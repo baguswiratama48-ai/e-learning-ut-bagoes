@@ -135,7 +135,7 @@ function Biodata({ user, profileData }) {
               <span className="text-slate-700 font-bold text-sm">{profileData.semester || '-'}</span>
            </div>
            <div className="flex justify-between">
-              <span className="text-slate-400 text-sm">Pokjar</span>
+              <span className="text-slate-400 text-sm">Salut</span>
               <span className="text-slate-700 font-bold text-sm">{profileData.pokjar}</span>
            </div>
         </div>
@@ -228,7 +228,7 @@ function EditBiodata({ user, profileData, setProfileData }) {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">Pokjar</label>
+          <label className="block text-sm font-bold text-slate-700 mb-1">Salut</label>
           <input type="text" value={formData.pokjar} readOnly className="w-full px-4 py-2.5 rounded-xl border bg-slate-50 text-slate-500 font-semibold text-sm outline-none cursor-not-allowed" />
         </div>
 
@@ -549,7 +549,7 @@ function Layout({ user, onLogin, onLogout }) {
       <footer className="w-full text-center py-8 border-t bg-white mt-auto pb-28 md:pb-8">
         <div className="max-w-screen-xl mx-auto px-4">
           <p className="text-slate-500 text-[11px] font-extrabold uppercase tracking-[0.2em] mb-1">Universitas Terbuka</p>
-          <p className="text-primary text-xs font-bold uppercase mb-2">Pokjar Nusa Indah Belitang</p>
+          <p className="text-primary text-xs font-bold uppercase mb-2">Salut Nusa Indah Belitang</p>
           <p className="text-slate-400 text-[10px] font-medium">
             &copy; 2026 Bagoes Panca Wiratama. All rights reserved.
           </p>
@@ -597,7 +597,7 @@ export default function App() {
         whatsapp: '081234567890',
         prodi: 'PGSD - Bi / AKP',
         semester: '8',
-        pokjar: 'Nusa Indah Belitang'
+        pokjar: 'Salut Nusa Indah Belitang'
       }
     });
   };
