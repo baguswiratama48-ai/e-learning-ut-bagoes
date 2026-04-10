@@ -66,11 +66,88 @@ const STUDENTS = [
 ];
 
 const MENUS = [
-  "Beranda", "Nama Mata Kuliah", "Informasi Modul", "Pertanyaan Pemantik",
+  "Nama Mata Kuliah", "Informasi Modul", "Pertanyaan Pemantik",
   "Materi Pembelajaran", "Tugas dan Catatan", "Video Pembelajaran",
   "LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan", "Glosarium",
   "Refleksi", "Rangkuman"
 ];
+
+const COURSE_DATA = {
+  'SPGK4307': {
+    'Informasi Modul': (
+      <div className="space-y-6 text-justify leading-relaxed text-slate-700">
+        <section>
+          <h3 className="font-bold text-lg text-primary mb-3">Tinjauan Mata Kuliah</h3>
+          <p>
+            Mata kuliah ini dirancang untuk memberikan pemahaman mendalam kepada mahasiswa mengenai konsep dasar, pendekatan, dan implementasi Bimbingan Konseling (BK) di Sekolah Dasar (SD). Modul 1 membahas konsep dasar BK, termasuk tujuan, fungsi, dan prinsip-prinsip yang relevan dengan kebutuhan peserta didik di tingkat SD. Modul 2 fokus pada karakteristik peserta didik, termasuk tugas perkembangan yang harus dicapai, sehingga mahasiswa dapat memahami kebutuhan dan tantangan yang dihadapi oleh anak usia sekolah dasar dalam proses perkembangan mereka.
+          </p>
+          <p className="mt-4">
+            Dalam praktiknya, mata kuliah ini juga memberikan keterampilan teknis melalui Modul 3 yang membahas teknik asesmen dan pengumpulan data kebutuhan peserta didik. Modul ini membantu mahasiswa memahami cara menganalisis kebutuhan siswa sebagai dasar untuk merancang layanan BK yang efektif. Selanjutnya, Modul 4 dan 5 memberikan panduan tentang perencanaan dan pelaksanaan layanan BK di SD. Mahasiswa akan belajar menyusun program BK yang sesuai dengan karakteristik peserta didik serta bagaimana mengimplementasikan program tersebut secara optimal dalam lingkungan sekolah.
+          </p>
+          <p className="mt-4">
+            Sebagai penutup, Modul 6 mengajarkan bagaimana melakukan penilaian, evaluasi, pelaporan, dan tindak lanjut terhadap layanan BK yang telah diberikan. Hal ini bertujuan untuk memastikan efektivitas layanan dan memberikan perbaikan berkelanjutan sesuai dengan hasil evaluasi. Mata kuliah ini bertujuan membekali mahasiswa dengan pengetahuan, keterampilan, dan sikap profesional untuk menjadi konselor yang efektif dalam membantu peserta didik SD mencapai perkembangan optimal baik secara akademik maupun personal.
+          </p>
+        </section>
+
+        <section className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+          <h3 className="font-bold text-lg text-primary mb-3">Tujuan Instruksional Umum</h3>
+          <p>
+            Setelah mengikuti mata kuliah ini, mahasiswa S1 PGSD diharapkan mampu menganalisis kebutuhan dan mengaplikasikan prinsip-prinsip serta strategi layanan BK bagi peserta didik SD.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="font-bold text-lg text-primary mb-3">Tujuan Instruksional Khusus</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Mahasiswa mampu menguraikan konsep dasar (pengertian, hakikat, tujuan, prinsip, asas, bidang, dan komponen program) bimbingan dan konseling di SD.</li>
+            <li>Mahasiswa mampu menguraikan karakteristik peserta didik dan mampu menganalisis serta mengevaluasi tugas perkembangan peserta didik di SD.</li>
+            <li>Mahasiswa mampu menguraikan konsep teknik asesmen dan mampu memanfaatkan data hasil asesmen kebutuhan peserta didik di SD.</li>
+            <li>Mahasiswa mampu merencanakan program bimbingan dan konseling di SD.</li>
+            <li>Mahasiswa mampu melaksanakan program bimbingan dan konseling di SD.</li>
+            <li>Mahasiswa mampu menilai, mengevaluasi, membuat pelaporan dan tindak lanjut layanan BK di SD.</li>
+          </ul>
+        </section>
+
+        <section className="border-l-4 border-yellow-400 pl-4 py-2">
+          <h3 className="font-bold text-lg text-primary mb-3">Struktur Modul</h3>
+          <p className="mb-2 italic text-sm">Untuk menguasai seluruh kompetensi tersebut, bahan ajar mata kuliah ini disusun dalam enam modul sebagai berikut:</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm font-semibold">
+            <div className="bg-white p-3 rounded-lg border">Modul 1 : Konsep Dasar BK di SD</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 2 : Karakteristik Peserta Didik</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 3 : Teknik Asesmen</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 4 : Perencanaan BK</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 5 : Pelaksanaan BK</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 6 : Penilaian & Evaluasi</div>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="font-bold text-lg text-primary mb-3">Petunjuk Mempelajari Modul</h3>
+          <div className="space-y-3">
+            {[
+              "Kajilah isi modul secara keseluruhan diawali dengan membaca pendahuluan.",
+              "Bacalah dengan cermat dan teliti setiap uraian dan contoh dalam masing-masing kegiatan belajar.",
+              "Jawablah dengan tepat pertanyaan dan kerjakan soal latihan secara maksimal dengan memperhatikan rambu-rambu atau perintah soal secara utuh.",
+              "Kerjakan sendiri tes formatif dengan tuntas, kemudian lihatlah kunci jawaban untuk mengetahui tingkat pencapaian pemahaman Anda.",
+              "Pelajari kembali bagian modul yang belum Anda kuasai.",
+              "Carilah buku acuan yang tercantum dalam daftar pustaka untuk memperdalam kajian dalam modul ini."
+            ].map((text, idx) => (
+              <div key={idx} className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-[10px] flex items-center justify-center font-bold">{idx + 1}</span>
+                <p className="text-sm">{text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <footer className="pt-6 border-t font-medium text-center italic">
+          <p>"Pada akhirnya, keberhasilan Anda dalam belajar akan ditentukan oleh usaha Anda sendiri. Aturlah waktu sebaik-baiknya, berdiskusilah dengan teman sejawat dan tutor."</p>
+          <p className="text-primary mt-2 not-italic font-bold">Selamat belajar.</p>
+        </footer>
+      </div>
+    )
+  }
+};
 
 function Home({ navigate, onLoginTutor }) {
   return (
@@ -547,6 +624,9 @@ function ClassMenu({ user }) {
 
 function SectionPage({ user }) {
   const { id, meetingId, sectionName } = useParams();
+  const cls = CLASSES.find(c => c.id === id);
+  const courseCode = cls?.title.split('|')[0].trim();
+  
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -554,6 +634,24 @@ function SectionPage({ user }) {
   if (!user || user.role !== 'student') return <Navigate to={`/class/${id}`} />;
 
   const isInput = ["Tugas", "Catatan", "LKPD", "Latihan", "Kuis", "Refleksi"].some(p => sectionName.includes(p));
+
+  // Render Special content
+  const renderStaticContent = () => {
+    if (sectionName === "Nama Mata Kuliah") {
+      return (
+        <div className="bg-primary/5 p-10 rounded-3xl text-center border border-primary/10">
+          <span className="material-symbols-outlined text-5xl text-primary mb-4">school</span>
+          <h3 className="font-headline font-bold text-2xl text-slate-800">{cls?.title}</h3>
+        </div>
+      );
+    }
+    
+    if (sectionName === "Informasi Modul" && COURSE_DATA[courseCode]?.[sectionName]) {
+      return COURSE_DATA[courseCode][sectionName];
+    }
+
+    return <div className="bg-blue-50 p-10 rounded-3xl text-center text-slate-400 font-medium">Baca instruksi modul untuk bagian ini.</div>;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -587,10 +685,10 @@ function SectionPage({ user }) {
            <button type="submit" disabled={loading} className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20">{loading ? 'Sedang Mengirim...' : 'Kirim Jawaban'}</button>
          </form>
        ) : (
-         <div className="bg-blue-50 p-10 rounded-3xl text-center text-slate-400 font-medium">Baca instruksi modul untuk bagian ini.</div>
+         renderStaticContent()
        )}
     </div>
-  )
+  );
 }
 
 function Layout({ user, onLogin, onLogout }) {
