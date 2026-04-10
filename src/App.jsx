@@ -72,7 +72,7 @@ const STUDENTS = [
 const MENUS = [
   "Nama Mata Kuliah", "Informasi Modul", "Pertanyaan Pemantik",
   "Materi Pembelajaran", "Tugas dan Catatan", "Video Pembelajaran",
-  "LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan", "Glosarium",
+  "LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan",
   "Refleksi", "Rangkuman"
 ];
 
