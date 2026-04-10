@@ -140,11 +140,6 @@ const COURSE_DATA = {
           </div>
         </section>
 
-        <footer className="pt-6 border-t font-medium text-center italic">
-          <p>"Pada akhirnya, keberhasilan Anda dalam belajar akan ditentukan oleh usaha Anda sendiri. Aturlah waktu sebaik-baiknya, berdiskusilah dengan teman sejawat dan tutor."</p>
-          <p className="text-primary mt-2 not-italic font-bold">Selamat belajar.</p>
-        </footer>
-
         <section className="py-8 bg-white rounded-3xl border border-slate-100 shadow-inner px-4 overflow-x-auto">
           <h3 className="font-bold text-lg text-primary mb-6 text-center underline decoration-yellow-400 decoration-4 underline-offset-8">Peta Kompetensi Matakuliah</h3>
           
@@ -224,6 +219,11 @@ const COURSE_DATA = {
           </div>
           <p className="text-[9px] text-center text-slate-400 mt-6 italic">Bagan: Alur Kompetensi Pembelajaran SPGK4307</p>
         </section>
+
+        <footer className="pt-6 border-t font-medium text-center italic">
+          <p>"Pada akhirnya, keberhasilan Anda dalam belajar akan ditentukan oleh usaha Anda sendiri. Aturlah waktu sebaik-baiknya, berdiskusilah dengan teman sejawat dan tutor."</p>
+          <p className="text-primary mt-2 not-italic font-bold">Selamat belajar.</p>
+        </footer>
       </div>
     )
   }
