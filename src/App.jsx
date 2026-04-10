@@ -841,14 +841,17 @@ function DashboardTutor({ user }) {
                                          
                                          <div className="pt-2 border-t">
                                            <div className="flex justify-between items-center">
-                                             <p className="text-[9px] font-bold text-slate-400 uppercase">Nilai Anda:</p>
+                                             <div className="flex items-center gap-2">
+                                               <p className="text-[10px] font-bold text-slate-700 uppercase">Nilai Anda:</p>
+                                               {curStars > 0 && <span className="text-[8px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full flex items-center gap-0.5"><span className="material-symbols-outlined text-[10px]">check_circle</span>Tersimpan Otomatis</span>}
+                                             </div>
                                              <div className="flex gap-0.5">
                                                {[1,2,3,4,5].map(star => (
                                                  <button
                                                    key={star}
                                                    onClick={() => handleStarFeedback(student.email, student.classId, answer.meeting_num || '1', secName, star)}
                                                    className={`text-[20px] transition-transform hover:scale-125 ${
-                                                     star <= curStars ? 'text-yellow-400 drop-shadow-sm' : 'text-slate-200'
+                                                     star <= curStars ? 'text-yellow-400 drop-shadow-sm' : 'text-slate-300'
                                                    }`}
                                                  >
                                                    <span className="material-symbols-outlined fill-1 text-[18px]">star</span>
