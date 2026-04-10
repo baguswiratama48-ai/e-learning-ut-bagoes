@@ -100,6 +100,14 @@ const PEMANTIK_GROUPS = [
   ]
 ];
 
+const FEEDBACK_MESSAGES = {
+  1: "Jawaban masih sangat kurang. Mohon pelajari kembali materi modul dengan teliti ya. Tetap semangat!",
+  2: "Masih banyak yang perlu diperbaiki. Coba baca ulang modulnya dengan lebih teliti ya.",
+  3: "Sudah cukup baik, namun jawaban bisa lebih dielaborasi lagi. Jangan ragu untuk memperluas pemahamanmu.",
+  4: "Bagus sekali! Pemahamanmu sudah sangat baik. Pertahankan prestasimu.",
+  5: "Luar biasa! Jawabanmu sangat tepat, struktural, dan inspiratif. Teruskan semangat belajarmu!"
+};
+
 const getPemantikForStudent = (nim) => {
   const n = parseInt(nim.replace(/\D/g, '')) || 0;
   return PEMANTIK_GROUPS.map((group, gi) => group[(n + gi) % group.length]);
@@ -639,20 +647,26 @@ function DashboardTutor({ user }) {
     }
   };
 
-  const handleStarFeedback = async (studentEmail, classId, sectionName, stars) => {
+  const handleStarFeedback = async (studentEmail, classId, meetingNum, sectionName, stars) => {
     try {
+      const feedbackName = `TUTOR_FEEDBACK_${sectionName}`;
+      // Optimistic update so UI updates immediately
+      setSubmissions(prev => {
+        const withoutOld = prev.filter(s => !(s.student_email === studentEmail && s.section_name === feedbackName));
+        return [...withoutOld, { student_email: studentEmail, class_id: classId, meeting_num: meetingNum, section_name: feedbackName, content: String(stars) }];
+      });
+      
       await supabase.from('submissions')
         .delete()
         .eq('student_email', studentEmail)
-        .eq('section_name', `TUTOR_FEEDBACK_${sectionName}`);
+        .eq('section_name', feedbackName);
       await supabase.from('submissions').insert([{
         student_email: studentEmail,
         class_id: classId,
-        meeting_num: '1',
-        section_name: `TUTOR_FEEDBACK_${sectionName}`,
+        meeting_num: meetingNum,
+        section_name: feedbackName,
         content: String(stars)
       }]);
-      await fetchData();
     } catch(err) {
       console.log(err);
     }
@@ -831,7 +845,7 @@ function DashboardTutor({ user }) {
                                              {[1,2,3,4,5].map(star => (
                                                <button
                                                  key={star}
-                                                 onClick={() => handleStarFeedback(student.email, student.classId, secName, star)}
+                                                 onClick={() => handleStarFeedback(student.email, student.classId, answer.meeting_num || '1', secName, star)}
                                                  className={`text-[20px] transition-transform hover:scale-125 ${
                                                    star <= curStars ? 'text-yellow-400 drop-shadow-sm' : 'text-slate-200'
                                                  }`}
@@ -1054,6 +1068,7 @@ function SectionPage({ user }) {
                     <span className="material-symbols-outlined text-yellow-700 text-3xl">stars</span>
                     <div>
                       <p className="font-bold text-slate-900 mb-1">Feedback Tutor</p>
+                      <p className="text-xs text-slate-800 mb-2 italic">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || 'Selamat! Pertahankan kerjamu.'}"</p>
                       <div className="flex gap-0.5">
                         {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-slate-900">star</span>)}
                         {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-yellow-600/50">star</span>)}
@@ -1203,6 +1218,7 @@ function SectionPage({ user }) {
                 <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
                 <div>
                   <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                  <p className="text-sm text-yellow-800 mb-3 italic">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || 'Tutor telah memberikan penilaian.'}"</p>
                   <div className="flex gap-1 text-yellow-500">
                     {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-2xl">star</span>)}
                     {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300 text-2xl">star</span>)}
