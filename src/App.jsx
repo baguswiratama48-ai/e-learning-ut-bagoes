@@ -626,6 +626,11 @@ function DashboardTutor({ user }) {
         .delete()
         .eq('student_email', studentEmail)
         .eq('section_name', sectionName);
+      // Let's also delete the feedback if they are resetting the answer
+      await supabase.from('submissions')
+        .delete()
+        .eq('student_email', studentEmail)
+        .eq('section_name', `TUTOR_FEEDBACK_${sectionName}`);
       await fetchData();
     } catch(err) {
       console.log(err);
@@ -634,18 +639,17 @@ function DashboardTutor({ user }) {
     }
   };
 
-  const handleStarFeedback = async (studentEmail, classId, stars) => {
+  const handleStarFeedback = async (studentEmail, classId, sectionName, stars) => {
     try {
-      // Delete existing feedback first, then insert new one
       await supabase.from('submissions')
         .delete()
         .eq('student_email', studentEmail)
-        .eq('section_name', 'TUTOR_FEEDBACK_Pemantik');
+        .eq('section_name', `TUTOR_FEEDBACK_${sectionName}`);
       await supabase.from('submissions').insert([{
         student_email: studentEmail,
         class_id: classId,
         meeting_num: '1',
-        section_name: 'TUTOR_FEEDBACK_Pemantik',
+        section_name: `TUTOR_FEEDBACK_${sectionName}`,
         content: String(stars)
       }]);
       await fetchData();
@@ -653,6 +657,7 @@ function DashboardTutor({ user }) {
       console.log(err);
     }
   };
+
 
   const CLASS_TABS = [
     { id: '1', label: 'Kelas 8B' },
@@ -668,6 +673,12 @@ function DashboardTutor({ user }) {
   };
 
   const studentList = getStudentList();
+  const [expandedStudent, setExpandedStudent] = useState(null);
+
+  const toggleStudent = (email) => {
+    if (expandedStudent === email) setExpandedStudent(null);
+    else setExpandedStudent(email);
+  };
 
   return (
     <div className="py-8 min-h-[70vh] px-4">
@@ -709,9 +720,8 @@ function DashboardTutor({ user }) {
                 <tr className="bg-primary text-white uppercase tracking-wider font-bold">
                   <th className="px-4 py-4 w-10 text-center border-r border-white/10">No</th>
                   <th className="px-4 py-4 border-r border-white/10">Mahasiswa</th>
-                  <th className="px-4 py-4 text-center border-r border-white/10">Status Baca</th>
-                  <th className="px-4 py-4 border-r border-white/10">Jawaban Informasi Modul</th>
-                  <th className="px-4 py-4 border-r border-white/10">Jawaban Pertanyaan Pemantik</th>
+                  <th className="px-4 py-4 text-center border-r border-white/10">Status Baca (Identitas)</th>
+                  <th className="px-4 py-4 border-r border-white/10 text-center">Jumlah Jawaban Mhs</th>
                   <th className="px-4 py-4 text-center">Aksi Tutor</th>
                 </tr>
               </thead>
@@ -719,122 +729,128 @@ function DashboardTutor({ user }) {
                 {studentList.map((student, index) => {
                   const studentSubs = submissions.filter(s => s.student_email === student.email);
                   const readMark = studentSubs.find(s => s.section_name === "Nama Mata Kuliah" && s.content.includes("READ_CONFIRMED"));
-                  const moduleAnswer = studentSubs.find(s => s.section_name === "Informasi Modul");
-                  const pemantikAnswer = studentSubs.find(s => s.section_name === "Pertanyaan Pemantik");
-                  const tutorFeedback = studentSubs.find(s => s.section_name === "TUTOR_FEEDBACK_Pemantik");
-                  const currentStars = tutorFeedback ? parseInt(tutorFeedback.content) : 0;
                   const unlockKeyRead = `${student.email}_Nama Mata Kuliah`;
-                  const unlockKeyModule = `${student.email}_Informasi Modul`;
-                  const unlockKeyPemantik = `${student.email}_Pertanyaan Pemantik`;
+                  
+                  // Filter out "Nama Mata Kuliah" and "TUTOR_FEEDBACK" rows to get pure answers
+                  const actualAnswers = studentSubs.filter(s => s.section_name !== "Nama Mata Kuliah" && !s.section_name.startsWith("TUTOR_FEEDBACK_"));
 
                   return (
-                    <tr key={index} className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
-                      <td className="px-4 py-4 font-bold text-slate-400 text-center border-r">{index + 1}</td>
-                      <td className="px-4 py-4 border-r">
-                        <p className="font-bold text-slate-800 uppercase leading-none mb-1">{student.name}</p>
-                        <p className="text-[10px] text-slate-400 font-medium tracking-tighter">{student.nim} • {student.email}</p>
-                      </td>
-                      <td className="px-4 py-4 text-center border-r">
-                        {readMark ? (
-                          <div className="inline-flex flex-col items-center">
-                            <span className="material-symbols-outlined text-green-500 text-[24px]">verified</span>
-                            <div className="flex text-yellow-400 -mt-1 scale-75">
-                               {Array(5).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-[16px]">star</span>)}
+                    <React.Fragment key={index}>
+                      <tr className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
+                        <td className="px-4 py-4 font-bold text-slate-400 text-center border-r">{index + 1}</td>
+                        <td className="px-4 py-4 border-r">
+                          <p className="font-bold text-slate-800 uppercase leading-none mb-1">{student.name}</p>
+                          <p className="text-[10px] text-slate-400 font-medium tracking-tighter">{student.nim} • {student.email}</p>
+                        </td>
+                        <td className="px-4 py-4 text-center border-r max-w-[120px]">
+                          {readMark ? (
+                            <div className="inline-flex flex-col items-center">
+                              <span className="material-symbols-outlined text-green-500 text-[20px]">verified</span>
+                              <p className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Selesai Membaca</p>
                             </div>
-                            <p className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Selesai Membaca</p>
-                          </div>
-                        ) : (
-                          <span className="text-[9px] font-bold text-slate-300 uppercase">Belum Membaca</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 border-r max-w-[180px]">
-                         {moduleAnswer ? (
-                           <div>
-                             <p className="text-[10px] text-primary font-bold uppercase mb-1 flex items-center gap-1">
-                               <span className="material-symbols-outlined text-[14px]">speaker_notes</span> Jawaban:
-                             </p>
-                             <p className="font-medium text-slate-700 italic border-l-2 border-primary/20 pl-2 leading-relaxed text-[11px]">"{moduleAnswer.content}"</p>
-                           </div>
-                         ) : (
-                           <div className="flex items-center gap-2 text-slate-300">
-                             <span className="material-symbols-outlined text-sm">pending</span>
-                             <span className="text-[9px] font-bold uppercase">Belum Menjawab</span>
-                           </div>
-                         )}
-                      </td>
-                      <td className="px-4 py-4 border-r max-w-[220px]">
-                        {pemantikAnswer ? (
-                          <div className="space-y-2">
-                            <p className="text-[10px] text-indigo-600 font-bold uppercase mb-1 flex items-center gap-1">
-                              <span className="material-symbols-outlined text-[14px]">quiz</span> Jawaban Pemantik:
-                            </p>
-                            {pemantikAnswer.content.split('\n\n').map((block, bi) => {
-                              const parts = block.split('\nJawaban: ');
-                              return (
-                                <div key={bi} className="bg-slate-50 p-2 rounded-lg border-l-2 border-indigo-200">
-                                  <p className="text-[9px] text-slate-400 mb-0.5">{parts[0]?.replace(`Pertanyaan ${bi+1}: `, '')}</p>
-                                  <p className="text-[11px] font-medium text-slate-700 italic">"{parts[1] || '-'}"</p>
-                                </div>
-                              );
-                            })}
-                            <div className="pt-2 border-t">
-                              <p className="text-[9px] font-bold text-slate-500 mb-1 uppercase">Nilai Tutor:</p>
-                              <div className="flex gap-1">
-                                {[1,2,3,4,5].map(star => (
-                                  <button
-                                    key={star}
-                                    onClick={() => handleStarFeedback(student.email, student.classId, star)}
-                                    className={`text-[20px] transition-transform hover:scale-125 ${
-                                      star <= currentStars ? 'text-yellow-400' : 'text-slate-200'
-                                    }`}
-                                  >
-                                    <span className="material-symbols-outlined fill-1 text-[18px]">star</span>
-                                  </button>
-                                ))}
-                                {currentStars > 0 && <span className="text-[9px] font-bold text-yellow-600 self-center ml-1">{currentStars}/5</span>}
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2 text-slate-300">
-                            <span className="material-symbols-outlined text-sm">pending</span>
-                            <span className="text-[9px] font-bold uppercase">Belum Menjawab Pemantik</span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-4 py-4 text-center">
-                        <div className="flex flex-col gap-2 items-center">
+                          ) : (
+                            <span className="text-[9px] font-bold text-slate-300 uppercase">Belum Membaca</span>
+                          )}
                           {readMark && (
                             <button
                               onClick={() => handleUnlock(student.email, "Nama Mata Kuliah")}
                               disabled={unlocking === unlockKeyRead}
-                              className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-orange-50 text-orange-600 border border-orange-200 hover:bg-orange-100 disabled:opacity-50 whitespace-nowrap"
+                              className="block mt-2 mx-auto text-[8px] font-bold px-2 py-1 rounded-md bg-orange-50 text-orange-600 border border-orange-200 hover:bg-orange-100 disabled:opacity-50"
                             >
-                              {unlocking === unlockKeyRead ? 'Memproses...' : '🔓 Reset Status Baca'}
+                              {unlocking === unlockKeyRead ? '...' : '🔓 Reset'}
                             </button>
                           )}
-                          {moduleAnswer && (
-                            <button
-                              onClick={() => handleUnlock(student.email, "Informasi Modul")}
-                              disabled={unlocking === unlockKeyModule}
-                              className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 disabled:opacity-50 whitespace-nowrap"
-                            >
-                              {unlocking === unlockKeyModule ? 'Memproses...' : '🔓 Buka Kembali Jawaban Modul'}
-                            </button>
-                          )}
-                          {pemantikAnswer && (
-                            <button
-                              onClick={() => handleUnlock(student.email, "Pertanyaan Pemantik")}
-                              disabled={unlocking === unlockKeyPemantik}
-                              className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-100 disabled:opacity-50 whitespace-nowrap"
-                            >
-                              {unlocking === unlockKeyPemantik ? 'Memproses...' : '🔓 Buka Kembali Pemantik'}
-                            </button>
-                          )}
-                          {!readMark && !moduleAnswer && !pemantikAnswer && <span className="text-slate-300 text-[9px]">-</span>}
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                        <td className="px-4 py-4 border-r text-center">
+                           <span className="inline-block bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-sm">
+                             {actualAnswers.length} Jawaban
+                           </span>
+                        </td>
+                        <td className="px-4 py-4 text-center">
+                          <button
+                            onClick={() => toggleStudent(student.email)}
+                            className="bg-primary text-white text-[10px] font-bold px-4 py-2 rounded-xl shadow-md hover:bg-[#1a2169] transition-all flex items-center justify-center gap-1 mx-auto"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">
+                               {expandedStudent === student.email ? 'expand_less' : 'expand_more'}
+                            </span>
+                            {expandedStudent === student.email ? 'Tutup Detail' : 'Beri Penilaian & Cek Jawaban'}
+                          </button>
+                        </td>
+                      </tr>
+                      {expandedStudent === student.email && (
+                        <tr className="bg-slate-50 border-b-2 border-slate-200">
+                          <td colSpan={5} className="p-0">
+                             <div className="p-6">
+                               {actualAnswers.length === 0 ? (
+                                 <p className="text-center text-slate-400 italic text-xs font-bold py-4">Mahasiswa ini belum mengirim jawaban apapun.</p>
+                               ) : (
+                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                   {actualAnswers.map((answer, i) => {
+                                     const secName = answer.section_name;
+                                     const tutorFb = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${secName}`);
+                                     const curStars = tutorFb ? parseInt(tutorFb.content) : 0;
+                                     const isUnlocking = unlocking === `${student.email}_${secName}`;
+
+                                     return (
+                                       <div key={i} className="bg-white border rounded-xl p-4 shadow-sm relative group hover:border-primary/30 transition-all flex flex-col justify-between">
+                                         <div>
+                                           <div className="flex justify-between items-start mb-2">
+                                             <p className="text-[10px] font-bold text-primary uppercase bg-primary/10 px-2 py-0.5 rounded inline-block">{secName}</p>
+                                             <button
+                                               onClick={() => handleUnlock(student.email, secName)}
+                                               disabled={isUnlocking}
+                                               className="text-[9px] text-red-500 hover:text-white hover:bg-red-500 border border-red-500 rounded px-1.5 py-0.5 font-bold transition-all disabled:opacity-30"
+                                               title="Hapus jawaban agar mahasiswa bisa mengulang"
+                                             >
+                                               {isUnlocking ? '...' : '🔓 Reset/Hapus'}
+                                             </button>
+                                           </div>
+                                           <div className="bg-slate-50 border border-slate-100 p-2.5 rounded-lg mb-3">
+                                             {secName === 'Pertanyaan Pemantik' ? (
+                                               <div className="max-h-[120px] overflow-y-auto pr-1 custom-scrollbar">
+                                                 {answer.content.split('\n\n').map((block, bi) => {
+                                                    const parts = block.split('\nJawaban: ');
+                                                    return (
+                                                      <div key={bi} className="mb-2 last:mb-0">
+                                                        <p className="text-[9px] text-slate-400 leading-tight mb-0.5">{parts[0]?.replace(`Pertanyaan ${bi+1}: `, `Q${bi+1}: `)}</p>
+                                                        <p className="text-[10px] font-medium text-slate-700 italic border-l-2 border-primary/20 pl-1.5 leading-snug">"{parts[1] || '-'}"</p>
+                                                      </div>
+                                                    );
+                                                  })}
+                                               </div>
+                                             ) : (
+                                               <p className="text-[11px] font-medium text-slate-700 italic max-h-[120px] overflow-y-auto custom-scrollbar pr-1">"{answer.content}"</p>
+                                             )}
+                                           </div>
+                                         </div>
+                                         
+                                         <div className="pt-2 border-t flex justify-between items-center">
+                                           <p className="text-[9px] font-bold text-slate-400 uppercase">Nilai Anda:</p>
+                                           <div className="flex gap-0.5">
+                                             {[1,2,3,4,5].map(star => (
+                                               <button
+                                                 key={star}
+                                                 onClick={() => handleStarFeedback(student.email, student.classId, secName, star)}
+                                                 className={`text-[20px] transition-transform hover:scale-125 ${
+                                                   star <= curStars ? 'text-yellow-400 drop-shadow-sm' : 'text-slate-200'
+                                                 }`}
+                                               >
+                                                 <span className="material-symbols-outlined fill-1 text-[18px]">star</span>
+                                               </button>
+                                             ))}
+                                           </div>
+                                         </div>
+                                       </div>
+                                     )
+                                   })}
+                                 </div>
+                               )}
+                             </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
                   )
                 })}
                 {studentList.length === 0 && (
@@ -1025,12 +1041,26 @@ function SectionPage({ user }) {
             <p className="text-sm mb-6 leading-relaxed font-medium">Sebutkan Judul 6 Modul yang ada di Mata Kuliah SPGK4307 | Bimbingan Konseling di SD</p>
             
             {status ? (
-              <div className="bg-white/10 p-4 rounded-xl border border-white/20">
-                <p className="text-[10px] text-white/50 uppercase font-bold mb-2">Jawaban Anda:</p>
-                <p className="text-sm italic">"{status.content}"</p>
-                <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
-                  <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
+              <div className="space-y-4">
+                <div className="bg-white/10 p-4 rounded-xl border border-white/20">
+                  <p className="text-[10px] text-white/50 uppercase font-bold mb-2">Jawaban Anda:</p>
+                  <p className="text-sm italic">"{status.content}"</p>
+                  <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
+                    <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
+                  </div>
                 </div>
+                {tutorFeedback && (
+                  <div className="bg-yellow-400 p-4 rounded-xl text-slate-900 border border-yellow-500 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-yellow-700 text-3xl">stars</span>
+                    <div>
+                      <p className="font-bold text-slate-900 mb-1">Feedback Tutor</p>
+                      <div className="flex gap-0.5">
+                        {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-slate-900">star</span>)}
+                        {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-yellow-600/50">star</span>)}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-4">
@@ -1158,16 +1188,33 @@ function SectionPage({ user }) {
     <div className="bg-white rounded-3xl p-6 md:p-8 border shadow-sm min-h-[60vh] mt-4 mb-10 mx-4">
        <Link to={`/class/${id}/meeting/${meetingId}`} className="inline-flex items-center text-slate-400 font-bold mb-8 text-sm hover:text-primary"><span className="material-symbols-outlined text-sm mr-1">arrow_back</span> Kembali</Link>
        <h2 className="font-headline font-bold text-2xl md:text-3xl text-primary mb-6">{sectionName}</h2>
-       {success ? (
-         <div className="bg-green-50 text-green-700 p-10 rounded-3xl text-center flex flex-col items-center">
-           <span className="material-symbols-outlined text-5xl mb-4 text-green-500">check_circle</span>
-           <p className="font-bold text-xl">Jawaban Berhasil Dikirim!</p>
-           <button onClick={() => setSuccess(false)} className="mt-8 bg-green-600 text-white px-8 py-3 rounded-xl font-bold">Kirim Lagi</button>
-         </div>
+       {status ? (
+          <div className="space-y-6">
+            <div className="bg-green-50 text-green-700 p-6 md:p-10 rounded-3xl text-center flex flex-col items-center border border-green-200">
+              <span className="material-symbols-outlined text-5xl mb-4 text-green-500">check_circle</span>
+              <p className="font-bold text-xl mb-4">Jawaban Anda Sudah Terkirim!</p>
+              <div className="bg-white p-6 rounded-2xl w-full text-left shadow-sm border border-green-100">
+                <p className="text-xs font-bold text-slate-400 uppercase mb-2">Jawaban Anda:</p>
+                <p className="text-sm text-slate-700 whitespace-pre-wrap italic">"{status.content}"</p>
+              </div>
+            </div>
+            {tutorFeedback && (
+              <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+                <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+                <div>
+                  <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                  <div className="flex gap-1 text-yellow-500">
+                    {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-2xl">star</span>)}
+                    {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300 text-2xl">star</span>)}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
        ) : isInput ? (
          <form onSubmit={handleSubmit} className="space-y-4">
-           <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Tulis jawaban Anda..." className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all"></textarea>
-           <button type="submit" disabled={loading} className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20">{loading ? 'Sedang Mengirim...' : 'Kirim Jawaban'}</button>
+           <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Tulis jawaban Anda..." className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all resize-none"></textarea>
+           <button type="submit" disabled={loading} className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-[#1a2169] transition-all">{loading ? 'Sedang Mengirim...' : 'Kirim Jawaban'}</button>
          </form>
        ) : (
          renderStaticContent()
