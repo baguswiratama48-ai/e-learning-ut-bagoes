@@ -76,6 +76,35 @@ const MENUS = [
   "Refleksi", "Rangkuman"
 ];
 
+const PEMANTIK_GROUPS = [
+  [
+    "Pernahkah Anda melihat siswa SD mengalami kesulitan belajar atau masalah perilaku? Menurut Anda, siapa yang seharusnya membantu mereka dan bagaimana caranya?",
+    "Mengapa siswa sekolah dasar tidak cukup hanya diajar materi pelajaran saja?",
+    "Apa yang mungkin terjadi jika kebutuhan emosional dan sosial siswa diabaikan di sekolah?",
+    "Menurut Anda, apakah semua siswa membutuhkan bantuan yang sama? Mengapa demikian?",
+    "Bagaimana peran guru dalam membantu perkembangan siswa selain mengajar di kelas?"
+  ],
+  [
+    "Jika Anda membantu seorang siswa yang memiliki masalah, hal apa yang harus Anda perhatikan agar bantuan tersebut tidak merugikan siswa?",
+    "Apakah semua masalah siswa boleh diselesaikan dengan cara yang sama? Mengapa?",
+    "Bagaimana cara memperlakukan setiap siswa agar mereka merasa dihargai dan dipahami?",
+    "Mengapa penting menjaga kerahasiaan masalah siswa? Apa dampaknya jika tidak dijaga?",
+    "Dalam membantu siswa, apakah kita boleh memaksakan kehendak kita? Mengapa?"
+  ],
+  [
+    "Apa yang harus dijaga agar siswa merasa aman dan percaya saat menceritakan masalahnya?",
+    "Mengapa hubungan antara guru dan siswa perlu dilandasi rasa percaya?",
+    "Bagaimana sikap seorang guru agar siswa mau terbuka tentang masalahnya?",
+    "Menurut Anda, apa yang membuat bantuan kepada siswa bisa berjalan efektif?",
+    "Jika seorang siswa tidak mau terbuka, apa yang sebaiknya dilakukan oleh guru?"
+  ]
+];
+
+const getPemantikForStudent = (nim) => {
+  const n = parseInt(nim.replace(/\D/g, '')) || 0;
+  return PEMANTIK_GROUPS.map((group, gi) => group[(n + gi) % group.length]);
+};
+
 const COURSE_DATA = {
   'SPGK4307': {
     'Informasi Modul': (
@@ -817,8 +846,10 @@ function SectionPage({ user }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
+  const [pemantikAnswers, setPemantikAnswers] = useState(['', '', '']);
 
   const isInput = ["Tugas", "Catatan", "LKPD", "Latihan", "Kuis", "Refleksi"].some(p => sectionName?.includes(p));
+
 
   useEffect(() => {
     setStatus(null);
@@ -932,6 +963,72 @@ function SectionPage({ user }) {
               </div>
             )}
           </div>
+        </div>
+      );
+    }
+
+    if (sectionName === "Pertanyaan Pemantik" && (cls?.classId === '1' || cls?.classId === '2' || ['1','2'].includes(id))) {
+      const questions = getPemantikForStudent(user.nim || '0');
+      const allAnswered = pemantikAnswers.every(a => a.trim().length > 0);
+      const combinedContent = questions.map((q, i) => `Pertanyaan ${i+1}: ${q}\nJawaban: ${pemantikAnswers[i]}`).join('\n\n');
+
+      return (
+        <div className="space-y-6">
+          <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
+            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm">tips_and_updates</span> Pertanyaan Pemantik
+            </p>
+            <p className="text-sm text-slate-600 font-medium">Jawablah 3 pertanyaan di bawah ini sesuai dengan pemahaman Anda. Pertanyaan bersifat pribadi dan berbeda untuk setiap mahasiswa.</p>
+          </div>
+
+          {status ? (
+            <div className="space-y-4">
+              <div className="bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center gap-3">
+                <span className="material-symbols-outlined text-green-500 text-3xl">check_circle</span>
+                <div>
+                  <p className="font-bold text-green-700">Jawaban Sudah Terkirim ke Tutor</p>
+                  <p className="text-xs text-green-600">Jawaban Anda telah disimpan dan tidak bisa diubah kecuali tutor membuka kembali.</p>
+                </div>
+              </div>
+              {questions.map((q, i) => (
+                <div key={i} className="bg-white border rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs font-bold text-primary uppercase mb-2">Pertanyaan {i + 1}</p>
+                  <p className="text-sm font-medium text-slate-700 mb-3">{q}</p>
+                  <div className="bg-slate-50 p-3 rounded-xl border-l-4 border-primary/30">
+                    <p className="text-sm text-slate-600 italic">"{pemantikAnswers[i] || (status.content.split('\n\n')[i]?.split('Jawaban: ')[1] || '-')}"</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-5">
+              {questions.map((q, i) => (
+                <div key={i} className="bg-white border rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="bg-primary text-white text-xs font-bold px-2 py-1 rounded-lg shrink-0">{i + 1}</span>
+                    <p className="text-sm font-semibold text-slate-800 leading-relaxed">{q}</p>
+                  </div>
+                  <textarea
+                    value={pemantikAnswers[i]}
+                    onChange={e => {
+                      const updated = [...pemantikAnswers];
+                      updated[i] = e.target.value;
+                      setPemantikAnswers(updated);
+                    }}
+                    placeholder="Tulis jawaban Anda di sini..."
+                    className="w-full bg-slate-50 border rounded-xl p-4 text-sm focus:bg-white focus:border-primary outline-none transition-all min-h-[100px] resize-none"
+                  />
+                </div>
+              ))}
+              <button
+                onClick={() => handleAction(combinedContent)}
+                disabled={loading || !allAnswered}
+                className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-[#1a2169] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Mengirim...' : !allAnswered ? 'Lengkapi Semua Jawaban Terlebih Dahulu' : 'Kirim Semua Jawaban'}
+              </button>
+            </div>
+          )}
         </div>
       );
     }
