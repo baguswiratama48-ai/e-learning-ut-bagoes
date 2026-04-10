@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { Routes, Route, Link, useLocation, useNavigate, useParams, Navigate } from 'react-router-dom'
 import { supabase } from './supabaseClient'
 
@@ -735,7 +735,7 @@ function DashboardTutor({ user }) {
                   const actualAnswers = studentSubs.filter(s => s.section_name !== "Nama Mata Kuliah" && !s.section_name.startsWith("TUTOR_FEEDBACK_"));
 
                   return (
-                    <React.Fragment key={index}>
+                    <Fragment key={index}>
                       <tr className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
                         <td className="px-4 py-4 font-bold text-slate-400 text-center border-r">{index + 1}</td>
                         <td className="px-4 py-4 border-r">
@@ -850,7 +850,7 @@ function DashboardTutor({ user }) {
                           </td>
                         </tr>
                       )}
-                    </React.Fragment>
+                    </Fragment>
                   )
                 })}
                 {studentList.length === 0 && (
