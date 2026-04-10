@@ -1108,11 +1108,6 @@ function SectionPage({ user }) {
             </div>
           )}
 
-          <div className="mt-8">
-            <Link to={`/class/${id}/meeting/${meetingId}`} className="block text-center text-primary font-bold bg-white border border-primary text-sm py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
-              <span className="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Menu Pembelajaran
-            </Link>
-          </div>
         </div>
       );
     }
@@ -1197,11 +1192,6 @@ function SectionPage({ user }) {
             </div>
           )}
 
-          <div className="mt-8">
-            <Link to={`/class/${id}/meeting/${meetingId}`} className="block text-center text-primary font-bold bg-white border border-primary text-sm py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
-              <span className="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Menu Pembelajaran
-            </Link>
-          </div>
         </div>
       );
     }
@@ -1230,7 +1220,9 @@ function SectionPage({ user }) {
     <div className="bg-white rounded-3xl p-6 md:p-8 border shadow-sm min-h-[60vh] mt-4 mb-10 mx-4">
        <Link to={`/class/${id}/meeting/${meetingId}`} className="inline-flex items-center text-slate-400 font-bold mb-8 text-sm hover:text-primary"><span className="material-symbols-outlined text-sm mr-1">arrow_back</span> Kembali</Link>
        <h2 className="font-headline font-bold text-2xl md:text-3xl text-primary mb-6">{sectionName}</h2>
-       {status ? (
+       {!isInput ? (
+         renderStaticContent()
+       ) : status ? (
           <div className="space-y-6">
             <div className="bg-green-50 text-green-700 p-6 md:p-10 rounded-3xl text-center flex flex-col items-center border border-green-200">
               <span className="material-symbols-outlined text-5xl mb-4 text-green-500">check_circle</span>
@@ -1254,13 +1246,11 @@ function SectionPage({ user }) {
               </div>
             )}
           </div>
-       ) : isInput ? (
+       ) : (
          <form onSubmit={handleSubmit} className="space-y-4">
            <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Tulis jawaban Anda..." className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all resize-none"></textarea>
            <button type="submit" disabled={loading} className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-[#1a2169] transition-all">{loading ? 'Sedang Mengirim...' : 'Kirim Jawaban'}</button>
          </form>
-       ) : (
-         renderStaticContent()
        )}
        <div className="mt-10 pt-6 border-t border-slate-100">
          <Link to={`/class/${id}/meeting/${meetingId}`} className="inline-flex items-center gap-2 text-slate-500 font-bold text-sm hover:text-primary bg-slate-50 hover:bg-primary/5 px-5 py-3 rounded-xl border border-slate-200 hover:border-primary transition-all">
