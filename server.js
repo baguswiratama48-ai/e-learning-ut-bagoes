@@ -13,18 +13,33 @@ const pool = new Pool({
 
 async function initDB() {
   try {
+    // Table for student submissions
     await pool.query(`
       CREATE TABLE IF NOT EXISTS submissions (
         id SERIAL PRIMARY KEY,
         student_email TEXT,
-        class_name TEXT,
+        class_id TEXT,
         meeting_num INTEGER,
         section_name TEXT,
         content TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    console.log('Database initialized properly.');
+
+    // Table for transcribed module content
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS module_content (
+        id SERIAL PRIMARY KEY,
+        module_num INTEGER,
+        section_title TEXT,
+        sub_title TEXT,
+        content_type TEXT,
+        body_text TEXT,
+        page_num INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('Database tables initialized properly.');
   } catch (err) {
     console.error('Error initializing database:', err);
   }

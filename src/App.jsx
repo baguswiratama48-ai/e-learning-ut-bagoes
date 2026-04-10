@@ -605,6 +605,7 @@ function Login({ onLogin }) {
 
 function DashboardTutor({ user }) {
   const [submissions, setSubmissions] = useState([]);
+  const [moduleContent, setModuleContent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('1');
   const [unlocking, setUnlocking] = useState(null);
@@ -614,9 +615,12 @@ function DashboardTutor({ user }) {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.from('submissions').select('*');
-      if (error) throw error;
-      setSubmissions(data || []);
+      const { data: subs, error: errSubs } = await supabase.from('submissions').select('*').order('created_at', { ascending: false });
+      const { data: mods, error: errMods } = await supabase.from('module_content').select('*').order('page_num', { ascending: true });
+      if (errSubs) throw errSubs;
+      if (errMods) throw errMods;
+      setSubmissions(subs || []);
+      setModuleContent(mods || []);
     } catch (err) {
       console.log("Supabase fetch failed", err);
     } finally {
@@ -673,12 +677,9 @@ function DashboardTutor({ user }) {
   };
 
 
-  const CLASS_TABS = [
-    { id: '1', label: 'Kelas 8B' },
-    { id: '2', label: 'Kelas 8C' },
-    { id: '3', label: 'Kelas 6A' },
     { id: '4', label: 'Kelas 5A' },
     { id: 'demo', label: 'Demo' },
+    { id: 'record_m1', label: '📂 Record Modul 1' }
   ];
 
   const getStudentList = () => {
@@ -727,6 +728,65 @@ function DashboardTutor({ user }) {
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-4"></div>
             <p className="text-slate-400 font-bold">Memuat Data...</p>
           </div>
+        ) : activeTab === 'record_m1' ? (
+           <div className="p-8">
+              <div className="flex justify-between items-center mb-8">
+                 <div>
+                    <h3 className="text-2xl font-headline font-bold text-slate-800">Manajemen Konten Modul 1</h3>
+                    <p className="text-sm text-slate-500 font-medium">Hasil transkripsi dari Pustaka UT (Halaman 4-47)</p>
+                 </div>
+                 <div className="bg-primary/5 px-4 py-2 rounded-xl border border-primary/10 flex items-center gap-4">
+                    <div className="text-center border-r pr-4">
+                       <p className="text-[10px] uppercase font-black text-slate-400">Total Bagian</p>
+                       <p className="font-bold text-primary">{moduleContent.length}</p>
+                    </div>
+                    <div className="text-center">
+                       <p className="text-[10px] uppercase font-black text-slate-400">Status</p>
+                       <p className="font-bold text-green-500 font-mono text-[11px]">DRAFTING</p>
+                    </div>
+                 </div>
+              </div>
+
+              {moduleContent.length === 0 ? (
+                 <div className="bg-slate-50 border-2 border-dashed rounded-3xl p-20 text-center">
+                    <span className="material-symbols-outlined text-5xl text-slate-300 mb-4">edit_note</span>
+                    <p className="text-slate-500 font-medium italic">Belum ada konten yang ditranskripsi. Saya sedang mulai mengetik hasil screenshot...</p>
+                 </div>
+              ) : (
+                 <div className="space-y-6">
+                    {['materi', 'rangkuman', 'soal_latihan'].map(type => {
+                       const items = moduleContent.filter(m => m.content_type === type);
+                       if (items.length === 0) return null;
+                       return (
+                          <div key={type} className="space-y-4">
+                             <h4 className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-[0.2em] bg-primary/5 px-4 py-2 rounded-lg w-fit">
+                                <span className="material-symbols-outlined text-[18px]">
+                                   {type === 'materi' ? 'auto_stories' : type === 'rangkuman' ? 'summarize' : 'quiz'}
+                                </span>
+                                {type.replace('_', ' ')}
+                             </h4>
+                             <div className="grid grid-cols-1 gap-4">
+                                {items.map((item, mi) => (
+                                   <div key={mi} className="bg-white border-l-4 border-l-primary/30 border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                                      <div className="flex justify-between items-start mb-4">
+                                         <div>
+                                            <p className="text-xs font-bold text-primary opacity-50 uppercase tracking-tighter">HALAMAN {item.page_num}</p>
+                                            <h5 className="font-bold text-slate-800 text-lg">{item.section_title}</h5>
+                                            {item.sub_title && <p className="text-sm font-medium text-slate-500">{item.sub_title}</p>}
+                                         </div>
+                                      </div>
+                                      <div className="bg-slate-50 p-6 rounded-2xl border text-sm text-slate-700 leading-relaxed text-justify whitespace-pre-wrap font-serif">
+                                         {item.body_text}
+                                      </div>
+                                   </div>
+                                ))}
+                             </div>
+                          </div>
+                       );
+                    })}
+                 </div>
+              )}
+           </div>
         ) : (
           <div className="overflow-x-auto">
              <table className="w-full text-xs text-left">
