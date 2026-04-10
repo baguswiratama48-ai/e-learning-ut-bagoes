@@ -974,6 +974,11 @@ function SectionPage({ user }) {
        ) : (
          renderStaticContent()
        )}
+       <div className="mt-10 pt-6 border-t border-slate-100">
+         <Link to={`/class/${id}/meeting/${meetingId}`} className="inline-flex items-center gap-2 text-slate-500 font-bold text-sm hover:text-primary bg-slate-50 hover:bg-primary/5 px-5 py-3 rounded-xl border border-slate-200 hover:border-primary transition-all">
+           <span className="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Menu Pembelajaran
+         </Link>
+       </div>
     </div>
   );
 }
