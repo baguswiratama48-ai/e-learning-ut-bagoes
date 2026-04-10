@@ -89,6 +89,62 @@ const COURSE_DATA = {
           </p>
         </section>
 
+        <section className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+          <h3 className="font-bold text-lg text-primary mb-3">Tujuan Instruksional Umum</h3>
+          <p>
+            Setelah mengikuti mata kuliah ini, mahasiswa S1 PGSD diharapkan mampu menganalisis kebutuhan dan mengaplikasikan prinsip-prinsip serta strategi layanan BK bagi peserta didik SD.
+          </p>
+        </section>
+
+        <section>
+          <h3 className="font-bold text-lg text-primary mb-3">Tujuan Instruksional Khusus</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Mahasiswa mampu menguraikan konsep dasar (pengertian, hakikat, tujuan, prinsip, asas, bidang, dan komponen program) bimbingan dan konseling di SD.</li>
+            <li>Mahasiswa mampu menguraikan karakteristik peserta didik dan mampu menganalisis serta mengevaluasi tugas perkembangan peserta didik di SD.</li>
+            <li>Mahasiswa mampu menguraikan konsep teknik asesmen dan mampu memanfaatkan data hasil asesmen kebutuhan peserta didik di SD.</li>
+            <li>Mahasiswa mampu merencanakan program bimbingan dan konseling di SD.</li>
+            <li>Mahasiswa mampu melaksanakan program bimbingan dan konseling di SD.</li>
+            <li>Mahasiswa mampu menilai, mengevaluasi, membuat pelaporan dan tindak lanjut layanan BK di SD.</li>
+          </ul>
+        </section>
+
+        <section className="border-l-4 border-yellow-400 pl-4 py-2">
+          <h3 className="font-bold text-lg text-primary mb-3">Struktur Modul</h3>
+          <p className="mb-2 italic text-sm">Untuk menguasai seluruh kompetensi tersebut, bahan ajar mata kuliah ini disusun dalam enam modul sebagai berikut:</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm font-semibold">
+            <div className="bg-white p-3 rounded-lg border">Modul 1 : Konsep Dasar BK di SD</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 2 : Karakteristik Peserta Didik</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 3 : Teknik Asesmen</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 4 : Perencanaan BK</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 5 : Pelaksanaan BK</div>
+            <div className="bg-white p-3 rounded-lg border">Modul 6 : Penilaian & Evaluasi</div>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="font-bold text-lg text-primary mb-3">Petunjuk Mempelajari Modul</h3>
+          <div className="space-y-3">
+            {[
+              "Kajilah isi modul secara keseluruhan diawali dengan membaca pendahuluan.",
+              "Bacalah dengan cermat dan teliti setiap uraian dan contoh dalam masing-masing kegiatan belajar.",
+              "Jawablah dengan tepat pertanyaan dan kerjakan soal latihan secara maksimal dengan memperhatikan rambu-rambu atau perintah soal secara utuh.",
+              "Kerjakan sendiri tes formatif dengan tuntas, kemudian lihatlah kunci jawaban untuk mengetahui tingkat pencapaian pemahaman Anda.",
+              "Pelajari kembali bagian modul yang belum Anda kuasai.",
+              "Carilah buku acuan yang tercantum dalam daftar pustaka untuk memperdalam kajian dalam modul ini."
+            ].map((text, idx) => (
+              <div key={idx} className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-[10px] flex items-center justify-center font-bold">{idx + 1}</span>
+                <p className="text-sm">{text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <footer className="pt-6 border-t font-medium text-center italic">
+          <p>"Pada akhirnya, keberhasilan Anda dalam belajar akan ditentukan oleh usaha Anda sendiri. Aturlah waktu sebaik-baiknya, berdiskusilah dengan teman sejawat dan tutor."</p>
+          <p className="text-primary mt-2 not-italic font-bold">Selamat belajar.</p>
+        </footer>
+
         <section className="py-8 bg-white rounded-3xl border border-slate-100 shadow-inner px-4 overflow-x-auto">
           <h3 className="font-bold text-lg text-primary mb-6 text-center underline decoration-yellow-400 decoration-4 underline-offset-8">Peta Kompetensi Matakuliah</h3>
           
@@ -168,62 +224,6 @@ const COURSE_DATA = {
           </div>
           <p className="text-[9px] text-center text-slate-400 mt-6 italic">Bagan: Alur Kompetensi Pembelajaran SPGK4307</p>
         </section>
-
-        <section className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-          <h3 className="font-bold text-lg text-primary mb-3">Tujuan Instruksional Umum</h3>
-          <p>
-            Setelah mengikuti mata kuliah ini, mahasiswa S1 PGSD diharapkan mampu menganalisis kebutuhan dan mengaplikasikan prinsip-prinsip serta strategi layanan BK bagi peserta didik SD.
-          </p>
-        </section>
-
-        <section>
-          <h3 className="font-bold text-lg text-primary mb-3">Tujuan Instruksional Khusus</h3>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>Mahasiswa mampu menguraikan konsep dasar (pengertian, hakikat, tujuan, prinsip, asas, bidang, dan komponen program) bimbingan dan konseling di SD.</li>
-            <li>Mahasiswa mampu menguraikan karakteristik peserta didik dan mampu menganalisis serta mengevaluasi tugas perkembangan peserta didik di SD.</li>
-            <li>Mahasiswa mampu menguraikan konsep teknik asesmen dan mampu memanfaatkan data hasil asesmen kebutuhan peserta didik di SD.</li>
-            <li>Mahasiswa mampu merencanakan program bimbingan dan konseling di SD.</li>
-            <li>Mahasiswa mampu melaksanakan program bimbingan dan konseling di SD.</li>
-            <li>Mahasiswa mampu menilai, mengevaluasi, membuat pelaporan dan tindak lanjut layanan BK di SD.</li>
-          </ul>
-        </section>
-
-        <section className="border-l-4 border-yellow-400 pl-4 py-2">
-          <h3 className="font-bold text-lg text-primary mb-3">Struktur Modul</h3>
-          <p className="mb-2 italic text-sm">Untuk menguasai seluruh kompetensi tersebut, bahan ajar mata kuliah ini disusun dalam enam modul sebagai berikut:</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm font-semibold">
-            <div className="bg-white p-3 rounded-lg border">Modul 1 : Konsep Dasar BK di SD</div>
-            <div className="bg-white p-3 rounded-lg border">Modul 2 : Karakteristik Peserta Didik</div>
-            <div className="bg-white p-3 rounded-lg border">Modul 3 : Teknik Asesmen</div>
-            <div className="bg-white p-3 rounded-lg border">Modul 4 : Perencanaan BK</div>
-            <div className="bg-white p-3 rounded-lg border">Modul 5 : Pelaksanaan BK</div>
-            <div className="bg-white p-3 rounded-lg border">Modul 6 : Penilaian & Evaluasi</div>
-          </div>
-        </section>
-
-        <section>
-          <h3 className="font-bold text-lg text-primary mb-3">Petunjuk Mempelajari Modul</h3>
-          <div className="space-y-3">
-            {[
-              "Kajilah isi modul secara keseluruhan diawali dengan membaca pendahuluan.",
-              "Bacalah dengan cermat dan teliti setiap uraian dan contoh dalam masing-masing kegiatan belajar.",
-              "Jawablah dengan tepat pertanyaan dan kerjakan soal latihan secara maksimal dengan memperhatikan rambu-rambu atau perintah soal secara utuh.",
-              "Kerjakan sendiri tes formatif dengan tuntas, kemudian lihatlah kunci jawaban untuk mengetahui tingkat pencapaian pemahaman Anda.",
-              "Pelajari kembali bagian modul yang belum Anda kuasai.",
-              "Carilah buku acuan yang tercantum dalam daftar pustaka untuk memperdalam kajian dalam modul ini."
-            ].map((text, idx) => (
-              <div key={idx} className="flex gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-[10px] flex items-center justify-center font-bold">{idx + 1}</span>
-                <p className="text-sm">{text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <footer className="pt-6 border-t font-medium text-center italic">
-          <p>"Pada akhirnya, keberhasilan Anda dalam belajar akan ditentukan oleh usaha Anda sendiri. Aturlah waktu sebaik-baiknya, berdiskusilah dengan teman sejawat dan tutor."</p>
-          <p className="text-primary mt-2 not-italic font-bold">Selamat belajar.</p>
-        </footer>
       </div>
     )
   }
