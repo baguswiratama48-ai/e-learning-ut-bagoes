@@ -971,9 +971,7 @@ function SectionPage({ user }) {
     if (!user) return;
     const fetchStatus = async () => {
       // If we are looking for Pertanyaan Pemantik, fetch that and its tutor feedback
-      const sectionNamesToFetch = sectionName === "Pertanyaan Pemantik" 
-        ? [sectionName, "TUTOR_FEEDBACK_Pemantik"] 
-        : [sectionName];
+      const sectionNamesToFetch = [sectionName, `TUTOR_FEEDBACK_${sectionName}`];
 
       const { data } = await supabase
         .from('submissions')
@@ -985,7 +983,7 @@ function SectionPage({ user }) {
         
       if (data && data.length > 0) {
         const _status = data.find(d => d.section_name === sectionName);
-        const _feedback = data.find(d => d.section_name === "TUTOR_FEEDBACK_Pemantik");
+        const _feedback = data.find(d => d.section_name === `TUTOR_FEEDBACK_${sectionName}`);
         if (_status) setStatus(_status);
         if (_feedback) setTutorFeedback(_feedback);
       }
