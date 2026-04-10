@@ -10,6 +10,61 @@ const CLASSES = [
   { id: '4', title: 'SPGK4410 | Strategi Pembelajaran Kontemporer di SD Kelas 5A' }
 ];
 
+const STUDENTS = [
+  { nim: '855734487', name: 'IKE DIA PRENTIKA', email: '855734487@ecampus.ut.ac.id', classId: '2' },
+  { nim: '855883951', name: 'INTAN TRI KUSUMAWATI', email: '855883951@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856602599', name: 'KHOIRUN NISA', email: '856602599@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856607265', name: 'INDRA RAHMAN', email: '856607265@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856608339', name: 'KURNIA RAHMAWATI', email: '856608339@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856609197', name: 'INDAH SETIANINGSIH', email: '856609197@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856789129', name: 'FENTI NUR SAFITRI', email: '856789129@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856789182', name: 'FAHRIN RISANDINI', email: '856789182@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856789208', name: 'FINKY ARIYANTI', email: '856789208@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856789981', name: 'KHANIF FARIS FADHILA', email: '856789981@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790259', name: 'FINA ANGGRAINI', email: '856790259@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790306', name: 'IKE FAJAR AISAH', email: '856790306@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790345', name: 'EVIRA LUKIANA', email: '856790345@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790424', name: 'INDAH MUSTIKA SARI', email: '856790424@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790757', name: 'FITRY INDAH SARI', email: '856790757@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790843', name: 'JENNY VIOLLA', email: '856790843@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790882', name: 'FERI KIRANA HANDAYANI', email: '856790882@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856790961', name: 'FRANCISKUS TANUERIT', email: '856790961@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856791806', name: 'DIMAS PRATAMA', email: '856791806@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856793301', name: 'INNES KUSUMAWATI', email: '856793301@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856795161', name: 'IRMA SURYANI', email: '856795161@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856795219', name: 'HAIDILA RAHMAH', email: '856795219@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856796432', name: 'ICA JUNITA', email: '856796432@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856796765', name: 'INTAN WIDIAWATI', email: '856796765@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856797591', name: 'ICHO FERDINAN', email: '856797591@ecampus.ut.ac.id', classId: '2' },
+  { nim: '856799556', name: 'EVA RIYANTI', email: '856799556@ecampus.ut.ac.id', classId: '2' },
+  { nim: '860098532', name: 'SARI ROHANA INDAH', email: '860098532@ecampus.ut.ac.id', classId: '2' },
+  { nim: '860101687', name: 'YULIANTI RISTIANA', email: '860101687@ecampus.ut.ac.id', classId: '2' },
+  { nim: '855734527', name: 'DELA SINTAWATI', email: '855734527@ecampus.ut.ac.id', classId: '1' },
+  { nim: '855734534', name: 'ERIN ARDANATA', email: '855734534@ecampus.ut.ac.id', classId: '1' },
+  { nim: '855883983', name: 'DISKA FINDANI', email: '855883983@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856603085', name: 'DERIANA', email: '856603085@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856603157', name: 'DERIANI', email: '856603157@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856607756', name: 'ELVA YULIANA', email: '856607756@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856610217', name: 'ENDANG ANDARA PUTRI MULIA', email: '856610217@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856789136', name: 'DENI IRAWAN', email: '856789136@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856789143', name: 'DENI SAPUTRA', email: '856789143@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856789222', name: 'DWITASARI', email: '856789222@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856789261', name: 'DEVI YULIA PRATIWI', email: '856789261@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856789849', name: 'DINA ANISA', email: '856789849@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856789999', name: 'DIAH PUTRI AFIFAH', email: '856789999@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856790187', name: 'DEWI ERMAWATI', email: '856790187@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856790241', name: 'DITA ANGGRAENI', email: '856790241@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856790488', name: 'DHEA ARTIKA NOVENTIANA', email: '856790488@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856790764', name: 'ELENA FAJAR DWIANA', email: '856790764@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856792585', name: 'EKA MAYA PUSPITA', email: '856792585@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856793397', name: 'DEVA SYAHRONI', email: '856793397@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856796679', name: 'DESI NATALIA', email: '856796679@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856796837', name: 'DESNA FITRIANA', email: '856796837@ecampus.ut.ac.id', classId: '1' },
+  { nim: '856797971', name: 'DWI MARIA', email: '856797971@ecampus.ut.ac.id', classId: '1' },
+  { nim: '860080386', name: 'CICA ATIKA', email: '860080386@ecampus.ut.ac.id', classId: '1' },
+  { nim: '878235739', name: 'ANGGI OCTAVIANA', email: '878235739@ecampus.ut.ac.id', classId: '1' }
+];
+
 const MENUS = [
   "Beranda", "Nama Mata Kuliah", "Informasi Modul", "Pertanyaan Pemantik",
   "Materi Pembelajaran", "Tugas dan Catatan", "Video Pembelajaran",
@@ -310,7 +365,30 @@ function Login({ onLogin }) {
       setError('NIM minimal 5 karakter.');
       return;
     }
-    onLogin({ email, nim, role: 'student', classId: id });
+
+    const inputEmail = email.trim().toLowerCase();
+    const inputNim = nim.trim();
+
+    // Attempt to find student in our database
+    const student = STUDENTS.find(s => 
+      (s.email.toLowerCase() === inputEmail && s.nim === inputNim)
+    );
+
+    if (student) {
+      // If student belongs to a different class, warn them
+      if (student.classId !== id) {
+        const targetClass = CLASSES.find(c => c.id === student.classId);
+        setError(`Gagal: Mahasiswa ini terdaftar di ${targetClass?.title || 'kelas lain'}. Tidak bisa masuk kelas ini.`);
+        return;
+      }
+      onLogin({ email: student.email, nim: student.nim, role: 'student', classId: id });
+    } else {
+      // If not in database at all, reject it for ALL classes.
+      // Now all 4 classes are strictly protected.
+      setError('Data tidak cocok. Cek kembali NIM dan Email untuk kelas ini.');
+      return;
+    }
+    
     navigate(`/class/${id}/meetings`);
   };
 
@@ -584,13 +662,16 @@ export default function App() {
   };
 
   const handleLogin = (userData) => {
-    // Initialize default profile data on login
+    // Find student in mock data if it exists
+    const studentInfo = STUDENTS.find(s => s.nim === userData.nim || s.email === userData.email);
+
+    // Initialize profile data
     setUser({ 
       ...userData, 
       setProfileData,
       profileData: {
         photo: null,
-        fullName: 'Alexander Bagoes',
+        fullName: studentInfo ? studentInfo.name : 'Alexander Bagoes',
         email: userData.email,
         nim: userData.nim || '045123987',
         ttl: 'Belitang, 12-05-2004',
