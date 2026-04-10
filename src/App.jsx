@@ -1073,19 +1073,7 @@ function SectionPage({ user }) {
                     <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
                   </div>
                 </div>
-                {tutorFeedback && (
-                  <div className="bg-yellow-400 p-4 rounded-xl text-slate-900 border border-yellow-500 flex items-center gap-3">
-                    <span className="material-symbols-outlined text-yellow-700 text-3xl">stars</span>
-                    <div>
-                      <p className="font-bold text-slate-900 mb-1">Feedback Tutor</p>
-                      <p className="text-xs text-slate-800 mb-2 italic">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || 'Selamat! Pertahankan kerjamu.'}"</p>
-                      <div className="flex gap-0.5">
-                        {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-slate-900">star</span>)}
-                        {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-yellow-600/50">star</span>)}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* Tutor feedback removed from inside the forms box */}
               </div>
             ) : (
               <div className="space-y-4">
@@ -1104,6 +1092,26 @@ function SectionPage({ user }) {
                 </button>
               </div>
             )}
+          </div>
+          
+          {status && tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm mt-8">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-3 italic">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || 'Tutor telah memberikan penilaian.'}"</p>
+                <div className="flex gap-1 text-yellow-500">
+                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-2xl">star</span>)}
+                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300 text-2xl">star</span>)}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-8">
+            <Link to={`/class/${id}/meeting/${meetingId}`} className="block text-center text-primary font-bold bg-white border border-primary text-sm py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
+              <span className="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Menu Pembelajaran
+            </Link>
           </div>
         </div>
       );
@@ -1133,18 +1141,7 @@ function SectionPage({ user }) {
                 </div>
               </div>
               
-              {tutorFeedback && (
-                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-2xl flex items-center gap-3">
-                  <span className="material-symbols-outlined text-yellow-500 text-3xl">stars</span>
-                  <div>
-                    <p className="font-bold text-yellow-700 mb-1">Feedback Tutor</p>
-                    <div className="flex text-yellow-500">
-                      {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1">star</span>)}
-                      {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300">star</span>)}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Tutor feedback shifted to bottom */}
 
               {questions.map((q, i) => (
                 <div key={i} className="bg-white border rounded-2xl p-5 shadow-sm">
@@ -1185,6 +1182,26 @@ function SectionPage({ user }) {
               </button>
             </div>
           )}
+
+          {status && tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm mt-8">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-3 italic">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || 'Tutor telah memberikan penilaian.'}"</p>
+                <div className="flex gap-1 text-yellow-500">
+                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-2xl">star</span>)}
+                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300 text-2xl">star</span>)}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-8">
+            <Link to={`/class/${id}/meeting/${meetingId}`} className="block text-center text-primary font-bold bg-white border border-primary text-sm py-3 px-6 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
+              <span className="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Menu Pembelajaran
+            </Link>
+          </div>
         </div>
       );
     }
