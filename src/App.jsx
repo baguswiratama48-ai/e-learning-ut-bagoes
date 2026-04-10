@@ -140,84 +140,64 @@ const COURSE_DATA = {
           </div>
         </section>
 
-        <section className="py-8 bg-white rounded-3xl border border-slate-100 shadow-inner px-4 overflow-x-auto">
-          <h3 className="font-bold text-lg text-primary mb-6 text-center underline decoration-yellow-400 decoration-4 underline-offset-8">Peta Kompetensi Matakuliah</h3>
-          
-          <div className="flex flex-col items-center min-w-[300px]">
-            {/* Top Goal */}
-            <div className="bg-[#0c3352] text-white p-4 rounded-2xl text-[11px] font-bold text-center w-full max-w-md shadow-md border-b-4 border-yellow-500 relative">
+        <section className="py-8 bg-[#0c3352] rounded-3xl px-4">
+          <h3 className="font-bold text-base text-white mb-1 text-center">Peta Kompetensi</h3>
+          <p className="text-yellow-400 text-xs font-bold text-center mb-8">Bimbingan dan Konseling di SD / SPGK4307 / 2 SKS</p>
+
+          <div className="flex flex-col items-center w-full gap-0">
+            <div className="w-full bg-[#1a4a6e] text-white p-4 rounded-2xl text-xs font-bold text-center shadow-md border-2 border-yellow-400">
               Setelah mengikuti mata kuliah ini, mahasiswa S1 PGSD diharapkan mampu menganalisis kebutuhan dan mengaplikasikan prinsip-prinsip serta strategi layanan BK bagi peserta didik SD.
             </div>
-            
-            <div className="h-6 w-0.5 bg-slate-300 relative">
-               <div className="absolute -bottom-1 -left-1 text-slate-300 material-symbols-outlined text-sm">arrow_drop_up</div>
+            <div className="flex flex-col items-center py-1">
+              <div className="w-px h-5 bg-white/40"></div>
+              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
-
-            {/* Level 1 */}
-            <div className="bg-[#0c3352] text-white p-3 rounded-xl text-[10px] text-center w-full max-w-sm shadow-sm">
+            <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu menilai, mengevaluasi, membuat pelaporan dan tindak lanjut layanan BK di SD.
             </div>
-
-            <div className="h-6 w-0.5 bg-slate-300 relative">
-               <div className="absolute -bottom-1 -left-1 text-slate-300 material-symbols-outlined text-sm">arrow_drop_up</div>
+            <div className="flex flex-col items-center py-1">
+              <div className="w-px h-5 bg-white/40"></div>
+              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
-
-            {/* Level 2 */}
-            <div className="bg-[#0c3352] text-white p-3 rounded-xl text-[10px] text-center w-full max-w-sm shadow-sm">
+            <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu melaksanakan program bimbingan dan konseling (BK) di SD.
             </div>
-
-            <div className="h-6 w-0.5 bg-slate-300 relative">
-               <div className="absolute -bottom-1 -left-1 text-slate-300 material-symbols-outlined text-sm">arrow_drop_up</div>
+            <div className="flex flex-col items-center py-1">
+              <div className="w-px h-5 bg-white/40"></div>
+              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
-
-            {/* Level 3 */}
-            <div className="bg-[#0c3352] text-white p-3 rounded-xl text-[10px] text-center w-full max-w-sm shadow-sm">
+            <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu merencanakan program bimbingan dan konseling di SD.
             </div>
-
-            <div className="h-6 w-0.5 bg-slate-300 relative">
-               <div className="absolute -bottom-1 -left-1 text-slate-300 material-symbols-outlined text-sm">arrow_drop_up</div>
+            <div className="flex flex-col items-center py-1">
+              <div className="w-px h-5 bg-white/40"></div>
+              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
-
-            {/* Level 4 */}
-            <div className="bg-[#0c3352] text-white p-3 rounded-xl text-[10px] text-center w-full max-w-sm shadow-sm">
-              Mahasiswa mampu menguraikan konsep teknik assesmen dan mampu memanfaatkan data hasil assesmen kebutuhan peserta didik di SD.
+            <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
+              Mahasiswa mampu menguraikan konsep teknik asesmen dan mampu memanfaatkan data hasil asesmen kebutuhan peserta didik di SD.
             </div>
-
-            <div className="h-6 w-px bg-slate-300 relative"></div>
-            
-            {/* Level 5 Split */}
-            <div className="w-full max-w-md flex flex-col items-center">
-               <div className="w-[80%] h-px bg-slate-300"></div>
-               <div className="w-full flex justify-between px-4">
-                  <div className="h-4 w-px bg-slate-300"></div>
-                  <div className="h-4 w-px bg-slate-300"></div>
-               </div>
-               <div className="w-full flex gap-4">
-                  <div className="flex-1 bg-[#0c3352] text-white p-3 rounded-xl text-[9px] text-center shadow-sm">
-                    Mahasiswa mampu menguraikan karakteristik peserta didik SD.
-                  </div>
-                  <div className="flex-1 bg-[#0c3352] text-white p-3 rounded-xl text-[9px] text-center shadow-sm">
-                    Mahasiswa mampu menganalisis dan mengevaluasi tugas perkembangan peserta didik SD.
-                  </div>
-               </div>
+            <div className="w-full flex flex-col items-center py-1">
+              <div className="w-px h-4 bg-white/40"></div>
+              <div className="w-3/4 h-px bg-white/40"></div>
             </div>
-
-            <div className="h-6 w-px bg-slate-300 relative flex justify-center">
-               <div className="absolute top-0 w-[80%] h-px bg-slate-300"></div>
-               <div className="w-[80%] flex justify-between px-2">
-                  <div className="h-2 w-px bg-slate-300 relative"><div className="absolute -top-1 -left-1 text-slate-300 material-symbols-outlined text-xs">arrow_drop_up</div></div>
-                  <div className="h-2 w-px bg-slate-300 relative"><div className="absolute -top-1 -left-1 text-slate-300 material-symbols-outlined text-xs">arrow_drop_up</div></div>
-               </div>
+            <div className="w-full grid grid-cols-2 gap-3">
+              <div className="bg-[#1a4a6e] text-white p-3 rounded-xl text-[10px] text-center shadow flex items-center justify-center">
+                Mahasiswa mampu menguraikan karakteristik peserta didik SD.
+              </div>
+              <div className="bg-[#1a4a6e] text-white p-3 rounded-xl text-[10px] text-center shadow flex items-center justify-center">
+                Mahasiswa mampu menganalisis dan mengevaluasi tugas perkembangan peserta didik SD.
+              </div>
             </div>
-
-            {/* Base */}
-            <div className="bg-[#0c3352] text-white p-3 rounded-xl text-[10px] text-center w-full max-w-md shadow-lg ring-2 ring-blue-100 ring-offset-2">
+            <div className="w-full flex flex-col items-center py-1">
+              <div className="w-3/4 h-px bg-white/40"></div>
+              <div className="w-px h-4 bg-white/40"></div>
+              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
+            </div>
+            <div className="w-full bg-[#1a4a6e] text-white p-4 rounded-2xl text-xs text-center shadow-lg ring-2 ring-yellow-400/40">
               Mahasiswa mampu menguraikan konsep dasar (pengertian, hakikat, tujuan, prinsip, asas, bidang, dan komponen program layanan Bimbingan dan Konseling (BK) di SD).
             </div>
           </div>
-          <p className="text-[9px] text-center text-slate-400 mt-6 italic">Bagan: Alur Kompetensi Pembelajaran SPGK4307</p>
+          <p className="text-[9px] text-center text-white/40 mt-6 italic">Sumber: Bahan Ajar SPGK4307 Universitas Terbuka</p>
         </section>
 
         <footer className="pt-6 border-t font-medium text-center italic">
