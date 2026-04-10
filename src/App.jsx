@@ -61,8 +61,12 @@ const STUDENTS = [
   { nim: '856796679', name: 'DESI NATALIA', email: '856796679@ecampus.ut.ac.id', classId: '1' },
   { nim: '856796837', name: 'DESNA FITRIANA', email: '856796837@ecampus.ut.ac.id', classId: '1' },
   { nim: '856797971', name: 'DWI MARIA', email: '856797971@ecampus.ut.ac.id', classId: '1' },
-  { nim: '860080386', name: 'CICA ATIKA', email: '860080386@ecampus.ut.ac.id', classId: '1' },
-  { nim: '878235739', name: 'ANGGI OCTAVIANA', email: '878235739@ecampus.ut.ac.id', classId: '1' }
+  { nim: '878235739', name: 'ANGGI OCTAVIANA', email: '878235739@ecampus.ut.ac.id', classId: '1' },
+  // === AKUN UJICOBA (DUMMY) - bisa dipakai masuk ke semua kelas ===
+  { nim: '000000000', name: 'MAHASISWA DEMO', email: 'demo@ecampus.ut.ac.id', classId: '1' },
+  { nim: '000000000', name: 'MAHASISWA DEMO', email: 'demo@ecampus.ut.ac.id', classId: '2' },
+  { nim: '000000000', name: 'MAHASISWA DEMO', email: 'demo@ecampus.ut.ac.id', classId: '3' },
+  { nim: '000000000', name: 'MAHASISWA DEMO', email: 'demo@ecampus.ut.ac.id', classId: '4' }
 ];
 
 const MENUS = [
