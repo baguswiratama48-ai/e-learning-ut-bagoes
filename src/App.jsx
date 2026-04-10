@@ -634,6 +634,26 @@ function DashboardTutor({ user }) {
     }
   };
 
+  const handleStarFeedback = async (studentEmail, classId, stars) => {
+    try {
+      // Delete existing feedback first, then insert new one
+      await supabase.from('submissions')
+        .delete()
+        .eq('student_email', studentEmail)
+        .eq('section_name', 'TUTOR_FEEDBACK_Pemantik');
+      await supabase.from('submissions').insert([{
+        student_email: studentEmail,
+        class_id: classId,
+        meeting_num: '1',
+        section_name: 'TUTOR_FEEDBACK_Pemantik',
+        content: String(stars)
+      }]);
+      await fetchData();
+    } catch(err) {
+      console.log(err);
+    }
+  };
+
   const CLASS_TABS = [
     { id: '1', label: 'Kelas 8B' },
     { id: '2', label: 'Kelas 8C' },
@@ -690,17 +710,21 @@ function DashboardTutor({ user }) {
                   <th className="px-4 py-4 w-10 text-center border-r border-white/10">No</th>
                   <th className="px-4 py-4 border-r border-white/10">Mahasiswa</th>
                   <th className="px-4 py-4 text-center border-r border-white/10">Status Baca</th>
-                  <th className="px-4 py-4 border-r border-white/10">Jawaban Pertanyaan Wajib</th>
+                  <th className="px-4 py-4 border-r border-white/10">Jawaban Informasi Modul</th>
+                  <th className="px-4 py-4 border-r border-white/10">Jawaban Pertanyaan Pemantik</th>
                   <th className="px-4 py-4 text-center">Aksi Tutor</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
-                {studentList.map((student, index) => {
+              <tbody className="div                 {studentList.map((student, index) => {
                   const studentSubs = submissions.filter(s => s.student_email === student.email);
                   const readMark = studentSubs.find(s => s.section_name === "Nama Mata Kuliah" && s.content.includes("READ_CONFIRMED"));
                   const moduleAnswer = studentSubs.find(s => s.section_name === "Informasi Modul");
+                  const pemantikAnswer = studentSubs.find(s => s.section_name === "Pertanyaan Pemantik");
+                  const tutorFeedback = studentSubs.find(s => s.section_name === "TUTOR_FEEDBACK_Pemantik");
+                  const currentStars = tutorFeedback ? parseInt(tutorFeedback.content) : 0;
                   const unlockKeyRead = `${student.email}_Nama Mata Kuliah`;
                   const unlockKeyModule = `${student.email}_Informasi Modul`;
+                  const unlockKeyPemantik = `${student.email}_Pertanyaan Pemantik`;
 
                   return (
                     <tr key={index} className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
@@ -722,13 +746,13 @@ function DashboardTutor({ user }) {
                           <span className="text-[9px] font-bold text-slate-300 uppercase">Belum Membaca</span>
                         )}
                       </td>
-                      <td className="px-4 py-4 border-r max-w-xs">
+                      <td className="px-4 py-4 border-r max-w-[180px]">
                          {moduleAnswer ? (
                            <div>
                              <p className="text-[10px] text-primary font-bold uppercase mb-1 flex items-center gap-1">
                                <span className="material-symbols-outlined text-[14px]">speaker_notes</span> Jawaban:
                              </p>
-                             <p className="font-medium text-slate-700 italic border-l-2 border-primary/20 pl-2 leading-relaxed text-[11px]">“{moduleAnswer.content}”</p>
+                             <p className="font-medium text-slate-700 italic border-l-2 border-primary/20 pl-2 leading-relaxed text-[11px]">"{moduleAnswer.content}"</p>
                            </div>
                          ) : (
                            <div className="flex items-center gap-2 text-slate-300">
@@ -736,6 +760,46 @@ function DashboardTutor({ user }) {
                              <span className="text-[9px] font-bold uppercase">Belum Menjawab</span>
                            </div>
                          )}
+                      </td>
+                      <td className="px-4 py-4 border-r max-w-[220px]">
+                        {pemantikAnswer ? (
+                          <div className="space-y-2">
+                            <p className="text-[10px] text-indigo-600 font-bold uppercase mb-1 flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">quiz</span> Jawaban Pemantik:
+                            </p>
+                            {pemantikAnswer.content.split('\n\n').map((block, bi) => {
+                              const parts = block.split('\nJawaban: ');
+                              return (
+                                <div key={bi} className="bg-slate-50 p-2 rounded-lg border-l-2 border-indigo-200">
+                                  <p className="text-[9px] text-slate-400 mb-0.5">{parts[0]?.replace(`Pertanyaan ${bi+1}: `, '')}</p>
+                                  <p className="text-[11px] font-medium text-slate-700 italic">"{parts[1] || '-'}"</p>
+                                </div>
+                              );
+                            })}
+                            <div className="pt-2 border-t">
+                              <p className="text-[9px] font-bold text-slate-500 mb-1 uppercase">Nilai Tutor:</p>
+                              <div className="flex gap-1">
+                                {[1,2,3,4,5].map(star => (
+                                  <button
+                                    key={star}
+                                    onClick={() => handleStarFeedback(student.email, student.classId, star)}
+                                    className={`text-[20px] transition-transform hover:scale-125 ${
+                                      star <= currentStars ? 'text-yellow-400' : 'text-slate-200'
+                                    }`}
+                                  >
+                                    <span className="material-symbols-outlined fill-1 text-[18px]">star</span>
+                                  </button>
+                                ))}
+                                {currentStars > 0 && <span className="text-[9px] font-bold text-yellow-600 self-center ml-1">{currentStars}/5</span>}
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 text-slate-300">
+                            <span className="material-symbols-outlined text-sm">pending</span>
+                            <span className="text-[9px] font-bold uppercase">Belum Menjawab Pemantik</span>
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-4 text-center">
                         <div className="flex flex-col gap-2 items-center">
@@ -754,17 +818,26 @@ function DashboardTutor({ user }) {
                               disabled={unlocking === unlockKeyModule}
                               className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 disabled:opacity-50 whitespace-nowrap"
                             >
-                              {unlocking === unlockKeyModule ? 'Memproses...' : '🔓 Buka Kembali Jawaban'}
+                              {unlocking === unlockKeyModule ? 'Memproses...' : '🔓 Buka Kembali Jawaban Modul'}
                             </button>
                           )}
-                          {!readMark && !moduleAnswer && <span className="text-slate-300 text-[9px]">-</span>}
+                          {pemantikAnswer && (
+                            <button
+                              onClick={() => handleUnlock(student.email, "Pertanyaan Pemantik")}
+                              disabled={unlocking === unlockKeyPemantik}
+                              className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-purple-50 text-purple-600 border border-purple-200 hover:bg-purple-100 disabled:opacity-50 whitespace-nowrap"
+                            >
+                              {unlocking === unlockKeyPemantik ? 'Memproses...' : '🔓 Buka Kembali Pemantik'}
+                            </button>
+                          )}
+                          {!readMark && !moduleAnswer && !pemantikAnswer && <span className="text-slate-300 text-[9px]">-</span>}
                         </div>
                       </td>
                     </tr>
                   )
                 })}
                 {studentList.length === 0 && (
-                  <tr><td colSpan={5} className="text-center py-12 text-slate-300 font-bold">Belum ada data mahasiswa untuk kelas ini.</td></tr>
+                  <tr><td colSpan={6} className="text-center py-12 text-slate-300 font-bold">Belum ada data mahasiswa untuk kelas ini.</td></tr>
                 )}
               </tbody>
             </table>
