@@ -70,7 +70,7 @@ const STUDENTS = [
 ];
 
 const MENUS = [
-  "Nama Mata Kuliah", "Informasi Modul", "Pertanyaan Pemantik",
+  "Informasi Modul", "Pertanyaan Pemantik",
   "Materi Pembelajaran", "Video Pembelajaran",
   "LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan",
   "Refleksi", "Rangkuman"
@@ -734,7 +734,6 @@ function DashboardTutor({ user }) {
                 <tr className="bg-primary text-white uppercase tracking-wider font-bold">
                   <th className="px-4 py-4 w-10 text-center border-r border-white/10">No</th>
                   <th className="px-4 py-4 border-r border-white/10">Mahasiswa</th>
-                  <th className="px-4 py-4 text-center border-r border-white/10">Status Baca (Identitas)</th>
                   <th className="px-4 py-4 border-r border-white/10 text-center">Jumlah Jawaban Mhs</th>
                   <th className="px-4 py-4 text-center">Aksi Tutor</th>
                 </tr>
@@ -742,11 +741,8 @@ function DashboardTutor({ user }) {
               <tbody className="divide-y">
                 {studentList.map((student, index) => {
                   const studentSubs = submissions.filter(s => s.student_email === student.email);
-                  const readMark = studentSubs.find(s => s.section_name === "Nama Mata Kuliah" && s.content.includes("READ_CONFIRMED"));
-                  const unlockKeyRead = `${student.email}_Nama Mata Kuliah`;
-                  
-                  // Filter out "Nama Mata Kuliah" and "TUTOR_FEEDBACK" rows to get pure answers
-                  const actualAnswers = studentSubs.filter(s => s.section_name !== "Nama Mata Kuliah" && !s.section_name.startsWith("TUTOR_FEEDBACK_"));
+                  // Filter out "TUTOR_FEEDBACK" rows to get pure answers
+                  const actualAnswers = studentSubs.filter(s => !s.section_name.startsWith("TUTOR_FEEDBACK_"));
 
                   return (
                     <Fragment key={index}>
@@ -755,25 +751,6 @@ function DashboardTutor({ user }) {
                         <td className="px-4 py-4 border-r">
                           <p className="font-bold text-slate-800 uppercase leading-none mb-1">{student.name}</p>
                           <p className="text-[10px] text-slate-400 font-medium tracking-tighter">{student.nim} • {student.email}</p>
-                        </td>
-                        <td className="px-4 py-4 text-center border-r max-w-[120px]">
-                          {readMark ? (
-                            <div className="inline-flex flex-col items-center">
-                              <span className="material-symbols-outlined text-green-500 text-[20px]">verified</span>
-                              <p className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Selesai Membaca</p>
-                            </div>
-                          ) : (
-                            <span className="text-[9px] font-bold text-slate-300 uppercase">Belum Membaca</span>
-                          )}
-                          {readMark && (
-                            <button
-                              onClick={() => handleUnlock(student.email, "Nama Mata Kuliah")}
-                              disabled={unlocking === unlockKeyRead}
-                              className="block mt-2 mx-auto text-[8px] font-bold px-2 py-1 rounded-md bg-orange-50 text-orange-600 border border-orange-200 hover:bg-orange-100 disabled:opacity-50"
-                            >
-                              {unlocking === unlockKeyRead ? '...' : '🔓 Reset'}
-                            </button>
-                          )}
                         </td>
                         <td className="px-4 py-4 border-r text-center">
                            <span className="inline-block bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-sm">
@@ -1015,40 +992,6 @@ function SectionPage({ user }) {
   if (!user || user.role !== 'student') return <Navigate to={`/class/${id}`} />;
 
   const renderStaticContent = () => {
-    if (sectionName === "Nama Mata Kuliah") {
-      return (
-        <div className="space-y-8">
-          <div className="bg-primary/5 p-10 rounded-3xl text-center border border-primary/10">
-            <span className="material-symbols-outlined text-5xl text-primary mb-4">school</span>
-            <h3 className="font-headline font-bold text-2xl text-slate-800">{cls?.title}</h3>
-          </div>
-          
-          <div className="bg-white border p-6 rounded-2xl shadow-sm text-center">
-            {status ? (
-              <div className="text-green-600 font-bold flex flex-col items-center gap-2">
-                <span className="material-symbols-outlined text-4xl">check_circle</span>
-                <p>Mata Kuliah Sudah Dikonfirmasi</p>
-                <div className="flex gap-1 text-yellow-400">
-                  {Array(5).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1">star</span>)}
-                </div>
-                <p className="text-[10px] text-slate-400 font-medium italic mt-2">Feedback bintang 5 otomatis terkirim ke Tutor</p>
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm text-slate-500 mb-4 font-medium">Klik tombol di bawah untuk menginformasikan ke tutor bahwa Anda sudah membaca dan memahami identitas mata kuliah ini.</p>
-                <button 
-                  onClick={() => handleAction("[LOG: READ_CONFIRMED_5_STARS]")}
-                  disabled={loading}
-                  className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-all shadow-lg active:scale-95 disabled:opacity-50"
-                >
-                  {loading ? 'Mengirim...' : 'Tandai Sudah Membaca'}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
     
     if (sectionName === "Informasi Modul" && COURSE_DATA[courseCode]?.[sectionName]) {
       return (
