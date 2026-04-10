@@ -675,7 +675,7 @@ function DashboardTutor({ user }) {
       console.log(err);
     }
   };
-  const TAB_OPTIONS = [
+  const CLASS_TABS = [
     { id: '1', label: 'Kelas 8B' },
     { id: '2', label: 'Kelas 8C' },
     { id: '4', label: 'Kelas 5A' },
