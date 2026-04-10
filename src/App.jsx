@@ -920,25 +920,38 @@ function SectionPage({ user }) {
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
   const [pemantikAnswers, setPemantikAnswers] = useState(['', '', '']);
+  const [tutorFeedback, setTutorFeedback] = useState(null);
 
   const isInput = ["Tugas", "Catatan", "LKPD", "Latihan", "Kuis", "Refleksi"].some(p => sectionName?.includes(p));
 
-
   useEffect(() => {
     setStatus(null);
+    setTutorFeedback(null);
     if (!user) return;
     const fetchStatus = async () => {
+      // If we are looking for Pertanyaan Pemantik, fetch that and its tutor feedback
+      const sectionNamesToFetch = sectionName === "Pertanyaan Pemantik" 
+        ? [sectionName, "TUTOR_FEEDBACK_Pemantik"] 
+        : [sectionName];
+
       const { data } = await supabase
         .from('submissions')
         .select('*')
         .eq('student_email', user.email)
         .eq('class_id', id)
         .eq('meeting_num', meetingId)
-        .eq('section_name', sectionName);
-      if (data && data.length > 0) setStatus(data[0]);
+        .in('section_name', sectionNamesToFetch);
+        
+      if (data && data.length > 0) {
+        const _status = data.find(d => d.section_name === sectionName);
+        const _feedback = data.find(d => d.section_name === "TUTOR_FEEDBACK_Pemantik");
+        if (_status) setStatus(_status);
+        if (_feedback) setTutorFeedback(_feedback);
+      }
     };
     fetchStatus();
   }, [user, sectionName, id, meetingId]);
+
 
   const handleAction = async (val) => {
     if (!val || !val.trim()) return;
@@ -1063,6 +1076,20 @@ function SectionPage({ user }) {
                   <p className="text-xs text-green-600">Jawaban Anda telah disimpan dan tidak bisa diubah kecuali tutor membuka kembali.</p>
                 </div>
               </div>
+              
+              {tutorFeedback && (
+                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-2xl flex items-center gap-3">
+                  <span className="material-symbols-outlined text-yellow-500 text-3xl">stars</span>
+                  <div>
+                    <p className="font-bold text-yellow-700 mb-1">Feedback Tutor</p>
+                    <div className="flex text-yellow-500">
+                      {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1">star</span>)}
+                      {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300">star</span>)}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {questions.map((q, i) => (
                 <div key={i} className="bg-white border rounded-2xl p-5 shadow-sm">
                   <p className="text-xs font-bold text-primary uppercase mb-2">Pertanyaan {i + 1}</p>
