@@ -832,41 +832,53 @@ function Layout({ user, onLogin, onLogout }) {
 }
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  
-  // Custom setter for profile data to keep it reactive within the user object
-  const setProfileData = (newData) => {
-    setUser(prev => ({ ...prev, profileData: newData }));
-  };
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('elearning_user');
+    try {
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
 
   const handleLogin = (userData) => {
-    // Find student in mock data if it exists
     const studentInfo = STUDENTS.find(s => s.nim === userData.nim || s.email === userData.email);
-
-    // Initialize profile data
-    setUser({ 
-      ...userData, 
-      setProfileData,
-      profileData: {
-        photo: null,
-        fullName: studentInfo ? studentInfo.name : 'Alexander Bagoes',
-        email: userData.email,
-        nim: userData.nim || '045123987',
-        ttl: 'Belitang, 12-05-2004',
-        whatsapp: '081234567890',
-        prodi: 'PGSD - Bi / AKP',
-        semester: '8',
-        pokjar: 'Salut Nusa Indah Belitang'
-      }
-    });
+    const profileData = {
+      photo: null,
+      fullName: studentInfo ? studentInfo.name : 'Alexander Bagoes',
+      email: userData.email,
+      nim: userData.nim || '045123987',
+      ttl: 'Belitang, 12-05-2004',
+      whatsapp: '081234567890',
+      prodi: 'PGSD - Bi / AKP',
+      semester: '8',
+      pokjar: 'Salut Nusa Indah Belitang'
+    };
+    const newUser = { ...userData, profileData };
+    setUser(newUser);
+    localStorage.setItem('elearning_user', JSON.stringify(newUser));
   };
 
-  const handleLogout = () => setUser(null);
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('elearning_user');
+  };
 
-  // Wrap the entire app to pass down auth states correctly
+  // Create a version of user that includes the reactive setter for components
+  const userWithSetter = user ? {
+    ...user,
+    setProfileData: (newData) => {
+      setUser(prev => {
+        const updated = { ...prev, profileData: newData };
+        localStorage.setItem('elearning_user', JSON.stringify(updated));
+        return updated;
+      });
+    }
+  } : null;
+
   return (
     <Routes>
-      <Route path="*" element={<Layout user={user} onLogin={handleLogin} onLogout={handleLogout} />} />
+      <Route path="*" element={<Layout user={userWithSetter} onLogin={handleLogin} onLogout={handleLogout} />} />
     </Routes>
   );
 }
