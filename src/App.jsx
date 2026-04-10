@@ -569,53 +569,109 @@ function Login({ onLogin }) {
 function DashboardTutor({ user }) {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('1');
+  const [unlocking, setUnlocking] = useState(null);
 
   if (!user || user.role !== 'tutor') return <Navigate to="/" />;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data, error } = await supabase.from('submissions').select('*');
-        if (error) throw error;
-        setSubmissions(data || []);
-      } catch (err) {
-        console.log("Supabase fetch failed", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.from('submissions').select('*');
+      if (error) throw error;
+      setSubmissions(data || []);
+    } catch (err) {
+      console.log("Supabase fetch failed", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchData(); }, []);
+
+  const handleUnlock = async (studentEmail, sectionName) => {
+    const key = `${studentEmail}_${sectionName}`;
+    setUnlocking(key);
+    try {
+      await supabase.from('submissions')
+        .delete()
+        .eq('student_email', studentEmail)
+        .eq('section_name', sectionName);
+      await fetchData();
+    } catch(err) {
+      console.log(err);
+    } finally {
+      setUnlocking(null);
+    }
+  };
+
+  const CLASS_TABS = [
+    { id: '1', label: 'Kelas 8B' },
+    { id: '2', label: 'Kelas 8C' },
+    { id: '3', label: 'Kelas 6A' },
+    { id: '4', label: 'Kelas 5A' },
+    { id: 'demo', label: 'Demo' },
+  ];
+
+  const getStudentList = () => {
+    if (activeTab === 'demo') return STUDENTS.filter(s => s.email === 'demo@ecampus.ut.ac.id').slice(0, 1);
+    return STUDENTS.filter(s => s.classId === activeTab && s.email !== 'demo@ecampus.ut.ac.id');
+  };
+
+  const studentList = getStudentList();
 
   return (
     <div className="py-8 min-h-[70vh] px-4">
-      <h2 className="font-headline font-bold text-3xl text-primary mb-2">Monitoring Keaktifan</h2>
-      <p className="text-slate-500 mb-8 font-medium italic text-sm">Monitoring real-time aktivitas dan jawaban mahasiswa.</p>
+      <h2 className="font-headline font-bold text-3xl text-primary mb-1">Monitoring Keaktifan</h2>
+      <p className="text-slate-500 mb-6 font-medium italic text-sm">Monitoring real-time aktivitas dan jawaban mahasiswa per kelas.</p>
       
+      <div className="flex flex-wrap gap-2 mb-6">
+        {CLASS_TABS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${
+              activeTab === tab.id
+                ? 'bg-primary text-white shadow-lg shadow-primary/30 scale-105'
+                : 'bg-white border border-slate-200 text-slate-500 hover:border-primary hover:text-primary'
+            }`}
+          >
+            {tab.label}
+            <span className={`ml-2 text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/20' : 'bg-slate-100'}`}>
+              {tab.id === 'demo' ? '1' : STUDENTS.filter(s => s.classId === tab.id && s.email !== 'demo@ecampus.ut.ac.id').length}
+            </span>
+          </button>
+        ))}
+        <button onClick={fetchData} className="ml-auto px-4 py-2.5 rounded-xl border border-slate-200 text-slate-400 hover:text-primary hover:border-primary text-sm font-bold flex items-center gap-2">
+          <span className="material-symbols-outlined text-[18px]">refresh</span> Refresh
+        </button>
+      </div>
+
       <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         {loading ? (
           <div className="text-center py-20 bg-slate-50">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-4"></div>
-            <p className="text-slate-400 font-bold">Sinkronisasi Data...</p>
+            <p className="text-slate-400 font-bold">Memuat Data...</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
              <table className="w-full text-xs text-left">
               <thead>
                 <tr className="bg-primary text-white uppercase tracking-wider font-bold">
-                  <th className="px-4 py-4 w-12 text-center border-r border-white/10">No</th>
+                  <th className="px-4 py-4 w-10 text-center border-r border-white/10">No</th>
                   <th className="px-4 py-4 border-r border-white/10">Mahasiswa</th>
-                  <th className="px-4 py-4 text-center border-r border-white/10">Status Baca (Matkul)</th>
-                  <th className="px-4 py-4 border-r border-white/10">Jawaban Modul (Pertanyaan Wajib)</th>
-                  <th className="px-4 py-4">Submission Lainnya</th>
+                  <th className="px-4 py-4 text-center border-r border-white/10">Status Baca</th>
+                  <th className="px-4 py-4 border-r border-white/10">Jawaban Pertanyaan Wajib</th>
+                  <th className="px-4 py-4 text-center">Aksi Tutor</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {STUDENTS.map((student, index) => {
+                {studentList.map((student, index) => {
                   const studentSubs = submissions.filter(s => s.student_email === student.email);
                   const readMark = studentSubs.find(s => s.section_name === "Nama Mata Kuliah" && s.content.includes("READ_CONFIRMED"));
                   const moduleAnswer = studentSubs.find(s => s.section_name === "Informasi Modul");
-                  const otherSubs = studentSubs.filter(s => s.section_name !== "Nama Mata Kuliah" && s.section_name !== "Informasi Modul");
+                  const unlockKeyRead = `${student.email}_Nama Mata Kuliah`;
+                  const unlockKeyModule = `${student.email}_Informasi Modul`;
 
                   return (
                     <tr key={index} className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
@@ -623,7 +679,6 @@ function DashboardTutor({ user }) {
                       <td className="px-4 py-4 border-r">
                         <p className="font-bold text-slate-800 uppercase leading-none mb-1">{student.name}</p>
                         <p className="text-[10px] text-slate-400 font-medium tracking-tighter">{student.nim} • {student.email}</p>
-                        <span className="inline-block mt-2 px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-extrabold text-[9px] uppercase">Kelas {student.classId === '1' ? '8B' : student.classId === '2' ? '8C' : student.classId === '3' ? '6A' : '5A'}</span>
                       </td>
                       <td className="px-4 py-4 text-center border-r">
                         {readMark ? (
@@ -644,31 +699,44 @@ function DashboardTutor({ user }) {
                              <p className="text-[10px] text-primary font-bold uppercase mb-1 flex items-center gap-1">
                                <span className="material-symbols-outlined text-[14px]">speaker_notes</span> Jawaban:
                              </p>
-                             <p className="font-medium text-slate-700 italic border-l-2 border-primary/20 pl-2 leading-relaxed">"{moduleAnswer.content}"</p>
+                             <p className="font-medium text-slate-700 italic border-l-2 border-primary/20 pl-2 leading-relaxed text-[11px]">“{moduleAnswer.content}”</p>
                            </div>
                          ) : (
                            <div className="flex items-center gap-2 text-slate-300">
                              <span className="material-symbols-outlined text-sm">pending</span>
-                             <span className="text-[9px] font-bold uppercase">Belum Menjawab Pertanyaan Wajib</span>
+                             <span className="text-[9px] font-bold uppercase">Belum Menjawab</span>
                            </div>
                          )}
                       </td>
-                      <td className="px-4 py-4">
-                        {otherSubs.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {otherSubs.map((sub, i) => (
-                              <span key={i} className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[9px] font-bold">
-                                {sub.section_name} (Sesi {sub.meeting_num})
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-slate-300 text-[9px] font-bold">-</span>
-                        )}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-2 items-center">
+                          {readMark && (
+                            <button
+                              onClick={() => handleUnlock(student.email, "Nama Mata Kuliah")}
+                              disabled={unlocking === unlockKeyRead}
+                              className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-orange-50 text-orange-600 border border-orange-200 hover:bg-orange-100 disabled:opacity-50 whitespace-nowrap"
+                            >
+                              {unlocking === unlockKeyRead ? 'Memproses...' : '🔓 Reset Status Baca'}
+                            </button>
+                          )}
+                          {moduleAnswer && (
+                            <button
+                              onClick={() => handleUnlock(student.email, "Informasi Modul")}
+                              disabled={unlocking === unlockKeyModule}
+                              className="text-[9px] font-bold px-2 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 disabled:opacity-50 whitespace-nowrap"
+                            >
+                              {unlocking === unlockKeyModule ? 'Memproses...' : '🔓 Buka Kembali Jawaban'}
+                            </button>
+                          )}
+                          {!readMark && !moduleAnswer && <span className="text-slate-300 text-[9px]">-</span>}
+                        </div>
                       </td>
                     </tr>
                   )
                 })}
+                {studentList.length === 0 && (
+                  <tr><td colSpan={5} className="text-center py-12 text-slate-300 font-bold">Belum ada data mahasiswa untuk kelas ini.</td></tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -677,6 +745,7 @@ function DashboardTutor({ user }) {
     </div>
   )
 }
+
 
 function Meetings({ user }) {
   const { id } = useParams();
