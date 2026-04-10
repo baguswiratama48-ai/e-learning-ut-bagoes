@@ -567,7 +567,7 @@ function Login({ onLogin }) {
 }
 
 function DashboardTutor({ user }) {
-  const [data, setData] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   if (!user || user.role !== 'tutor') return <Navigate to="/" />;
@@ -575,9 +575,9 @@ function DashboardTutor({ user }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: submissions, error } = await supabase.from('submissions').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabase.from('submissions').select('*');
         if (error) throw error;
-        setData(submissions || []);
+        setSubmissions(data || []);
       } catch (err) {
         console.log("Supabase fetch failed", err);
       } finally {
@@ -589,33 +589,86 @@ function DashboardTutor({ user }) {
 
   return (
     <div className="py-8 min-h-[70vh] px-4">
-      <h2 className="font-headline font-bold text-3xl text-primary mb-2">Dasbor Tutor</h2>
-      <p className="text-slate-500 mb-8 font-medium">Monitoring hasil pengerjaan mahasiswa.</p>
-      <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+      <h2 className="font-headline font-bold text-3xl text-primary mb-2">Monitoring Keaktifan</h2>
+      <p className="text-slate-500 mb-8 font-medium italic text-sm">Monitoring real-time aktivitas dan jawaban mahasiswa.</p>
+      
+      <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         {loading ? (
-          <div className="text-center py-10">Memuat data...</div>
+          <div className="text-center py-20 bg-slate-50">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-4"></div>
+            <p className="text-slate-400 font-bold">Sinkronisasi Data...</p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
-             <table className="w-full text-sm text-left">
-              <thead className="bg-slate-50 border-b">
-                <tr>
-                  <th className="py-3 px-4">Waktu</th>
-                  <th className="py-3 px-4">Mahasiswa</th>
-                  <th className="py-3 px-4">Kelas</th>
-                  <th className="py-3 px-4">Sesi</th>
-                  <th className="py-3 px-4">Isi</th>
+             <table className="w-full text-xs text-left">
+              <thead>
+                <tr className="bg-primary text-white uppercase tracking-wider font-bold">
+                  <th className="px-4 py-4 w-12 text-center border-r border-white/10">No</th>
+                  <th className="px-4 py-4 border-r border-white/10">Mahasiswa</th>
+                  <th className="px-4 py-4 text-center border-r border-white/10">Status Baca (Matkul)</th>
+                  <th className="px-4 py-4 border-r border-white/10">Jawaban Modul (Pertanyaan Wajib)</th>
+                  <th className="px-4 py-4">Submission Lainnya</th>
                 </tr>
               </thead>
-              <tbody>
-                {data.map((item, idx) => (
-                  <tr key={idx} className="border-b transition-colors hover:bg-slate-50">
-                    <td className="py-3 px-4 text-xs text-slate-400">{new Date(item.created_at).toLocaleString()}</td>
-                    <td className="py-3 px-4 font-bold">{item.student_email}</td>
-                    <td className="py-3 px-4 text-xs">{CLASSES.find(c => c.id == item.class_id)?.title || item.class_id}</td>
-                    <td className="py-3 px-4">P{item.meeting_num}</td>
-                    <td className="py-3 px-4 truncate max-w-[200px]">{item.content}</td>
-                  </tr>
-                ))}
+              <tbody className="divide-y">
+                {STUDENTS.map((student, index) => {
+                  const studentSubs = submissions.filter(s => s.student_email === student.email);
+                  const readMark = studentSubs.find(s => s.section_name === "Nama Mata Kuliah" && s.content.includes("READ_CONFIRMED"));
+                  const moduleAnswer = studentSubs.find(s => s.section_name === "Informasi Modul");
+                  const otherSubs = studentSubs.filter(s => s.section_name !== "Nama Mata Kuliah" && s.section_name !== "Informasi Modul");
+
+                  return (
+                    <tr key={index} className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
+                      <td className="px-4 py-4 font-bold text-slate-400 text-center border-r">{index + 1}</td>
+                      <td className="px-4 py-4 border-r">
+                        <p className="font-bold text-slate-800 uppercase leading-none mb-1">{student.name}</p>
+                        <p className="text-[10px] text-slate-400 font-medium tracking-tighter">{student.nim} • {student.email}</p>
+                        <span className="inline-block mt-2 px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-extrabold text-[9px] uppercase">Kelas {student.classId === '1' ? '8B' : student.classId === '2' ? '8C' : student.classId === '3' ? '6A' : '5A'}</span>
+                      </td>
+                      <td className="px-4 py-4 text-center border-r">
+                        {readMark ? (
+                          <div className="inline-flex flex-col items-center">
+                            <span className="material-symbols-outlined text-green-500 text-[24px]">verified</span>
+                            <div className="flex text-yellow-400 -mt-1 scale-75">
+                               {Array(5).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-[16px]">star</span>)}
+                            </div>
+                            <p className="text-[8px] font-bold text-slate-400 mt-1 uppercase">Selesai Membaca</p>
+                          </div>
+                        ) : (
+                          <span className="text-[9px] font-bold text-slate-300 uppercase">Belum Membaca</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-4 border-r max-w-xs">
+                         {moduleAnswer ? (
+                           <div>
+                             <p className="text-[10px] text-primary font-bold uppercase mb-1 flex items-center gap-1">
+                               <span className="material-symbols-outlined text-[14px]">speaker_notes</span> Jawaban:
+                             </p>
+                             <p className="font-medium text-slate-700 italic border-l-2 border-primary/20 pl-2 leading-relaxed">"{moduleAnswer.content}"</p>
+                           </div>
+                         ) : (
+                           <div className="flex items-center gap-2 text-slate-300">
+                             <span className="material-symbols-outlined text-sm">pending</span>
+                             <span className="text-[9px] font-bold uppercase">Belum Menjawab Pertanyaan Wajib</span>
+                           </div>
+                         )}
+                      </td>
+                      <td className="px-4 py-4">
+                        {otherSubs.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {otherSubs.map((sub, i) => (
+                              <span key={i} className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[9px] font-bold">
+                                {sub.section_name} (Sesi {sub.meeting_num})
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-slate-300 text-[9px] font-bold">-</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
@@ -698,20 +751,118 @@ function SectionPage({ user }) {
   if (!user || user.role !== 'student') return <Navigate to={`/class/${id}`} />;
 
   const isInput = ["Tugas", "Catatan", "LKPD", "Latihan", "Kuis", "Refleksi"].some(p => sectionName.includes(p));
+  const [status, setStatus] = useState(null);
 
-  // Render Special content
+  useEffect(() => {
+    const fetchStatus = async () => {
+      if (!user) return;
+      const { data } = await supabase
+        .from('submissions')
+        .select('*')
+        .eq('student_email', user.email)
+        .eq('class_id', id)
+        .eq('meeting_num', meetingId)
+        .eq('section_name', sectionName);
+      if (data && data.length > 0) setStatus(data[0]);
+    };
+    fetchStatus();
+  }, [user, sectionName]);
+
+  const handleAction = async (val) => {
+    setLoading(true);
+    try {
+      const payload = {
+        student_email: user.email, 
+        class_id: id, 
+        meeting_num: meetingId, 
+        section_name: sectionName, 
+        content: val
+      };
+      const { data, error } = await supabase.from('submissions').insert([payload]).select();
+      if (!error && data) setStatus(data[0]);
+    } catch(err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const renderStaticContent = () => {
     if (sectionName === "Nama Mata Kuliah") {
       return (
-        <div className="bg-primary/5 p-10 rounded-3xl text-center border border-primary/10">
-          <span className="material-symbols-outlined text-5xl text-primary mb-4">school</span>
-          <h3 className="font-headline font-bold text-2xl text-slate-800">{cls?.title}</h3>
+        <div className="space-y-8">
+          <div className="bg-primary/5 p-10 rounded-3xl text-center border border-primary/10">
+            <span className="material-symbols-outlined text-5xl text-primary mb-4">school</span>
+            <h3 className="font-headline font-bold text-2xl text-slate-800">{cls?.title}</h3>
+          </div>
+          
+          <div className="bg-white border p-6 rounded-2xl shadow-sm text-center">
+            {status ? (
+              <div className="text-green-600 font-bold flex flex-col items-center gap-2">
+                <span className="material-symbols-outlined text-4xl">check_circle</span>
+                <p>Mata Kuliah Sudah Dikonfirmasi</p>
+                <div className="flex gap-1 text-yellow-400">
+                  {Array(5).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1">star</span>)}
+                </div>
+                <p className="text-[10px] text-slate-400 font-medium italic mt-2">Feedback bintang 5 otomatis terkirim ke Tutor</p>
+              </div>
+            ) : (
+              <div>
+                <p className="text-sm text-slate-500 mb-4 font-medium">Klik tombol di bawah untuk menginformasikan ke tutor bahwa Anda sudah membaca dan memahami identitas mata kuliah ini.</p>
+                <button 
+                  onClick={() => handleAction("[LOG: READ_CONFIRMED_5_STARS]")}
+                  disabled={loading}
+                  className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:scale-105 transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                >
+                  {loading ? 'Mengirim...' : 'Tandai Sudah Membaca'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       );
     }
     
     if (sectionName === "Informasi Modul" && COURSE_DATA[courseCode]?.[sectionName]) {
-      return COURSE_DATA[courseCode][sectionName];
+      return (
+        <div className="space-y-10">
+          {COURSE_DATA[courseCode][sectionName]}
+          
+          <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+            <h4 className="font-bold text-lg mb-4 text-yellow-400 uppercase tracking-tighter flex items-center gap-2">
+              <span className="material-symbols-outlined">quiz</span> Pertanyaan Verifikasi
+            </h4>
+            <p className="text-sm mb-6 leading-relaxed font-medium">Sebutkan Judul 6 Modul yang ada di Mata Kuliah SPGK4307 | Bimbingan Konseling di SD</p>
+            
+            {status ? (
+              <div className="bg-white/10 p-4 rounded-xl border border-white/20">
+                <p className="text-[10px] text-white/50 uppercase font-bold mb-2">Jawaban Anda:</p>
+                <p className="text-sm italic">"{status.content}"</p>
+                <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
+                  <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <textarea 
+                  value={content} 
+                  onChange={e => setContent(e.target.value)}
+                  placeholder="Ketik jawaban Anda di sini..."
+                  className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-sm focus:bg-white/10 focus:border-yellow-400 outline-none min-h-[120px]"
+                ></textarea>
+                <button 
+                  onClick={() => handleAction(content)}
+                  disabled={loading || !content.trim()}
+                  className="w-full bg-yellow-400 text-slate-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-all disabled:opacity-50"
+                >
+                  {loading ? 'Mengirim...' : 'Kirim Jawaban'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      );
     }
 
     return <div className="bg-blue-50 p-10 rounded-3xl text-center text-slate-400 font-medium">Baca instruksi modul untuk bagian ini.</div>;
@@ -726,6 +877,7 @@ function SectionPage({ user }) {
         student_email: user.email, class_id: id, meeting_num: meetingId, section_name: sectionName, content
       }]);
       setSuccess(true);
+      setContent('');
     } catch(err) {
       console.log(err);
     } finally {
