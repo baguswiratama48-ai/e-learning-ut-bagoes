@@ -839,21 +839,28 @@ function DashboardTutor({ user }) {
                                            </div>
                                          </div>
                                          
-                                         <div className="pt-2 border-t flex justify-between items-center">
-                                           <p className="text-[9px] font-bold text-slate-400 uppercase">Nilai Anda:</p>
-                                           <div className="flex gap-0.5">
-                                             {[1,2,3,4,5].map(star => (
-                                               <button
-                                                 key={star}
-                                                 onClick={() => handleStarFeedback(student.email, student.classId, answer.meeting_num || '1', secName, star)}
-                                                 className={`text-[20px] transition-transform hover:scale-125 ${
-                                                   star <= curStars ? 'text-yellow-400 drop-shadow-sm' : 'text-slate-200'
-                                                 }`}
-                                               >
-                                                 <span className="material-symbols-outlined fill-1 text-[18px]">star</span>
-                                               </button>
-                                             ))}
+                                         <div className="pt-2 border-t">
+                                           <div className="flex justify-between items-center">
+                                             <p className="text-[9px] font-bold text-slate-400 uppercase">Nilai Anda:</p>
+                                             <div className="flex gap-0.5">
+                                               {[1,2,3,4,5].map(star => (
+                                                 <button
+                                                   key={star}
+                                                   onClick={() => handleStarFeedback(student.email, student.classId, answer.meeting_num || '1', secName, star)}
+                                                   className={`text-[20px] transition-transform hover:scale-125 ${
+                                                     star <= curStars ? 'text-yellow-400 drop-shadow-sm' : 'text-slate-200'
+                                                   }`}
+                                                 >
+                                                   <span className="material-symbols-outlined fill-1 text-[18px]">star</span>
+                                                 </button>
+                                               ))}
+                                             </div>
                                            </div>
+                                           {curStars > 0 && (
+                                             <div className="mt-2 bg-yellow-50 border border-yellow-100 p-2 rounded-md">
+                                               <p className="text-[9px] text-yellow-700 italic leading-snug">"{FEEDBACK_MESSAGES[curStars]}"</p>
+                                             </div>
+                                           )}
                                          </div>
                                        </div>
                                      )
