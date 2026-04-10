@@ -1030,7 +1030,102 @@ function SectionPage({ user }) {
 
   if (!user || user.role !== 'student') return <Navigate to={`/class/${id}`} />;
 
-  const renderStaticContent = () => {
+    const renderStaticContent = () => {
+    if (sectionName === "Video Pembelajaran" && (id === '1' || id === '2')) {
+      const videoId = "GYlmNScMEl4";
+      const wordCount = content.trim() ? content.trim().split(/\s+/).filter(w => w.length > 0).length : 0;
+      const isWordCountEnough = wordCount >= 100;
+
+      return (
+        <div className="space-y-8">
+          <div className="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden">
+             <div className="aspect-video">
+                <iframe 
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="Video Pembelajaran"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+             </div>
+             <div className="p-6 bg-slate-50 border-t items-center flex justify-between">
+                <div className="flex items-center gap-2">
+                   <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                     <span className="material-symbols-outlined text-red-600 text-[18px]">movie</span>
+                   </div>
+                   <p className="font-bold text-slate-800 text-sm">Video Pembelajaran Kelas 8B & 8C</p>
+                </div>
+                <a 
+                   href={`https://youtu.be/${videoId}`} 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="text-[10px] font-bold text-primary uppercase bg-white border px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
+                >
+                   Buka di YouTube
+                </a>
+             </div>
+          </div>
+
+          <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+            <h4 className="font-bold text-lg mb-4 text-yellow-400 uppercase tracking-tighter flex items-center gap-2">
+              <span className="material-symbols-outlined">assignment</span> Kesimpulan Video
+            </h4>
+            <p className="text-sm mb-6 leading-relaxed font-medium">Tuliskan kesimpulan isi video di atas dengan bahasa Anda sendiri. Minimal <span className="text-yellow-400 font-bold underline">100 Kata</span>.</p>
+            
+            {status ? (
+              <div className="space-y-4">
+                <div className="bg-white/10 p-4 rounded-xl border border-white/20">
+                  <p className="text-[10px] text-white/50 uppercase font-bold mb-2">Kesimpulan Anda:</p>
+                  <p className="text-sm italic leading-relaxed">"{status.content}"</p>
+                  <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
+                    <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="relative">
+                  <textarea 
+                    value={content} 
+                    onChange={e => setContent(e.target.value)}
+                    placeholder="Ketik kesimpulan video minimal 100 kata di sini..."
+                    className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-sm focus:bg-white/10 focus:border-yellow-400 outline-none min-h-[250px] resize-none"
+                  ></textarea>
+                  <div className={`absolute bottom-4 right-4 text-[10px] font-bold px-2 py-1 rounded-md ${isWordCountEnough ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                    {wordCount} / 100 Kata
+                  </div>
+                </div>
+                <button 
+                  onClick={() => handleAction(content)}
+                  disabled={loading || !isWordCountEnough}
+                  className="w-full bg-yellow-400 text-slate-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? 'Mengirim...' : 'Kirim Kesimpulan Video'}
+                  {!loading && isWordCountEnough && <span className="material-symbols-outlined text-[18px]">send</span>}
+                </button>
+                {!isWordCountEnough && content.trim().length > 0 && <p className="text-center text-[10px] text-red-300 font-bold italic animate-pulse">⚠️ Kurang {100 - wordCount} kata lagi untuk bisa mengirim.</p>}
+              </div>
+            )}
+          </div>
+
+          {status && tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai Kesimpulan Anda</p>
+                <p className="text-sm text-yellow-800 mb-3 italic">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || 'Tutor telah memberikan penilaian.'}"</p>
+                <div className="flex gap-1 text-yellow-500">
+                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined fill-1 text-2xl">star</span>)}
+                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => <span key={i} className="material-symbols-outlined text-slate-300 text-2xl">star</span>)}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
     
     if (sectionName === "Informasi Modul" && COURSE_DATA[courseCode]?.[sectionName]) {
       return (
