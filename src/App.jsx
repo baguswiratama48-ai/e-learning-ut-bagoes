@@ -715,7 +715,8 @@ function DashboardTutor({ user }) {
                   <th className="px-4 py-4 text-center">Aksi Tutor</th>
                 </tr>
               </thead>
-              <tbody className="div                 {studentList.map((student, index) => {
+              <tbody className="divide-y">
+                {studentList.map((student, index) => {
                   const studentSubs = submissions.filter(s => s.student_email === student.email);
                   const readMark = studentSubs.find(s => s.section_name === "Nama Mata Kuliah" && s.content.includes("READ_CONFIRMED"));
                   const moduleAnswer = studentSubs.find(s => s.section_name === "Informasi Modul");
