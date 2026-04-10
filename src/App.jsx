@@ -747,15 +747,14 @@ function SectionPage({ user }) {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  if (!user || user.role !== 'student') return <Navigate to={`/class/${id}`} />;
-
-  const isInput = ["Tugas", "Catatan", "LKPD", "Latihan", "Kuis", "Refleksi"].some(p => sectionName.includes(p));
   const [status, setStatus] = useState(null);
 
+  const isInput = ["Tugas", "Catatan", "LKPD", "Latihan", "Kuis", "Refleksi"].some(p => sectionName?.includes(p));
+
   useEffect(() => {
+    setStatus(null);
+    if (!user) return;
     const fetchStatus = async () => {
-      if (!user) return;
       const { data } = await supabase
         .from('submissions')
         .select('*')
@@ -766,9 +765,10 @@ function SectionPage({ user }) {
       if (data && data.length > 0) setStatus(data[0]);
     };
     fetchStatus();
-  }, [user, sectionName]);
+  }, [user, sectionName, id, meetingId]);
 
   const handleAction = async (val) => {
+    if (!val || !val.trim()) return;
     setLoading(true);
     try {
       const payload = {
@@ -779,13 +779,15 @@ function SectionPage({ user }) {
         content: val
       };
       const { data, error } = await supabase.from('submissions').insert([payload]).select();
-      if (!error && data) setStatus(data[0]);
+      if (!error && data && data.length > 0) setStatus(data[0]);
     } catch(err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
   };
+
+  if (!user || user.role !== 'student') return <Navigate to={`/class/${id}`} />;
 
   const renderStaticContent = () => {
     if (sectionName === "Nama Mata Kuliah") {
