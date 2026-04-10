@@ -1067,47 +1067,94 @@ function SectionPage({ user }) {
              </div>
           </div>
 
-          <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-            <h4 className="font-bold text-lg mb-4 text-yellow-400 uppercase tracking-tighter flex items-center gap-2">
-              <span className="material-symbols-outlined">assignment</span> Kesimpulan Video
-            </h4>
-            <p className="text-sm mb-6 leading-relaxed font-medium">Tuliskan kesimpulan isi video di atas dengan bahasa Anda sendiri. Minimal <span className="text-yellow-400 font-bold underline">100 Kata</span>.</p>
+          <div className="bg-[#0f172a] text-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white/5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400/10 rounded-full -ml-24 -mb-24 blur-[80px]"></div>
             
-            {status ? (
-              <div className="space-y-4">
-                <div className="bg-white/10 p-4 rounded-xl border border-white/20">
-                  <p className="text-[10px] text-white/50 uppercase font-bold mb-2">Kesimpulan Anda:</p>
-                  <p className="text-sm italic leading-relaxed">"{status.content}"</p>
-                  <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
-                    <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-6">
+                <div>
+                  <h4 className="font-headline font-bold text-xl md:text-2xl text-yellow-400 tracking-tight flex items-center gap-3">
+                    <span className="w-10 h-10 rounded-xl bg-yellow-400/20 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-yellow-400">description</span>
+                    </span>
+                    Kesimpulan Video
+                  </h4>
+                  <p className="text-slate-400 text-sm mt-2 font-medium">Susunlah poin-poin penting dari video yang telah Anda tonton.</p>
+                </div>
+                {!status && (
+                  <div className={`px-4 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${isWordCountEnough ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-white/5 border-white/10 text-slate-400'}`}>
+                    <span className={`w-2 h-2 rounded-full ${isWordCountEnough ? 'bg-green-500 animate-pulse' : 'bg-slate-500'}`}></span>
+                    Syarat: 100 Kata
+                  </div>
+                )}
+              </div>
+              
+              {status ? (
+                <div className="space-y-4">
+                  <div className="bg-white/5 backdrop-blur-sm p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-inner">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-[10px] text-yellow-400/70 border border-yellow-400/30 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">Laporan Mahasiswa</span>
+                    </div>
+                    <p className="text-sm md:text-base text-slate-200 leading-[1.8] text-justify italic font-serif">
+                       {status.content}
+                    </p>
+                    <div className="mt-8 flex items-center gap-3 py-3 px-5 bg-green-500/10 rounded-2xl border border-green-500/20 w-fit">
+                      <span className="material-symbols-outlined text-green-400 text-xl font-bold">verified</span>
+                      <p className="text-xs text-green-400 font-bold uppercase tracking-widest">Terkirim & Terarsip</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="relative">
-                  <textarea 
-                    value={content} 
-                    onChange={e => setContent(e.target.value)}
-                    placeholder="Ketik kesimpulan video minimal 100 kata di sini..."
-                    className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-sm focus:bg-white/10 focus:border-yellow-400 outline-none min-h-[250px] resize-none"
-                  ></textarea>
-                  <div className={`absolute bottom-4 right-4 text-[10px] font-bold px-2 py-1 rounded-md ${isWordCountEnough ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                    {wordCount} / 100 Kata
+              ) : (
+                <div className="space-y-6">
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400/20 to-primary/20 rounded-[2rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
+                    <textarea 
+                      value={content} 
+                      onChange={e => setContent(e.target.value)}
+                      placeholder="Masukkan analisis dan kesimpulan Anda di sini (Minimal 100 kata)..."
+                      className="relative w-full bg-[#1e293b]/50 border border-white/10 rounded-[2rem] p-6 md:p-8 text-sm md:text-base text-white placeholder:text-slate-500 focus:bg-[#1e293b] focus:border-yellow-400/50 outline-none min-h-[300px] resize-none transition-all leading-relaxed text-justify"
+                    ></textarea>
+                    
+                    <div className="absolute bottom-6 right-6 flex items-center gap-3">
+                       <p className={`text-xs font-black tracking-tighter transition-colors ${isWordCountEnough ? 'text-green-400' : 'text-slate-500'}`}>
+                         {wordCount.toLocaleString()} <span className="opacity-50">/ 100 KATA</span>
+                       </p>
+                       <div className="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-white/5">
+                         {isWordCountEnough ? (
+                           <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
+                         ) : (
+                           <div className="w-1.5 h-1.5 rounded-full bg-slate-600 animate-pulse"></div>
+                         )}
+                       </div>
+                    </div>
                   </div>
+
+                  <div className="flex flex-col md:flex-row gap-4 items-center justify-between pt-2">
+                    <p className="text-[11px] text-slate-500 font-medium italic order-2 md:order-1">
+                      * Kesimpulan yang dikirim tidak dapat diubah kembali. Mohon teliti.
+                    </p>
+                    <button 
+                      onClick={() => handleAction(content)}
+                      disabled={loading || !isWordCountEnough}
+                      className="w-full md:w-auto min-w-[240px] bg-yellow-400 text-slate-900 font-black py-4 px-8 rounded-2xl hover:bg-yellow-300 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 shadow-xl shadow-yellow-400/10 flex items-center justify-center gap-3 order-1 md:order-2"
+                    >
+                      {loading ? 'MEMPROSES...' : 'KIRIM KESIMPULAN VIDEO'}
+                      {!loading && isWordCountEnough && <span className="material-symbols-outlined font-bold">send</span>}
+                    </button>
+                  </div>
+                  
+                  {!isWordCountEnough && content.trim().length > 0 && (
+                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
+                      <span className="material-symbols-outlined text-red-400">priority_high</span>
+                      <p className="text-xs text-red-300 font-bold uppercase tracking-wider">
+                        Kurang {100 - wordCount} kata lagi untuk membuka akses tombol kirim.
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <button 
-                  onClick={() => handleAction(content)}
-                  disabled={loading || !isWordCountEnough}
-                  className="w-full bg-yellow-400 text-slate-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {loading ? 'Mengirim...' : 'Kirim Kesimpulan Video'}
-                  {!loading && isWordCountEnough && <span className="material-symbols-outlined text-[18px]">send</span>}
-                </button>
-                {!isWordCountEnough && content.trim().length > 0 && <p className="text-center text-[10px] text-red-300 font-bold italic animate-pulse">⚠️ Kurang {100 - wordCount} kata lagi untuk bisa mengirim.</p>}
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {status && tutorFeedback && (
