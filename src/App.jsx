@@ -914,15 +914,54 @@ function ClassMenu({ user }) {
         <h2 className="font-headline font-bold text-2xl md:text-3xl mt-2 mb-2">Menu Pembelajaran</h2>
         <p className="text-white/60 text-sm">Pilih modul yang ingin Anda pelajari atau kerjakan sekarang.</p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-        {MENUS.map((menu, i) => (
-          <Link key={i} to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent(menu)}`} className="bg-white p-5 rounded-2xl border border-slate-100 hover:bg-primary group transition-all shadow-sm text-center flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-blue-50 group-hover:bg-white/20 flex items-center justify-center mb-3">
-              <span className="material-symbols-outlined text-primary group-hover:text-white">edit_document</span>
-            </div>
-            <p className="font-bold text-slate-700 group-hover:text-white text-xs md:text-sm leading-tight">{menu}</p>
-          </Link>
-        ))}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {MENUS.map((menu, i) => {
+          let icon = "edit_document";
+          let colorClass = "bg-blue-50 text-blue-600";
+          let iconName = "edit_document";
+
+          if (menu === "Informasi Modul") {
+            iconName = "info";
+            colorClass = "bg-sky-50 text-sky-600";
+          } else if (menu === "Pertanyaan Pemantik") {
+            iconName = "tips_and_updates";
+            colorClass = "bg-amber-50 text-amber-600";
+          } else if (menu === "Materi Pembelajaran") {
+            iconName = "menu_book";
+            colorClass = "bg-emerald-50 text-emerald-600";
+          } else if (menu === "Video Pembelajaran") {
+            iconName = "play_circle";
+            colorClass = "bg-rose-50 text-rose-600";
+          } else if (menu === "LKPD (Lembar Kerja Peserta Didik)") {
+            iconName = "assignment";
+            colorClass = "bg-indigo-50 text-indigo-600";
+          } else if (menu === "Kuis dan Latihan") {
+            iconName = "extension";
+            colorClass = "bg-violet-50 text-violet-600";
+          } else if (menu === "Refleksi") {
+            iconName = "psychology";
+            colorClass = "bg-fuchsia-50 text-fuchsia-600";
+          } else if (menu === "Rangkuman") {
+            iconName = "summarize";
+            colorClass = "bg-slate-100 text-slate-600";
+          }
+
+          return (
+            <Link 
+              key={i} 
+              to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent(menu)}`} 
+              className="group bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 text-center flex flex-col items-center relative overflow-hidden active:scale-95"
+            >
+              <div className={`w-16 h-16 rounded-2xl ${colorClass} group-hover:scale-110 transition-transform duration-500 flex items-center justify-center mb-4 shadow-sm relative z-10`}>
+                <span className="material-symbols-outlined text-[32px]">{iconName}</span>
+              </div>
+              <p className="font-bold text-slate-700 group-hover:text-primary text-[13px] md:text-sm leading-tight transition-colors relative z-10">{menu}</p>
+              
+              {/* Subtle background decoration on hover */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   )
