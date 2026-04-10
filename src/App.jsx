@@ -817,7 +817,7 @@ function Layout({ user, onLogin, onLogout }) {
             <span className="material-symbols-outlined text-[28px]">home</span>
             <span className="text-[10px] font-bold uppercase tracking-tighter">Beranda</span>
           </Link>
-          <Link to="/classes" className={`flex flex-col items-center flex-1 py-1 ${location.pathname.startsWith('/class') ? 'text-primary' : 'text-slate-300'}`}>
+          <Link to={user?.role === 'student' ? `/class/${user.classId}/meetings` : '/classes'} className={`flex flex-col items-center flex-1 py-1 ${location.pathname.startsWith('/class') ? 'text-primary' : 'text-slate-300'}`}>
             <span className="material-symbols-outlined text-[28px]">import_contacts</span>
             <span className="text-[10px] font-bold uppercase tracking-tighter">Kelas</span>
           </Link>
