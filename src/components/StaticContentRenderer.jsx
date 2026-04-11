@@ -1103,52 +1103,78 @@ export const StaticContentRenderer = ({
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Modul 1 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
-             <div className="border-b border-slate-100 pb-4 mb-6">
-                <h2 className="text-indigo-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 1</h2>
-                <p className="text-xl font-bold text-slate-800">Hakikat Perkembangan Anak yang Bersifat Nonnormatif</p>
+          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-10 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500 bg-opacity-5 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-opacity-10 transition-all"></div>
+             
+             <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-6 mb-8 gap-4 relative z-10">
+                <div>
+                   <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+                      <span className="material-symbols-outlined text-sm">menu_book</span> MODUL 1
+                   </div>
+                   <h2 className="text-xl md:text-2xl font-black text-slate-800 leading-tight">Hakikat Perkembangan Anak <br className="hidden md:block"/> yang Bersifat Nonnormatif</h2>
+                </div>
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                   <span className="material-symbols-outlined text-3xl text-indigo-500">psychology_alt</span>
+                </div>
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="space-y-4">
-                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-indigo-500">Kegiatan Belajar 1</h4>
-                   <div className="space-y-2">
-                     <p className="font-bold text-slate-700 text-sm">A. Hakikat Perkembangan Anak yang Bersifat Nonnormatif</p>
-                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-none pl-4">
-                        <li>1. Pengertian</li>
-                        <li>
-                          2. Apakah yang Disebut Kelainan atau Abnormal
-                          <ul className="pl-4 mt-1 space-y-1 list-[lower-alpha]">
-                            <li>Model Medis (Medical Model)</li>
-                            <li>Penyimpangan dari Rata-rata</li>
-                            <li>Penyimpangan dari Ideal</li>
-                          </ul>
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 relative z-10">
+                {/* KB 1 */}
+                <div className="space-y-5">
+                   <div className="flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-xl bg-indigo-500 text-white flex items-center justify-center font-black text-sm shadow-md shadow-indigo-500 shadow-opacity-30">1</span>
+                      <h4 className="font-black text-slate-800 text-sm md:text-base uppercase tracking-tight">Kegiatan Belajar 1</h4>
+                   </div>
+                   <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                     <p className="font-bold text-indigo-900 text-sm mb-4">A. Hakikat Perkembangan Anak yang Bersifat Nonnormatif</p>
+                     <ul className="space-y-3 text-sm text-slate-600 font-medium list-none">
+                        <li className="flex gap-3 items-start">
+                           <span className="text-indigo-400 font-black">1.</span> 
+                           <span>Pengertian Dasar</span>
                         </li>
-                        <li>3. Ciri-ciri Anak dengan Perkembangan Nonnormatif</li>
+                        <li className="flex gap-3 items-start">
+                           <span className="text-indigo-400 font-black">2.</span> 
+                           <div>
+                              <span>Apakah yang Disebut Kelainan atau Abnormal?</span>
+                              <div className="grid gap-2 mt-3 pl-2 border-l-2 border-indigo-100 pb-1">
+                                 <div className="flex items-center gap-2 text-xs bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Model Medis</div>
+                                 <div className="flex items-center gap-2 text-xs bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Penyimpangan dari Rata-rata</div>
+                                 <div className="flex items-center gap-2 text-xs bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm"><span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Penyimpangan dari Ideal</div>
+                              </div>
+                           </div>
+                        </li>
+                        <li className="flex gap-3 items-start">
+                           <span className="text-indigo-400 font-black">3.</span> 
+                           <span className="leading-relaxed">Ciri-ciri Anak dengan Perkembangan Nonnormatif</span>
+                        </li>
                      </ul>
                    </div>
                 </div>
 
-                <div className="space-y-4">
-                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-indigo-500">Kegiatan Belajar 2</h4>
+                {/* KB 2 */}
+                <div className="space-y-5">
+                   <div className="flex items-center gap-3">
+                      <span className="w-8 h-8 rounded-xl bg-indigo-500 text-white flex items-center justify-center font-black text-sm shadow-md shadow-indigo-500 shadow-opacity-30">2</span>
+                      <h4 className="font-black text-slate-800 text-sm md:text-base uppercase tracking-tight">Kegiatan Belajar 2</h4>
+                   </div>
+                   
                    <div className="space-y-4">
-                     <div className="space-y-2">
-                       <p className="font-bold text-slate-700 text-sm">A. Faktor yang Memengaruhi Perkembangan Nonnormatif dan Identifikasi Penanganan Anak</p>
-                       <ul className="space-y-1 text-sm text-slate-500 font-medium list-none pl-4">
-                          <li>1. Cetak Biru Biologis</li>
-                          <li>2. Genetik atau Lingkungan</li>
-                          <li>3. Konteks Sosial</li>
-                       </ul>
+                     <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-center md:text-left">
+                       <p className="font-bold text-indigo-900 text-sm mb-4 leading-relaxed">A. Faktor yang Memengaruhi Perkembangan Nonnormatif & Identifikasi Penanganan</p>
+                       <div className="flex flex-wrap md:flex-nowrap gap-2 justify-center md:justify-start">
+                          <span className="text-xs font-bold text-slate-500 bg-white px-3 py-1.5 border border-slate-200 rounded-lg whitespace-nowrap">1. Cetak Biru Biologis</span>
+                          <span className="text-xs font-bold text-slate-500 bg-white px-3 py-1.5 border border-slate-200 rounded-lg whitespace-nowrap">2. Genetik & Lingkungan</span>
+                          <span className="text-xs font-bold text-slate-500 bg-white px-3 py-1.5 border border-slate-200 rounded-lg whitespace-nowrap">3. Konteks Sosial</span>
+                       </div>
                      </div>
-                     <div className="space-y-2">
-                       <p className="font-bold text-slate-700 text-sm">B. Cara Identifikasi dan Penanganan</p>
-                       <ul className="space-y-1 text-sm text-slate-500 font-medium list-none pl-4">
-                          <li>1. Wawancara</li>
-                          <li>2. Kuesioner</li>
-                          <li>3. Observasi</li>
-                       </ul>
+                     <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex flex-col md:flex-row gap-4 items-center md:items-start text-center md:text-left">
+                       <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-500 shrink-0"><span className="material-symbols-outlined text-2xl">manage_search</span></div>
+                       <div>
+                         <p className="font-bold text-indigo-900 text-sm uppercase mb-2">B. Cara Identifikasi</p>
+                         <p className="text-sm text-slate-500 font-medium leading-relaxed">Penanganan dapat dilakukan melalui Wawancara mendalam, Kuesioner berstandar, serta Observasi rutin.</p>
+                       </div>
                      </div>
                    </div>
                 </div>
@@ -1156,33 +1182,48 @@ export const StaticContentRenderer = ({
           </div>
 
           {/* Modul 2 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
-             <div className="border-b border-slate-100 pb-4 mb-6">
-                <h2 className="text-emerald-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 2</h2>
-                <p className="text-xl font-bold text-slate-800">Anak dengan Gangguan Fisik</p>
+          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-10 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative border-l-8 border-l-emerald-500">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 bg-opacity-5 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-opacity-10 transition-all"></div>
+             
+             <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-6 mb-8 gap-4 relative z-10">
+                <div>
+                   <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+                      <span className="material-symbols-outlined text-sm">accessible_forward</span> MODUL 2
+                   </div>
+                   <h2 className="text-xl md:text-2xl font-black text-slate-800 leading-tight">Anak dengan <br className="hidden md:block"/> Gangguan Fisik</h2>
+                </div>
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                   <span className="material-symbols-outlined text-3xl text-emerald-500">healing</span>
+                </div>
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 relative z-10">
                 <div className="space-y-4">
-                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-emerald-500">Kegiatan Belajar 1</h4>
-                   <div className="space-y-2">
-                     <p className="font-bold text-slate-700 text-sm">Anak dengan Cerebral Palsy</p>
-                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
-                        <li>Batasan Cerebral Palsy</li>
-                        <li>Tipe-tipe Cerebral Palsy</li>
-                        <li>Karakteristik Anak dengan Cerebral Palsy</li>
-                        <li>Strategi Penanganan Anak dengan Cerebral Palsy</li>
+                   <div className="flex items-center gap-3 mb-4">
+                      <span className="text-xs font-black text-emerald-500 uppercase tracking-widest">K. Belajar 01</span>
+                      <div className="h-px flex-1 bg-emerald-100"></div>
+                   </div>
+                   <div className="bg-emerald-50 bg-opacity-40 p-6 md:p-8 rounded-3xl border border-emerald-50 h-[85%] hover:bg-opacity-100 transition-colors">
+                     <p className="font-bold text-slate-800 text-sm md:text-base mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500">personal_injury</span> Anak dengan Cerebral Palsy</p>
+                     <ul className="space-y-3 text-xs md:text-sm text-slate-600 font-medium list-none">
+                        <li className="flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500 text-lg">radio_button_unchecked</span> Batasan Cerebral Palsy</li>
+                        <li className="flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500 text-lg">radio_button_unchecked</span> Tipe-tipe Cerebral Palsy</li>
+                        <li className="flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500 text-lg">radio_button_unchecked</span> Karakteristik Anak Spesifik</li>
+                        <li className="flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500 text-lg">radio_button_unchecked</span> Strategi Penanganan Inklusif</li>
                      </ul>
                    </div>
                 </div>
 
                 <div className="space-y-4">
-                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-emerald-500">Kegiatan Belajar 2</h4>
-                   <div className="space-y-2">
-                     <p className="font-bold text-slate-700 text-sm">Anak yang Rentan Sakit</p>
-                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
-                        <li>Pengertian</li>
-                        <li>Penyakit yang Umum Diderita Anak: Karakteristik Anak dan Penanganannya</li>
+                   <div className="flex items-center gap-3 mb-4">
+                      <span className="text-xs font-black text-emerald-500 uppercase tracking-widest">K. Belajar 02</span>
+                      <div className="h-px flex-1 bg-emerald-100"></div>
+                   </div>
+                   <div className="bg-emerald-50 bg-opacity-40 p-6 md:p-8 rounded-3xl border border-emerald-50 h-[85%] hover:bg-opacity-100 transition-colors">
+                     <p className="font-bold text-slate-800 text-sm md:text-base mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500">local_hospital</span> Anak yang Rentan Sakit</p>
+                     <ul className="space-y-3 text-xs md:text-sm text-slate-600 font-medium list-none">
+                        <li className="flex items-center gap-2"><span className="material-symbols-outlined text-emerald-500 text-lg">radio_button_unchecked</span> Pengertian Dasar Penyakit</li>
+                        <li className="flex items-start gap-2"><span className="material-symbols-outlined text-emerald-500 text-lg shrink-0">radio_button_unchecked</span> <span className="leading-relaxed">Penyakit yang Umum Diderita Anak: Karakteristik & Penanganannya.</span></li>
                      </ul>
                    </div>
                 </div>
@@ -1190,35 +1231,61 @@ export const StaticContentRenderer = ({
           </div>
 
           {/* Modul 3 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
-             <div className="border-b border-slate-100 pb-4 mb-6">
-                <h2 className="text-rose-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 3</h2>
-                <p className="text-xl font-bold text-slate-800">Anak dengan Gangguan Panca Indra</p>
+          <div className="bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-10 shadow-sm hover:shadow-xl transition-all group overflow-hidden relative border-l-8 border-l-rose-500">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500 bg-opacity-5 rounded-full -mr-10 -mt-10 blur-2xl group-hover:bg-opacity-10 transition-all"></div>
+             
+             <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-100 pb-6 mb-8 gap-4 relative z-10">
+                <div>
+                   <div className="inline-flex items-center gap-2 bg-rose-50 text-rose-600 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+                      <span className="material-symbols-outlined text-sm">visibility</span> MODUL 3
+                   </div>
+                   <h2 className="text-xl md:text-2xl font-black text-slate-800 leading-tight">Anak dengan <br className="hidden md:block"/> Gangguan Panca Indra</h2>
+                </div>
+                <div className="flex gap-2">
+                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-rose-50 flex items-center justify-center flex-shrink-0">
+                      <span className="material-symbols-outlined text-2xl text-rose-500">hearing</span>
+                   </div>
+                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-rose-50 flex items-center justify-center flex-shrink-0">
+                      <span className="material-symbols-outlined text-2xl text-rose-500">visibility</span>
+                   </div>
+                </div>
              </div>
              
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="space-y-4">
-                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-rose-500">Kegiatan Belajar 1</h4>
-                   <div className="space-y-2">
-                     <p className="font-bold text-slate-700 text-sm">Anak dengan Gangguan Pendengaran</p>
-                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
-                        <li>Batasan dan Penggolongan Gangguan Pendengaran</li>
-                        <li>Identifikasi Anak dengan Gangguan Pendengaran</li>
-                        <li>Karakteristik Anak dengan Gangguan Pendengaran</li>
-                        <li>Strategi Penanganan Anak dengan Gangguan Pendengaran</li>
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 relative z-10">
+                {/* Gangguan Pendengaran */}
+                <div className="group/item h-full">
+                   <div className="bg-gradient-to-br from-white to-rose-50 p-6 md:p-8 rounded-3xl border border-rose-100 shadow-sm h-full hover:shadow-md transition-all">
+                     <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm text-rose-500 border border-slate-50">
+                        <span className="material-symbols-outlined text-2xl">hearing_disabled</span>
+                     </div>
+                     <p className="font-black text-rose-900 text-sm md:text-base mb-5 uppercase tracking-tight flex items-center justify-between">
+                        Gangguan Pendengaran
+                        <span className="text-[10px] bg-rose-200 text-rose-800 px-2 py-1 rounded-md">KB 1</span>
+                     </p>
+                     <ul className="space-y-4 text-xs md:text-sm text-slate-600 font-medium">
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-rose-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Batasan dan Penggolongan Gangguan Pendengaran</p></li>
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-rose-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Identifikasi Anak dengan Gangguan Pendengaran</p></li>
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-rose-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Karakteristik Anak dengan Gangguan Pendengaran</p></li>
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-rose-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Strategi Penanganan Anak secara Interaktif</p></li>
                      </ul>
                    </div>
                 </div>
 
-                <div className="space-y-4">
-                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-rose-500">Kegiatan Belajar 2</h4>
-                   <div className="space-y-2">
-                     <p className="font-bold text-slate-700 text-sm">Anak dengan Gangguan Penglihatan</p>
-                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
-                        <li>Batasan Gangguan Penglihatan</li>
-                        <li>Identifikasi Anak dengan Gangguan Penglihatan</li>
-                        <li>Karakteristik Anak dengan Gangguan Penglihatan</li>
-                        <li>Strategi Penanganan Anak dengan Gangguan Penglihatan</li>
+                {/* Gangguan Penglihatan */}
+                <div className="group/item h-full">
+                   <div className="bg-gradient-to-br from-white to-orange-50 p-6 md:p-8 rounded-3xl border border-orange-100 shadow-sm h-full hover:shadow-md transition-all">
+                     <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm text-orange-500 border border-slate-50">
+                        <span className="material-symbols-outlined text-2xl">blind</span>
+                     </div>
+                     <p className="font-black text-orange-900 text-sm md:text-base mb-5 uppercase tracking-tight flex items-center justify-between">
+                        Gangguan Penglihatan
+                        <span className="text-[10px] bg-orange-200 text-orange-800 px-2 py-1 rounded-md">KB 2</span>
+                     </p>
+                     <ul className="space-y-4 text-xs md:text-sm text-slate-600 font-medium">
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-orange-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Batasan Gangguan Penglihatan secara Medis</p></li>
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-orange-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Pedoman Identifikasi Anak dengan Gangguan</p></li>
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-orange-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Karakteristik Perkembangan Anak dengan Gangguan</p></li>
+                        <li className="flex items-start gap-3"><div className="w-2 h-2 rounded-full bg-orange-400 mt-1 shrink-0 shadow-sm"></div> <p className="leading-snug">Strategi Penanganan di Lingkungan Belajar (PAUD)</p></li>
                      </ul>
                    </div>
                 </div>
