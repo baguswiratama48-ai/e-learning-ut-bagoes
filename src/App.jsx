@@ -4121,6 +4121,149 @@ function SectionPage({ user }) {
       );
     }
 
+    if (sectionName === "Pertanyaan Pemantik" && id === "3") {
+      const cases = [
+        {
+          id: 1,
+          title: "Kasus 1",
+          icon: "nightlight",
+          color: "indigo",
+          content: "Seorang ibu bercerita dalam sebuah arisan bahwa anaknya sekarang ini jika tidur tidak mau sendiri, padahal sebelumnya dia hanya ditemani sebentar sebelum tertidur. Tapi sekarang harus ditemani terus menerus, kalau ditinggal akan berteriak-teriak dan menangis seperti ketakutan. “Aku sampe susah nafas karena dipeluk kencang betul” kata sang ibu.",
+          question: "Apa pertanyaan pertama yang akan anda ajukan?"
+        },
+        {
+          id: 2,
+          title: "Kasus 2",
+          icon: "family_restroom",
+          color: "rose",
+          content: "“Wah kesel bener aku sama anakku” kata seorang bapak mengenai anak laki-lakinya. Masa tadi malam waktu kami makan bersama, tiba-tiba dia bilang mau jadi perempuan saja, karena jadi anak laki-laki itu “enggak” enak karena kalo main sering kasar. Memang selama ini saya tahu dia dekat sekali dengan ibunya, bahkan secara berkelakar saya selalu bilang dia sebagai “anak mama”. Tapi seumur hidup saya tidak pernah terpikirkan dan tidak akan pernah mengizinkan kalau anak laki-laki saya ingin jadi perempuan.",
+          question: "Apa pertanyaan pertama yang akan anda ajukan?"
+        }
+      ];
+
+      const allAnswered = pemantikAnswers[0]?.trim().length > 0 && pemantikAnswers[1]?.trim().length > 0;
+      const combinedContent = cases
+        .map((c, i) => `[${c.title}]\nKonteks: ${c.content}\nJawaban: ${pemantikAnswers[i]}`)
+        .join("\n\n---\n\n");
+
+      return (
+        <div className="space-y-8 md:space-y-12 pb-10">
+          {/* Header Section */}
+          <div className="bg-gradient-to-br from-[#1e1e2e] to-[#2d2d4a] p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] text-white shadow-2xl relative overflow-hidden border border-white border-opacity-5">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500 bg-opacity-20 rounded-full -mr-40 -mt-40 blur-[100px]"></div>
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6">
+                <span className="material-symbols-outlined text-sm md:text-base">clinical_notes</span> Studi Kasus Psikopatologi
+              </span>
+              <h1 className="text-3xl md:text-5xl font-headline font-black mb-4 leading-tight uppercase tracking-tighter">
+                Pertanyaan <br /> Pemantik
+              </h1>
+              <p className="text-slate-400 text-sm md:text-base font-medium max-w-xl leading-relaxed italic">
+                "Memahami dinamika emosi dan perilaku anak melalui sudut pandang profesional pendidik PAUD."
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:gap-10">
+            {cases.map((item, i) => (
+              <div key={i} className="bg-white rounded-[2rem] md:rounded-[3.5rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all group border-l-[12px] md:border-l-[16px]" style={{ borderLeftColor: item.id === 1 ? '#6366f1' : '#f43f5e' }}>
+                <div className="p-8 md:p-12">
+                  <div className="flex items-start justify-between mb-8 md:mb-10">
+                    <div className="flex items-center gap-5">
+                      <div className={`w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-white shadow-lg`} style={{ backgroundColor: item.id === 1 ? '#6366f1' : '#f43f5e' }}>
+                         <span className="material-symbols-outlined text-3xl font-black">{item.icon}</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-tight">{item.title}</h3>
+                        <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Skenario Analisis</p>
+                      </div>
+                    </div>
+                    <div className="hidden md:flex flex-col items-end">
+                       <span className="text-4xl font-black text-slate-100 group-hover:text-slate-200 transition-colors">0{item.id}</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-100 mb-8 md:mb-10 relative">
+                    <span className="absolute -top-4 left-6 text-5xl text-slate-200 font-serif leading-none italic opacity-50">“</span>
+                    <p className="text-sm md:text-lg text-slate-600 leading-relaxed md:leading-[1.8] font-medium text-justify">
+                      {item.content}
+                    </p>
+                    <span className="absolute -bottom-10 right-6 text-5xl text-slate-200 font-serif leading-none italic opacity-50 transform rotate-180">“</span>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                       <div className="w-2 h-8 rounded-full bg-primary bg-opacity-20"></div>
+                       <h4 className="font-black text-slate-800 text-sm md:text-base uppercase tracking-widest">{item.question}</h4>
+                    </div>
+
+                    {status ? (
+                      <div className="bg-white border-2 border-slate-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-inner relative">
+                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-3">Analisis Anda:</p>
+                         <p className="text-sm md:text-base text-slate-700 italic font-serif leading-relaxed">
+                           "{status.content.split("\n\n---\n\n")[i]?.split("Jawaban: ")[1] || "Jawaban belum tersedia."}"
+                         </p>
+                         <div className="absolute top-6 right-6">
+                            <span className="material-symbols-outlined text-green-500">verified</span>
+                         </div>
+                      </div>
+                    ) : (
+                      <textarea
+                        value={pemantikAnswers[i] || ""}
+                        onChange={(e) => {
+                          const updated = [...pemantikAnswers];
+                          updated[i] = e.target.value;
+                          setPemantikAnswers(updated);
+                        }}
+                        placeholder="Ketik pertanyaan atau langkah pertama Anda di sini..."
+                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl md:rounded-3xl p-6 md:p-8 text-sm md:text-base focus:bg-white focus:border-indigo-400 focus:ring-1 outline-none transition-all min-h-[120px] md:min-h-[150px] resize-none shadow-sm"
+                      ></textarea>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {!status && (
+            <div className="pt-10 flex flex-col items-center">
+               <button
+                  onClick={() => handleAction(combinedContent)}
+                  disabled={loading || !allAnswered}
+                  className="w-full max-w-xl bg-slate-900 text-white font-black py-5 md:py-7 rounded-[1.5rem] md:rounded-[2.5rem] hover:bg-black hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 shadow-2xl shadow-indigo-500 shadow-opacity-20 flex items-center justify-center gap-4 text-xs md:text-xl tracking-widest uppercase group"
+               >
+                  {loading ? "MENGIRIM ANALISIS..." : "KIRIM SEMUA ANALISIS KASUS"}
+                  {!loading && <span className="material-symbols-outlined font-black group-hover:translate-x-1 transition-transform">send</span>}
+               </button>
+               {!allAnswered && (
+                 <p className="text-xs font-bold text-rose-500 mt-4 animate-pulse">Mohon analisis kedua kasus sebelum mengirim jawaban.</p>
+               )}
+            </div>
+          )}
+
+          {status && tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-8 md:p-12 rounded-[2.5rem] md:rounded-[4rem] flex flex-col md:flex-row items-center gap-8 shadow-sm animate-in fade-in slide-in-from-bottom-4">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-yellow-400 rounded-3xl flex items-center justify-center shadow-lg shadow-yellow-400 shadow-opacity-40">
+                <span className="material-symbols-outlined text-white text-5xl">stars</span>
+              </div>
+              <div className="text-center md:text-left">
+                <p className="font-black text-yellow-700 mb-1 text-xl md:text-3xl uppercase tracking-tighter">Feedback Analisis Kasus</p>
+                <p className="text-sm md:text-lg text-yellow-800 mb-6 italic font-medium">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || "Tutor telah memberikan penilaian."}"</p>
+                <div className="flex justify-center md:justify-start gap-2 text-yellow-500">
+                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                    <span key={i} className="material-symbols-outlined text-3xl md:text-4xl fill-1">star</span>
+                  ))}
+                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                    <span key={i} className="material-symbols-outlined text-3xl md:text-4xl text-slate-200">star</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     if (
       sectionName === "Pertanyaan Pemantik" &&
       (cls?.classId === "1" || cls?.classId === "2" || ["1", "2"].includes(id))
