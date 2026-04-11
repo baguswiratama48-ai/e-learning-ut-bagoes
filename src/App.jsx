@@ -1611,19 +1611,31 @@ function InteractiveMindMap({
           </div>
         </div>
       )}
-      <div className="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+      <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center gap-2">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setGameState("INTRO")}
-            className="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary transition-all shadow-sm"
+            onClick={() => {
+              if (confirm("Ulangi pengerjaan LKPD dari awal? Skor dan posisi gelembung Anda saat ini akan dihapus.")) {
+                setPlacedItems({});
+                setScore(0);
+                setGameState("PLAYING");
+                setChallengeStep(0);
+                setChallengeSelections({});
+                setIsSuccess(false);
+                setAllDone(false);
+                setSelectedItem(null);
+              }
+            }}
+            className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 hover:border-red-200 transition-all shadow-sm group"
+            title="Ulangi dari Awal"
           >
-            <span className="material-symbols-outlined text-lg">info</span>
+            <span className="material-symbols-outlined text-xl group-hover:rotate-[-180deg] transition-all duration-500">refresh</span>
           </button>
-          <div>
-            <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest">
-              LKPD Mind Map BK
+          <div className="hidden xs:block">
+            <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">
+              LKPD Mind Map
             </p>
-            <p className="text-sm font-black text-slate-700">
+            <p className="text-xs font-black text-slate-700 leading-none">
               {myGroup ? `Kelompok ${myGroup.group_num}` : "Individu"}
             </p>
           </div>
