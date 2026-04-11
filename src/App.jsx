@@ -1810,6 +1810,103 @@ function SectionPage({ user }) {
       );
     }
 
+    if (sectionName === "Video Pembelajaran" && (id === '1' || id === '2')) {
+      return (
+        <div className="space-y-8 pb-10">
+          <div className="bg-gradient-to-br from-red-600 to-red-800 rounded-[3rem] p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+             <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
+                   <span className="material-symbols-outlined text-sm">play_circle</span> Multimedia Learning
+                </div>
+                <h1 className="text-3xl md:text-5xl font-headline font-black mb-4">Video Penjelasan BK</h1>
+                <p className="text-red-100/70 font-medium max-w-xl text-sm md:text-base">Tonton video di bawah ini untuk memahami konsep dasar, fungsi, dan prinsip bimbingan konseling di sekolah dasar secara visual.</p>
+             </div>
+          </div>
+          
+          <div className="bg-black rounded-[2.5rem] overflow-hidden shadow-2xl aspect-video border-8 border-slate-900">
+             <iframe 
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/HutA-P9J6r4" 
+                title="Video Pembelajaran BK"
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowFullScreen
+             ></iframe>
+          </div>
+
+          <div className="bg-white border rounded-[2rem] p-6 flex items-start gap-4">
+             <span className="material-symbols-outlined text-red-500 text-3xl">info</span>
+             <div>
+                <p className="font-bold text-slate-800 text-sm mb-1">Tips Belajar:</p>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">Catat poin-poin penting dari video ini di buku catatan Anda. Materi dari video ini akan membantu Anda menjawab pertanyaan di kuis dan latihan sesi ini.</p>
+             </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (sectionName === "LKPD (Lembar Kerja Peserta Didik)" && (id === '1' || id === '2')) {
+       return (
+         <div className="space-y-8 pb-10">
+            <div className="bg-gradient-to-br from-[#0c3352] to-[#1e293b] rounded-[3rem] p-8 md:p-12 text-white shadow-xl">
+               <span className="inline-block bg-yellow-400 text-primary text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest">Case Study</span>
+               <h1 className="text-3xl md:text-5xl font-headline font-black mb-4">Lembar Kerja BK</h1>
+               <p className="text-blue-100/60 font-medium max-w-2xl text-sm md:text-base">Selesaikan studi kasus berikut berdasarkan teori Konsep Dasar BK yang telah Anda pelajari di modul materi.</p>
+            </div>
+
+            <div className="bg-white border-2 border-slate-100 rounded-[2.5rem] p-8 shadow-sm">
+               <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black">?</div>
+                  <h3 className="text-xl font-black text-slate-800 italic font-serif leading-tight">"Andi, siswa kelas 3 SD, sering menyendiri dan menangis diam-diam setelah ayahnya meninggal. Nilai-nilainya mulai turun drastis."</h3>
+               </div>
+               
+               <div className="space-y-6">
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-dashed border-slate-200">
+                     <p className="text-xs font-black text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm">edit_square</span> Instruksi Pengerjaan
+                     </p>
+                     <p className="text-sm text-slate-600 font-medium leading-relaxed">Analisis kasus di atas menggunakan perspektif pelayanan BK:
+                        <br/>1. Fungsi BK apa yang paling mendesak diaktifkan untuk Andi?
+                        <br/>2. Jenis layanan apa yang sebaiknya diberikan tutor/guru?
+                        <br/>3. Bagaimana penerapan asas kerahasiaan dalam kasus ini?
+                     </p>
+                  </div>
+
+                  {!status ? (
+                     <div className="space-y-4">
+                        <textarea 
+                           value={content}
+                           onChange={e => setContent(e.target.value)}
+                           placeholder="Tuliskan analisis Anda di sini (Minimal 100 kata)..."
+                           className="w-full min-h-[250px] bg-white border border-slate-200 rounded-3xl p-6 text-sm focus:border-primary outline-none transition-all resize-none shadow-inner"
+                        ></textarea>
+                        <button 
+                           onClick={() => handleAction(content)}
+                           disabled={loading || !content.trim()}
+                           className="w-full bg-primary text-white font-black py-4 rounded-2xl hover:bg-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+                        >
+                           {loading ? 'MENYIMPAN...' : 'SIMPAN DAN KIRIM LKPD'}
+                           {!loading && <span className="material-symbols-outlined">cloud_upload</span>}
+                        </button>
+                     </div>
+                  ) : (
+                     <div className="bg-green-500 text-white p-8 rounded-[2.5rem] flex flex-col items-center text-center">
+                        <span className="material-symbols-outlined text-4xl mb-4">task_alt</span>
+                        <h3 className="text-xl font-black mb-1">LKPD Berhasil Dikirim!</h3>
+                        <p className="text-white/80 text-sm font-medium mb-4">Jawaban Anda sedang diperiksa oleh Tutor untuk diberikan feedback.</p>
+                        <div className="bg-white/10 px-6 py-4 rounded-2xl w-full border border-white/10 text-left">
+                           <p className="text-[10px] font-black uppercase text-white/40 mb-1">Analisis Anda:</p>
+                           <p className="text-xs italic font-serif leading-relaxed opacity-90 truncate-multiline">"{status.content}"</p>
+                        </div>
+                     </div>
+                  )}
+               </div>
+            </div>
+         </div>
+       );
+    }
+
     return <div className="bg-blue-50 p-10 rounded-3xl text-center text-slate-400 font-medium">Baca instruksi modul untuk bagian ini.</div>;
   };
 
