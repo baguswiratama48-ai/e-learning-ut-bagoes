@@ -4907,7 +4907,6 @@ function SectionPage({ user }) {
     if (sectionName === "Materi Pembelajaran" && id === "3") {
       return (
         <div className="space-y-10 md:space-y-12 pb-10">
-        <div className="space-y-10 md:space-y-12 pb-10">
           {/* Header Silabus */}
           <div className="relative bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[2rem] md:rounded-[4rem] p-8 md:p-16 overflow-hidden shadow-2xl border border-white border-opacity-5">
             <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500 bg-opacity-20 rounded-full -mr-48 -mt-48 blur-[120px]"></div>
