@@ -737,55 +737,107 @@ const MIND_MAP_DATA = {
   ],
 };
 
+const COURSE_DATA = {
+  SPGK4307: {
+    "Informasi Modul": (
+      <div className="space-y-6 text-slate-600 leading-relaxed">
+        <div className="bg-primary bg-opacity-5 p-6 md:p-8 rounded-[2.5rem] border border-primary border-opacity-10">
+          <h3 className="text-lg md:text-xl font-black text-primary mb-4 flex items-center gap-2">
+            <span className="material-symbols-outlined">info</span> Mata Kuliah
+            SPGK4307
+          </h3>
+          <p className="font-bold text-slate-800 mb-2">
+            Bimbingan Konseling di SD
+          </p>
+          <p className="text-xs md:text-sm">
+            Mata kuliah ini membekali mahasiswa dengan konsep dasar, prinsip,
+            asas, dan teknik bimbingan konseling yang relevan untuk diterapkan
+            di lingkungan sekolah dasar.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h4 className="font-bold text-primary mb-2 text-sm uppercase tracking-tighter">
+              Target Kompetensi
+            </h4>
+            <ul className="text-xs space-y-2 list-disc pl-4">
+              <li>Memahami hakikat bimbingan di SD</li>
+              <li>Mampu memberikan pelayanan dasar BK</li>
+              <li>Menjaga kode etik profesi guru pembimbing</li>
+            </ul>
+          </div>
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h4 className="font-bold text-emerald-500 mb-2 text-sm uppercase tracking-tighter">
+              Sistem Belajar
+            </h4>
+            <p className="text-xs leading-relaxed">
+              Tutorial Webinar (Tuweb), Diskusi Kelompok, dan Pengerjaan Tugas
+              Mandiri melalui LMS yang terintegrasi.
+            </p>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+};
+
 const STUDY_CASE_STAGES = [
   {
     step: 1,
-    title: "Analisis Masalah",
+    title: "Membangun Kepercayaan",
     scenario:
-      "Tahap 1: Seorang siswa ketakutan menceritakan bahwa ia menjadi korban bullying karena tidak ingin teman-temannya tahu. Namun, ia sangat butuh bantuan segera. Apa fokus utama kelompok Anda?",
+      "KASUS DUDI (Bagian 1): Dudi, siswa kelas 4, datang ke Anda dengan mata berkaca-kaca. Ia mengaku sering dipalak dan diancam oleh kakak kelas di kantin. Ia memohon: 'Ibu, tolong bantu aku, tapi jangan lapor ke Guru Piket atau Orang Tua Dudi ya, mereka nanti marah'. Apa langkah awal Anda?",
     options: [
-      { id: "A", t: "Mencari siapa pelaku bullying", correct: false },
-      { id: "B", t: "Memberikan rasa aman dan perlindungan", correct: true },
+      {
+        id: "A",
+        t: "Langsung lapor Guru Piket agar pelaku ditangkap",
+        correct: false,
+      },
+      {
+        id: "B",
+        t: "Menenangkan Dudi & menjamin kerahasiaan ceritanya",
+        correct: true,
+      },
     ],
   },
   {
     step: 2,
-    title: "Pemilihan Layanan",
+    title: "Dilema Profesional",
     scenario:
-      "Tahap 2: Untuk menangani trauma siswa tersebut secara privat agar privasinya terjaga, layanan mana yang paling tepat digunakan?",
+      "KASUS DUDI (Bagian 2): Saat Anda sedang konseling dengan Dudi, Guru Kelasnya memaksa meminta catatan pembicaraan tersebut untuk data rapor perilaku. Padahal Dudi belum bersedia jika gurunya tahu. Apa sikap Anda?",
     options: [
-      { id: "A", t: "Konseling Individual", correct: true },
-      { id: "B", t: "Bimbingan Kelompok", correct: false },
+      { id: "A", t: "Memberikan catatan demi kelancaran rapor", correct: false },
+      { id: "B", t: "Menolak halus demi menjaga Asas Kerahasiaan", correct: true },
     ],
   },
   {
     step: 3,
-    title: "Penerapan Asas",
+    title: "Penanganan Trauma",
     scenario:
-      "Tahap 3: Agar siswa tersebut mau terbuka, asas apa yang HARU paling ditekankan oleh guru pembimbing?",
+      "KASUS DUDI (Bagian 3): Dudi mulai sering menangis di kelas dan tidak fokus belajar. Ia butuh bantuan mendalam untuk memulihkan kepercayaan dirinya secara privat. Layanan mana yang harus Anda berikan?",
     options: [
-      { id: "A", t: "Asas Kerahasiaan", correct: true },
-      { id: "B", t: "Asas Keahlian", correct: false },
+      { id: "A", t: "Konseling Individual di ruangan yang aman", correct: true },
+      { id: "B", t: "Bimbingan Kelompok bersama teman-temannya", correct: false },
     ],
   },
   {
     step: 4,
-    title: "Tindakan Strategis",
+    title: "Kasus Berat",
     scenario:
-      "Tahap 4: Jika kasus ini melibatkan kekerasan fisik yang serius di luar kapasitas guru, tindakan apa yang harus dilakukan sesuai asas BK?",
+      "KASUS DUDI (Bagian 4): Ternyata aksi pemalakan tersebut disertai kekerasan fisik yang membahayakan nyawa Dudi. Sebagai guru SD, Anda merasa ini di luar wewenang sekolah. Apa prosedur BK yang tepat?",
     options: [
-      { id: "A", t: "Alih Tangan Kasus (Referral)", correct: true },
-      { id: "B", t: "Menyelesaikan sendiri agar tidak malu", correct: false },
+      { id: "A", t: "Melakukan Alih Tangan Kasus (Referral) ke Ahli", correct: true },
+      { id: "B", t: "Mencoba menangani sendiri sampai tuntas", correct: false },
     ],
   },
   {
     step: 5,
-    title: "Prinsip Profesional",
+    title: "Evaluasi & Komitmen",
     scenario:
-      "Tahap 5: Apa komitmen akhir kelompok Anda sebagai calon guru profesional dalam menjaga ekosistem BK di sekolah?",
+      "KASUS DUDI (Bagian 5): Setelah ditangani, Dudi kembali ceria namun masih ada rasa takut jika sendirian. Sebagai Guru Profesional, apa komitmen jangka panjang kelompok Anda untuk Dudi?",
     options: [
-      { id: "A", t: "Menjamin setiap individu dihargai dan dibantu", correct: true },
-      { id: "B", t: "Membantu hanya siswa yang bermasalah saja", correct: false },
+      { id: "A", t: "Memantau perkembangan (Follow Up) berkala", correct: true },
+      { id: "B", t: "Menganggap kasus selesai karena Dudi sudah masuk", correct: false },
     ],
   },
 ];
@@ -1401,13 +1453,30 @@ function InteractiveMindMap({
               Luar biasa! Analisis kelompok Anda sangat tajam. Hasil LKPD telah
               berhasil terkirim ke sistem Bapak Bagus Panca Wiratama.
             </p>
-            <button
-              onClick={() => window.history.back()}
-              className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-3"
-            >
-              <span className="material-symbols-outlined">home</span>
-              KEMBALI KE KELAS
-            </button>
+            <div className="space-y-3">
+              <button
+                onClick={() => window.history.back()}
+                className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-3"
+              >
+                <span className="material-symbols-outlined">home</span>
+                KEMBALI KE KELAS
+              </button>
+              <button
+                onClick={() => {
+                  setPlacedItems({});
+                  setScore(0);
+                  setGameState("PLAYING");
+                  setChallengeStep(0);
+                  setChallengeSelections({});
+                  setIsSuccess(false);
+                  setAllDone(false);
+                }}
+                className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-black text-base hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined">refresh</span>
+                ULANGI MISI
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -1531,13 +1600,15 @@ function InteractiveMindMap({
         ></div>
       </div>
       {feedback && (
-        <div
-          className={`absolute top-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300 px-8 py-3 rounded-full font-black text-sm shadow-2xl flex items-center gap-3 ${feedbackType === "correct" ? "bg-emerald-500 text-white" : "bg-red-500 text-white"}`}
-        >
-          <span className="material-symbols-outlined">
-            {feedbackType === "correct" ? "verified" : "cancel"}
-          </span>
-          {feedback}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-6">
+          <div
+            className={`animate-in zoom-in duration-300 px-10 py-6 rounded-[2.5rem] font-black text-lg shadow-2xl flex flex-col items-center gap-4 text-center backdrop-blur-md border-4 ${feedbackType === "correct" ? "bg-emerald-500 bg-opacity-90 text-white border-emerald-400" : "bg-red-500 bg-opacity-90 text-white border-red-400"}`}
+          >
+            <span className="material-symbols-outlined text-6xl drop-shadow-lg">
+              {feedbackType === "correct" ? "verified" : "cancel"}
+            </span>
+            <p className="max-w-xs">{feedback}</p>
+          </div>
         </div>
       )}
       <div className="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
