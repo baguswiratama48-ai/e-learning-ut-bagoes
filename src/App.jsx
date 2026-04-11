@@ -3029,7 +3029,7 @@ function DashboardTutor({ user }) {
         ) : (
           <div className="p-0">
             {/* Rekapitulasi LKPD Kelompok Section */}
-            {(activeTab === "1" || activeTab === "2") && (
+            {(activeTab === "1" || activeTab === "2" || activeTab === "3") && (
               <div className="p-8 bg-slate-50 bg-opacity-50 border-b border-slate-100">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shadow-sm border border-slate-100">
@@ -3090,16 +3090,18 @@ function DashboardTutor({ user }) {
                         members.length > 0 &&
                         memberSubs.length === members.length;
                       const averageScore = isEveryoneDone
-                        ? Math.round(
-                            memberSubs.reduce((acc, s) => {
-                              const score = parseInt(
-                                (s.content.match(
-                                  new RegExp("SKOR GAME: (\\d+)"),
-                                ) || [])[1] || "0",
-                              );
-                              return acc + score;
-                            }, 0) / members.length,
-                          )
+                        ? (activeTab === "3" 
+                            ? 100 
+                            : Math.round(
+                                memberSubs.reduce((acc, s) => {
+                                  const score = parseInt(
+                                    (s.content.match(
+                                      new RegExp("SKOR GAME: (\\d+)"),
+                                    ) || [])[1] || "0",
+                                  );
+                                  return acc + score;
+                                }, 0) / members.length,
+                              ))
                         : null;
 
                       return (
@@ -3169,11 +3171,16 @@ function DashboardTutor({ user }) {
                                   const sub = memberSubs.find(
                                     (s) => s.student_email === m.email,
                                   );
-                                  const score = sub
-                                    ? (sub.content.match(
+                                  let score = null;
+                                  if (sub) {
+                                    if (activeTab === "3") {
+                                      score = "SELESAI";
+                                    } else {
+                                      score = (sub.content.match(
                                         new RegExp("SKOR GAME: (\\d+)"),
-                                      ) || [])[1] || "0"
-                                    : null;
+                                      ) || [])[1] || "0";
+                                    }
+                                  }
 
                                   return (
                                     <div
