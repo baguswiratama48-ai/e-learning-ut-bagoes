@@ -916,77 +916,80 @@ function InteractiveQuiz({
       : finalScore;
 
     return (
-      <div className="bg-gradient-to-br from-indigo-50 to-white rounded-3xl p-10 border border-indigo-100 shadow-xl text-center">
-        <span className="material-symbols-outlined text-6xl text-yellow-500 mb-4 drop-shadow-md">
-          {sc >= 80 ? "military_tech" : "workspace_premium"}
-        </span>
-        <h2 className="text-3xl font-black text-indigo-900 mb-2">
-          KUIS SELESAI
+      <div className="max-w-3xl mx-auto bg-white border border-slate-200 rounded-3xl p-10 md:p-16 text-center shadow-sm animate-in fade-in zoom-in duration-700">
+        <div className="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-8 relative">
+          <span className="material-symbols-outlined text-6xl text-indigo-600">
+            {sc >= 80 ? "military_tech" : "school"}
+          </span>
+          {sc >= 80 && (
+             <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center border-4 border-white">
+                <span className="material-symbols-outlined text-white text-xs font-black">star</span>
+             </div>
+          )}
+        </div>
+        
+        <h2 className="text-3xl font-black text-slate-800 mb-2 uppercase tracking-tight">
+          Evaluasi Selesai
         </h2>
-        <p className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-8">
-          Hasil Telah Tersimpan
+        <p className="text-slate-500 font-medium mb-10">
+          Hasil pengerjaan Anda telah terekam di sistem dan dikirim ke Tutor.
         </p>
 
-        <div className="bg-white rounded-3xl p-8 max-w-sm mx-auto shadow-2xl shadow-indigo-900 shadow-opacity-5 border border-indigo-50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-          <p className="text-sm font-bold text-slate-400 mb-1">
-            Skor Akhir Anda
+        <div className="bg-slate-50 rounded-[2.5rem] p-10 max-w-xs mx-auto border border-slate-100 relative mb-10">
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+            Pencapaian Skor
           </p>
-          <p
-            className={`text-6xl font-black ${sc >= 80 ? "text-green-500" : "text-orange-500"}`}
-          >
+          <p className={`text-7xl font-black ${sc >= 80 ? "text-emerald-500" : "text-orange-500"}`}>
             {sc}
           </p>
-          <p className="text-xs font-bold text-slate-300 mt-2">DARI 100 POIN</p>
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dari 100 Poin</p>
+            <span className="h-1.5 w-1.5 rounded-full bg-slate-300"></span>
+          </div>
         </div>
 
-        <div className="mt-8">
-          <button
-            onClick={() => window.history.back()}
-            className="text-indigo-600 font-bold hover:underline flex items-center justify-center gap-2 mx-auto"
-          >
-            <span className="material-symbols-outlined">arrow_back</span>
-            Kembali ke Menu Kelas
-          </button>
-        </div>
+        <button
+          onClick={() => window.history.back()}
+          className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:bg-indigo-50 px-6 py-3 rounded-xl transition-all"
+        >
+          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          Kembali ke Dashboard Kelas
+        </button>
       </div>
     );
   }
 
   if (gameState === "INTRO") {
     return (
-      <div className="bg-white rounded-3xl p-8 border shadow-sm flex flex-col items-center text-center">
-        <div className="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center text-indigo-600 mb-6 drop-shadow-sm">
-          <span className="material-symbols-outlined text-4xl">quiz</span>
+      <div className="max-w-2xl mx-auto bg-white rounded-3xl p-10 md:p-14 border border-slate-200 shadow-sm flex flex-col items-center text-center animate-in fade-in duration-500">
+        <div className="w-20 h-20 bg-indigo-600 rounded-2xl flex items-center justify-center text-white mb-8 shadow-xl shadow-indigo-600 shadow-opacity-20">
+          <span className="material-symbols-outlined text-4xl">assignment</span>
         </div>
-        <h1 className="text-2xl md:text-3xl font-black text-slate-800 mb-3">
-          KUIS PILIHAN GANDA
+        <h1 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">
+          KUIS EVALUASI MODUL
         </h1>
-        <p className="text-slate-500 font-medium max-w-md mx-auto mb-8">
-          Terdapat 20 soal evaluasi pilihan ganda. Di setiap soal, pilih satu
-          jawaban yang Anda anggap paling tepat. Nilai otomatis keluar pada
-          akhir kuis.
+        <p className="text-slate-500 font-medium mb-10 leading-relaxed">
+          Ujilah pemahaman Anda mengenai materi Modul 1 melalui 20 butir soal pilihan ganda. 
+          Pastikan Anda telah mempelajari seluruh materi sebelum memulai.
         </p>
-        <div className="flex bg-slate-50 p-4 rounded-xl gap-6 mb-8 border border-slate-100">
-          <div>
-            <p className="text-2xl font-black text-slate-700">20</p>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              Soal
-            </p>
+        
+        <div className="grid grid-cols-2 gap-4 w-full mb-10">
+          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+            <p className="text-2xl font-black text-slate-800">20</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Soal</p>
           </div>
-          <div className="w-px bg-slate-200"></div>
-          <div>
-            <p className="text-2xl font-black text-slate-700">100</p>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-              Poin Maks
-            </p>
+          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+            <p className="text-2xl font-black text-slate-800">100</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Skor Maksimal</p>
           </div>
         </div>
+
         <button
           onClick={() => setGameState("PLAYING")}
-          className="w-full max-w-xs bg-indigo-600 text-white py-4 rounded-xl font-black text-lg hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-indigo-600 shadow-opacity-30"
+          className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-indigo-700 active:scale-95 transition-all shadow-xl shadow-slate-900 shadow-opacity-10"
         >
-          MULAI KUIS SEKARANG
+          MULAI PENGERJAAN
         </button>
       </div>
     );
@@ -996,104 +999,118 @@ function InteractiveQuiz({
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden border shadow-xl shadow-slate-200 shadow-opacity-30 flex flex-col min-h-[500px]">
-      {/* Quiz Header */}
-      <div className="bg-slate-900 px-6 py-4 flex justify-between items-center text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500 bg-opacity-20 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-        <div className="flex items-center gap-3 relative z-10">
-          <span className="material-symbols-outlined">quiz</span>
-          <span className="font-bold text-sm tracking-widest uppercase">
-            Kuis Modul 1
-          </span>
+    <div className="max-w-5xl mx-auto bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-xl shadow-slate-200 shadow-opacity-20 flex flex-col min-h-[600px] animate-in slide-in-from-bottom-5 duration-700">
+      {/* Header */}
+      <div className="bg-white px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white">
+            <span className="material-symbols-outlined text-xl">menu_book</span>
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Evaluasi</p>
+            <p className="font-bold text-slate-800">Modul 1: BK di SD</p>
+          </div>
         </div>
-        <div className="bg-white bg-opacity-20 px-4 py-1.5 rounded-full text-xs font-black tracking-widest">
-          SOAL {currentIdx + 1} / {QUIZ_DATA.length}
+        <div className="flex items-center gap-4">
+           <div className="hidden md:block h-2 w-32 bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-indigo-600 transition-all duration-500"
+                style={{ width: `${((currentIdx + 1) / QUIZ_DATA.length) * 100}%` }}
+              ></div>
+           </div>
+           <div className="px-4 py-2 bg-slate-50 rounded-lg text-xs font-black text-slate-600 font-mono">
+              SOAL {currentIdx + 1} / {QUIZ_DATA.length}
+           </div>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-1.5 bg-slate-100">
+      {/* Progress Line */}
+      <div className="w-full h-1 bg-slate-50">
         <div
-          className="h-full bg-indigo-500 transition-all duration-300"
+          className="h-full bg-indigo-600 transition-all duration-300"
           style={{ width: `${((currentIdx + 1) / QUIZ_DATA.length) * 100}%` }}
         ></div>
       </div>
 
-      {/* Quiz Body */}
-      <div className="p-6 md:p-10 flex-1 flex flex-col justify-center">
-        <h3 className="text-xl md:text-2xl font-bold text-slate-800 leading-snug mb-8">
-          <span className="text-indigo-600 mr-2">{q.n}.</span>
+      {/* Question Body */}
+      <div className="p-8 md:p-16 flex-1 flex flex-col justify-center">
+        <span className="inline-block px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase rounded-full w-fit mb-6">
+          Pertanyaan {currentIdx + 1}
+        </span>
+        <h3 className="text-xl md:text-3xl font-bold text-slate-800 leading-tight mb-12">
           {q.q}
         </h3>
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {q.opts.map((opt) => (
             <button
               key={opt.id}
               onClick={() => handleSelect(opt.id)}
-              className={`w-full text-left p-4 rounded-2xl border-2 transition-all flex items-start gap-4 group ${
+              className={`text-left p-6 rounded-2xl border-2 transition-all flex items-center gap-5 group ${
                 answers[currentIdx] === opt.id
-                  ? "border-indigo-600 bg-indigo-50"
-                  : "border-slate-100 hover:border-indigo-200 hover:bg-slate-50"
+                  ? "border-indigo-600 bg-indigo-50 shadow-md"
+                  : "border-slate-100 hover:border-slate-300 hover:bg-slate-50"
               }`}
             >
               <span
-                className={`w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center font-black text-sm transition-colors ${
+                className={`w-10 h-10 flex-shrink-0 rounded-xl flex items-center justify-center font-black transition-all ${
                   answers[currentIdx] === opt.id
-                    ? "bg-indigo-600 text-white"
-                    : "bg-slate-200 text-slate-600 group-hover:bg-indigo-100"
+                    ? "bg-indigo-600 text-white rotate-6"
+                    : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
                 }`}
               >
                 {opt.id}
               </span>
               <span
-                className={`font-medium mt-1 leading-relaxed ${answers[currentIdx] === opt.id ? "text-indigo-900" : "text-slate-700"}`}
+                className={`font-bold flex-1 leading-snug ${answers[currentIdx] === opt.id ? "text-indigo-900" : "text-slate-600"}`}
               >
                 {opt.t}
               </span>
+              {answers[currentIdx] === opt.id && (
+                <span className="material-symbols-outlined text-indigo-600 animate-in zoom-in duration-300">check_circle</span>
+              )}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Quiz Footer */}
-      <div className="border-t border-slate-100 p-6 bg-slate-50 flex items-center justify-between">
+      {/* Footer Nav */}
+      <div className="p-8 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
         <button
           onClick={prevQuestion}
           disabled={currentIdx === 0}
-          className="px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-200 disabled:opacity-30 disabled:hover:bg-transparent transition-all flex items-center gap-2"
+          className="h-14 px-8 rounded-2xl font-bold text-slate-400 hover:text-slate-700 disabled:opacity-0 transition-all flex items-center gap-2 uppercase text-xs"
         >
-          <span className="material-symbols-outlined">chevron_left</span>{" "}
-          SEBELUMNYA
+          <span className="material-symbols-outlined font-black">arrow_back</span>
+          Sebelumnya
         </button>
 
         {currentIdx === QUIZ_DATA.length - 1 ? (
           <button
             onClick={handleSubmit}
             disabled={answeredCount < QUIZ_DATA.length}
-            className="px-8 py-3 rounded-xl font-black text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600 shadow-opacity-30 transition-all flex items-center gap-2 disabled:opacity-50 disabled:hover:bg-indigo-600 disabled:shadow-none"
+            className="h-14 px-10 rounded-2xl font-black text-white bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600 shadow-opacity-20 transition-all flex items-center gap-3 disabled:opacity-50"
           >
-            KIRIM HASIL <span className="material-symbols-outlined">send</span>
+            SELESAI & KIRIM <span className="material-symbols-outlined font-black">verified</span>
           </button>
         ) : (
           <button
             onClick={nextQuestion}
-            className="px-6 py-3 rounded-xl font-bold text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-all flex items-center gap-2"
+            className="h-14 px-10 rounded-2xl font-black text-white bg-slate-900 hover:bg-slate-800 transition-all flex items-center gap-3 shadow-lg shadow-slate-900 shadow-opacity-10"
           >
-            SELANJUTNYA{" "}
-            <span className="material-symbols-outlined">chevron_right</span>
+            LANJUTKAN <span className="material-symbols-outlined font-black">arrow_forward</span>
           </button>
         )}
       </div>
 
-      {/* Incomplete warning near submit */}
-      {currentIdx === QUIZ_DATA.length - 1 &&
-        answeredCount < QUIZ_DATA.length && (
-          <p className="text-center text-xs text-red-500 font-bold bg-slate-50 pb-4">
-            Masih ada {QUIZ_DATA.length - answeredCount} soal yang terlewat.
-            Gunakan tombol 'Sebelumnya' untuk memeriksa.
-          </p>
-        )}
+      {currentIdx === QUIZ_DATA.length - 1 && answeredCount < QUIZ_DATA.length && (
+        <div className="bg-orange-50 px-8 py-3 flex items-center justify-center gap-2 text-orange-600">
+           <span className="material-symbols-outlined text-sm">warning</span>
+           <p className="text-[10px] font-black uppercase tracking-widest">
+             Terdeteksi {QUIZ_DATA.length - answeredCount} soal belum terjawab. Harap periksa kembali.
+           </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -1139,18 +1156,22 @@ function InteractiveReflection({
 
   if (statusRow) {
     return (
-      <div className="bg-white border border-slate-200 p-8 md:p-12 rounded-2xl text-center shadow-sm max-w-2xl mx-auto animate-in fade-in duration-500">
-        <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
-          <span className="material-symbols-outlined text-4xl text-indigo-600">
+      <div className="max-w-2xl mx-auto bg-white border border-slate-200 p-10 md:p-16 rounded-3xl text-center shadow-sm animate-in fade-in zoom-in duration-700">
+        <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+          <span className="material-symbols-outlined text-5xl text-emerald-600">
             verified
           </span>
         </div>
-        <h3 className="text-2xl font-extrabold text-slate-800 mb-2">
+        <h3 className="text-3xl font-black text-slate-800 mb-2 tracking-tight uppercase">
           Refleksi Terkirim
         </h3>
-        <p className="text-slate-600 font-medium max-w-md mx-auto leading-relaxed">
-          Terima kasih atas refleksinya. Masukan Anda sangat berharga untuk peningkatan kualitas pembelajaran.
+        <p className="text-slate-500 font-medium max-w-md mx-auto leading-relaxed mb-10">
+          Terima kasih atas refleksi mendalam Anda. Masukan ini sangat berharga untuk terus meningkatkan kualitas sesi bimbingan kita.
         </p>
+        <div className="inline-flex items-center gap-3 bg-emerald-50 border border-emerald-100 px-6 py-3 rounded-2xl text-emerald-700 text-sm font-bold">
+           <span className="material-symbols-outlined text-lg">check_circle</span>
+           Telah Selesai & Terdata
+        </div>
       </div>
     );
   }
@@ -4608,7 +4629,7 @@ function SectionPage({ user }) {
       {!isInput ? (
         renderStaticContent()
       ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <InteractiveQuiz
             user={user}
             classId={id}
@@ -4616,6 +4637,24 @@ function SectionPage({ user }) {
             submissions={submissions}
             onComplete={(content) => handleAction(content)}
           />
+          {tutorFeedback && (
+             <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
+               <span className="material-symbols-outlined text-yellow-500 text-4xl">
+                 stars
+               </span>
+               <div>
+                 <p className="font-bold text-yellow-700 mb-1 text-lg">
+                   Nilai dari Tutor
+                 </p>
+                 <p className="text-sm text-yellow-800 mb-1 italic">
+                   "
+                   {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
+                     tutorFeedback.content}
+                   "
+                 </p>
+               </div>
+             </div>
+           )}
         </div>
       ) : (id === "1" || id === "2") &&
         sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
@@ -4659,7 +4698,7 @@ function SectionPage({ user }) {
           />
         </div>
       ) : sectionName === "Refleksi" ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <InteractiveReflection
             user={user}
             classId={id}
@@ -4667,6 +4706,24 @@ function SectionPage({ user }) {
             submissions={submissions}
             onComplete={(content) => handleAction(content)}
           />
+          {tutorFeedback && (
+             <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
+               <span className="material-symbols-outlined text-yellow-500 text-4xl">
+                 stars
+               </span>
+               <div>
+                 <p className="font-bold text-yellow-700 mb-1 text-lg">
+                   Nilai dari Tutor
+                 </p>
+                 <p className="text-sm text-yellow-800 mb-1 italic">
+                   "
+                   {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
+                     tutorFeedback.content}
+                   "
+                 </p>
+               </div>
+             </div>
+           )}
         </div>
       ) : status ? (
         <div className="space-y-6">
