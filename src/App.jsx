@@ -3737,14 +3737,19 @@ function SectionPage({ user }) {
         `TUTOR_FEEDBACK_${sectionName}`,
       ];
 
-      // Fetch personal answers + system-generated groups
-      const { data } = await supabase
+      // Fetch personal answers + system-generated groups + everyone's LKPD for class 6A cross-visibility
+      let query = supabase
         .from("submissions")
         .select("*")
-        .or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`)
         .eq("class_id", id)
         .eq("meeting_num", meetingId)
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS"]);
+        
+      if (!(id === "3" && sectionName === "LKPD (Lembar Kerja Peserta Didik)")) {
+        query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
+      }
+
+      const { data } = await query;
 
       if (data && data.length > 0) {
         setSubmissions(data);
@@ -3832,9 +3837,9 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {!isInput ? (
-        renderStaticContent()
-      ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
+      {!isInput || (id === "3" && sectionName === "LKPD (Lembar Kerja Peserta Didik)") ? (
+          renderStaticContent()
+        ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
           <InteractiveQuiz
             user={user}
