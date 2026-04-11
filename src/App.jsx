@@ -1214,7 +1214,7 @@ function DashboardTutor({ user }) {
            <div className="p-0">
              {/* Rekapitulasi LKPD Kelompok Section */}
              {(activeTab === '1' || activeTab === '2') && (
-               <div className="p-8 bg-slate-50/50 border-b border-slate-100">
+                <div className="p-8 bg-slate-50 bg-opacity-50 border-b border-slate-100">
                   <div className="flex items-center gap-3 mb-6">
                      <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shadow-sm border border-slate-100">
                         <span className="material-symbols-outlined text-3xl">hub</span>
@@ -1297,9 +1297,9 @@ function DashboardTutor({ user }) {
              <table className="w-full text-xs text-left">
               <thead>
                 <tr className="bg-primary text-white uppercase tracking-wider font-bold">
-                  <th className="px-4 py-4 w-10 text-center border-r border-white/10">No</th>
-                  <th className="px-4 py-4 border-r border-white/10">Mahasiswa</th>
-                  <th className="px-4 py-4 border-r border-white/10 text-center">Jumlah Jawaban Mhs</th>
+                  <th className="px-4 py-4 w-10 text-center border-r border-white border-opacity-10">No</th>
+                  <th className="px-4 py-4 border-r border-white border-opacity-10">Mahasiswa</th>
+                  <th className="px-4 py-4 border-r border-white border-opacity-10 text-center">Jumlah Jawaban Mhs</th>
                   <th className="px-4 py-4 text-center">Aksi Tutor</th>
                 </tr>
               </thead>
@@ -1311,14 +1311,14 @@ function DashboardTutor({ user }) {
 
                   return (
                     <Fragment key={index}>
-                      <tr className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-50'}>
+                      <tr className={index % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50 bg-opacity-50 hover:bg-slate-50'}>
                         <td className="px-4 py-4 font-bold text-slate-400 text-center border-r">{index + 1}</td>
                         <td className="px-4 py-4 border-r">
                           <p className="font-bold text-slate-800 uppercase leading-none mb-1">{student.name}</p>
                           <p className="text-[10px] text-slate-400 font-medium tracking-tighter">{student.nim} • {student.email}</p>
                         </td>
                         <td className="px-4 py-4 border-r text-center">
-                           <span className="inline-block bg-primary/10 text-primary font-bold px-3 py-1 rounded-full text-sm">
+                           <span className="inline-block bg-primary bg-opacity-10 text-primary font-bold px-3 py-1 rounded-full text-sm">
                              {actualAnswers.length} Jawaban
                            </span>
                         </td>
@@ -1349,10 +1349,10 @@ function DashboardTutor({ user }) {
                                      const isUnlocking = unlocking === `${student.email}_${secName}`;
 
                                      return (
-                                       <div key={i} className="bg-white border rounded-xl p-4 shadow-sm relative group hover:border-primary/30 transition-all flex flex-col justify-between">
+                                       <div key={i} className="bg-white border rounded-xl p-4 shadow-sm relative group hover:border-primary hover:border-opacity-30 transition-all flex flex-col justify-between">
                                          <div>
                                            <div className="flex justify-between items-start mb-2">
-                                             <p className="text-[10px] font-bold text-primary uppercase bg-primary/10 px-2 py-0.5 rounded inline-block">{secName}</p>
+                                             <p className="text-[10px] font-bold text-primary uppercase bg-primary bg-opacity-10 px-2 py-0.5 rounded inline-block">{secName}</p>
                                              <button
                                                onClick={() => handleUnlock(student.email, secName)}
                                                disabled={isUnlocking}
@@ -1370,7 +1370,7 @@ function DashboardTutor({ user }) {
                                                     return (
                                                       <div key={bi} className="mb-2 last:mb-0">
                                                         <p className="text-[9px] text-slate-400 leading-tight mb-0.5">{parts[0]?.replace(`Pertanyaan ${bi+1}: `, `Q${bi+1}: `)}</p>
-                                                        <p className="text-[10px] font-medium text-slate-700 italic border-l-2 border-primary/20 pl-1.5 leading-snug">"{parts[1] || '-'}"</p>
+                                                        <p className="text-[10px] font-medium text-slate-700 italic border-l-2 border-primary border-opacity-20 pl-1.5 leading-snug">"{parts[1] || '-'}"</p>
                                                       </div>
                                                     );
                                                   })}
@@ -1441,7 +1441,7 @@ function Meetings({ user }) {
 
   return (
     <div className="pb-10 pt-4 px-4">
-      <div className="flex items-center gap-3 mb-6 bg-primary-fixed/30 p-4 rounded-2xl border border-primary/10">
+      <div className="flex items-center gap-3 mb-6 bg-primary bg-opacity-30 p-4 rounded-2xl border border-primary border-opacity-10">
         <div className="bg-white p-2 rounded-xl text-primary shadow-sm"><span className="material-symbols-outlined">menu_book</span></div>
         <div className="flex-1 min-w-0">
           <p className="text-[10px] font-bold text-primary uppercase tracking-wider">Mata Kuliah</p>
@@ -1477,7 +1477,7 @@ function ClassMenu({ user }) {
       <div className="bg-gradient-to-br from-primary to-[#232c94] text-white p-8 rounded-3xl shadow-xl mb-8">
         <span className="bg-yellow-400 text-primary text-[10px] font-bold px-2 py-1 rounded">SESI {meetingId}</span>
         <h2 className="font-headline font-bold text-2xl md:text-3xl mt-2 mb-2">Menu Pembelajaran</h2>
-        <p className="text-white/60 text-sm">Pilih modul yang ingin Anda pelajari atau kerjakan sekarang.</p>
+        <p className="text-white text-opacity-60 text-sm">Pilih modul yang ingin Anda pelajari atau kerjakan sekarang.</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {MENUS.map((menu, i) => {
@@ -1518,7 +1518,7 @@ function ClassMenu({ user }) {
             <Link 
               key={i} 
               to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent(menu)}`} 
-              className="group bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 text-center flex flex-col items-center relative overflow-hidden active:scale-95"
+              className="group bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-primary hover:border-opacity-30 hover:shadow-2xl hover:shadow-primary hover:shadow-opacity-10 transition-all duration-300 text-center flex flex-col items-center relative overflow-hidden active:scale-95"
             >
               <div className={`w-16 h-16 rounded-2xl ${colorClass} group-hover:scale-110 transition-transform duration-500 flex items-center justify-center mb-4 shadow-sm relative z-10`}>
                 <span className="material-symbols-outlined text-[32px]">{iconName}</span>
@@ -1526,7 +1526,7 @@ function ClassMenu({ user }) {
               <p className="font-bold text-slate-700 group-hover:text-primary text-[13px] md:text-sm leading-tight transition-colors relative z-10">{menu}</p>
               
               {/* Subtle background decoration on hover */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </Link>
           );
         })}
@@ -1641,15 +1641,15 @@ function SectionPage({ user }) {
              </div>
           </div>
 
-          <div className="bg-[#0f172a] text-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white/5">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400/10 rounded-full -ml-24 -mb-24 blur-[80px]"></div>
+          <div className="bg-[#0f172a] text-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white border-opacity-5">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary bg-opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400 bg-opacity-10 rounded-full -ml-24 -mb-24 blur-[80px]"></div>
             
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h4 className="font-headline font-bold text-xl md:text-2xl text-yellow-400 tracking-tight flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-xl bg-yellow-400/20 flex items-center justify-center">
+                    <span className="w-10 h-10 rounded-xl bg-yellow-400 bg-opacity-20 flex items-center justify-center">
                       <span className="material-symbols-outlined text-yellow-400">description</span>
                     </span>
                     Kesimpulan Video
@@ -1657,7 +1657,7 @@ function SectionPage({ user }) {
                   <p className="text-slate-400 text-sm mt-2 font-medium">Susunlah poin-poin penting dari video yang telah Anda tonton.</p>
                 </div>
                 {!status && (
-                  <div className={`px-4 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${isWordCountEnough ? 'bg-green-500/10 border-green-500/30 text-green-400' : 'bg-white/5 border-white/10 text-slate-400'}`}>
+                  <div className={`px-4 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${isWordCountEnough ? 'bg-green-500 bg-opacity-10 border-green-500 border-opacity-30 text-green-400' : 'bg-white bg-opacity-5 border-white border-opacity-10 text-slate-400'}`}>
                     <span className={`w-2 h-2 rounded-full ${isWordCountEnough ? 'bg-green-500 animate-pulse' : 'bg-slate-500'}`}></span>
                     Syarat: 100 Kata
                   </div>
@@ -1666,14 +1666,14 @@ function SectionPage({ user }) {
               
               {status ? (
                 <div className="space-y-4">
-                  <div className="bg-white/5 backdrop-blur-sm p-6 md:p-8 rounded-[2rem] border border-white/10 shadow-inner">
+                  <div className="bg-white bg-opacity-5 backdrop-blur-sm p-6 md:p-8 rounded-[2rem] border border-white border-opacity-10 shadow-inner">
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-[10px] text-yellow-400/70 border border-yellow-400/30 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">Laporan Mahasiswa</span>
+                      <span className="text-[10px] text-yellow-400 text-opacity-70 border border-yellow-400 border-opacity-30 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">Laporan Mahasiswa</span>
                     </div>
                     <p className="text-sm md:text-base text-slate-200 leading-[1.8] text-justify italic font-serif">
                        {status.content}
                     </p>
-                    <div className="mt-8 flex items-center gap-3 py-3 px-5 bg-green-500/10 rounded-2xl border border-green-500/20 w-fit">
+                    <div className="mt-8 flex items-center gap-3 py-3 px-5 bg-green-500 bg-opacity-10 rounded-2xl border border-green-500 border-opacity-20 w-fit">
                       <span className="material-symbols-outlined text-green-400 text-xl font-bold">verified</span>
                       <p className="text-xs text-green-400 font-bold uppercase tracking-widest">Terkirim & Terarsip</p>
                     </div>
@@ -1682,19 +1682,19 @@ function SectionPage({ user }) {
               ) : (
                 <div className="space-y-6">
                   <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400/20 to-primary/20 rounded-[2rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
+                    <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 from-opacity-20 to-primary to-opacity-20 rounded-[2rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
                     <textarea 
                       value={content} 
                       onChange={e => setContent(e.target.value)}
                       placeholder="Masukkan analisis dan kesimpulan Anda di sini (Minimal 100 kata)..."
-                      className="relative w-full bg-[#1e293b]/50 border border-white/10 rounded-[2rem] p-6 md:p-8 text-sm md:text-base text-white placeholder:text-slate-500 focus:bg-[#1e293b] focus:border-yellow-400/50 outline-none min-h-[300px] resize-none transition-all leading-relaxed text-justify"
+                      className="relative w-full bg-[#1e293b] bg-opacity-50 border border-white border-opacity-10 rounded-[2rem] p-6 md:p-8 text-sm md:text-base text-white placeholder:text-slate-500 focus:bg-[#1e293b] focus:border-yellow-400 focus:border-opacity-50 outline-none min-h-[300px] resize-none transition-all leading-relaxed text-justify"
                     ></textarea>
                     
                     <div className="absolute bottom-6 right-6 flex items-center gap-3">
                        <p className={`text-xs font-black tracking-tighter transition-colors ${isWordCountEnough ? 'text-green-400' : 'text-slate-500'}`}>
                          {wordCount.toLocaleString()} <span className="opacity-50">/ 100 KATA</span>
                        </p>
-                       <div className="w-10 h-10 rounded-full bg-black/40 flex items-center justify-center border border-white/5">
+                       <div className="w-10 h-10 rounded-full bg-black bg-opacity-40 flex items-center justify-center border border-white border-opacity-5">
                          {isWordCountEnough ? (
                            <span className="material-symbols-outlined text-green-400 text-lg">check_circle</span>
                          ) : (
@@ -1711,7 +1711,7 @@ function SectionPage({ user }) {
                     <button 
                       onClick={() => handleAction(content)}
                       disabled={loading || !isWordCountEnough}
-                      className="w-full md:w-auto min-w-[240px] bg-yellow-400 text-slate-900 font-black py-4 px-8 rounded-2xl hover:bg-yellow-300 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 shadow-xl shadow-yellow-400/10 flex items-center justify-center gap-3 order-1 md:order-2"
+                      className="w-full md:w-auto min-w-[240px] bg-yellow-400 text-slate-900 font-black py-4 px-8 rounded-2xl hover:bg-yellow-300 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 shadow-xl shadow-yellow-400 shadow-opacity-10 flex items-center justify-center gap-3 order-1 md:order-2"
                     >
                       {loading ? 'MEMPROSES...' : 'KIRIM KESIMPULAN VIDEO'}
                       {!loading && isWordCountEnough && <span className="material-symbols-outlined font-bold">send</span>}
@@ -1719,7 +1719,7 @@ function SectionPage({ user }) {
                   </div>
                   
                   {!isWordCountEnough && content.trim().length > 0 && (
-                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
+                    <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
                       <span className="material-symbols-outlined text-red-400">priority_high</span>
                       <p className="text-xs text-red-300 font-bold uppercase tracking-wider">
                         Kurang {100 - wordCount} kata lagi untuk membuka akses tombol kirim.
@@ -1754,7 +1754,7 @@ function SectionPage({ user }) {
           {COURSE_DATA[courseCode][sectionName]}
           
           <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400 bg-opacity-10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
             <h4 className="font-bold text-lg mb-4 text-yellow-400 uppercase tracking-tighter flex items-center gap-2">
               <span className="material-symbols-outlined">quiz</span> Pertanyaan Verifikasi
             </h4>
@@ -1762,8 +1762,8 @@ function SectionPage({ user }) {
             
             {status ? (
               <div className="space-y-4">
-                <div className="bg-white/10 p-4 rounded-xl border border-white/20">
-                  <p className="text-[10px] text-white/50 uppercase font-bold mb-2">Jawaban Anda:</p>
+                <div className="bg-white bg-opacity-10 p-4 rounded-xl border border-white border-opacity-20">
+                  <p className="text-[10px] text-white text-opacity-50 uppercase font-bold mb-2">Jawaban Anda:</p>
                   <p className="text-sm italic">"{status.content}"</p>
                   <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
                     <span className="material-symbols-outlined text-sm">verified</span> Terkirim ke Tutor
@@ -1777,7 +1777,7 @@ function SectionPage({ user }) {
                   value={content} 
                   onChange={e => setContent(e.target.value)}
                   placeholder="Ketik jawaban Anda di sini..."
-                  className="w-full bg-white/5 border border-white/20 rounded-xl p-4 text-sm focus:bg-white/10 focus:border-yellow-400 outline-none min-h-[120px]"
+                  className="w-full bg-white bg-opacity-5 border border-white border-opacity-20 rounded-xl p-4 text-sm focus:bg-white focus:bg-opacity-10 focus:border-yellow-400 outline-none min-h-[120px]"
                 ></textarea>
                 <button 
                   onClick={() => handleAction(content)}
