@@ -476,20 +476,20 @@ function InteractiveMindMap({
   onComplete,
   submissions,
 }) {
-  const [placedItems, setPlacedItems] = React.useState({});
-  const [gameState, setGameState] = React.useState("INTRO");
-  const [score, setScore] = React.useState(0);
-  const [feedback, setFeedback] = React.useState(null);
-  const [feedbackType, setFeedbackType] = React.useState("correct");
-  const [isLandscape, setIsLandscape] = React.useState(
+  const [placedItems, setPlacedItems] = useState({});
+  const [gameState, setGameState] = useState("INTRO");
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState(null);
+  const [feedbackType, setFeedbackType] = useState("correct");
+  const [isLandscape, setIsLandscape] = useState(
     window.innerWidth > window.innerHeight,
   );
-  const [dragging, setDragging] = React.useState(null);
-  const [wrongItem, setWrongItem] = React.useState(null);
-  const [allDone, setAllDone] = React.useState(false);
-  const [challengeAnswer, setChallengeAnswer] = React.useState(null);
+  const [dragging, setDragging] = useState(null);
+  const [wrongItem, setWrongItem] = useState(null);
+  const [allDone, setAllDone] = useState(false);
+  const [challengeAnswer, setChallengeAnswer] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const check = () => setIsLandscape(window.innerWidth > window.innerHeight);
     check();
     window.addEventListener("resize", check);
