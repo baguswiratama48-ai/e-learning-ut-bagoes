@@ -1527,7 +1527,7 @@ function SectionPage({ user }) {
                  {[
                    { t: 'Kerahasiaan', icon: 'lock', d: 'Data konseli tidak boleh diketahui pihak lain.' },
                    { t: 'Kesukarelaan', icon: 'favorite', d: 'Ikuti layanan tanpa paksaan (kemauan sendiri).' },
-                   { t: 'Keterbukaan', icon: 'meet_anywhere', d: 'Jujur dan terbuka dalam memberi informasi.' },
+                   { t: 'Keterbukaan', icon: 'campaign', d: 'Jujur dan terbuka dalam memberi informasi.' },
                    { t: 'Kekinian', icon: 'event', d: 'Fokus pada masalah saat ini (here and now).' },
                    { t: 'Kemandirian', icon: 'person_celebrate', d: 'Menjadi pribadi mandiri tanpa bergantung.' },
                    { t: 'Keahlian', icon: 'workspace_premium', d: 'Dilakukan secara profesional oleh ahli terlatih.' },
@@ -1577,33 +1577,49 @@ function SectionPage({ user }) {
           {/* Verification Button Section */}
           <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
              {!status ? (
-               <div className="w-full max-w-xl text-center">
-                  <div className="mb-6">
+               <div className="w-full max-w-xl">
+                  <div className="text-center mb-8">
                      <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-4 py-2 rounded-full border border-yellow-200 text-[10px] font-black uppercase tracking-widest mb-4">
                         <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
                         Konfirmasi Pemahaman
                      </div>
-                     <h3 className="text-xl font-black text-slate-800 mb-2">Sudah Selesai Membaca?</h3>
-                     <p className="text-sm text-slate-500 font-medium">Klik tombol di bawah untuk melaporkan bahwa Anda telah mempelajari materi ini kepada tutor.</p>
+                     <h3 className="text-xl font-black text-slate-800 mb-2">Evaluasi Materi</h3>
+                     <p className="text-sm text-slate-500 font-medium">Tuliskan jawaban Anda untuk pertanyaan di bawah ini untuk mengirimkan laporan belajar ke tutor.</p>
                   </div>
-                  <button 
-                    onClick={() => handleAction("Saya telah membaca dan memahami seluruh materi Konsep Dasar Bimbingan dan Konseling (BK) ini secara mandiri.")}
-                    disabled={loading}
-                    className="w-full bg-[#1e293b] text-white font-black py-5 rounded-[2rem] hover:bg-black transition-all shadow-2xl shadow-slate-200 flex items-center justify-center gap-3 group"
-                  >
-                    {loading ? 'MEMPROSES LAPORAN...' : 'TANDAI SELESAI MEMPELAJARI'}
-                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">verified</span>}
-                  </button>
+
+                  <div className="bg-white border-2 border-primary/10 rounded-[2.5rem] p-8 shadow-xl shadow-primary/5">
+                     <label className="block text-sm font-black text-primary uppercase tracking-tight mb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm">question_answer</span>
+                        Pertanyaan Verifikasi:
+                     </label>
+                     <p className="text-lg font-bold text-slate-800 mb-6 leading-snug">Apa Pengertian, Fungsi, dan Tujuan Bimbingan dan Konseling?</p>
+                     
+                     <textarea 
+                        value={content}
+                        onChange={e => setContent(e.target.value)}
+                        placeholder="Ketik jawaban lengkap Anda di sini..."
+                        className="w-full min-h-[150px] bg-slate-50 border border-slate-100 rounded-2xl p-5 text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-6"
+                     ></textarea>
+
+                     <button 
+                        onClick={() => handleAction(content)}
+                        disabled={loading || !content.trim()}
+                        className="w-full bg-[#1e293b] text-white font-black py-5 rounded-2xl hover:bg-black transition-all flex items-center justify-center gap-3 group disabled:opacity-50"
+                     >
+                        {loading ? 'MENGIRIM JAWABAN...' : 'KIRIM JAWABAN KE TUTOR'}
+                        {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>}
+                     </button>
+                  </div>
                </div>
              ) : (
                <div className="w-full max-w-xl bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-500/20 flex flex-col items-center text-center">
                   <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
                      <span className="material-symbols-outlined text-4xl">done_all</span>
                   </div>
-                  <h3 className="text-xl font-black mb-1">Materi Berhasil Diselesaikan!</h3>
-                  <p className="text-white/80 text-sm font-medium mb-6">Laporan Anda telah terkirim dan tercatat di dashboard tutor.</p>
+                  <h3 className="text-xl font-black mb-1">Jawaban Terkirim!</h3>
+                  <p className="text-white/80 text-sm font-medium mb-6">Laporan belajar Anda telah masuk ke sistem. Silakan tunggu feedback/nilai dari tutor.</p>
                   <div className="bg-white/10 px-6 py-4 rounded-2xl w-full border border-white/10 text-left">
-                     <p className="text-[10px] font-black uppercase text-white/40 mb-1">Status Kehadiran</p>
+                     <p className="text-[10px] font-black uppercase text-white/40 mb-1">Jawaban Anda:</p>
                      <p className="text-xs italic font-serif opacity-90">"{status.content}"</p>
                   </div>
                </div>
