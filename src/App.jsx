@@ -109,7 +109,7 @@ const FEEDBACK_MESSAGES = {
 };
 
 const getPemantikForStudent = (nim) => {
-  const n = parseInt(nim.replace(/\D/g, '')) || 0;
+  const n = parseInt(nim.replace(new RegExp('\\D', 'g'), '')) || 0;
   return PEMANTIK_GROUPS.map((group, gi) => group[(n + gi) % group.length]);
 };
 
@@ -187,7 +187,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
 
   if (gameState === 'CASE_STUDY') {
     return (
-      <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[60] bg-opacity-60 bg-black backdrop-blur-md flex items-center justify-center p-4">
         <div className="bg-white rounded-[3rem] p-8 md:p-12 max-w-2xl w-full shadow-2xl animate-in zoom-in duration-300">
            <div className="flex items-center gap-4 mb-8">
               <div className="w-16 h-16 bg-yellow-100 rounded-3xl flex items-center justify-center text-yellow-600">
@@ -216,11 +216,11 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
 
        {/* Tutorial Overlay */}
        {showTutorial && (
-         <div className="fixed inset-0 z-[70] bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-6">
+         <div className="fixed inset-0 z-[70] bg-opacity-90 bg-slate-900 backdrop-blur-sm flex items-center justify-center p-6">
             <div className="bg-white rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl animate-in fade-in zoom-in duration-300 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+               <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-5 rounded-full -mr-16 -mt-16"></div>
                <div className="relative z-10 text-center">
-                  <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary mx-auto mb-6">
+                  <div className="w-20 h-20 bg-primary bg-opacity-10 rounded-3xl flex items-center justify-center text-primary mx-auto mb-6">
                      <span className="material-symbols-outlined text-5xl">auto_stories</span>
                   </div>
                   <h2 className="text-3xl font-black text-slate-800 mb-2">Misi Kelompok!</h2>
@@ -259,10 +259,10 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                    {myGroup && (
                      <div className="flex -space-x-1.5">
                         {myGroup.members.map((m, i) => (
-                           <div key={i} className="w-7 h-7 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center text-[9px] font-black text-primary leading-none ring-1 ring-slate-200 transition-transform hover:-translate-y-1 cursor-help group/avatar relative" title={m.name}>
+                           <div key={i} className="w-7 h-7 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center text-[9px] font-black text-primary leading-none ring-1 ring-slate-200 transition-transform hover:-translate-y-1 cursor-help group-avatar relative" title={m.name}>
                               {getInitials(m.name)}
                               {/* Tooltip Name */}
-                              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/avatar:opacity-100 whitespace-nowrap z-[100] font-medium pointer-events-none transition-opacity">
+                              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover-avatar:opacity-100 whitespace-nowrap z-[100] font-medium pointer-events-none transition-opacity">
                                  {m.name}
                               </div>
                            </div>
@@ -326,7 +326,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                     key={zone.id}
                     onDragOver={e => e.preventDefault()}
                     onDrop={() => dragging && handleDrop(dragging, zone.id)}
-                    className={`absolute w-44 h-44 md:w-56 md:h-56 rounded-full border-[3px] border-dashed animate-[pulse_5s_infinite] flex flex-col items-center justify-start pt-6 transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-') + "/40"}`}
+                    className={`absolute w-44 h-44 md:w-56 md:h-56 rounded-full border-[3px] border-dashed animate-[pulse_5s_infinite] flex flex-col items-center justify-start pt-6 transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-') + " bg-opacity-40"}`}
                     style={{ transform: `translate(${x}px, ${y}px)` }}
                   >
                      <div className={`p-2.5 px-5 rounded-2xl ${zone.color} text-white text-[9px] font-black uppercase tracking-widest mb-3 shadow-lg -mt-2`}>
@@ -1263,7 +1263,7 @@ function DashboardTutor({ user }) {
                                           <div className="flex-1 bg-slate-50 px-4 py-2 rounded-2xl">
                                              <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Skor Game</p>
                                              <p className="font-black text-primary text-xl">
-                                                {(sub.content.match(/SKOR GAME: (\d+)/)?.[1] || '0') + " / 100"}
+                                                {((sub.content.match(new RegExp('SKOR GAME: (\\d+)')) || [])[1] || '0') + " / 100"}
                                              </p>
                                           </div>
                                        </div>
