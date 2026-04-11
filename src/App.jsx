@@ -543,102 +543,124 @@ function InteractiveMindMap({
 
   if (!isLandscape) {
     return (
-      <div className="fixed inset-0 z-[100] bg-primary text-white flex flex-col items-center justify-center p-10 text-center">
-        <span className="material-symbols-outlined text-8xl animate-bounce mb-6">
-          screen_rotation
-        </span>
-        <h2 className="text-2xl font-black mb-3">Putar Layar Anda!</h2>
-        <p className="opacity-70 font-medium max-w-xs">
-          Gunakan mode <strong>Lanskap (Miring)</strong> agar Mind Map terlihat
-          jelas.
-        </p>
+      <div className="fixed inset-0 z-[100] bg-primary text-white flex flex-col items-center justify-center p-10 text-center overflow-y-auto h-full w-full">
+        <div className="min-h-full flex flex-col items-center justify-center w-full my-auto py-10">
+          <span className="material-symbols-outlined text-[6rem] md:text-8xl animate-bounce mb-6">
+            screen_rotation
+          </span>
+          <h2 className="text-2xl font-black mb-3">Putar Layar Anda!</h2>
+          <p className="opacity-70 font-medium max-w-xs mb-8">
+            Gunakan mode <strong>Lanskap (Miring)</strong> penuh agar area kerja
+            Mind Map terlihat dengan sempurna.
+          </p>
+          <button
+            onClick={() => window.history.back()}
+            className="flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-xl font-bold hover:scale-105 active:scale-95 transition-all"
+          >
+            <span className="material-symbols-outlined">arrow_back</span>
+            Kembali Saja
+          </button>
+        </div>
       </div>
     );
   }
 
   if (gameState === "INTRO") {
     return (
-      <div className="fixed inset-0 z-[70] bg-slate-900 flex items-center justify-center p-6">
-        <div className="bg-white rounded-[3rem] p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300">
-          <div className="relative z-10">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-primary bg-opacity-10 rounded-3xl flex items-center justify-center text-primary flex-shrink-0">
-                <span className="material-symbols-outlined text-4xl">
-                  auto_stories
-                </span>
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">
-                  LKPD Interaktif
-                </p>
-                <h2 className="text-2xl font-black text-slate-800 leading-tight">
-                  MISI ARSITEK EKOSISTEM BK
-                </h2>
-              </div>
-            </div>
-            <p className="text-slate-500 font-medium mb-8 text-sm leading-relaxed">
-              Halo, Calon Guru Profesional! Tugasmu adalah menyusun Mind Map BK
-              yang berantakan menjadi utuh kembali bersama tim.
-            </p>
-            <div className="space-y-3 mb-8">
-              {[
-                {
-                  n: "1",
-                  icon: "drag_pan",
-                  text: "Perhatikan 3 cabang: Etimologi, Asas, dan Jenis Layanan.",
-                },
-                {
-                  n: "2",
-                  icon: "touch_app",
-                  text: "Tekan & geser bubble kata ke lingkaran cabang yang tepat (Drag & Drop).",
-                },
-                {
-                  n: "3",
-                  icon: "info",
-                  text: "Setiap jawaban benar memunculkan info singkat.",
-                },
-                {
-                  n: "4",
-                  icon: "send",
-                  text: "Jika semua terpasang, tekan KIRIM dan screenshot hasilnya.",
-                },
-              ].map((s) => (
-                <div
-                  key={s.n}
-                  className="flex gap-4 items-start bg-slate-50 p-4 rounded-2xl"
-                >
-                  <span className="w-8 h-8 rounded-full bg-primary text-white flex-shrink-0 flex items-center justify-center font-black text-xs">
-                    {s.n}
+      <div className="fixed inset-0 z-[70] bg-slate-900 overflow-y-auto w-full h-full">
+        <div className="min-h-full flex items-center justify-center w-full p-4 md:p-6">
+          <div className="bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 max-w-2xl w-full shadow-2xl relative overflow-hidden animate-in fade-in zoom-in duration-300 my-auto">
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 bg-primary bg-opacity-10 rounded-3xl flex items-center justify-center text-primary flex-shrink-0">
+                  <span className="material-symbols-outlined text-4xl">
+                    auto_stories
                   </span>
-                  <div className="flex items-start gap-2">
-                    <span className="material-symbols-outlined text-primary text-base mt-0.5">
-                      {s.icon}
-                    </span>
-                    <p className="text-sm font-semibold text-slate-600">
-                      {s.text}
-                    </p>
-                  </div>
                 </div>
-              ))}
-            </div>
-            {myGroup && (
-              <div className="bg-primary bg-opacity-5 border border-primary border-opacity-20 p-4 rounded-2xl flex items-center gap-3 mb-8">
-                <span className="material-symbols-outlined text-primary">
-                  group
-                </span>
-                <p className="text-sm font-bold text-primary">
-                  Kelompok {myGroup.group_num} — {myGroup.members.length}{" "}
-                  anggota
-                </p>
+                <div>
+                  <p className="text-[10px] font-black uppercase text-primary tracking-widest mb-1">
+                    LKPD Interaktif
+                  </p>
+                  <h2 className="text-2xl font-black text-slate-800 leading-tight">
+                    MISI ARSITEK EKOSISTEM BK
+                  </h2>
+                </div>
               </div>
-            )}
-            <button
-              onClick={() => setGameState("PLAYING")}
-              className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-3"
-            >
-              <span className="material-symbols-outlined">rocket_launch</span>{" "}
-              MULAI MISI!
-            </button>
+              <p className="text-slate-500 font-medium mb-8 text-sm leading-relaxed">
+                Halo, Calon Guru Profesional! Tugasmu adalah menyusun Mind Map
+                BK yang berantakan menjadi utuh kembali bersama tim.
+              </p>
+              <div className="space-y-3 mb-8">
+                {[
+                  {
+                    n: "1",
+                    icon: "drag_pan",
+                    text: "Perhatikan 3 cabang: Etimologi, Asas, dan Jenis Layanan.",
+                  },
+                  {
+                    n: "2",
+                    icon: "touch_app",
+                    text: "Tekan & geser bubble kata ke lingkaran cabang yang tepat (Drag & Drop).",
+                  },
+                  {
+                    n: "3",
+                    icon: "info",
+                    text: "Setiap jawaban benar memunculkan info singkat.",
+                  },
+                  {
+                    n: "4",
+                    icon: "send",
+                    text: "Jika semua terpasang, tekan KIRIM dan screenshot hasilnya.",
+                  },
+                ].map((s) => (
+                  <div
+                    key={s.n}
+                    className="flex gap-4 items-start bg-slate-50 p-4 rounded-2xl"
+                  >
+                    <span className="w-8 h-8 rounded-full bg-primary text-white flex-shrink-0 flex items-center justify-center font-black text-xs">
+                      {s.n}
+                    </span>
+                    <div className="flex items-start gap-2">
+                      <span className="material-symbols-outlined text-primary text-base mt-0.5">
+                        {s.icon}
+                      </span>
+                      <p className="text-sm font-semibold text-slate-600">
+                        {s.text}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {myGroup && (
+                <div className="bg-primary bg-opacity-5 border border-primary border-opacity-20 p-4 rounded-2xl flex items-center gap-3 mb-8">
+                  <span className="material-symbols-outlined text-primary">
+                    group
+                  </span>
+                  <p className="text-sm font-bold text-primary">
+                    Kelompok {myGroup.group_num} — {myGroup.members.length}{" "}
+                    anggota
+                  </p>
+                </div>
+              )}
+              <div className="flex flex-col-reverse md:flex-row gap-3 mt-4">
+                <button
+                  onClick={() => window.history.back()}
+                  className="w-full md:w-1/3 bg-slate-100 text-slate-500 py-4 md:py-5 rounded-2xl font-black text-base md:text-lg hover:bg-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined">arrow_back</span>
+                  KEMBALI
+                </button>
+                <button
+                  onClick={() => setGameState("PLAYING")}
+                  className="w-full md:w-2/3 bg-primary text-white py-4 md:py-5 rounded-2xl font-black text-base md:text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-3"
+                >
+                  <span className="material-symbols-outlined">
+                    rocket_launch
+                  </span>{" "}
+                  MULAI MISI!
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
