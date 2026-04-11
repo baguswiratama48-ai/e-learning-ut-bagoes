@@ -3503,6 +3503,122 @@ function SectionPage({ user }) {
   if (!user || user.role !== "student") return <Navigate to={`/class/${id}`} />;
 
   const renderStaticContent = () => {
+    if (sectionName === "Video Pembelajaran" && id === "3") {
+      const videoId = "g1xgaTWoOiM";
+      return (
+        <div className="space-y-10 md:space-y-12 pb-10">
+          {/* Video Player Card */}
+          <div className="bg-white rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-slate-100 overflow-hidden group">
+            <div className="aspect-video relative">
+              <iframe
+                className="w-full h-full relative z-10"
+                src={`https://www.youtube.com/embed/${videoId}`}
+                title="Video Pembelajaran"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+              <div className="absolute inset-0 bg-primary bg-opacity-5 animate-pulse"></div>
+            </div>
+            <div className="p-6 md:p-10 bg-slate-50 border-t items-center flex flex-col md:flex-row justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500 shadow-opacity-30">
+                  <span className="material-symbols-outlined text-2xl md:text-3xl font-black">
+                    play_circle
+                  </span>
+                </div>
+                <div>
+                  <p className="font-black text-slate-800 text-base md:text-xl leading-tight">
+                    Video Pembelajaran Utama
+                  </p>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
+                    SPDA4401 | Kelas 6A
+                  </p>
+                </div>
+              </div>
+              <a
+                href={`https://youtu.be/${videoId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full md:w-auto text-xs font-black text-white uppercase bg-slate-900 px-8 py-4 rounded-2xl hover:bg-black transition-all shadow-xl shadow-slate-900 shadow-opacity-10 flex items-center justify-center gap-2"
+              >
+                Tonton di YouTube
+                <span className="material-symbols-outlined text-sm">open_in_new</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Evaluation Section */}
+          <div className="bg-[#1e293b] text-white p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-2xl relative overflow-hidden border border-white border-opacity-5">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary bg-opacity-20 rounded-full -mr-48 -mt-48 blur-[120px]"></div>
+            
+            <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">
+              <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+                <span className="w-2 h-2 bg-slate-900 rounded-full animate-pulse"></span>
+                Evaluasi Video
+              </div>
+              <h4 className="font-headline font-black text-2xl md:text-4xl text-white mb-6 leading-tight uppercase tracking-tighter text-center">
+                Apa yang kamu pelajari dari video ini?
+              </h4>
+              <p className="text-slate-400 text-sm md:text-base font-medium mb-10 leading-relaxed text-center">
+                Tuangkan pemahaman Anda setelah menonton tayangan di atas dalam bentuk rangkuman singkat dan jelas di bawah ini.
+              </p>
+
+              {status ? (
+                <div className="w-full bg-white bg-opacity-5 backdrop-blur-md p-6 md:p-10 rounded-[2.5rem] border border-white border-opacity-10 shadow-inner text-left">
+                  <p className="text-[9px] md:text-[10px] text-yellow-400 font-black uppercase tracking-widest mb-4 opacity-70">Laporan Belajar Anda:</p>
+                  <div className="bg-white bg-opacity-5 p-4 rounded-2xl">
+                     <p className="text-sm md:text-lg text-slate-200 leading-relaxed italic font-serif opacity-90">"{status.content}"</p>
+                  </div>
+                  <div className="mt-8 flex items-center gap-3 py-3 px-6 bg-green-500 bg-opacity-20 rounded-2xl border border-green-500 border-opacity-30 w-fit">
+                    <span className="material-symbols-outlined text-green-400">check_circle</span>
+                    <p className="text-[10px] text-green-400 font-black uppercase tracking-widest">Berhasil Terkirim</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full space-y-6">
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Tuliskan analisis Anda di sini..."
+                    className="w-full min-h-[180px] md:min-h-[220px] bg-white bg-opacity-5 border border-white border-opacity-10 rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 text-sm md:text-lg text-white placeholder:text-slate-600 focus:bg-white focus:bg-opacity-10 focus:border-yellow-400 outline-none transition-all resize-none"
+                  ></textarea>
+                  <button
+                    onClick={() => handleAction(content)}
+                    disabled={loading || !content.trim()}
+                    className="w-full bg-yellow-400 text-slate-900 font-black py-5 md:py-7 rounded-2xl md:rounded-[2.5rem] hover:bg-yellow-300 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-yellow-400 shadow-opacity-20 flex items-center justify-center gap-3 text-sm md:text-xl tracking-widest uppercase disabled:opacity-30"
+                  >
+                    {loading ? "MENGIRIM JAWABAN..." : "KIRIM JAWABAN KE TUTOR"}
+                    {!loading && <span className="material-symbols-outlined font-black">send</span>}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {status && tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-8 md:p-12 rounded-[2.5rem] md:rounded-[4rem] flex flex-col md:flex-row items-center gap-8 shadow-sm">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-yellow-400 rounded-3xl flex items-center justify-center shadow-lg shadow-yellow-400 shadow-opacity-40">
+                <span className="material-symbols-outlined text-white text-5xl">stars</span>
+              </div>
+              <div className="text-center md:text-left">
+                <p className="font-black text-yellow-700 mb-1 text-xl md:text-3xl uppercase tracking-tighter">Hasil Penilaian</p>
+                <p className="text-sm md:text-lg text-yellow-800 mb-6 italic font-medium">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || "Tutor telah memberikan penilaian."}"</p>
+                <div className="flex justify-center md:justify-start gap-2 text-yellow-500">
+                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                    <span key={i} className="material-symbols-outlined text-3xl md:text-4xl fill-1">star</span>
+                  ))}
+                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                    <span key={i} className="material-symbols-outlined text-3xl md:text-4xl text-slate-200">star</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     if (sectionName === "Video Pembelajaran" && (id === "1" || id === "2")) {
       const videoId = "GYlmNScMEl4";
       const wordCount = content.trim()
@@ -4976,6 +5092,37 @@ function SectionPage({ user }) {
                         ))}
                      </tbody>
                   </table>
+               </div>
+            </div>
+          </section>
+
+          {/* Materi Pengayaan Section */}
+          <section className="space-y-6 md:space-y-8 mt-12">
+            <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
+               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-indigo-600 shadow-opacity-20">
+                 <span className="material-symbols-outlined">video_library</span>
+               </span>
+               <div>
+                  <h2 className="text-lg md:text-2xl font-black text-indigo-900 leading-tight uppercase tracking-tight">Materi Pengayaan</h2>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Tayangan Visual Pendukung</p>
+               </div>
+            </div>
+
+            <div className="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden group">
+               <div className="aspect-video relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl">
+                  <iframe
+                    className="w-full h-full relative z-10"
+                    src={`https://www.youtube.com/embed/L9CWP3bNFA8`}
+                    title="Materi Pengayaan"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                  <div className="absolute inset-0 bg-indigo-900 bg-opacity-5 animate-pulse"></div>
+               </div>
+               <div className="mt-6 flex items-center gap-3 px-2">
+                  <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                  <p className="text-xs md:text-sm text-slate-500 font-bold italic">Tonton video pengayaan di atas sebagai referensi tambahan sebelum menjawab pertanyaan evaluasi.</p>
                </div>
             </div>
           </section>
