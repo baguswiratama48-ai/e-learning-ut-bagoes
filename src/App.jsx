@@ -680,10 +680,11 @@ function DashboardTutor({ user }) {
   };
   
   const handleGenerateGroups = async () => {
-    if (!activeTab || activeTab === 'demo' || activeTab === 'record_m1') return;
+    if (!activeTab || activeTab === 'record_m1') return;
     setGenerating(true);
     try {
-      const classStudents = STUDENTS.filter(s => s.classId === activeTab && s.email !== 'demo@ecampus.ut.ac.id');
+      // Include all students in the class (including demo account if for testing)
+      const classStudents = STUDENTS.filter(s => s.classId === activeTab);
       if (classStudents.length === 0) return;
 
       // Shuffle using Fisher-Yates
@@ -734,6 +735,29 @@ function DashboardTutor({ user }) {
     } catch (err) {
       console.log(err);
       alert("Gagal mengacak kelompok.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleResetGroups = async () => {
+    if (!activeTab || activeTab === 'record_m1') return;
+    if (!confirm(`Apakah Anda yakin ingin menghapus pembagian kelompok untuk Pertemuan ${selectedMeeting}? Semua data kelompok sesi ini akan hilang.`)) return;
+    
+    setGenerating(true);
+    try {
+      await supabase.from('submissions')
+        .delete()
+        .eq('student_email', 'SYSTEM_GROUP')
+        .eq('class_id', activeTab)
+        .eq('meeting_num', selectedMeeting)
+        .eq('section_name', 'GENERATED_GROUPS');
+      
+      alert(`Berhasil mereset kelompok untuk Pertemuan ${selectedMeeting}.`);
+      await fetchData();
+    } catch (err) {
+      console.log(err);
+      alert("Gagal mereset kelompok.");
     } finally {
       setGenerating(false);
     }
@@ -822,14 +846,24 @@ function DashboardTutor({ user }) {
                     className="bg-transparent font-bold text-sm outline-none w-10 text-center"
                  />
               </div>
-              <button 
-                onClick={handleGenerateGroups}
-                disabled={generating}
-                className="bg-yellow-400 text-primary px-6 py-2.5 rounded-xl font-black text-xs hover:bg-yellow-300 transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/20 disabled:opacity-50"
-              >
-                 {generating ? 'MEMPROSES...' : 'ACAK SEKARANG'}
-                 {!generating && <span className="material-symbols-outlined text-sm">casino</span>}
-              </button>
+              <div className="flex gap-2">
+                 <button 
+                   onClick={handleGenerateGroups}
+                   disabled={generating}
+                   className="bg-yellow-400 text-primary px-6 py-2.5 rounded-xl font-black text-xs hover:bg-yellow-300 transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/20 disabled:opacity-50"
+                 >
+                    {generating ? '...' : 'ACAK SEKARANG'}
+                    {!generating && <span className="material-symbols-outlined text-sm">casino</span>}
+                 </button>
+                 <button 
+                   onClick={handleResetGroups}
+                   disabled={generating}
+                   className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-2 border border-red-500/20 disabled:opacity-50"
+                   title="Reset/Hapus Kelompok"
+                 >
+                    <span className="material-symbols-outlined text-sm">delete_sweep</span>
+                 </button>
+              </div>
            </div>
         </div>
       )}
@@ -1748,11 +1782,13 @@ function SectionPage({ user }) {
       if (!groups) {
          return (
            <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-20 text-center flex flex-col items-center">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                 <span className="material-symbols-outlined text-4xl text-slate-300">pending</span>
+              <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-slate-200 rotate-3 border border-slate-100">
+                 <span className="material-symbols-outlined text-5xl text-primary animate-pulse">pending_actions</span>
               </div>
-              <h3 className="text-xl font-black text-slate-800 mb-2">Kelompok Belum Dibagikan</h3>
-              <p className="text-sm text-slate-500 max-w-sm font-medium">Tutor belum mengacak kelompok untuk pertemuan ini. Silakan tunggu instruksi selanjutnya dari tutor Anda.</p>
+              <h3 className="text-2xl font-headline font-black text-slate-800 mb-3 tracking-tight">Kelompok Belum Dibuat Oleh Tutor</h3>
+              <p className="text-sm text-slate-500 max-w-sm font-medium leading-relaxed italic">
+                 Mohon bersabar, tutor Anda sedang memproses pembagian tim untuk sesi diskusi ini. Silakan refresh halaman atau tunggu instruksi selanjutnya.
+              </p>
            </div>
          );
       }
