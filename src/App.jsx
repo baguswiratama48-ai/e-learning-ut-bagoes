@@ -1139,67 +1139,61 @@ function InteractiveReflection({
 
   if (statusRow) {
     return (
-      <div className="bg-emerald-50 border border-emerald-100 p-8 md:p-12 rounded-[3.5rem] text-center shadow-inner animate-in zoom-in duration-500">
-        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-500 shadow-opacity-10 border border-emerald-100">
-          <span className="material-symbols-outlined text-5xl text-emerald-500">
+      <div className="bg-white border border-slate-200 p-8 md:p-12 rounded-2xl text-center shadow-sm max-w-2xl mx-auto animate-in fade-in duration-500">
+        <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
+          <span className="material-symbols-outlined text-4xl text-indigo-600">
             verified
           </span>
         </div>
-        <h3 className="text-2xl font-black text-emerald-800 mb-2">
-          Refleksi Terkirim!
+        <h3 className="text-2xl font-extrabold text-slate-800 mb-2">
+          Refleksi Terkirim
         </h3>
-        <p className="text-emerald-600 font-medium italic max-w-md mx-auto leading-relaxed">
-          "Terima kasih atas refleksinya. Masukan Anda sangat berharga bagi Pak
-          Bagus Panca Wiratama untuk terus memberikan layanan terbaik."
+        <p className="text-slate-600 font-medium max-w-md mx-auto leading-relaxed">
+          Terima kasih atas refleksinya. Masukan Anda sangat berharga untuk peningkatan kualitas pembelajaran.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-1000 slide-in-from-bottom-5">
-      {/* Progress Card */}
-      <div className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-5 rounded-full -mr-16 -mt-16"></div>
-        <div className="flex justify-between items-end mb-4 relative z-10">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Progress Header */}
+      <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+        <div className="flex justify-between items-end mb-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">
-              Tahapan Refleksi
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+              Refleksi Pembelajaran
             </p>
-            <h4 className="font-headline font-black text-2xl text-primary">
+            <h4 className="font-bold text-xl text-slate-800">
               Pertanyaan {currentIdx + 1}{" "}
-              <span className="text-slate-300 font-medium">
-                / {REFLECTION_QUESTIONS.length}
+              <span className="text-slate-400 font-medium text-base">
+                dari {REFLECTION_QUESTIONS.length}
               </span>
             </h4>
           </div>
-          <p className="text-sm font-black text-primary">
+          <p className="text-sm font-bold text-indigo-600">
             {Math.round(progress)}%
           </p>
         </div>
-        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden relative z-10 p-0.5">
+        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-primary via-indigo-500 to-fuchsia-500 rounded-full transition-all duration-700 ease-out"
+            className="h-full bg-indigo-600 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
       </div>
 
       {/* Question Card */}
-      <div className="bg-white p-8 md:p-14 rounded-[4rem] shadow-2xl shadow-primary shadow-opacity-5 border border-slate-100 relative overflow-hidden min-h-[550px] flex flex-col">
-        {/* Background Decorations */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary bg-opacity-5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-500 bg-opacity-5 rounded-full -ml-32 -mb-32 blur-3xl"></div>
-
+      <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 min-h-[450px] flex flex-col relative overflow-hidden">
         <div className="relative z-10 flex-1 flex flex-col">
-          <div className="flex items-center gap-4 mb-10">
-            <span className="material-symbols-outlined text-primary text-3xl p-3 bg-primary bg-opacity-5 rounded-2xl">
-              psychology_alt
-            </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-slate-100 to-transparent"></div>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+              <span className="material-symbols-outlined">description</span>
+            </div>
+            <div className="h-px flex-1 bg-slate-100"></div>
           </div>
 
-          <h3 className="text-xl md:text-3xl font-black text-slate-800 leading-[1.4] mb-10">
+          <h3 className="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed mb-6">
             {REFLECTION_QUESTIONS[currentIdx]}
           </h3>
 
@@ -1208,19 +1202,17 @@ function InteractiveReflection({
             onChange={(e) =>
               setAnswers({ ...answers, [currentIdx]: e.target.value })
             }
-            placeholder="Tuliskan refleksi jujur Anda di sini..."
-            className="flex-1 min-h-[250px] p-8 md:p-10 rounded-[3rem] border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-primary focus:ring-8 focus:ring-primary focus:ring-opacity-5 outline-none transition-all resize-none text-slate-700 font-medium leading-relaxed text-lg"
+            placeholder="Ketik refleksi Anda secara mendalam di sini..."
+            className="flex-1 min-h-[200px] p-6 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-10 outline-none transition-all resize-none text-slate-700 leading-relaxed font-medium"
           ></textarea>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-12">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-slate-100">
             <button
               onClick={handleBack}
               disabled={currentIdx === 0}
-              className="w-full md:w-auto px-10 py-5 rounded-2xl font-bold text-slate-400 hover:text-primary hover:bg-primary hover:bg-opacity-5 disabled:opacity-0 transition-all flex items-center justify-center gap-3 order-2 md:order-1"
+              className="w-full md:w-auto px-6 py-3 rounded-xl font-bold text-slate-500 border border-transparent hover:bg-slate-50 hover:text-slate-700 disabled:opacity-0 transition-all flex items-center justify-center gap-2"
             >
-              <span className="material-symbols-outlined font-bold">
-                arrow_back
-              </span>
+              <span className="material-symbols-outlined text-sm font-bold">arrow_back</span>
               SEBELUMNYA
             </button>
 
@@ -1228,23 +1220,19 @@ function InteractiveReflection({
               <button
                 onClick={handleSubmit}
                 disabled={loading || !answers[currentIdx]?.trim()}
-                className="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-[2.5rem] font-black text-lg shadow-xl shadow-emerald-500 shadow-opacity-20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 order-1 md:order-2 disabled:opacity-30"
+                className="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:bg-indigo-600"
               >
                 {loading ? "MENGIRIM..." : "KIRIM REFLEKSI FINAL"}
-                <span className="material-symbols-outlined font-black">
-                  verified
-                </span>
+                <span className="material-symbols-outlined text-sm">send</span>
               </button>
             ) : (
               <button
                 onClick={handleNext}
                 disabled={!answers[currentIdx]?.trim()}
-                className="w-full md:w-auto px-14 py-5 bg-primary text-white rounded-[2.5rem] font-black text-lg shadow-xl shadow-primary shadow-opacity-20 hover:bg-[#1a2169] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 order-1 md:order-2 disabled:opacity-30"
+                className="w-full md:w-auto px-8 py-3 bg-slate-800 text-white rounded-xl font-bold shadow-md hover:bg-slate-900 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                PERTANYAAN LANJUT{" "}
-                <span className="material-symbols-outlined font-black">
-                  arrow_forward
-                </span>
+                SELANJUTNYA
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
               </button>
             )}
           </div>
