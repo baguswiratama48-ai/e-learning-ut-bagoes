@@ -113,6 +113,225 @@ const getPemantikForStudent = (nim) => {
   return PEMANTIK_GROUPS.map((group, gi) => group[(n + gi) % group.length]);
 };
 
+// Data untuk LKPD Interaktif Mind Map
+const MIND_MAP_DATA = {
+  zones: [
+    { id: 'etimologi', label: 'Etimologi (Inggris)', color: 'bg-blue-500', bgColor: 'bg-blue-50', textColor: 'text-blue-700' },
+    { id: 'asas', label: 'Asas-Asas BK', color: 'bg-emerald-500', bgColor: 'bg-emerald-50', textColor: 'text-emerald-700' },
+    { id: 'layanan', label: 'Jenis Layanan', color: 'bg-yellow-500', bgColor: 'bg-yellow-50', textColor: 'text-yellow-700' }
+  ],
+  items: [
+    { id: 'direct', label: 'To Direct', category: 'etimologi', info: 'Tepat! BK berfungsi mengarahkan siswa ke jalan yang benar.' },
+    { id: 'pilot', label: 'To Pilot', category: 'etimologi', info: 'Bagus! BK memandu siswa agar tetap pada jalurnya.' },
+    { id: 'rahasia', label: 'Kerahasiaan', category: 'asas', info: 'Benar! Ini adalah kode etik utama Konselor.' },
+    { id: 'mandiri', label: 'Kemandirian', category: 'asas', info: 'Tepat! Tujuan BK adalah memandirikan siswa.' },
+    { id: 'konseling', label: 'Konseling Individual', category: 'layanan', info: 'Betul! Layanan privat satu-lawan-satu.' },
+    { id: 'mediasi', label: 'Mediasi', category: 'layanan', info: 'Keren! Membantu menyelesaikan konflik antar siswa.' }
+  ]
+};
+
+function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions }) {
+  const [placedItems, setPlacedItems] = useState({}); // { itemId: zoneId }
+  const [gameState, setGameState] = useState('PLAYING'); // PLAYING, CASE_STUDY, FINISHED
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState(null);
+  const [isLandscape, setIsLandscape] = useState(true);
+  const [dragging, setDragging] = useState(null);
+  const [shake, setShake] = useState(null);
+
+  useEffect(() => {
+    const checkOrientation = () => setIsLandscape(window.innerWidth > window.innerHeight);
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    return () => window.removeEventListener('resize', checkOrientation);
+  }, []);
+
+  // Temukan Info Kelompok
+  const groupRow = submissions.find(s => s.student_email === 'SYSTEM_GROUP' && s.section_name === 'GENERATED_GROUPS');
+  const groups = groupRow ? JSON.parse(groupRow.content) : null;
+  const myGroup = groups?.find(g => g.members.some(m => m.email === user.email));
+
+  const handleDrop = (itemId, zoneId) => {
+    const item = MIND_MAP_DATA.items.find(i => i.id === itemId);
+    if (item.category === zoneId) {
+      setPlacedItems(prev => ({ ...prev, [itemId]: zoneId }));
+      setScore(prev => prev + 10);
+      setFeedback(item.info);
+      setTimeout(() => setFeedback(null), 3000);
+      
+      // Cek apakah semua sudah selesai (6 kepingan)
+      if (Object.keys(placedItems).length + 1 === MIND_MAP_DATA.items.length) {
+         setTimeout(() => setGameState('CASE_STUDY'), 2000);
+      }
+    } else {
+      setShake(itemId);
+      setTimeout(() => setShake(null), 500);
+    }
+  };
+
+  if (!isLandscape) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-primary text-white flex flex-col items-center justify-center p-10 text-center">
+        <span className="material-symbols-outlined text-7xl animate-bounce mb-6">screen_rotation</span>
+        <h2 className="text-2xl font-black mb-2">Putar Layar Anda</h2>
+        <p className="opacity-70 font-medium">Gunakan mode Landscape (Miring) untuk pengalaman Mind Map terbaik.</p>
+      </div>
+    );
+  }
+
+  if (gameState === 'CASE_STUDY') {
+    return (
+      <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="bg-white rounded-[3rem] p-8 md:p-12 max-w-2xl w-full shadow-2xl animate-in zoom-in duration-300">
+           <div className="flex items-center gap-4 mb-8">
+              <div className="w-16 h-16 bg-yellow-100 rounded-3xl flex items-center justify-center text-yellow-600">
+                 <span className="material-symbols-outlined text-4xl">emoji_objects</span>
+              </div>
+              <h2 className="text-3xl font-black text-slate-800">Final Challenge!</h2>
+           </div>
+           
+           <div className="bg-slate-50 border border-slate-100 p-8 rounded-[2rem] mb-10">
+              <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Kasus Pendek:</p>
+              <p className="text-xl font-medium text-slate-700 leading-relaxed italic">"Siswa A sering termenung di pojok kelas karena masalah keluarga yang membuatnya tidak fokus belajar."</p>
+           </div>
+           
+           <p className="text-sm font-bold text-slate-500 mb-6 uppercase tracking-tight">Pilih 1 Jenis Layanan yang paling pas:</p>
+           <div className="grid grid-cols-2 gap-4 text-center">
+              <button onClick={() => onComplete(score + 40, 'Konseling Individual')} className="bg-primary text-white py-5 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all text-sm uppercase">Konseling Individual</button>
+              <button onClick={() => alert('Kurang tepat, Orientasi biasanya untuk perkenalan awal.')} className="bg-slate-100 text-slate-400 py-5 rounded-2xl font-black hover:bg-slate-200 transition-all text-sm uppercase">Orientasi Masalah</button>
+           </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative min-h-[600px] w-full bg-white rounded-[3rem] overflow-hidden border-4 border-slate-100 shadow-2xl flex flex-col">
+       {/* UI Header */}
+       <div className="p-6 bg-slate-50/80 backdrop-blur-sm border-b border-slate-100 flex justify-between items-center relative z-20">
+          <div className="flex items-center gap-4">
+             <div className="flex flex-col">
+                <p className="text-[10px] font-black uppercase text-primary/40 tracking-widest leading-none mb-1">Collaborative LKPD</p>
+                <h4 className="font-headline font-black text-slate-800 flex items-center gap-2">
+                   {myGroup ? `Kelompok ${myGroup.group_num}` : 'Individu'}
+                   {myGroup && (
+                     <div className="flex -space-x-2 ml-2">
+                        {myGroup.members.slice(0, 3).map((m, i) => (
+                           <div key={i} className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[8px] font-black text-slate-600 uppercase" title={m.name}>
+                              {m.name[0]}
+                           </div>
+                        ))}
+                     </div>
+                   )}
+                </h4>
+             </div>
+          </div>
+          <div className="flex items-center gap-4">
+             <div className="bg-white shadow-sm border border-slate-100 px-6 py-2 rounded-2xl flex items-center gap-2">
+                <span className="material-symbols-outlined text-yellow-500 text-xl font-bold fill-1">stars</span>
+                <span className="font-black text-slate-800 text-xl">{score}</span>
+             </div>
+          </div>
+       </div>
+
+       {/* Feedback Pop-up Overlay */}
+       {feedback && (
+         <div className="absolute top-24 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top duration-300">
+            <div className="bg-emerald-500 text-white px-8 py-3 rounded-full font-black text-sm shadow-xl flex items-center gap-3">
+               <span className="material-symbols-outlined">verified</span> {feedback}
+            </div>
+         </div>
+       )}
+
+       {/* Game Board */}
+       <div className="flex-1 p-10 relative flex items-center justify-center">
+          <svg className="absolute inset-0 w-full h-full pointer-events-none">
+             {/* Dynamic connector lines would go here */}
+          </svg>
+          
+          <div className="relative w-full h-full flex items-center justify-center">
+             {/* Center Node */}
+             <div className="w-32 h-32 bg-primary rounded-full flex items-center justify-center text-white font-black text-center p-4 shadow-2xl z-10 ring-8 ring-blue-50">
+                MIND MAP BK
+             </div>
+
+             {/* Zones */}
+             {MIND_MAP_DATA.zones.map((zone, idx) => {
+                const angles = [210, 330, 90]; // Angles for 3 zones
+                const dist = isLandscape ? 220 : 180;
+                const rad = (angles[idx] * Math.PI) / 180;
+                const x = Math.cos(rad) * dist;
+                const y = Math.sin(rad) * dist;
+                
+                return (
+                  <div 
+                    key={zone.id}
+                    onDragOver={e => e.preventDefault()}
+                    onDrop={() => dragging && handleDrop(dragging, zone.id)}
+                    className={`absolute w-52 h-52 md:w-64 md:h-64 rounded-full border-4 border-dashed animate-[pulse_3s_infinite] flex flex-col items-center justify-center transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-')}/30`}
+                    style={{ transform: `translate(${x}px, ${y}px)` }}
+                  >
+                     <div className={`p-3 rounded-2xl ${zone.color} text-white text-[10px] font-black uppercase tracking-widest mb-4 shadow-lg`}>
+                        {zone.label}
+                     </div>
+                     <div className="flex flex-wrap justify-center gap-2 px-4 min-h-[40px]">
+                        {Object.entries(placedItems).filter(([_, zid]) => zid === zone.id).map(([iid]) => {
+                           const item = MIND_MAP_DATA.items.find(i => i.id === iid);
+                           return (
+                             <div key={iid} className={`px-4 py-2 rounded-xl text-white font-black text-[10px] shadow-sm animate-in zoom-in duration-300 ${zone.color}`}>
+                                {item.label}
+                             </div>
+                           );
+                        })}
+                     </div>
+                  </div>
+                );
+             })}
+          </div>
+       </div>
+
+       {/* Dock Tray (Mobile Friendly) */}
+       <div className="bg-slate-900 p-8 flex flex-col items-center gap-4 relative z-20 shadow-[0_-20px_50px_rgba(0,0,0,0.1)]">
+          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Geser Bubble ke Cabang yang Tepat</p>
+          <div className="flex flex-wrap justify-center gap-4">
+             {MIND_MAP_DATA.items.filter(i => !placedItems[i.id]).map(item => (
+                <div 
+                  key={item.id}
+                  draggable
+                  onDragStart={() => setDragging(item.id)}
+                  onDragEnd={() => setDragging(null)}
+                  onClick={() => {
+                     // Click support for mobile as alternative to drag
+                     const zone = prompt(`Pilih Kategori untuk ${item.label}:\n1. Etimologi\n2. Asas\n3. Layanan`);
+                     if (zone === '1') handleDrop(item.id, 'etimologi');
+                     else if (zone === '2') handleDrop(item.id, 'asas');
+                     else if (zone === '3') handleDrop(item.id, 'layanan');
+                  }}
+                  className={`px-8 py-3 rounded-full bg-white text-primary font-black text-sm cursor-grab active:cursor-grabbing hover:bg-yellow-400 transition-all shadow-xl shadow-black/20 flex items-center gap-3 ${shake === item.id ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}
+                >
+                   <span className="material-symbols-outlined text-[18px]">drag_indicator</span>
+                   {item.label}
+                </div>
+             ))}
+          </div>
+          {MIND_MAP_DATA.items.filter(i => !placedItems[i.id]).length === 0 && (
+            <p className="text-emerald-400 font-bold text-sm animate-pulse flex items-center gap-2">
+               <span className="material-symbols-outlined">check_circle</span> MIND MAP SELESAI! MENUNGGU CHALLENGE...
+            </p>
+          )}
+       </div>
+
+       <style>{`
+          @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+          }
+       `}</style>
+    </div>
+  );
+}
+
 const COURSE_DATA = {
   'SPGK4307': {
     'Informasi Modul': (
@@ -1911,6 +2130,44 @@ function SectionPage({ user }) {
               </div>
             )}
           </div>
+       ) : (id === '1' || id === '2') && sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
+         <div className="space-y-4">
+           <InteractiveMindMap 
+              user={user} 
+              classId={id} 
+              meetingId={meetingId} 
+              submissions={submissions}
+              onComplete={async (totalScore, caseAnswer) => {
+                setLoading(true);
+                try {
+                  // Get group info for collective submission
+                  const groupRow = submissions.find(s => s.student_email === 'SYSTEM_GROUP' && s.section_name === 'GENERATED_GROUPS');
+                  const groups = groupRow ? JSON.parse(groupRow.content) : null;
+                  const myGroup = groups?.find(g => g.members.some(m => m.email === user.email));
+                  
+                  const submissionId = myGroup 
+                    ? `GROUP_LKPD_${id}_${meetingId}_G${myGroup.group_num}`
+                    : user.email;
+
+                  const payload = {
+                    student_email: submissionId,
+                    class_id: id,
+                    meeting_num: meetingId,
+                    section_name: sectionName,
+                    content: `SKOR GAME: ${totalScore}/100\nJAWABAN KASUS SISWA A: ${caseAnswer}`
+                  };
+                  
+                  await supabase.from('submissions').insert([payload]);
+                  setSuccess(true);
+                  if (myGroup) alert(`Keren! Hasil kelompok ${myGroup.group_num} berhasil disimpan.`);
+                } catch(err) {
+                  console.log(err);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+           />
+         </div>
        ) : (
          <form onSubmit={handleSubmit} className="space-y-4">
            <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Tulis jawaban Anda..." className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all resize-none"></textarea>
