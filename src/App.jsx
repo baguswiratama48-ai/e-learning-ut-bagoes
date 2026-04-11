@@ -241,17 +241,17 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                      </div>
                   </div>
 
-                  <button onClick={() => setShowTutorial(false)} className="w-full bg-primary text-white py-5 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20">SAYA MENGERTI, MULAI!</button>
+                  <button onClick={() => setShowTutorial(false)} className="w-full bg-primary text-white py-5 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20">SAYA MENGERTI, MULAI!</button>
                </div>
             </div>
          </div>
        )}
 
        {/* UI Header */}
-       <div className="p-6 bg-slate-50/80 backdrop-blur-sm border-b border-slate-100 flex justify-between items-center relative z-20">
+       <div className="p-6 bg-slate-50 bg-opacity-80 backdrop-blur-sm border-b border-slate-100 flex justify-between items-center relative z-20">
           <div className="flex items-center gap-4">
              <div className="flex flex-col">
-                <p className="text-[10px] font-black uppercase text-primary/40 tracking-widest leading-none mb-1">Collaborative LKPD</p>
+                <p className="text-[10px] font-black uppercase text-primary text-opacity-40 tracking-widest leading-none mb-1">Collaborative LKPD</p>
                 <div className="flex items-center gap-3">
                    <h4 className="font-headline font-black text-slate-800">
                       {myGroup ? `Kelompok ${myGroup.group_num}` : 'Individu'}
@@ -309,7 +309,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
           
           <div className="relative w-full h-full flex items-center justify-center">
              {/* Center Node */}
-             <div className="w-24 h-24 md:w-32 md:h-32 bg-primary rounded-full flex items-center justify-center text-white font-black text-center p-4 shadow-2xl z-10 ring-8 ring-blue-50/50">
+             <div className="w-24 h-24 md:w-32 md:h-32 bg-primary rounded-full flex items-center justify-center text-white font-black text-center p-4 shadow-2xl z-10 ring-8 ring-blue-50 ring-opacity-50">
                 <span className="text-xs md:text-sm">MIND MAP BK</span>
              </div>
 
@@ -336,7 +336,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                         {Object.entries(placedItems).filter(([_, zid]) => zid === zone.id).map(([iid]) => {
                            const item = MIND_MAP_DATA.items.find(i => i.id === iid);
                            return (
-                             <div key={iid} className={`px-3 py-1.5 rounded-xl text-white font-black text-[9px] shadow-md animate-in zoom-in duration-300 ${zone.color} border border-white/20`}>
+                             <div key={iid} className={`px-3 py-1.5 rounded-xl text-white font-black text-[9px] shadow-md animate-in zoom-in duration-300 ${zone.color} border border-white border-opacity-20`}>
                                 {item.label}
                              </div>
                            );
@@ -350,7 +350,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
 
        {/* Dock Tray (Mobile Friendly) */}
        <div className="bg-slate-900 p-8 flex flex-col items-center gap-4 relative z-20 shadow-[0_-20px_50px_rgba(0,0,0,0.1)]">
-          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Geser Bubble ke Cabang yang Tepat</p>
+          <p className="text-white text-opacity-40 text-[10px] font-black uppercase tracking-[0.2em] mb-2">Geser Bubble ke Cabang yang Tepat</p>
           <div className="flex flex-wrap justify-center gap-4">
              {MIND_MAP_DATA.items.filter(i => !placedItems[i.id]).map(item => (
                 <div 
@@ -365,7 +365,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                      else if (zone === '2') handleDrop(item.id, 'asas');
                      else if (zone === '3') handleDrop(item.id, 'layanan');
                   }}
-                  className={`px-8 py-3 rounded-full bg-white text-primary font-black text-sm cursor-grab active:cursor-grabbing hover:bg-yellow-400 transition-all shadow-xl shadow-black/20 flex items-center gap-3 ${shake === item.id ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}
+                  className={`px-8 py-3 rounded-full bg-white text-primary font-black text-sm cursor-grab active:cursor-grabbing hover:bg-yellow-400 transition-all shadow-xl shadow-black shadow-opacity-20 flex items-center gap-3 ${shake === item.id ? 'animate-[shake_0.5s_ease-in-out]' : ''}`}
                 >
                    <span className="material-symbols-outlined text-[18px]">drag_indicator</span>
                    {item.label}
@@ -467,36 +467,36 @@ const COURSE_DATA = {
               Setelah mengikuti mata kuliah ini, mahasiswa S1 PGSD diharapkan mampu menganalisis kebutuhan dan mengaplikasikan prinsip-prinsip serta strategi layanan BK bagi peserta didik SD.
             </div>
             <div className="flex flex-col items-center py-1">
-              <div className="w-px h-5 bg-white/40"></div>
-              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
+              <div className="w-px h-5 bg-white bg-opacity-40"></div>
+              <span className="text-white text-opacity-60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
             <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu menilai, mengevaluasi, membuat pelaporan dan tindak lanjut layanan BK di SD.
             </div>
             <div className="flex flex-col items-center py-1">
-              <div className="w-px h-5 bg-white/40"></div>
-              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
+              <div className="w-px h-5 bg-white bg-opacity-40"></div>
+              <span className="text-white text-opacity-60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
             <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu melaksanakan program bimbingan dan konseling (BK) di SD.
             </div>
             <div className="flex flex-col items-center py-1">
-              <div className="w-px h-5 bg-white/40"></div>
-              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
+              <div className="w-px h-5 bg-white bg-opacity-40"></div>
+              <span className="text-white text-opacity-60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
             <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu merencanakan program bimbingan dan konseling di SD.
             </div>
             <div className="flex flex-col items-center py-1">
-              <div className="w-px h-5 bg-white/40"></div>
-              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
+              <div className="w-px h-5 bg-white bg-opacity-40"></div>
+              <span className="text-white text-opacity-60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
             <div className="w-full bg-[#1a4a6e] text-white p-3 rounded-xl text-xs text-center shadow">
               Mahasiswa mampu menguraikan konsep teknik asesmen dan mampu memanfaatkan data hasil asesmen kebutuhan peserta didik di SD.
             </div>
             <div className="w-full flex flex-col items-center py-1">
-              <div className="w-px h-4 bg-white/40"></div>
-              <div className="w-3/4 h-px bg-white/40"></div>
+              <div className="w-px h-4 bg-white bg-opacity-40"></div>
+              <div className="w-3/4 h-px bg-white bg-opacity-40"></div>
             </div>
             <div className="w-full grid grid-cols-2 gap-3">
               <div className="bg-[#1a4a6e] text-white p-3 rounded-xl text-[10px] text-center shadow flex items-center justify-center">
@@ -507,15 +507,15 @@ const COURSE_DATA = {
               </div>
             </div>
             <div className="w-full flex flex-col items-center py-1">
-              <div className="w-3/4 h-px bg-white/40"></div>
-              <div className="w-px h-4 bg-white/40"></div>
-              <span className="text-white/60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
+              <div className="w-3/4 h-px bg-white bg-opacity-40"></div>
+              <div className="w-px h-4 bg-white bg-opacity-40"></div>
+              <span className="text-white text-opacity-60 material-symbols-outlined text-base -mt-1">arrow_drop_up</span>
             </div>
-            <div className="w-full bg-[#1a4a6e] text-white p-4 rounded-2xl text-xs text-center shadow-lg ring-2 ring-yellow-400/40">
+            <div className="w-full bg-[#1a4a6e] text-white p-4 rounded-2xl text-xs text-center shadow-lg ring-2 ring-yellow-400 ring-opacity-40">
               Mahasiswa mampu menguraikan konsep dasar (pengertian, hakikat, tujuan, prinsip, asas, bidang, dan komponen program layanan Bimbingan dan Konseling (BK) di SD).
             </div>
           </div>
-          <p className="text-[9px] text-center text-white/40 mt-6 italic">Sumber: Bahan Ajar SPGK4307 Universitas Terbuka</p>
+          <p className="text-[9px] text-center text-white text-opacity-40 mt-6 italic">Sumber: Bahan Ajar SPGK4307 Universitas Terbuka</p>
         </section>
 
         <footer className="pt-6 border-t font-medium text-center italic">
@@ -553,12 +553,12 @@ function Home({ navigate, onLoginTutor }) {
         </div>
       </section>
 
-      <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10">
+      <div className="bg-primary bg-opacity-5 p-6 rounded-3xl border border-primary border-opacity-10">
         <h3 className="font-headline font-bold text-lg mb-4 flex items-center gap-2 text-primary">
           <span className="material-symbols-outlined">rocket_launch</span> Mulai Belajar
         </h3>
         <p className="text-sm text-slate-600 mb-6">Akses modul pembelajaran dan kerjakan tugas tepat waktu.</p>
-        <Link to="/classes" className="inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/20">
+        <Link to="/classes" className="inline-block bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary shadow-opacity-20">
           Lihat Daftar Kelas
         </Link>
       </div>
@@ -581,7 +581,7 @@ function ClassesList() {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {CLASSES.map(c => (
-          <Link key={c.id} to={`/class/${c.id}`} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all group flex items-center justify-between relative overflow-hidden">
+          <Link key={c.id} to={`/class/${c.id}`} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg hover:border-primary border-opacity-30 transition-all group flex items-center justify-between relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1 h-full bg-yellow-400"></div>
             <div className="pl-2">
               <div className="flex items-center gap-2 mb-2 block text-primary font-semibold text-sm uppercase tracking-wider">
@@ -694,7 +694,7 @@ function EditBiodata({ user, profileData, setProfileData }) {
               ) : (
                 <span className="material-symbols-outlined text-4xl text-slate-400">account_circle</span>
               )}
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                  <span className="material-symbols-outlined text-white">photo_camera</span>
               </div>
               <input type="file" accept="image/*" onChange={handlePhotoChange} className="absolute inset-0 opacity-0 cursor-pointer" />
@@ -742,7 +742,7 @@ function EditBiodata({ user, profileData, setProfileData }) {
           <input type="text" value={formData.pokjar} readOnly className="w-full px-4 py-2.5 rounded-xl border bg-slate-50 text-slate-500 font-semibold text-sm outline-none cursor-not-allowed" />
         </div>
 
-        <button type="submit" className="w-full bg-primary hover:bg-[#1a2169] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-primary/25 mt-4">
+        <button type="submit" className="w-full bg-primary hover:bg-[#1a2169] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-primary shadow-opacity-25 mt-4">
           Simpan Perubahan
         </button>
       </form>
@@ -769,7 +769,7 @@ function LoginTutor({ onLogin }) {
 
   return (
     <div className="max-w-md mx-auto pt-6 pb-20 px-4">
-      <Link to="/" className="inline-flex items-center text-primary font-bold mb-8 hover:underline bg-primary-fixed/30 px-3 py-1 rounded-full text-sm">
+      <Link to="/" className="inline-flex items-center text-primary font-bold mb-8 hover:underline bg-primary-fixed bg-opacity-30 px-3 py-1 rounded-full text-sm">
         <span className="material-symbols-outlined text-sm mr-1">arrow_back</span> Kembali
       </Link>
       <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100">
@@ -849,7 +849,7 @@ function Login({ onLogin }) {
 
   return (
     <div className="max-w-md mx-auto pt-6 pb-20 px-4">
-      <Link to="/" className="inline-flex items-center text-primary font-bold mb-8 hover:underline bg-primary-fixed/30 px-3 py-1 rounded-full text-sm">
+      <Link to="/" className="inline-flex items-center text-primary font-bold mb-8 hover:underline bg-primary-fixed bg-opacity-30 px-3 py-1 rounded-full text-sm">
         <span className="material-symbols-outlined text-sm mr-1">arrow_back</span> Kembali
       </Link>
       <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100">
@@ -1074,12 +1074,12 @@ function DashboardTutor({ user }) {
             onClick={() => setActiveTab(tab.id)}
             className={`px-5 py-2.5 rounded-xl font-bold text-sm transition-all ${
               activeTab === tab.id
-                ? 'bg-primary text-white shadow-lg shadow-primary/30 scale-105'
+                ? 'bg-primary text-white shadow-lg shadow-primary shadow-opacity-30 scale-105'
                 : 'bg-white border border-slate-200 text-slate-500 hover:border-primary hover:text-primary'
             }`}
           >
             {tab.label}
-            <span className={`ml-2 text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white/20' : 'bg-slate-100'}`}>
+            <span className={`ml-2 text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-white bg-opacity-20' : 'bg-slate-100'}`}>
               {tab.id === 'demo' ? '1' : STUDENTS.filter(s => s.classId === tab.id && s.email !== 'demo@ecampus.ut.ac.id').length}
             </span>
           </button>
@@ -1093,17 +1093,17 @@ function DashboardTutor({ user }) {
       {activeTab !== 'demo' && activeTab !== 'record_m1' && (
         <div className="mb-8 p-6 bg-gradient-to-r from-primary to-[#1a2169] rounded-[2.5rem] text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
+              <div className="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-md">
                  <span className="material-symbols-outlined text-3xl">group_add</span>
               </div>
               <div>
                  <h3 className="font-bold text-lg leading-tight">Generator Kelompok Acak</h3>
-                 <p className="text-white/60 text-[10px] font-medium uppercase tracking-wider">Acak kelompok berbeda untuk setiap sesi mahasiswa</p>
+                 <p className="text-white text-opacity-60 text-[10px] font-medium uppercase tracking-wider">Acak kelompok berbeda untuk setiap sesi mahasiswa</p>
               </div>
            </div>
            
-           <div className="flex flex-wrap items-center gap-4 bg-white/10 p-2 rounded-2xl backdrop-blur-sm border border-white/10">
-              <div className="px-3 border-r border-white/10">
+           <div className="flex flex-wrap items-center gap-4 bg-white bg-opacity-10 p-2 rounded-2xl backdrop-blur-sm border border-white border-opacity-10">
+              <div className="px-3 border-r border-white border-opacity-10">
                  <p className="text-[10px] font-black opacity-40 uppercase mb-1">Sesi Pertemuan</p>
                  <select 
                     value={selectedMeeting} 
@@ -1113,7 +1113,7 @@ function DashboardTutor({ user }) {
                     {[1,2,3,4,5,6,7,8].map(n => <option key={n} value={String(n)} className="text-slate-800">Pertemuan {n}</option>)}
                  </select>
               </div>
-              <div className="px-3 border-r border-white/10">
+              <div className="px-3 border-r border-white border-opacity-10">
                  <p className="text-[10px] font-black opacity-40 uppercase mb-1">Jumlah Kelompok</p>
                  <input 
                     type="number" 
@@ -1127,7 +1127,7 @@ function DashboardTutor({ user }) {
                  <button 
                    onClick={handleGenerateGroups}
                    disabled={generating}
-                   className="bg-yellow-400 text-primary px-6 py-2.5 rounded-xl font-black text-xs hover:bg-yellow-300 transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/20 disabled:opacity-50"
+                   className="bg-yellow-400 text-primary px-6 py-2.5 rounded-xl font-black text-xs hover:bg-yellow-300 transition-all flex items-center gap-2 shadow-lg shadow-yellow-400 shadow-opacity-20 disabled:opacity-50"
                  >
                     {generating ? '...' : 'ACAK SEKARANG'}
                     {!generating && <span className="material-symbols-outlined text-sm">casino</span>}
@@ -1135,7 +1135,7 @@ function DashboardTutor({ user }) {
                  <button 
                    onClick={handleResetGroups}
                    disabled={generating}
-                   className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-2 border border-red-500/20 disabled:opacity-50"
+                   className="bg-red-500 bg-opacity-10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-2 border border-red-500 border-opacity-20 disabled:opacity-50"
                    title="Reset/Hapus Kelompok"
                  >
                     <span className="material-symbols-outlined text-sm">delete_sweep</span>
@@ -1158,7 +1158,7 @@ function DashboardTutor({ user }) {
                     <h3 className="text-2xl font-headline font-bold text-slate-800">Manajemen Konten Modul 1</h3>
                     <p className="text-sm text-slate-500 font-medium">Hasil transkripsi dari Pustaka UT (Halaman 4-47)</p>
                  </div>
-                 <div className="bg-primary/5 px-4 py-2 rounded-xl border border-primary/10 flex items-center gap-4">
+                 <div className="bg-primary bg-opacity-5 px-4 py-2 rounded-xl border border-primary border-opacity-10 flex items-center gap-4">
                     <div className="text-center border-r pr-4">
                        <p className="text-[10px] uppercase font-black text-slate-400">Total Bagian</p>
                        <p className="font-bold text-primary">{moduleContent.length}</p>
@@ -1182,7 +1182,7 @@ function DashboardTutor({ user }) {
                        if (items.length === 0) return null;
                        return (
                           <div key={type} className="space-y-4">
-                             <h4 className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-[0.2em] bg-primary/5 px-4 py-2 rounded-lg w-fit">
+                             <h4 className="flex items-center gap-2 text-primary font-black uppercase text-xs tracking-[0.2em] bg-primary bg-opacity-5 px-4 py-2 rounded-lg w-fit">
                                 <span className="material-symbols-outlined text-[18px]">
                                    {type === 'materi' ? 'auto_stories' : type === 'rangkuman' ? 'summarize' : 'quiz'}
                                 </span>
@@ -1190,7 +1190,7 @@ function DashboardTutor({ user }) {
                              </h4>
                              <div className="grid grid-cols-1 gap-4">
                                 {items.map((item, mi) => (
-                                   <div key={mi} className="bg-white border-l-4 border-l-primary/30 border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+                                   <div key={mi} className="bg-white border-l-4 border-l-primary border-opacity-30 border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
                                       <div className="flex justify-between items-start mb-4">
                                          <div>
                                             <p className="text-xs font-bold text-primary opacity-50 uppercase tracking-tighter">HALAMAN {item.page_num}</p>
@@ -1244,7 +1244,7 @@ function DashboardTutor({ user }) {
                         return allGroups.map((g, i) => {
                            const sub = groupSubs.find(s => s.student_email.endsWith(`_G${g.group_num}`));
                            return (
-                              <div key={i} className={`bg-white rounded-3xl p-6 border-2 transition-all ${sub ? 'border-emerald-100 shadow-lg shadow-emerald-500/5' : 'border-slate-100 opacity-60'}`}>
+                              <div key={i} className={`bg-white rounded-3xl p-6 border-2 transition-all ${sub ? 'border-emerald-100 shadow-lg shadow-emerald-500 shadow-opacity-5' : 'border-slate-100 opacity-60'}`}>
                                  <div className="flex justify-between items-start mb-4">
                                     <h4 className="font-black text-slate-800 flex items-center gap-2">
                                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${sub ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'}`}>{g.group_num}</span>
@@ -1815,7 +1815,7 @@ function SectionPage({ user }) {
 
       return (
         <div className="space-y-6">
-          <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
+          <div className="bg-primary bg-opacity-5 p-5 rounded-2xl border border-primary border-opacity-10">
             <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-2">
               <span className="material-symbols-outlined text-sm">tips_and_updates</span> Pertanyaan Pemantik
             </p>
@@ -1838,7 +1838,7 @@ function SectionPage({ user }) {
                 <div key={i} className="bg-white border rounded-2xl p-5 shadow-sm">
                   <p className="text-xs font-bold text-primary uppercase mb-2">Pertanyaan {i + 1}</p>
                   <p className="text-sm font-medium text-slate-700 mb-3">{q}</p>
-                  <div className="bg-slate-50 p-3 rounded-xl border-l-4 border-primary/30">
+                  <div className="bg-slate-50 p-3 rounded-xl border-l-4 border-primary border-opacity-30">
                     <p className="text-sm text-slate-600 italic">"{pemantikAnswers[i] || (status.content.split('\n\n')[i]?.split('Jawaban: ')[1] || '-')}"</p>
                   </div>
                 </div>
@@ -1867,7 +1867,7 @@ function SectionPage({ user }) {
               <button
                 onClick={() => handleAction(combinedContent)}
                 disabled={loading || !allAnswered}
-                className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-[#1a2169] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary shadow-opacity-20 hover:bg-[#1a2169] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {loading ? 'Mengirim...' : !allAnswered ? 'Lengkapi Semua Jawaban Terlebih Dahulu' : 'Kirim Semua Jawaban'}
               </button>
@@ -1897,18 +1897,18 @@ function SectionPage({ user }) {
         <div className="space-y-12 pb-10">
           {/* Hero Section */}
           <div className="relative bg-gradient-to-br from-[#0c3352] to-[#1a4a6e] rounded-[3rem] p-10 overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/10 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400 bg-opacity-10 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
             <div className="relative z-10 text-center">
-              <span className="inline-block bg-yellow-400 text-primary text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest shadow-lg shadow-yellow-400/20">Modul Utama</span>
+              <span className="inline-block bg-yellow-400 text-primary text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest shadow-lg shadow-yellow-400 shadow-opacity-20">Modul Utama</span>
               <h1 className="text-3xl md:text-5xl font-headline font-black text-white mb-4 leading-tight">Konsep Dasar Bimbingan & Konseling (BK)</h1>
-              <p className="text-blue-100/70 max-w-2xl mx-auto text-sm md:text-base font-medium">Ringkasan materi pembelajaran yang disusun secara sistematis untuk pemahaman mendalam tentang layanan BK di sekolah dasar.</p>
+              <p className="text-blue-100 text-opacity-70 max-w-2xl mx-auto text-sm md:text-base font-medium">Ringkasan materi pembelajaran yang disusun secara sistematis untuk pemahaman mendalam tentang layanan BK di sekolah dasar.</p>
             </div>
           </div>
 
           {/* Section 1: Pengertian, Fungsi, & Tujuan */}
           <section className="space-y-6">
             <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
-              <span className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">01</span>
+              <span className="w-10 h-10 rounded-2xl bg-primary bg-opacity-10 flex items-center justify-center text-primary">01</span>
               Pengertian, Fungsi, & Tujuan
             </h2>
             
@@ -1926,7 +1926,7 @@ function SectionPage({ user }) {
                 </div>
                 <div className="space-y-3 mb-6">
                   {['To Direct (Mengarahkan)', 'To Pilot (Memandu)', 'To Manage (Mengelola)', 'To Steer (Menyetir)'].map((t, i) => (
-                    <div key={i} className="flex items-center gap-3 bg-blue-50/50 p-2 rounded-xl border border-blue-100/50">
+                    <div key={i} className="flex items-center gap-3 bg-blue-50 bg-opacity-50 p-2 rounded-xl border border-blue-100 border-opacity-50">
                       <span className="material-symbols-outlined text-blue-500 text-sm">check_circle</span>
                       <span className="text-sm font-semibold text-slate-600">{t}</span>
                     </div>
@@ -1970,7 +1970,7 @@ function SectionPage({ user }) {
                   { icon: 'volunteer_activism', title: 'Fasilitasi', desc: 'Memberikan kemudahan tumbuh' }
                 ].map((f, i) => (
                   <div key={i} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm text-center flex flex-col items-center group hover:border-primary transition-all">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-2xl bg-primary bg-opacity-5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       <span className="material-symbols-outlined">{f.icon}</span>
                     </div>
                     <p className="font-bold text-slate-800 text-xs mb-1">{f.title}</p>
@@ -2005,7 +2005,7 @@ function SectionPage({ user }) {
           {/* Section 2: Prinsip-Prinsip */}
           <section className="space-y-6">
             <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
-              <span className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">02</span>
+              <span className="w-10 h-10 rounded-2xl bg-primary bg-opacity-10 flex items-center justify-center text-primary">02</span>
               Prinsip-Prinsip Dasar BK
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2018,7 +2018,7 @@ function SectionPage({ user }) {
                  { t: 'Lintas Aspek Kehidupan', d: 'Mencakup masyarakat, keluarga, dan dunia kerja.' }
                ].map((p, i) => (
                  <div key={i} className="flex gap-4 p-5 bg-white border border-slate-100 rounded-3xl items-start hover:border-yellow-400 transition-all">
-                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-400/10 text-yellow-600 text-[10px] flex items-center justify-center font-black">{i+1}</span>
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-400 bg-opacity-10 text-yellow-600 text-[10px] flex items-center justify-center font-black">{i+1}</span>
                     <div>
                       <h4 className="font-bold text-slate-800 text-sm mb-1">{p.t}</h4>
                       <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{p.d}</p>
@@ -2030,7 +2030,7 @@ function SectionPage({ user }) {
 
           {/* Section 3: Asas-Asas */}
           <section className="bg-primary p-8 md:p-12 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white bg-opacity-5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
             <div className="relative z-10">
               <h2 className="text-2xl md:text-3xl font-headline font-black mb-10 flex items-center gap-4">
                 <span className="material-symbols-outlined text-yellow-400 text-4xl">verified_user</span>
@@ -2047,10 +2047,10 @@ function SectionPage({ user }) {
                    { t: 'Alih Tangan', icon: 'forward_to_inbox', d: 'Merujuk ke ahli lain jika di luar wewenang.' },
                    { t: 'Tut Wuri Handayani', icon: 'star', d: 'Mengayomi, teladan, dan memberi dorongan.' }
                  ].map((a, i) => (
-                   <div key={i} className="bg-white/10 backdrop-blur-md border border-white/10 p-6 rounded-3xl hover:bg-white/20 transition-all">
+                   <div key={i} className="bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-10 p-6 rounded-3xl hover:bg-white bg-opacity-20 transition-all">
                       <span className="material-symbols-outlined text-yellow-400 mb-3">{a.icon}</span>
                       <h4 className="font-bold text-sm mb-1 uppercase tracking-tighter">{a.t}</h4>
-                      <p className="text-[10px] text-white/60 font-medium leading-normal">{a.d}</p>
+                      <p className="text-[10px] text-white text-opacity-60 font-medium leading-normal">{a.d}</p>
                    </div>
                  ))}
               </div>
@@ -2060,7 +2060,7 @@ function SectionPage({ user }) {
           {/* Section 4: Jenis Layanan */}
           <section className="space-y-6">
             <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
-              <span className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">04</span>
+              <span className="w-10 h-10 rounded-2xl bg-primary bg-opacity-10 flex items-center justify-center text-primary">04</span>
               Jenis-Jenis Layanan Konkret
             </h2>
             <div className="bg-white border rounded-[2.5rem] overflow-hidden shadow-sm">
@@ -2100,7 +2100,7 @@ function SectionPage({ user }) {
                      <p className="text-sm text-slate-500 font-medium">Tuliskan jawaban Anda untuk pertanyaan di bawah ini untuk mengirimkan laporan belajar ke tutor.</p>
                   </div>
 
-                  <div className="bg-white border-2 border-primary/10 rounded-[2.5rem] p-8 shadow-xl shadow-primary/5">
+                  <div className="bg-white border-2 border-primary border-opacity-10 rounded-[2.5rem] p-8 shadow-xl shadow-primary shadow-opacity-5">
                      <label className="block text-sm font-black text-primary uppercase tracking-tight mb-4 flex items-center gap-2">
                         <span className="material-symbols-outlined text-sm">question_answer</span>
                         Pertanyaan Verifikasi:
@@ -2125,14 +2125,14 @@ function SectionPage({ user }) {
                   </div>
                </div>
              ) : (
-               <div className="w-full max-w-xl bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-500/20 flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+               <div className="w-full max-w-xl bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-500 shadow-opacity-20 flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
                      <span className="material-symbols-outlined text-4xl">done_all</span>
                   </div>
                   <h3 className="text-xl font-black mb-1">Jawaban Terkirim!</h3>
-                  <p className="text-white/80 text-sm font-medium mb-6">Laporan belajar Anda telah masuk ke sistem. Silakan tunggu feedback/nilai dari tutor.</p>
-                  <div className="bg-white/10 px-6 py-4 rounded-2xl w-full border border-white/10 text-left">
-                     <p className="text-[10px] font-black uppercase text-white/40 mb-1">Jawaban Anda:</p>
+                  <p className="text-white text-opacity-80 text-sm font-medium mb-6">Laporan belajar Anda telah masuk ke sistem. Silakan tunggu feedback/nilai dari tutor.</p>
+                  <div className="bg-white bg-opacity-10 px-6 py-4 rounded-2xl w-full border border-white border-opacity-10 text-left">
+                     <p className="text-[10px] font-black uppercase text-white text-opacity-40 mb-1">Jawaban Anda:</p>
                      <p className="text-xs italic font-serif opacity-90">"{status.content}"</p>
                   </div>
                </div>
@@ -2165,13 +2165,13 @@ function SectionPage({ user }) {
         <div className="space-y-10">
           {myGroup ? (
              <div className="bg-gradient-to-br from-primary to-[#1a2169] rounded-[3.5rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-40 -mt-40 blur-3xl"></div>
+                <div className="absolute top-0 right-0 w-80 h-80 bg-white bg-opacity-5 rounded-full -mr-40 -mt-40 blur-3xl"></div>
                 <div className="relative z-10">
-                   <div className="inline-flex items-center gap-2 bg-yellow-400 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400/20">
+                   <div className="inline-flex items-center gap-2 bg-yellow-400 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
                       <span className="material-symbols-outlined text-sm animate-bounce">stars</span> Informasi Kelompok Anda
                    </div>
                    <h1 className="text-4xl md:text-6xl font-headline font-black mb-4">Kelompok {myGroup.group_num}</h1>
-                   <p className="text-blue-100/60 font-medium max-w-xl text-sm md:text-base leading-relaxed">
+                   <p className="text-blue-100 text-opacity-60 font-medium max-w-xl text-sm md:text-base leading-relaxed">
                       Anda telah terdaftar di Kelompok {myGroup.group_num} untuk Pertemuan {meetingId}. Silakan berdiskusi dan berkolaborasi dengan rekan tim Anda di bawah ini.
                    </p>
                 </div>
@@ -2190,7 +2190,7 @@ function SectionPage({ user }) {
                   )}
                   <div className="flex justify-between items-start mb-6">
                     <h3 className={`text-xl font-headline font-black flex items-center gap-3 ${myGroup?.group_num === g.group_num ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}>
-                      <span className={`w-10 h-10 rounded-2xl flex items-center justify-center ${myGroup?.group_num === g.group_num ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-slate-100 text-slate-400'}`}>
+                      <span className={`w-10 h-10 rounded-2xl flex items-center justify-center ${myGroup?.group_num === g.group_num ? 'bg-primary text-white shadow-lg shadow-primary shadow-opacity-30' : 'bg-slate-100 text-slate-400'}`}>
                         {g.group_num}
                       </span>
                       Kelompok {g.group_num}
@@ -2201,7 +2201,7 @@ function SectionPage({ user }) {
                   </div>
                   <div className="space-y-4">
                      {g.members.map((m, mi) => (
-                       <div key={mi} className={`flex items-center gap-4 p-3 rounded-2xl border transition-all ${m.email === user.email ? 'bg-primary/5 border-primary/20' : 'border-slate-50 group-hover:border-slate-100 bg-slate-50/50'}`}>
+                       <div key={mi} className={`flex items-center gap-4 p-3 rounded-2xl border transition-all ${m.email === user.email ? 'bg-primary bg-opacity-5 border-primary border-opacity-20' : 'border-slate-50 group-hover:border-slate-100 bg-slate-50 bg-opacity-50'}`}>
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs ${m.email === user.email ? 'bg-primary text-white' : 'bg-white text-slate-400 border border-slate-200'}`}>
                              {mi + 1}
                           </div>
@@ -2311,11 +2311,11 @@ function SectionPage({ user }) {
        ) : (
          <form onSubmit={handleSubmit} className="space-y-4">
            <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Tulis jawaban Anda..." className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all resize-none"></textarea>
-           <button type="submit" disabled={loading} className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-[#1a2169] transition-all">{loading ? 'Sedang Mengirim...' : 'Kirim Jawaban'}</button>
+           <button type="submit" disabled={loading} className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary shadow-opacity-20 hover:bg-[#1a2169] transition-all">{loading ? 'Sedang Mengirim...' : 'Kirim Jawaban'}</button>
          </form>
        )}
        <div className="mt-10 pt-6 border-t border-slate-100">
-         <Link to={`/class/${id}/meeting/${meetingId}`} className="inline-flex items-center gap-2 text-slate-500 font-bold text-sm hover:text-primary bg-slate-50 hover:bg-primary/5 px-5 py-3 rounded-xl border border-slate-200 hover:border-primary transition-all">
+         <Link to={`/class/${id}/meeting/${meetingId}`} className="inline-flex items-center gap-2 text-slate-500 font-bold text-sm hover:text-primary bg-slate-50 hover:bg-primary bg-opacity-5 px-5 py-3 rounded-xl border border-slate-200 hover:border-primary transition-all">
            <span className="material-symbols-outlined text-sm">arrow_back</span> Kembali ke Menu Pembelajaran
          </Link>
        </div>
@@ -2329,7 +2329,7 @@ function Layout({ user, onLogin, onLogout }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f8fbff] text-slate-800 font-body relative">
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg w-full px-5 py-3 border-b border-slate-100 flex justify-center">
+      <header className="sticky top-0 z-50 bg-white bg-opacity-80 backdrop-blur-lg w-full px-5 py-3 border-b border-slate-100 flex justify-center">
         <div className="flex justify-between items-center w-full max-w-screen-xl">
           <Link to="/" className="flex items-center gap-3">
             <img src="/ut-logo.png" alt="UT Logo" className="w-9 h-auto object-contain" />
