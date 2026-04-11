@@ -3784,56 +3784,29 @@ function SectionPage({ user }) {
   if (!user || user.role !== "student") return <Navigate to={`/class/${id}`} />;
 
   function renderStaticContent() {
-    const staticContent = COURSE_DATA[courseCode]?.[sectionName];
     return (
-      <div className="space-y-8">
-        {staticContent ? (
-          <div className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-sm leading-relaxed text-justify">
-            {staticContent}
-          </div>
-        ) : (
-          <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-16 text-center">
-            <span className="material-symbols-outlined text-5xl text-slate-300 mb-4">import_contacts</span>
-            <h3 className="text-xl font-black text-slate-400">Materi Belum Tersedia</h3>
-            <p className="text-sm text-slate-400 mt-2">Konten materi untuk bagian {sectionName} sedang dalam tahap penyusunan.</p>
-          </div>
-        )}
-        <div className="bg-[#1e293b] text-white p-8 md:p-12 rounded-[3rem] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-          <h4 className="font-headline font-black text-xl mb-6 text-yellow-400 uppercase tracking-tight flex items-center gap-3">
-            <span className="material-symbols-outlined">history_edu</span>
-            Laporan Belajar Mandiri
-          </h4>
-          {status ? (
-            <div className="bg-white bg-opacity-5 border border-white border-opacity-10 p-6 rounded-2xl">
-              <p className="text-[10px] text-yellow-400 font-black uppercase tracking-widest mb-3 opacity-60">Catatan Anda:</p>
-              <p className="text-sm italic font-medium leading-relaxed">"{status.content}"</p>
-              <div className="mt-6 flex items-center gap-2 text-green-400">
-                <span className="material-symbols-outlined text-sm">verified</span>
-                <span className="text-[10px] font-black uppercase tracking-widest">Terkirim ke Tutor</span>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Ketik catatan belajar Anda..."
-                className="w-full bg-white bg-opacity-5 border border-white border-opacity-10 rounded-2xl p-6 text-sm focus:bg-white focus:bg-opacity-10 focus:border-yellow-400 outline-none min-h-[150px] transition-all resize-none"
-              ></textarea>
-              <button
-                onClick={() => handleAction(content)}
-                disabled={loading || !content.trim()}
-                className="w-full bg-yellow-400 text-slate-900 font-black py-4 rounded-2xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-2 uppercase"
-              >
-                {loading ? "MENGIRIM..." : "SIMPAN CATATAN BELAJAR"}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+      <StaticContentRenderer
+        sectionName={sectionName}
+        id={id}
+        meetingId={meetingId}
+        user={user}
+        status={status}
+        tutorFeedback={tutorFeedback}
+        content={content}
+        setContent={setContent}
+        loading={loading}
+        handleAction={handleAction}
+        pemantikAnswers={pemantikAnswers}
+        setPemantikAnswers={setPemantikAnswers}
+        getPemantikForStudent={getPemantikForStudent}
+        cls={cls}
+        courseCode={courseCode}
+        COURSE_DATA={COURSE_DATA}
+        submissions={submissions}
+      />
     );
   }
+
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 pb-24">
