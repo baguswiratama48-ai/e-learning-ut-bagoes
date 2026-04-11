@@ -4463,51 +4463,51 @@ function SectionPage({ user }) {
 
     if (sectionName === "Materi Pembelajaran" && id === "3") {
       return (
-        <div className="space-y-12 pb-10">
+        <div className="space-y-10 md:space-y-12 pb-10">
           {/* Hero Section */}
-          <div className="relative bg-gradient-to-br from-[#1a2169] to-[#2c3e50] rounded-[3rem] p-10 overflow-hidden shadow-2xl border border-white border-opacity-10">
+          <div className="relative bg-gradient-to-br from-[#1a2169] to-[#2c3e50] rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 overflow-hidden shadow-2xl border border-white border-opacity-10">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary bg-opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
             <div className="relative z-10 text-center">
-              <span className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
+              <span className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 md:mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
                 <span className="material-symbols-outlined text-sm">stars</span> Modul 1 SPDA4401
               </span>
-              <h1 className="text-3xl md:text-5xl font-headline font-black text-white mb-6 leading-tight">
+              <h1 className="text-2xl md:text-5xl font-headline font-black text-white mb-4 md:mb-6 leading-tight">
                 Anak dengan Perkembangan Nonnormatif
               </h1>
-              <p className="text-blue-100 text-opacity-80 max-w-2xl mx-auto text-sm md:text-base font-medium leading-relaxed">
+              <p className="text-blue-100 text-opacity-80 max-w-2xl mx-auto text-xs md:text-base font-medium leading-relaxed">
                 Kajian mendalam mengenai hakikat, faktor penyebab, identifikasi, serta penanganan anak dengan perkembangan yang menyimpang dari standar baku.
               </p>
             </div>
           </div>
 
           {/* Section 1: Hakikat */}
-          <section className="space-y-8">
+          <section className="space-y-6 md:space-y-8">
             <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-               <span className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-xl shadow-lg shadow-primary shadow-opacity-20">01</span>
+               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-primary text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-primary shadow-opacity-20">01</span>
                <div>
-                  <h2 className="text-2xl font-black text-primary leading-tight">Hakikat Perkembangan Nonnormatif</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Prinsip Dasar Psikopatologi</p>
+                  <h2 className="text-lg md:text-2xl font-black text-primary leading-tight">Hakikat Perkembangan Nonnormatif</h2>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Prinsip Dasar Psikopatologi</p>
                </div>
             </div>
 
-            <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
-               <h3 className="font-black text-xl text-slate-800 mb-8 flex items-center gap-3">
+            <div className="bg-white p-6 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm">
+               <h3 className="font-black text-lg md:text-xl text-slate-800 mb-6 md:mb-8 flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary">schema</span>
                   4 Prinsip Pendekatan Perkembangan
                </h3>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                   {[
                     { t: "Fase Perkembangan", d: "Kelainan muncul atau terjadi hanya pada individu yang sedang mengalami proses perkembangan." },
                     { t: "Kaitan Normalitas", d: "Psikopatologi harus dipandang dalam kaitannya dengan perkembangan normal, tugas perkembangan, dan perubahan sepanjang hayat." },
                     { t: "Kajian Serius", d: "Tanda-tanda awal perilaku berkelainan harus dipelajari secara serius sebagai indikator masalah di masa depan." },
                     { t: "Keberagaman Patokan", d: "Terdapat beragam patokan atau karakteristik perkembangan, baik yang normal maupun yang berkelainan." }
                   ].map((p, i) => (
-                    <div key={i} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 hover:border-primary transition-all">
-                       <p className="text-sm font-black text-primary mb-2 flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-lg bg-primary text-white flex items-center justify-center text-[10px]">{i+1}</span>
+                    <div key={i} className="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100 hover:border-primary transition-all">
+                       <p className="text-xs md:text-sm font-black text-primary mb-2 flex items-center gap-2">
+                          <span className="w-5 h-5 md:w-6 md:h-6 rounded-lg bg-primary text-white flex items-center justify-center text-[9px] md:text-[10px]">{i+1}</span>
                           {p.t}
                        </p>
-                       <p className="text-xs text-slate-600 font-medium leading-relaxed">{p.d}</p>
+                       <p className="text-[11px] md:text-xs text-slate-600 font-medium leading-relaxed">{p.d}</p>
                     </div>
                   ))}
                </div>
@@ -4515,45 +4515,45 @@ function SectionPage({ user }) {
           </section>
 
           {/* Section 2: Abnormalitas */}
-          <section className="space-y-8">
+          <section className="space-y-6 md:space-y-8">
             <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-               <span className="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-indigo-500 shadow-opacity-20">02</span>
+               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-500 text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-indigo-500 shadow-opacity-20">02</span>
                <div>
-                  <h2 className="text-2xl font-black text-indigo-900 leading-tight">Definisi Kelainan & Abnormalitas</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">3 Model Pendekatan Utama</p>
+                  <h2 className="text-lg md:text-2xl font-black text-indigo-900 leading-tight">Definisi Kelainan & Abnormalitas</h2>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">3 Model Pendekatan Utama</p>
                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div className="bg-white border-2 border-slate-50 p-8 rounded-[3rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mb-6">
-                     <span className="material-symbols-outlined text-4xl">medical_services</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+               <div className="bg-white border-2 border-slate-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[3rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-rose-50 text-rose-500 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6">
+                     <span className="material-symbols-outlined text-3xl md:text-4xl">medical_services</span>
                   </div>
-                  <h4 className="font-black text-slate-800 mb-4">Model Medis</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">Memandang kelainan perilaku analog dengan penyakit fisik. Bersumber dari faktor fisiologis atau intrapsikis.</p>
-                  <div className="mt-auto bg-rose-50 text-rose-700 p-4 rounded-2xl text-[10px] font-black italic">
+                  <h4 className="font-black text-slate-800 text-sm md:text-base mb-2 md:mb-4">Model Medis</h4>
+                  <p className="text-[11px] md:text-xs text-slate-500 font-medium leading-relaxed mb-4 md:mb-6">Memandang kelainan perilaku analog dengan penyakit fisik. Bersumber dari faktor fisiologis atau intrapsikis.</p>
+                  <div className="mt-auto bg-rose-50 text-rose-700 p-3 md:p-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black italic">
                      "Anak dianggap sedang 'sakit' secara psikologis."
                   </div>
                </div>
 
-               <div className="bg-white border-2 border-slate-50 p-8 rounded-[3rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center mb-6">
-                     <span className="material-symbols-outlined text-4xl">analytics</span>
+               <div className="bg-white border-2 border-slate-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[3rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-50 text-blue-500 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6">
+                     <span className="material-symbols-outlined text-3xl md:text-4xl">analytics</span>
                   </div>
-                  <h4 className="font-black text-slate-800 mb-4">Statistik (Rata-Rata)</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">Abnormal berarti berbeda dari kondisi normal (statistik). Perilaku menyimpang jauh dari rata-rata kelompok.</p>
-                  <div className="mt-auto bg-blue-50 text-blue-700 p-4 rounded-2xl text-[10px] font-black italic">
+                  <h4 className="font-black text-slate-800 text-sm md:text-base mb-2 md:mb-4">Statistik (Rata-Rata)</h4>
+                  <p className="text-[11px] md:text-xs text-slate-500 font-medium leading-relaxed mb-4 md:mb-6">Abnormal berarti berbeda dari kondisi normal (statistik). Perilaku menyimpang jauh dari rata-rata kelompok.</p>
+                  <div className="mt-auto bg-blue-50 text-blue-700 p-3 md:p-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black italic">
                      "Menggunakan patokan rata-rata populasi."
                   </div>
                </div>
 
-               <div className="bg-white border-2 border-slate-50 p-8 rounded-[3rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mb-6">
-                     <span className="material-symbols-outlined text-4xl">verified</span>
+               <div className="bg-white border-2 border-slate-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[3rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-emerald-50 text-emerald-500 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6">
+                     <span className="material-symbols-outlined text-3xl md:text-4xl">verified</span>
                   </div>
-                  <h4 className="font-black text-slate-800 mb-4">Penyimpangan Ideal</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">Membandingkan dengan kondisi kepribadian ideal yang sehat. Penyimpangan dari standar ideal adalah abnormalitas.</p>
-                  <div className="mt-auto bg-emerald-50 text-emerald-700 p-4 rounded-2xl text-[10px] font-black italic">
+                  <h4 className="font-black text-slate-800 text-sm md:text-base mb-2 md:mb-4">Penyimpangan Ideal</h4>
+                  <p className="text-[11px] md:text-xs text-slate-500 font-medium leading-relaxed mb-4 md:mb-6">Membandingkan dengan kondisi kepribadian ideal yang sehat. Penyimpangan dari standar ideal adalah abnormalitas.</p>
+                  <div className="mt-auto bg-emerald-50 text-emerald-700 p-3 md:p-4 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black italic">
                      "Berfokus pada standar kesempurnaan mental."
                   </div>
                </div>
@@ -4561,55 +4561,55 @@ function SectionPage({ user }) {
           </section>
 
           {/* Section 3: Ciri-Ciri */}
-          <section className="bg-slate-900 rounded-[3.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+          <section className="bg-slate-900 rounded-[2rem] md:rounded-[3.5rem] p-6 md:p-12 text-white shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-primary bg-opacity-10 rounded-full -mr-40 -mt-40 blur-3xl"></div>
             <div className="relative z-10">
-               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                   <div>
-                     <span className="inline-block bg-yellow-400 text-slate-900 px-4 py-1 rounded-full text-[10px] font-black uppercase mb-6">Manifestasi Klinis</span>
-                     <h2 className="text-3xl font-black mb-6 leading-tight">Ciri-Ciri & Pola Kejadian Nonnormatif</h2>
-                     <p className="text-slate-400 text-sm font-medium leading-relaxed mb-8">Menurut Mash & Wolfe (2013), terdapat pola spesifik yang menandakan kondisi perkembangan nonnormatif pada anak.</p>
+                     <span className="inline-block bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-[9px] md:text-[10px] font-black uppercase mb-4 md:mb-6">Manifestasi Klinis</span>
+                     <h2 className="text-xl md:text-3xl font-black mb-4 md:mb-6 leading-tight">Ciri-Ciri & Pola Kejadian Nonnormatif</h2>
+                     <p className="text-slate-400 text-xs md:text-sm font-medium leading-relaxed mb-6 md:mb-8">Menurut Mash & Wolfe (2013), terdapat pola spesifik yang menandakan kondisi perkembangan nonnormatif pada anak.</p>
                      
-                     <div className="space-y-4">
+                     <div className="space-y-3 md:space-y-4">
                         {[
                            { t: "Distress", d: "Anak menunjukkan kesedihan atau ketakutan yang berlebihan.", i: "mood" },
                            { t: "Disabilitas", d: "Gangguan fungsi dalam aktivitas sehari-hari (belajar, sosialisasi).", i: "blind" },
                            { t: "Risiko Lanjutan", d: "Menimbulkan risiko penderitaan atau masalah serius di masa depan.", i: "warning" }
                         ].map((item, idx) => (
-                           <div key={idx} className="flex gap-4 items-center bg-white bg-opacity-5 p-5 rounded-3xl border border-white border-opacity-10">
-                              <span className="material-symbols-outlined text-yellow-500 text-3xl">{item.i}</span>
+                           <div key={idx} className="flex gap-4 items-center bg-white bg-opacity-5 p-4 md:p-5 rounded-2xl md:rounded-3xl border border-white border-opacity-10">
+                              <span className="material-symbols-outlined text-yellow-500 text-2xl md:text-3xl">{item.i}</span>
                               <div>
-                                 <p className="font-black text-sm">{item.t}</p>
-                                 <p className="text-[11px] text-slate-400">{item.d}</p>
+                                 <p className="font-black text-xs md:text-sm">{item.t}</p>
+                                 <p className="text-[10px] md:text-[11px] text-slate-400">{item.d}</p>
                               </div>
                            </div>
                         ))}
                      </div>
                   </div>
-                  <div className="bg-white bg-opacity-5 rounded-[2.5rem] p-8 border border-white border-opacity-10">
-                     <h4 className="font-black text-lg mb-6 text-primary flex items-center gap-2">
+                  <div className="bg-white bg-opacity-5 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 border border-white border-opacity-10">
+                     <h4 className="font-black text-base md:text-lg mb-4 md:mb-6 text-primary flex items-center gap-2">
                         <span className="material-symbols-outlined">history_edu</span>
                         Rangkuman Pemahaman
                      </h4>
-                     <div className="space-y-6">
-                        <div className="bg-primary bg-opacity-10 p-5 rounded-2xl">
-                           <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                     <div className="space-y-4 md:space-y-6">
+                        <div className="bg-primary bg-opacity-10 p-4 rounded-xl md:rounded-2xl">
+                           <p className="text-[11px] md:text-xs text-slate-300 font-medium leading-relaxed">
                               Psikopatologi perkembangan mengkaji asal-usul perilaku berkelainan serta perubahan perilaku sepanjang rentang kehidupan.
                            </p>
                         </div>
-                        <div className="space-y-3">
-                           <p className="text-xs font-black text-slate-100 flex items-center gap-2">
+                        <div className="space-y-2 md:space-y-3">
+                           <p className="text-[11px] md:text-xs font-black text-slate-100 flex items-center gap-2">
                               <span className="material-symbols-outlined text-sm text-green-500">check_circle</span>
                               Penilaian Harus Objektif
                            </p>
-                           <ul className="text-[11px] text-slate-400 space-y-2 pl-6 list-disc">
+                           <ul className="text-[10px] md:text-[11px] text-slate-400 space-y-1 md:space-y-2 pl-6 list-disc font-medium">
                               <li>Aspek Perilaku</li>
                               <li>Aspek Kognitif</li>
                               <li>Gejala Fisik</li>
                               <li>Interaksi Lingkungan</li>
                            </ul>
                         </div>
-                        <p className="text-[10px] font-bold italic text-yellow-400 border-t border-white border-opacity-10 pt-4">
+                        <p className="text-[9px] md:text-[10px] font-bold italic text-yellow-400 border-t border-white border-opacity-10 pt-4">
                            *Catatan: Kelainan didefinisikan sebagai penyimpangan dari perilaku normal sesuai usia.
                         </p>
                      </div>
@@ -4619,38 +4619,38 @@ function SectionPage({ user }) {
           </section>
 
           {/* Section 4: Faktor Memengaruhi */}
-          <section className="space-y-10">
+          <section className="space-y-6 md:space-y-10">
             <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-               <span className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-emerald-500 shadow-opacity-20">03</span>
+               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-emerald-500 shadow-opacity-20">03</span>
                <div>
-                  <h2 className="text-2xl font-black text-emerald-900 leading-tight">Faktor-Faktor Penentu</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Biologis, Genetik, & Konteks Sosial</p>
+                  <h2 className="text-lg md:text-2xl font-black text-emerald-900 leading-tight">Faktor-Faktor Penentu</h2>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Biologis, Genetik, & Konteks Sosial</p>
                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="space-y-6">
-                  <div className="bg-emerald-50 p-8 rounded-[2.5rem] border border-emerald-100">
-                     <h4 className="font-black text-emerald-900 mb-4 flex items-center gap-2">
-                        <span className="material-symbols-outlined">dna</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+               <div className="space-y-4 md:space-y-6">
+                  <div className="bg-emerald-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-emerald-100">
+                     <h4 className="font-black text-emerald-900 text-sm md:text-base mb-3 md:mb-4 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm md:text-base">dna</span>
                         Cetak Biru Biologis
                      </h4>
-                     <p className="text-xs text-emerald-800 font-medium leading-relaxed mb-6">
+                     <p className="text-[11px] md:text-xs text-emerald-800 font-medium leading-relaxed mb-4 md:mb-6">
                         Faktor genetik berlangsung sepanjang hidup. Tidak semua kelainan tampak sejak lahir (efek tertunda). Contoh: Sindrom Down.
                      </p>
-                     <div className="bg-white p-4 rounded-2xl flex items-center gap-4">
-                        <span className="material-symbols-outlined text-emerald-500">psychology</span>
-                        <div className="text-[10px] font-bold text-slate-600">Terpengaruh oleh perbedaan gender & tingkat intelegensi.</div>
+                     <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center gap-3 md:gap-4">
+                        <span className="material-symbols-outlined text-emerald-500 text-sm md:text-base">psychology</span>
+                        <div className="text-[9px] md:text-[10px] font-bold text-slate-600">Terpengaruh oleh perbedaan gender & tingkat intelegensi.</div>
                      </div>
                   </div>
-                  <div className="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-100">
-                     <h4 className="font-black text-amber-900 mb-4">Ketangguhan (Resilience)</h4>
-                     <p className="text-xs text-amber-800 font-medium leading-relaxed mb-6">
+                  <div className="bg-amber-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-amber-100">
+                     <h4 className="font-black text-amber-900 text-sm md:text-base mb-3 md:mb-4">Ketangguhan (Resilience)</h4>
+                     <p className="text-[11px] md:text-xs text-amber-800 font-medium leading-relaxed mb-4 md:mb-6">
                         Kemampuan anak untuk adaptasi dan bangkit kembali dari risiko penderitaan akibat lingkungan yang menekan.
                      </p>
-                     <div className="bg-white p-4 rounded-2xl">
-                        <p className="text-[10px] font-black text-amber-600 uppercase mb-2">Faktor Protektif:</p>
-                        <ul className="text-[10px] text-slate-600 font-bold grid grid-cols-2 gap-2">
+                     <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl">
+                        <p className="text-[9px] md:text-[10px] font-black text-amber-600 uppercase mb-2">Faktor Protektif:</p>
+                        <ul className="text-[9px] md:text-[10px] text-slate-600 font-bold grid grid-cols-2 gap-2">
                            <li>• Karakteristik Pribadi</li>
                            <li>• Pengasuhan Hangat</li>
                            <li>• Dukungan Sosial</li>
@@ -4660,25 +4660,25 @@ function SectionPage({ user }) {
                   </div>
                </div>
 
-               <div className="bg-slate-50 p-8 md:p-10 rounded-[3rem] border border-slate-200">
-                  <h4 className="font-black text-slate-800 mb-8 flex items-center gap-2">
-                     <span className="material-symbols-outlined text-primary">hub</span>
+               <div className="bg-slate-50 p-6 md:p-10 rounded-[1.5rem] md:rounded-[3rem] border border-slate-200">
+                  <h4 className="font-black text-slate-800 text-sm md:text-base mb-6 md:mb-8 flex items-center gap-2">
+                     <span className="material-symbols-outlined text-primary text-sm md:text-base">hub</span>
                      Konteks Lingkungan Sosial
                   </h4>
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                      {[
                         { t: "Keluarga", d: "Pengaruh langsung maupun tidak langsung terhadap perilaku anak.", i: "family_restroom" },
                         { t: "Ekonomi", d: "Status sosial ekonomi dan kondisi kemiskinan yang membatasi akses.", i: "payments" },
                         { t: "Budaya", d: "Nilai-nilai budaya yang membentuk persepsi abnormalitas.", i: "public" },
                         { t: "Dukungan", d: "Ketersediaan dukungan sosial dan lingkungan masyarakat.", i: "groups_2" }
                      ].map((item, idx) => (
-                        <div key={idx} className="flex gap-4 group">
-                           <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                              <span className="material-symbols-outlined">{item.i}</span>
+                        <div key={idx} className="flex gap-3 md:gap-4 group">
+                           <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm flex-shrink-0">
+                              <span className="material-symbols-outlined text-sm md:text-base">{item.i}</span>
                            </div>
                            <div>
-                              <p className="text-sm font-black text-slate-800">{item.t}</p>
-                              <p className="text-xs text-slate-400 font-medium">{item.d}</p>
+                              <p className="text-xs md:text-sm font-black text-slate-800">{item.t}</p>
+                              <p className="text-[10px] md:text-xs text-slate-400 font-medium">{item.d}</p>
                            </div>
                         </div>
                      ))}
@@ -4688,35 +4688,35 @@ function SectionPage({ user }) {
           </section>
 
           {/* Section 5: Identifikasi & Penanganan */}
-          <section className="space-y-10">
+          <section className="space-y-6 md:space-y-10">
             <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-               <span className="w-12 h-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-rose-500 shadow-opacity-20">04</span>
+               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-rose-500 shadow-opacity-20">04</span>
                <div>
-                  <h2 className="text-2xl font-black text-rose-900 leading-tight">Identifikasi & Penanganan</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Metodologi & Jenis Intervensi</p>
+                  <h2 className="text-lg md:text-2xl font-black text-rose-900 leading-tight">Identifikasi & Penanganan</h2>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Metodologi & Jenis Intervensi</p>
                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+               <div className="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-full -mr-12 -mt-12"></div>
-                  <h4 className="font-black text-slate-800 mb-8 flex items-center gap-2">
-                     <span className="material-symbols-outlined text-rose-500">search_check</span>
+                  <h4 className="font-black text-slate-800 text-sm md:text-base mb-6 md:mb-8 flex items-center gap-2">
+                     <span className="material-symbols-outlined text-rose-500 text-sm md:text-base">search_check</span>
                      3 Cara Identifikasi
                   </h4>
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                      {["Wawancara", "Kuesioner", "Observasi"].map((way, idx) => (
-                        <div key={idx} className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                           <span className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-black">{idx+1}</span>
-                           <p className="font-bold text-slate-700">{way}</p>
+                        <div key={idx} className="flex items-center gap-3 md:gap-4 bg-slate-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-100">
+                           <span className="w-7 h-7 md:w-8 md:h-8 rounded-lg md:rounded-xl bg-primary text-white flex items-center justify-center text-[10px] md:text-xs font-black">{idx+1}</span>
+                           <p className="font-bold text-xs md:text-sm text-slate-700">{way}</p>
                         </div>
                      ))}
                   </div>
                </div>
 
-               <div className="bg-slate-900 p-8 rounded-[2.5rem] text-white">
-                  <h4 className="font-black text-lg mb-8 text-primary">Jenis-Jenis Penanganan</h4>
-                  <div className="grid grid-cols-1 gap-3">
+               <div className="bg-slate-900 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] text-white">
+                  <h4 className="font-black text-base md:text-lg mb-6 md:mb-8 text-primary">Jenis-Jenis Penanganan</h4>
+                  <div className="grid grid-cols-1 gap-2 md:gap-3">
                      {[
                         { t: "Penanganan Medis", i: "medical_information" },
                         { t: "Terapi Bermain", i: "toys" },
@@ -4724,49 +4724,49 @@ function SectionPage({ user }) {
                         { t: "Terapi Keluarga", i: "family_history" },
                         { t: "Fisioterapi", i: "physical_therapy" }
                      ].map((t, idx) => (
-                        <div key={idx} className="flex items-center gap-4 bg-white bg-opacity-5 p-4 rounded-2xl border border-white border-opacity-5 hover:bg-opacity-10 transition-all cursor-default">
-                           <span className="material-symbols-outlined text-primary">{t.i}</span>
-                           <p className="text-sm font-bold">{t.t}</p>
+                        <div key={idx} className="flex items-center gap-3 md:gap-4 bg-white bg-opacity-5 p-3 md:p-4 rounded-xl md:rounded-2xl border border-white border-opacity-5 hover:bg-opacity-10 transition-all cursor-default">
+                           <span className="material-symbols-outlined text-primary text-sm md:text-base">{t.i}</span>
+                           <p className="text-xs md:text-sm font-bold">{t.t}</p>
                         </div>
                      ))}
                   </div>
                </div>
             </div>
             
-            <div className="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-200">
-               <div className="flex items-center gap-3 mb-4">
-                  <span className="material-symbols-outlined text-amber-600">info_i</span>
-                  <p className="text-xs font-black text-amber-800 uppercase tracking-widest">Catatan Penting:</p>
+            <div className="bg-amber-50 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-amber-200">
+               <div className="flex items-center gap-3 mb-3 md:mb-4">
+                  <span className="material-symbols-outlined text-amber-600 text-sm md:text-base">info_i</span>
+                  <p className="text-[10px] md:text-xs font-black text-amber-800 uppercase tracking-widest">Catatan Penting:</p>
                </div>
-               <p className="text-sm text-slate-700 font-bold leading-relaxed italic">
+               <p className="text-xs md:text-sm text-slate-700 font-bold leading-relaxed italic">
                   "Pengumpulan data harus dilakukan secara objektif karena identifikasi ini akan berdampak besar pada masa depan dan kehidupan anak dalam jangka panjang."
                </p>
             </div>
           </section>
 
           {/* Kesimpulan Section */}
-          <section className="space-y-8">
+          <section className="space-y-6 md:space-y-8">
             <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-               <span className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-amber-500 shadow-opacity-20">
+               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-amber-500 shadow-opacity-20">
                  <span className="material-symbols-outlined">summarize</span>
                </span>
                <div>
-                  <h2 className="text-2xl font-black text-amber-900 leading-tight">Kesimpulan Materi</h2>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Perbandingan Normatif vs Nonnormatif</p>
+                  <h2 className="text-lg md:text-2xl font-black text-amber-900 leading-tight">Kesimpulan Materi</h2>
+                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Perbandingan Normatif vs Nonnormatif</p>
                </div>
             </div>
 
-            <div className="bg-white border rounded-[2.5rem] overflow-hidden shadow-xl border-slate-100">
+            <div className="bg-white border rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-xl border-slate-100">
                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
+                  <table className="w-full text-left border-collapse min-w-[500px] md:min-w-0">
                      <thead>
                         <tr className="bg-slate-900 text-white">
-                           <th className="p-6 text-xs font-black uppercase tracking-widest border-r border-white border-opacity-10">Aspek</th>
-                           <th className="p-6 text-xs font-black uppercase tracking-widest border-r border-white border-opacity-10">Normatif</th>
-                           <th className="p-6 text-xs font-black uppercase tracking-widest">Nonnormatif</th>
+                           <th className="p-4 md:p-6 text-[10px] md:text-xs font-black uppercase tracking-widest border-r border-white border-opacity-10">Aspek</th>
+                           <th className="p-4 md:p-6 text-[10px] md:text-xs font-black uppercase tracking-widest border-r border-white border-opacity-10">Normatif</th>
+                           <th className="p-4 md:p-6 text-[10px] md:text-xs font-black uppercase tracking-widest">Nonnormatif</th>
                         </tr>
                      </thead>
-                     <tbody className="text-sm font-medium text-slate-600">
+                     <tbody className="text-[11px] md:text-sm font-medium text-slate-600">
                         {[
                            { a: "Sifat", n: "Umum & wajar", nn: "Tidak umum / menyimpang" },
                            { a: "Kesesuaian usia", n: "Sesuai tahap perkembangan", nn: "Tidak sesuai tahap" },
@@ -4775,16 +4775,16 @@ function SectionPage({ user }) {
                            { a: "Contoh", n: "Belajar membaca di SD", nn: "Keterlambatan bicara" }
                         ].map((row, i) => (
                            <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                              <td className="p-6 font-black text-slate-800 border-r border-slate-100">{row.a}</td>
-                              <td className="p-6 border-r border-slate-100">
-                                 <span className="inline-flex items-center gap-2 text-emerald-600">
-                                    <span className="material-symbols-outlined text-sm">check_circle</span>
+                              <td className="p-4 md:p-6 font-black text-slate-800 border-r border-slate-100 whitespace-nowrap">{row.a}</td>
+                              <td className="p-4 md:p-6 border-r border-slate-100">
+                                 <span className="inline-flex items-center gap-1 md:gap-2 text-emerald-600">
+                                    <span className="material-symbols-outlined text-[12px] md:text-sm">check_circle</span>
                                     {row.n}
                                  </span>
                               </td>
-                              <td className="p-6">
-                                 <span className="inline-flex items-center gap-2 text-rose-500">
-                                    <span className="material-symbols-outlined text-sm">error</span>
+                              <td className="p-4 md:p-6">
+                                 <span className="inline-flex items-center gap-1 md:gap-2 text-rose-500">
+                                    <span className="material-symbols-outlined text-[12px] md:text-sm">error</span>
                                     {row.nn}
                                  </span>
                               </td>
@@ -4797,28 +4797,28 @@ function SectionPage({ user }) {
           </section>
 
           {/* Verification Section */}
-          <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
+          <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
             {!status ? (
               <div className="w-full max-w-xl">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-4 py-2 rounded-full border border-yellow-200 text-[10px] font-black uppercase tracking-widest mb-4">
+                <div className="text-center mb-6 md:mb-8">
+                  <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-yellow-200 text-[9px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-4">
                     <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
                     Konfirmasi Pemahaman
                   </div>
-                  <h3 className="text-xl font-black text-slate-800 mb-2">
+                  <h3 className="text-lg md:text-xl font-black text-slate-800 mb-1 md:mb-2">
                     Evaluasi Materi
                   </h3>
-                  <p className="text-sm text-slate-500 font-medium">
+                  <p className="text-[11px] md:text-sm text-slate-500 font-medium">
                     Tuliskan jawaban Anda untuk pertanyaan di bawah ini untuk mengirimkan laporan belajar ke tutor.
                   </p>
                 </div>
 
-                <div className="bg-white border-2 border-primary border-opacity-10 rounded-[2.5rem] p-8 shadow-xl shadow-primary shadow-opacity-5">
-                  <label className="block text-sm font-black text-primary uppercase tracking-tight mb-4 flex items-center gap-2">
+                <div className="bg-white border-2 border-primary border-opacity-10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-xl shadow-primary shadow-opacity-5">
+                  <label className="block text-[11px] md:text-sm font-black text-primary uppercase tracking-tight mb-3 md:mb-4 flex items-center gap-2">
                     <span className="material-symbols-outlined text-sm">question_answer</span>
                     Pertanyaan Verifikasi:
                   </label>
-                  <p className="text-lg font-bold text-slate-800 mb-6 leading-snug">
+                  <p className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 leading-snug">
                     Apa yang dimaksud dengan perkembangan normatif dan nonnormatif?
                   </p>
 
@@ -4826,31 +4826,31 @@ function SectionPage({ user }) {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Ketik jawaban lengkap Anda di sini..."
-                    className="w-full min-h-[150px] bg-slate-50 border border-slate-100 rounded-2xl p-5 text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-6"
+                    className="w-full min-h-[120px] md:min-h-[150px] bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl p-4 md:p-5 text-[11px] md:text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-4 md:mb-6"
                   ></textarea>
 
                   <button
                     onClick={() => handleAction(content)}
                     disabled={loading || !content.trim()}
-                    className="w-full bg-primary text-white font-black py-5 rounded-2xl hover:bg-[#1a2169] transition-all flex items-center justify-center gap-3 group disabled:opacity-50 shadow-lg shadow-primary shadow-opacity-20"
+                    className="w-full bg-primary text-white font-black py-4 md:py-5 rounded-xl md:rounded-2xl hover:bg-[#1a2169] transition-all flex items-center justify-center gap-2 md:gap-3 group disabled:opacity-50 shadow-lg shadow-primary shadow-opacity-20 text-xs md:text-base tracking-widest"
                   >
                     {loading ? "MENGIRIM JAWABAN..." : "KIRIM JAWABAN KE TUTOR"}
-                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>}
+                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm md:text-base">send</span>}
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="w-full max-w-xl bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-500 shadow-opacity-20 flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                  <span className="material-symbols-outlined text-4xl">done_all</span>
+              <div className="w-full max-w-xl bg-green-500 text-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-xl shadow-green-500 shadow-opacity-20 flex flex-col items-center text-center">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                  <span className="material-symbols-outlined text-2xl md:text-4xl">done_all</span>
                 </div>
-                <h3 className="text-xl font-black mb-1">Jawaban Terkirim!</h3>
-                <p className="text-white text-opacity-80 text-sm font-medium mb-6">
+                <h3 className="text-lg md:text-xl font-black mb-1">Jawaban Terkirim!</h3>
+                <p className="text-white text-opacity-80 text-[11px] md:text-sm font-medium mb-4 md:mb-6">
                   Laporan belajar Anda telah masuk ke sistem. Silakan tunggu feedback/nilai dari tutor.
                 </p>
-                <div className="bg-white bg-opacity-10 px-6 py-4 rounded-2xl w-full border border-white border-opacity-10 text-left">
-                  <p className="text-[10px] font-black uppercase text-white text-opacity-40 mb-1">Jawaban Anda:</p>
-                  <p className="text-xs italic font-serif opacity-90">"{status.content}"</p>
+                <div className="bg-white bg-opacity-10 px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl w-full border border-white border-opacity-10 text-left">
+                  <p className="text-[9px] md:text-[10px] font-black uppercase text-white text-opacity-40 mb-1">Jawaban Anda:</p>
+                  <p className="text-[11px] md:text-xs italic font-serif opacity-90">"{status.content}"</p>
                 </div>
               </div>
             )}
