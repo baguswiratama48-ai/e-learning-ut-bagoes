@@ -737,6 +737,14 @@ const MIND_MAP_DATA = {
   ],
 };
 
+const REFLECTION_QUESTIONS = [
+  "Setelah mengikuti sesi hari ini, apa satu pemahaman baru mengenai hakikat Bimbingan dan Konseling yang menurut Anda paling menantang namun sangat penting untuk diterapkan di SD?",
+  "Dari semua materi yang sudah kita diskusikan (Etimologi, Asas, dan Jenis Layanan), bagian mana yang membuat Anda merasa paling siap untuk menjadi guru yang mengayomi siswa?",
+  "Bagaimana perasaan Anda belajar menggunakan fitur interaktif (Kuis 20 Soal & Games Mind Map) hari ini? Apakah membantu Anda lebih cepat paham dibandingkan metode biasa?",
+  "Apa satu janji atau komitmen pribadi Anda untuk terus meningkatkan kesehatan mental siswa di masa depan setelah mendapatkan ilmu dari pertemuan ini?",
+  "Ceritakan pak Bagus Panca Wiratama, S.Pd., M.Pd. itu seperti apa? (Tuliskan kesan Anda mengenai cara beliau mengajar, memberikan motivasi, atau inspirasi yang Anda dapatkan selama sesi bimbingan beliau).",
+];
+
 function InteractiveQuiz({
   user,
   classId,
@@ -985,6 +993,162 @@ function InteractiveQuiz({
   );
 }
 
+
+function InteractiveReflection({
+  user,
+  classId,
+  meetingId,
+  submissions,
+  onComplete,
+}) {
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // Periksa apakah refleksi sudah pernah dikerjakan sebelumnya
+  const statusRow = submissions.find(
+    (s) => s.student_email === user.email && s.section_name === "Refleksi",
+  );
+
+  const progress = ((currentIdx + 1) / REFLECTION_QUESTIONS.length) * 100;
+
+  const handleNext = () => {
+    if (currentIdx < REFLECTION_QUESTIONS.length - 1) {
+      setCurrentIdx(currentIdx + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentIdx > 0) {
+      setCurrentIdx(currentIdx - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    const content = REFLECTION_QUESTIONS.map(
+      (q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${answers[i] || "-"}`,
+    ).join("\n\n");
+    onComplete(content);
+  };
+
+  if (statusRow) {
+    return (
+      <div className="bg-emerald-50 border border-emerald-100 p-8 md:p-12 rounded-[3.5rem] text-center shadow-inner animate-in zoom-in duration-500">
+        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-500 shadow-opacity-10 border border-emerald-100">
+          <span className="material-symbols-outlined text-5xl text-emerald-500">
+            verified
+          </span>
+        </div>
+        <h3 className="text-2xl font-black text-emerald-800 mb-2">
+          Refleksi Terkirim!
+        </h3>
+        <p className="text-emerald-600 font-medium italic max-w-md mx-auto leading-relaxed">
+          "Terima kasih atas refleksinya. Masukan Anda sangat berharga bagi Pak
+          Bagus Panca Wiratama untuk terus memberikan layanan terbaik."
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-1000 slide-in-from-bottom-5">
+      {/* Progress Card */}
+      <div className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-sm border border-slate-100 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-5 rounded-full -mr-16 -mt-16"></div>
+        <div className="flex justify-between items-end mb-4 relative z-10">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">
+              Tahapan Refleksi
+            </p>
+            <h4 className="font-headline font-black text-2xl text-primary">
+              Pertanyaan {currentIdx + 1}{" "}
+              <span className="text-slate-300 font-medium">
+                / {REFLECTION_QUESTIONS.length}
+              </span>
+            </h4>
+          </div>
+          <p className="text-sm font-black text-primary">
+            {Math.round(progress)}%
+          </p>
+        </div>
+        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden relative z-10 p-0.5">
+          <div
+            className="h-full bg-gradient-to-r from-primary via-indigo-500 to-fuchsia-500 rounded-full transition-all duration-700 ease-out"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Question Card */}
+      <div className="bg-white p-8 md:p-14 rounded-[4rem] shadow-2xl shadow-primary shadow-opacity-5 border border-slate-100 relative overflow-hidden min-h-[550px] flex flex-col">
+        {/* Background Decorations */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary bg-opacity-5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-fuchsia-500 bg-opacity-5 rounded-full -ml-32 -mb-32 blur-3xl"></div>
+
+        <div className="relative z-10 flex-1 flex flex-col">
+          <div className="flex items-center gap-4 mb-10">
+            <span className="material-symbols-outlined text-primary text-3xl p-3 bg-primary bg-opacity-5 rounded-2xl">
+              psychology_alt
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-slate-100 to-transparent"></div>
+          </div>
+
+          <h3 className="text-xl md:text-3xl font-black text-slate-800 leading-[1.4] mb-10">
+            {REFLECTION_QUESTIONS[currentIdx]}
+          </h3>
+
+          <textarea
+            value={answers[currentIdx] || ""}
+            onChange={(e) =>
+              setAnswers({ ...answers, [currentIdx]: e.target.value })
+            }
+            placeholder="Tuliskan refleksi jujur Anda di sini..."
+            className="flex-1 min-h-[250px] p-8 md:p-10 rounded-[3rem] border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-primary focus:ring-8 focus:ring-primary focus:ring-opacity-5 outline-none transition-all resize-none text-slate-700 font-medium leading-relaxed text-lg"
+          ></textarea>
+
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-12">
+            <button
+              onClick={handleBack}
+              disabled={currentIdx === 0}
+              className="w-full md:w-auto px-10 py-5 rounded-2xl font-bold text-slate-400 hover:text-primary hover:bg-primary hover:bg-opacity-5 disabled:opacity-0 transition-all flex items-center justify-center gap-3 order-2 md:order-1"
+            >
+              <span className="material-symbols-outlined font-bold">
+                arrow_back
+              </span>
+              SEBELUMNYA
+            </button>
+
+            {currentIdx === REFLECTION_QUESTIONS.length - 1 ? (
+              <button
+                onClick={handleSubmit}
+                disabled={loading || !answers[currentIdx]?.trim()}
+                className="w-full md:w-auto px-12 py-5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-[2.5rem] font-black text-lg shadow-xl shadow-emerald-500 shadow-opacity-20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 order-1 md:order-2 disabled:opacity-30"
+              >
+                {loading ? "MENGIRIM..." : "KIRIM REFLEKSI FINAL"}
+                <span className="material-symbols-outlined font-black">
+                  verified
+                </span>
+              </button>
+            ) : (
+              <button
+                onClick={handleNext}
+                disabled={!answers[currentIdx]?.trim()}
+                className="w-full md:w-auto px-14 py-5 bg-primary text-white rounded-[2.5rem] font-black text-lg shadow-xl shadow-primary shadow-opacity-20 hover:bg-[#1a2169] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-4 order-1 md:order-2 disabled:opacity-30"
+              >
+                PERTANYAAN LANJUT{" "}
+                <span className="material-symbols-outlined font-black">
+                  arrow_forward
+                </span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function InteractiveMindMap({
   user,
   classId,
@@ -997,13 +1161,13 @@ function InteractiveMindMap({
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [feedbackType, setFeedbackType] = useState("correct");
-  const [isLandscape, setIsLandscape] = useState(
-    window.innerWidth > window.innerHeight,
-  );
+  const [isLandscape, setIsLandscape] = useState(true); // Default true agar tidak terblokir
+  const [selectedItem, setSelectedItem] = useState(null);
   const [dragging, setDragging] = useState(null);
   const [wrongItem, setWrongItem] = useState(null);
   const [allDone, setAllDone] = useState(false);
   const [challengeAnswer, setChallengeAnswer] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const check = () => setIsLandscape(window.innerWidth > window.innerHeight);
@@ -1037,6 +1201,7 @@ function InteractiveMindMap({
       setFeedback(item.info);
       setTimeout(() => setFeedback(null), 3000);
       if (Object.keys(newPlaced).length === totalItems) setAllDone(true);
+      setSelectedItem(null); // Reset selection after successful drop
     } else {
       setFeedbackType("wrong");
       setFeedback(
@@ -1057,29 +1222,7 @@ function InteractiveMindMap({
     if (zoneId) handleDrop(itemId, zoneId);
   };
 
-  if (!isLandscape) {
-    return (
-      <div className="fixed inset-0 z-[100] bg-primary text-white flex flex-col items-center justify-center p-10 text-center overflow-y-auto h-full w-full">
-        <div className="min-h-full flex flex-col items-center justify-center w-full my-auto py-10">
-          <span className="material-symbols-outlined text-[6rem] md:text-8xl animate-bounce mb-6">
-            screen_rotation
-          </span>
-          <h2 className="text-2xl font-black mb-3">Putar Layar Anda!</h2>
-          <p className="opacity-70 font-medium max-w-xs mb-8">
-            Gunakan mode <strong>Lanskap (Miring)</strong> penuh agar area kerja
-            Mind Map terlihat dengan sempurna.
-          </p>
-          <button
-            onClick={() => window.history.back()}
-            className="flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-xl font-bold hover:scale-105 active:scale-95 transition-all"
-          >
-            <span className="material-symbols-outlined">arrow_back</span>
-            Kembali Saja
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Hapus pembatasan Lanskap agar bisa dibuka di Potrait
 
   if (gameState === "INTRO") {
     return (
@@ -1185,7 +1328,7 @@ function InteractiveMindMap({
 
   if (gameState === "CHALLENGE") {
     return (
-      <div className="fixed inset-0 z-[60] bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-[60] bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div className="bg-white rounded-[3rem] p-8 md:p-10 max-w-2xl w-full shadow-2xl animate-in zoom-in duration-300">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 bg-red-100 rounded-3xl flex items-center justify-center">
@@ -1249,16 +1392,26 @@ function InteractiveMindMap({
           </div>
           {challengeAnswer !== null && (
             <button
-              onClick={() =>
-                onComplete(
-                  score + (challengeAnswer.correct ? 40 : 10),
-                  challengeAnswer.label,
-                )
-              }
-              className="w-full bg-primary text-white py-4 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-2"
+              onClick={async () => {
+                setIsSubmitting(true);
+                try {
+                  await onComplete(
+                    score + (challengeAnswer.correct ? 40 : 10),
+                    challengeAnswer.label,
+                  );
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }}
+              disabled={isSubmitting}
+              className="w-full bg-primary text-white py-4 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined">send</span> KIRIM
-              HASIL LKPD
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <span className="material-symbols-outlined">send</span>
+              )}
+              {isSubmitting ? "MENGIRIM..." : "KIRIM HASIL LKPD"}
             </button>
           )}
         </div>
@@ -1326,7 +1479,7 @@ function InteractiveMindMap({
         style={{ minHeight: "480px" }}
       >
         <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
+          className="absolute inset-0 w-full h-full pointer-events-none opacity-50 md:opacity-100"
           style={{ zIndex: 0 }}
         >
           {[
@@ -1367,7 +1520,8 @@ function InteractiveMindMap({
               data-zone={zone.id}
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => dragging && handleDrop(dragging, zone.id)}
-              className={`absolute w-40 h-40 rounded-full border-[3px] border-dashed flex flex-col items-center justify-center transition-all duration-300 ${zone.bgColor} ${zone.color.replace("bg-", "border-")} bg-opacity-40`}
+              onClick={() => selectedItem && handleDrop(selectedItem, zone.id)}
+              className={`absolute w-32 h-32 md:w-40 md:h-40 rounded-full border-[3px] border-dashed flex flex-col items-center justify-center transition-all duration-300 ${zone.bgColor} ${zone.color.replace("bg-", "border-")} bg-opacity-40 ${selectedItem ? "ring-4 ring-yellow-400 animate-pulse cursor-pointer" : ""}`}
               style={{ ...pos, zIndex: 5 }}
             >
               <div
@@ -1403,11 +1557,14 @@ function InteractiveMindMap({
                 onDragStart={() => setDragging(item.id)}
                 onDragEnd={() => setDragging(null)}
                 onTouchEnd={(e) => handleTouchDrop(item.id, e)}
-                className={`px-5 py-2.5 rounded-full bg-white text-primary font-black text-xs cursor-grab active:cursor-grabbing hover:bg-yellow-400 transition-all shadow-lg flex items-center gap-2 select-none ${wrongItem === item.id ? "animate-[shake_0.4s_ease-in-out] bg-red-100" : ""}`}
+                onClick={() =>
+                  setSelectedItem(selectedItem === item.id ? null : item.id)
+                }
+                className={`px-5 py-2.5 rounded-full bg-white text-primary font-black text-xs cursor-grab active:cursor-grabbing hover:bg-yellow-400 transition-all shadow-lg flex items-center gap-2 select-none border-2 ${selectedItem === item.id ? "border-yellow-400 scale-110 shadow-yellow-200" : "border-transparent"} ${wrongItem === item.id ? "animate-[shake_0.4s_ease-in-out] bg-red-100" : ""}`}
                 style={{ touchAction: "none" }}
               >
                 <span className="material-symbols-outlined text-sm">
-                  drag_indicator
+                  {selectedItem === item.id ? "check_circle" : "drag_indicator"}
                 </span>
                 {item.label}
               </div>
@@ -4201,6 +4358,74 @@ function SectionPage({ user }) {
       </h2>
       {!isInput ? (
         renderStaticContent()
+      ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
+        <div className="space-y-4">
+          <InteractiveQuiz
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
+        </div>
+      ) : (id === "1" || id === "2") &&
+        sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
+        <div className="space-y-4">
+          <InteractiveMindMap
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={async (totalScore, caseAnswer) => {
+              setLoading(true);
+              try {
+                // Get group info for collective submission
+                const groupRow = submissions.find(
+                  (s) =>
+                    s.student_email === "SYSTEM_GROUP" &&
+                    s.section_name === "GENERATED_GROUPS",
+                );
+                const groups = groupRow ? JSON.parse(groupRow.content) : null;
+                const myGroup = groups?.find((g) =>
+                  g.members.some((m) => m.email === user.email),
+                );
+
+                const submissionId = myGroup
+                  ? `GROUP_LKPD_${id}_${meetingId}_G${myGroup.group_num}`
+                  : user.email;
+
+                const payload = {
+                  student_email: submissionId,
+                  class_id: id,
+                  meeting_num: meetingId,
+                  section_name: sectionName,
+                  content: `SKOR GAME: ${totalScore} per 100\nJAWABAN KASUS SISWA A: ${caseAnswer}`,
+                };
+
+                await supabase.from("submissions").insert([payload]);
+                setSuccess(true);
+                if (myGroup)
+                  alert(
+                    `Keren! Hasil kelompok ${myGroup.group_num} berhasil disimpan.`,
+                  );
+              } catch (err) {
+                console.log(err);
+              } finally {
+                setLoading(false);
+              }
+            }}
+          />
+        </div>
+      ) : sectionName === "Refleksi" ? (
+        <div className="space-y-4">
+          <InteractiveReflection
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
+        </div>
       ) : status ? (
         <div className="space-y-6">
           <div className="bg-green-50 text-green-700 p-6 md:p-10 rounded-3xl text-center flex flex-col items-center border border-green-200">
@@ -4259,65 +4484,6 @@ function SectionPage({ user }) {
               </div>
             </div>
           )}
-        </div>
-      ) : (id === "1" || id === "2") &&
-        sectionName === "Kuis dan Latihan" ? (
-        <div className="space-y-4">
-          <InteractiveQuiz
-            user={user}
-            classId={id}
-            meetingId={meetingId}
-            submissions={submissions}
-            onComplete={(content) => handleAction(content)}
-          />
-        </div>
-      ) : (id === "1" || id === "2") &&
-        sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
-        <div className="space-y-4">
-          <InteractiveMindMap
-            user={user}
-            classId={id}
-            meetingId={meetingId}
-            submissions={submissions}
-            onComplete={async (totalScore, caseAnswer) => {
-              setLoading(true);
-              try {
-                // Get group info for collective submission
-                const groupRow = submissions.find(
-                  (s) =>
-                    s.student_email === "SYSTEM_GROUP" &&
-                    s.section_name === "GENERATED_GROUPS",
-                );
-                const groups = groupRow ? JSON.parse(groupRow.content) : null;
-                const myGroup = groups?.find((g) =>
-                  g.members.some((m) => m.email === user.email),
-                );
-
-                const submissionId = myGroup
-                  ? `GROUP_LKPD_${id}_${meetingId}_G${myGroup.group_num}`
-                  : user.email;
-
-                const payload = {
-                  student_email: submissionId,
-                  class_id: id,
-                  meeting_num: meetingId,
-                  section_name: sectionName,
-                  content: `SKOR GAME: ${totalScore} per 100\nJAWABAN KASUS SISWA A: ${caseAnswer}`,
-                };
-
-                await supabase.from("submissions").insert([payload]);
-                setSuccess(true);
-                if (myGroup)
-                  alert(
-                    `Keren! Hasil kelompok ${myGroup.group_num} berhasil disimpan.`,
-                  );
-              } catch (err) {
-                console.log(err);
-              } finally {
-                setLoading(false);
-              }
-            }}
-          />
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
