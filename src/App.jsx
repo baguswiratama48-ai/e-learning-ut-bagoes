@@ -4819,7 +4819,7 @@ function SectionPage({ user }) {
                     Pertanyaan Verifikasi:
                   </label>
                   <p className="text-lg font-bold text-slate-800 mb-6 leading-snug">
-                    Jelaskan apa yang dimaksud dengan perkembangan anak yang bersifat nonnormatif dan sebutkan faktor-faktor yang memengaruhinya!
+                    Apa yang dimaksud dengan perkembangan normatif dan nonnormatif?
                   </p>
 
                   <textarea
