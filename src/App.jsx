@@ -72,8 +72,8 @@ const STUDENTS = [
 const MENUS = [
   "Informasi Modul", "Pertanyaan Pemantik",
   "Materi Pembelajaran", "Video Pembelajaran",
-  "LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan",
-  "Refleksi", "Rangkuman"
+  "Pembagian Kelompok", "LKPD (Lembar Kerja Peserta Didik)", 
+  "Kuis dan Latihan", "Refleksi", "Rangkuman"
 ];
 
 const PEMANTIK_GROUPS = [
@@ -609,6 +609,9 @@ function DashboardTutor({ user }) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('1');
   const [unlocking, setUnlocking] = useState(null);
+  const [selectedMeeting, setSelectedMeeting] = useState('1');
+  const [groupCount, setGroupCount] = useState(4);
+  const [generating, setGenerating] = useState(false);
 
   if (!user || user.role !== 'tutor') return <Navigate to="/" />;
 
@@ -675,6 +678,67 @@ function DashboardTutor({ user }) {
       console.log(err);
     }
   };
+  
+  const handleGenerateGroups = async () => {
+    if (!activeTab || activeTab === 'demo' || activeTab === 'record_m1') return;
+    setGenerating(true);
+    try {
+      const classStudents = STUDENTS.filter(s => s.classId === activeTab && s.email !== 'demo@ecampus.ut.ac.id');
+      if (classStudents.length === 0) return;
+
+      // Shuffle using Fisher-Yates
+      const shuffled = [...classStudents];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      // Split into groups
+      const groups = Array.from({ length: groupCount }, (_, i) => ({
+        group_num: i + 1,
+        members: []
+      }));
+
+      shuffled.forEach((student, index) => {
+        groups[index % groupCount].members.push({
+          nim: student.nim,
+          name: student.name,
+          email: student.email
+        });
+      });
+
+      const sectionName = "GENERATED_GROUPS";
+      // Save/Upsert to submissions table
+      // We use a special student_email 'SYSTEM_GROUP' to store this session data
+      const payload = {
+        student_email: 'SYSTEM_GROUP',
+        class_id: activeTab,
+        meeting_num: selectedMeeting,
+        section_name: sectionName,
+        content: JSON.stringify(groups)
+      };
+
+      // Delete old if exists for this meeting
+      await supabase.from('submissions')
+        .delete()
+        .eq('student_email', 'SYSTEM_GROUP')
+        .eq('class_id', activeTab)
+        .eq('meeting_num', selectedMeeting)
+        .eq('section_name', sectionName);
+
+      const { error } = await supabase.from('submissions').insert([payload]);
+      if (error) throw error;
+      
+      alert(`Berhasil mengacak ${classStudents.length} mahasiswa ke dalam ${groupCount} kelompok untuk Pertemuan ${selectedMeeting}!`);
+      await fetchData();
+    } catch (err) {
+      console.log(err);
+      alert("Gagal mengacak kelompok.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const CLASS_TABS = [
     { id: '1', label: 'Kelas 8B' },
     { id: '2', label: 'Kelas 8C' },
@@ -722,6 +786,52 @@ function DashboardTutor({ user }) {
           <span className="material-symbols-outlined text-[18px]">refresh</span> Refresh
         </button>
       </div>
+
+      {/* Group Generator Tool - Only for real classes */}
+      {activeTab !== 'demo' && activeTab !== 'record_m1' && (
+        <div className="mb-8 p-6 bg-gradient-to-r from-primary to-[#1a2169] rounded-[2.5rem] text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+           <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
+                 <span className="material-symbols-outlined text-3xl">group_add</span>
+              </div>
+              <div>
+                 <h3 className="font-bold text-lg leading-tight">Generator Kelompok Acak</h3>
+                 <p className="text-white/60 text-[10px] font-medium uppercase tracking-wider">Acak kelompok berbeda untuk setiap sesi mahasiswa</p>
+              </div>
+           </div>
+           
+           <div className="flex flex-wrap items-center gap-4 bg-white/10 p-2 rounded-2xl backdrop-blur-sm border border-white/10">
+              <div className="px-3 border-r border-white/10">
+                 <p className="text-[10px] font-black opacity-40 uppercase mb-1">Sesi Pertemuan</p>
+                 <select 
+                    value={selectedMeeting} 
+                    onChange={e => setSelectedMeeting(e.target.value)}
+                    className="bg-transparent font-bold text-sm outline-none cursor-pointer"
+                 >
+                    {[1,2,3,4,5,6,7,8].map(n => <option key={n} value={String(n)} className="text-slate-800">Pertemuan {n}</option>)}
+                 </select>
+              </div>
+              <div className="px-3 border-r border-white/10">
+                 <p className="text-[10px] font-black opacity-40 uppercase mb-1">Jumlah Kelompok</p>
+                 <input 
+                    type="number" 
+                    min="2" max="20"
+                    value={groupCount}
+                    onChange={e => setGroupCount(parseInt(e.target.value))}
+                    className="bg-transparent font-bold text-sm outline-none w-10 text-center"
+                 />
+              </div>
+              <button 
+                onClick={handleGenerateGroups}
+                disabled={generating}
+                className="bg-yellow-400 text-primary px-6 py-2.5 rounded-xl font-black text-xs hover:bg-yellow-300 transition-all flex items-center gap-2 shadow-lg shadow-yellow-400/20 disabled:opacity-50"
+              >
+                 {generating ? 'MEMPROSES...' : 'ACAK SEKARANG'}
+                 {!generating && <span className="material-symbols-outlined text-sm">casino</span>}
+              </button>
+           </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         {loading ? (
@@ -1624,6 +1734,77 @@ function SectionPage({ user }) {
                   </div>
                </div>
              )}
+          </div>
+        </div>
+      );
+    }
+
+    if (sectionName === "Pembagian Kelompok") {
+      const groupRow = submissions.find(s => s.student_email === 'SYSTEM_GROUP' && s.section_name === 'GENERATED_GROUPS');
+      const groups = groupRow ? JSON.parse(groupRow.content) : null;
+      const myGroup = groups?.find(g => g.members.some(m => m.email === user.email));
+
+      if (!groups) {
+         return (
+           <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-20 text-center flex flex-col items-center">
+              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                 <span className="material-symbols-outlined text-4xl text-slate-300">pending</span>
+              </div>
+              <h3 className="text-xl font-black text-slate-800 mb-2">Kelompok Belum Dibagikan</h3>
+              <p className="text-sm text-slate-500 max-w-sm font-medium">Tutor belum mengacak kelompok untuk pertemuan ini. Silakan tunggu instruksi selanjutnya dari tutor Anda.</p>
+           </div>
+         );
+      }
+
+      return (
+        <div className="space-y-10">
+          {myGroup ? (
+             <div className="bg-gradient-to-br from-primary to-[#1a2169] rounded-[3.5rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-40 -mt-40 blur-3xl"></div>
+                <div className="relative z-10">
+                   <div className="inline-flex items-center gap-2 bg-yellow-400 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400/20">
+                      <span className="material-symbols-outlined text-sm animate-bounce">stars</span> Informasi Kelompok Anda
+                   </div>
+                   <h1 className="text-4xl md:text-6xl font-headline font-black mb-4">Kelompok {myGroup.group_num}</h1>
+                   <p className="text-blue-100/60 font-medium max-w-xl text-sm md:text-base leading-relaxed">
+                      Anda telah terdaftar di Kelompok {myGroup.group_num} untuk Pertemuan {meetingId}. Silakan berdiskusi dan berkolaborasi dengan rekan tim Anda di bawah ini.
+                   </p>
+                </div>
+             </div>
+          ) : (
+            <div className="bg-yellow-50 border border-yellow-200 p-8 rounded-[3rem] text-center">
+               <p className="font-bold text-yellow-800">Nama Anda tidak ditemukan dalam daftar kelompok sesi ini. Mohon hubungi tutor.</p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {groups.map((g, i) => (
+               <div key={i} className={`bg-white border rounded-[2.5rem] p-8 shadow-sm transition-all ${myGroup?.group_num === g.group_num ? 'ring-4 ring-primary ring-offset-4 border-primary scale-[1.02] shadow-2xl relative' : 'hover:border-slate-300 group'}`}>
+                  {myGroup?.group_num === g.group_num && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">Tim Anda</div>
+                  )}
+                  <h3 className={`text-xl font-headline font-black mb-6 flex items-center gap-3 ${myGroup?.group_num === g.group_num ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                    <span className={`w-10 h-10 rounded-2xl flex items-center justify-center ${myGroup?.group_num === g.group_num ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-slate-100 text-slate-400'}`}>
+                       {g.group_num}
+                    </span>
+                    Kelompok {g.group_num}
+                  </h3>
+                  <div className="space-y-4">
+                     {g.members.map((m, mi) => (
+                       <div key={mi} className={`flex items-center gap-4 p-3 rounded-2xl border transition-all ${m.email === user.email ? 'bg-primary/5 border-primary/20' : 'border-slate-50 group-hover:border-slate-100 bg-slate-50/50'}`}>
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs ${m.email === user.email ? 'bg-primary text-white' : 'bg-white text-slate-400 border border-slate-200'}`}>
+                             {m.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          </div>
+                          <div className="overflow-hidden">
+                             <p className={`font-bold text-xs truncate ${m.email === user.email ? 'text-primary' : 'text-slate-700'}`}>{m.name}</p>
+                             <p className="text-[9px] text-slate-400 font-medium">{m.nim}</p>
+                          </div>
+                          {m.email === user.email && <span className="material-symbols-outlined text-primary text-lg ml-auto">person</span>}
+                       </div>
+                     ))}
+                  </div>
+               </div>
+             ))}
           </div>
         </div>
       );
