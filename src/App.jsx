@@ -213,7 +213,6 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
 
   return (
     <div className="relative min-h-[600px] w-full bg-white rounded-[3rem] overflow-hidden border-4 border-slate-100 shadow-2xl flex flex-col">
-       </div>
 
        {/* Tutorial Overlay */}
        {showTutorial && (
