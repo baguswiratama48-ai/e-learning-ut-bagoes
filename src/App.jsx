@@ -1461,21 +1461,6 @@ function InteractiveMindMap({
                 <span className="material-symbols-outlined">home</span>
                 KEMBALI KE KELAS
               </button>
-              <button
-                onClick={() => {
-                  setPlacedItems({});
-                  setScore(0);
-                  setGameState("PLAYING");
-                  setChallengeStep(0);
-                  setChallengeSelections({});
-                  setIsSuccess(false);
-                  setAllDone(false);
-                }}
-                className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-black text-base hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
-              >
-                <span className="material-symbols-outlined">refresh</span>
-                ULANGI MISI
-              </button>
             </div>
           </div>
         </div>
@@ -1523,17 +1508,17 @@ function InteractiveMindMap({
                   })
                 }
                 disabled={userAns !== undefined}
-                className={`p-6 rounded-2xl border-2 text-left transition-all font-bold text-base flex items-center gap-4 ${userAns === undefined ? "border-slate-100 hover:border-primary hover:bg-primary hover:bg-opacity-5" : userAns.id === opt.id ? (opt.correct ? "border-emerald-500 bg-emerald-50 text-emerald-800" : "border-red-500 bg-red-50 text-red-800") : "opacity-40 border-slate-100"}`}
+                className={`p-6 rounded-2xl border-2 text-left transition-all font-bold text-base flex items-center gap-4 ${userAns === undefined ? "border-slate-100 hover:border-primary hover:bg-primary hover:bg-opacity-5" : userAns.id === opt.id ? "border-primary bg-primary bg-opacity-5 text-primary shadow-lg shadow-primary shadow-opacity-10" : "opacity-40 border-slate-100"}`}
               >
                 <span
-                  className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-black ${userAns === undefined ? "bg-slate-100 text-slate-400" : userAns.id === opt.id ? "bg-white text-inherit" : "bg-slate-50 text-slate-300"}`}
+                  className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-black ${userAns === undefined ? "bg-slate-100 text-slate-400" : userAns.id === opt.id ? "bg-primary text-white scale-110" : "bg-slate-50 text-slate-300"}`}
                 >
                   {opt.id}
                 </span>
                 {opt.t}
                 {userAns?.id === opt.id && (
-                  <span className="material-symbols-outlined ml-auto">
-                    {opt.correct ? "verified" : "error"}
+                  <span className="material-symbols-outlined ml-auto text-primary animate-in zoom-in duration-300">
+                    radio_button_checked
                   </span>
                 )}
               </button>
@@ -1614,22 +1599,11 @@ function InteractiveMindMap({
       <div className="px-6 py-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center gap-2">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => {
-              if (confirm("Ulangi pengerjaan LKPD dari awal? Skor dan posisi gelembung Anda saat ini akan dihapus.")) {
-                setPlacedItems({});
-                setScore(0);
-                setGameState("PLAYING");
-                setChallengeStep(0);
-                setChallengeSelections({});
-                setIsSuccess(false);
-                setAllDone(false);
-                setSelectedItem(null);
-              }
-            }}
-            className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 hover:border-red-200 transition-all shadow-sm group"
-            title="Ulangi dari Awal"
+            onClick={() => setGameState("INTRO")}
+            className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary transition-all shadow-sm"
+            title="Info Misi"
           >
-            <span className="material-symbols-outlined text-xl group-hover:rotate-[-180deg] transition-all duration-500">refresh</span>
+            <span className="material-symbols-outlined text-xl">info</span>
           </button>
           <div className="hidden xs:block">
             <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">
@@ -2876,77 +2850,168 @@ function DashboardTutor({ user }) {
                     }
 
                     return allGroups.map((g, i) => {
-                      const sub = groupSubs.find((s) =>
-                        s.student_email.endsWith(`_G${g.group_num}`),
+                      const members = g.members;
+                      const memberSubs = submissions.filter(
+                        (s) =>
+                          s.class_id === activeTab &&
+                          s.meeting_num === selectedMeeting &&
+                          s.section_name === "LKPD (Lembar Kerja Peserta Didik)" &&
+                          members.some((m) => m.email === s.student_email),
                       );
+
+                      const isEveryoneDone =
+                        members.length > 0 &&
+                        memberSubs.length === members.length;
+                      const averageScore = isEveryoneDone
+                        ? Math.round(
+                            memberSubs.reduce((acc, s) => {
+                              const score = parseInt(
+                                (s.content.match(
+                                  new RegExp("SKOR GAME: (\\d+)"),
+                                ) || [])[1] || "0",
+                              );
+                              return acc + score;
+                            }, 0) / members.length,
+                          )
+                        : null;
+
                       return (
                         <div
                           key={i}
-                          className={`bg-white rounded-3xl p-6 border-2 transition-all ${sub ? "border-emerald-100 shadow-lg shadow-emerald-500 shadow-opacity-5" : "border-slate-100 opacity-60"}`}
+                          className={`bg-white rounded-3xl p-6 border-2 transition-all flex flex-col ${isEveryoneDone ? "border-emerald-200 shadow-xl shadow-emerald-500 shadow-opacity-5" : "border-slate-100 shadow-sm"}`}
                         >
-                          <div className="flex justify-between items-start mb-4">
+                          <div className="flex justify-between items-start mb-6">
                             <h4 className="font-black text-slate-800 flex items-center gap-2">
                               <span
-                                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${sub ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500"}`}
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${isEveryoneDone ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500"}`}
                               >
                                 {g.group_num}
                               </span>
                               Kelompok {g.group_num}
                             </h4>
-                            {sub ? (
-                              <span className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">
-                                Sudah Kirim
-                              </span>
+                            {isEveryoneDone ? (
+                              <button
+                                onClick={async () => {
+                                  if (
+                                    confirm(
+                                      `RESET KELOMPOK ${g.group_num}? Seluruh data pengerjaan anggota tim ini akan dihapus.`,
+                                    )
+                                  ) {
+                                    setUnlocking(`RESET_G${g.group_num}`);
+                                    try {
+                                      const emailsToDelete = members.map(
+                                        (m) => m.email,
+                                      );
+                                      await supabase
+                                        .from("submissions")
+                                        .delete()
+                                        .eq("class_id", activeTab)
+                                        .eq("meeting_num", selectedMeeting)
+                                        .eq(
+                                          "section_name",
+                                          "LKPD (Lembar Kerja Peserta Didik)",
+                                        )
+                                        .in("student_email", emailsToDelete);
+                                      fetchData();
+                                    } finally {
+                                      setUnlocking(null);
+                                    }
+                                  }
+                                }}
+                                className="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm"
+                                title="Reset Kelompok"
+                              >
+                                <span className="material-symbols-outlined text-[18px]">
+                                  refresh
+                                </span>
+                              </button>
                             ) : (
                               <span className="bg-slate-100 text-slate-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">
-                                Belum Kirim
+                                {memberSubs.length} / {members.length} Terkirim
                               </span>
                             )}
                           </div>
 
-                          {sub ? (
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-3">
-                                <div className="flex-1 bg-slate-50 px-4 py-2 rounded-2xl">
-                                  <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">
-                                    Skor Game
+                          <div className="flex-1 space-y-4 mb-6">
+                            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">
+                                Laporan Anggota
+                              </p>
+                              <div className="space-y-3">
+                                {members.map((m, mi) => {
+                                  const sub = memberSubs.find(
+                                    (s) => s.student_email === m.email,
+                                  );
+                                  const score = sub
+                                    ? (sub.content.match(
+                                        new RegExp("SKOR GAME: (\\d+)"),
+                                      ) || [])[1] || "0"
+                                    : null;
+
+                                  return (
+                                    <div
+                                      key={mi}
+                                      className="flex items-center justify-between"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+                                        <p className="text-xs font-bold text-slate-600 truncate max-w-[120px]">
+                                          {m.name}
+                                        </p>
+                                      </div>
+                                      {score ? (
+                                        <span className="text-xs font-black text-emerald-600">
+                                          {score}
+                                        </span>
+                                      ) : (
+                                        <span className="text-[9px] font-black text-slate-300 uppercase">
+                                          PENDING
+                                        </span>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            {isEveryoneDone && (
+                              <div className="bg-emerald-500 p-4 rounded-2xl text-white shadow-lg shadow-emerald-500 shadow-opacity-20 animate-in zoom-in duration-500">
+                                <div className="flex justify-between items-center mb-1">
+                                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-100">
+                                    Nilai Kolektif
                                   </p>
-                                  <p className="font-black text-primary text-xl">
-                                    {((sub.content.match(
-                                      new RegExp("SKOR GAME: (\\d+)"),
-                                    ) || [])[1] || "0") + " per 100"}
-                                  </p>
+                                  <span className="material-symbols-outlined text-sm">
+                                    verified
+                                  </span>
                                 </div>
-                              </div>
-                              <div className="bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100">
-                                <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-2">
-                                  Jawaban Kasus
-                                </p>
-                                <p className="text-xs font-bold text-slate-700 italic leading-relaxed">
-                                  "
-                                  {sub.content.split(
-                                    "JAWABAN KASUS SISWA A: ",
-                                  )[1] || "Tidak ada jawaban"}
-                                  "
+                                <p className="text-2xl font-black">
+                                  {averageScore}{" "}
+                                  <span className="text-sm font-medium opacity-60">
+                                    Avg
+                                  </span>
                                 </p>
                               </div>
-                              <p className="text-[9px] text-slate-300 font-medium italic">
-                                Dikirim pada:{" "}
-                                {new Date(sub.created_at).toLocaleString(
-                                  "id-ID",
-                                )}
-                              </p>
-                            </div>
-                          ) : (
-                            <div className="py-6 flex flex-col items-center">
-                              <span className="material-symbols-outlined text-3xl text-slate-200 mb-2">
-                                hourglass_empty
+                            )}
+                          </div>
+
+                          <div className="pt-4 border-t border-slate-50">
+                            <button
+                              onClick={() => {
+                                // Tampilkan detail jawaban kasus yang pertama kirim sebagai referensi tim
+                                if (memberSubs.length > 0) {
+                                  alert(
+                                    `REFERENSI JAWABAN KASUS (Awal):\n\n${memberSubs[0].content}`,
+                                  );
+                                }
+                              }}
+                              className="w-full py-2.5 rounded-xl border border-slate-200 text-[10px] font-black text-slate-500 uppercase flex items-center justify-center gap-2 hover:bg-slate-50 transition-all"
+                            >
+                              <span className="material-symbols-outlined text-sm">
+                                visibility
                               </span>
-                              <p className="text-[10px] text-slate-400 font-bold uppercase">
-                                Menunggu Laporan
-                              </p>
-                            </div>
-                          )}
+                              Cek Konten
+                            </button>
+                          </div>
                         </div>
                       );
                     });
@@ -4586,12 +4651,8 @@ function SectionPage({ user }) {
                   g.members.some((m) => m.email === user.email),
                 );
 
-                const submissionId = myGroup
-                  ? `GROUP_LKPD_${id}_${meetingId}_G${myGroup.group_num}`
-                  : user.email;
-
                 const payload = {
-                  student_email: submissionId,
+                  student_email: user.email, // Sekarang simpan per individu mahasiswa
                   class_id: id,
                   meeting_num: meetingId,
                   section_name: sectionName,
@@ -4600,10 +4661,7 @@ function SectionPage({ user }) {
 
                 await supabase.from("submissions").insert([payload]);
                 setSuccess(true);
-                if (myGroup)
-                  alert(
-                    `Keren! Hasil kelompok ${myGroup.group_num} berhasil disimpan.`,
-                  );
+                alert(`Luar biasa! Laporan individu Anda berhasil dikirim.`);
               } catch (err) {
                 console.log(err);
               } finally {
