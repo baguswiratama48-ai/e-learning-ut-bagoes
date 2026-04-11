@@ -1150,6 +1150,9 @@ function ClassMenu({ user }) {
           } else if (menu === "Rangkuman") {
             iconName = "summarize";
             colorClass = "bg-slate-100 text-slate-600";
+          } else if (menu === "Pembagian Kelompok") {
+            iconName = "groups";
+            colorClass = "bg-teal-50 text-teal-600";
           }
 
           return (
@@ -1182,6 +1185,7 @@ function SectionPage({ user }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
   const [pemantikAnswers, setPemantikAnswers] = useState(['', '', '']);
   const [tutorFeedback, setTutorFeedback] = useState(null);
 
@@ -1195,16 +1199,18 @@ function SectionPage({ user }) {
       // If we are looking for Pertanyaan Pemantik, fetch that and its tutor feedback
       const sectionNamesToFetch = [sectionName, `TUTOR_FEEDBACK_${sectionName}`];
 
+      // Fetch personal answers + system-generated groups
       const { data } = await supabase
         .from('submissions')
         .select('*')
-        .eq('student_email', user.email)
+        .or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`)
         .eq('class_id', id)
         .eq('meeting_num', meetingId)
-        .in('section_name', sectionNamesToFetch);
+        .in('section_name', [...sectionNamesToFetch, 'GENERATED_GROUPS']);
         
       if (data && data.length > 0) {
-        const _status = data.find(d => d.section_name === sectionName);
+        setSubmissions(data);
+        const _status = data.find(d => d.student_email === user.email && d.section_name === sectionName);
         const _feedback = data.find(d => d.section_name === `TUTOR_FEEDBACK_${sectionName}`);
         if (_status) setStatus(_status);
         if (_feedback) setTutorFeedback(_feedback);
@@ -1226,7 +1232,10 @@ function SectionPage({ user }) {
         content: val
       };
       const { data, error } = await supabase.from('submissions').insert([payload]).select();
-      if (!error && data && data.length > 0) setStatus(data[0]);
+      if (!error && data && data.length > 0) {
+        setStatus(data[0]);
+        setSubmissions(prev => [...prev, data[0]]);
+      }
     } catch(err) {
       console.log(err);
     } finally {
