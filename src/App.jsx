@@ -1379,6 +1379,240 @@ function SectionPage({ user }) {
       );
     }
 
+    if (sectionName === "Materi Pembelajaran" && (id === '1' || id === '2')) {
+      return (
+        <div className="space-y-12 pb-10">
+          {/* Hero Section */}
+          <div className="relative bg-gradient-to-br from-[#0c3352] to-[#1a4a6e] rounded-[3rem] p-10 overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400/10 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+            <div className="relative z-10 text-center">
+              <span className="inline-block bg-yellow-400 text-primary text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest shadow-lg shadow-yellow-400/20">Modul Utama</span>
+              <h1 className="text-3xl md:text-5xl font-headline font-black text-white mb-4 leading-tight">Konsep Dasar Bimbingan & Konseling (BK)</h1>
+              <p className="text-blue-100/70 max-w-2xl mx-auto text-sm md:text-base font-medium">Ringkasan materi pembelajaran yang disusun secara sistematis untuk pemahaman mendalam tentang layanan BK di sekolah dasar.</p>
+            </div>
+          </div>
+
+          {/* Section 1: Pengertian, Fungsi, & Tujuan */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
+              <span className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">01</span>
+              Pengertian, Fungsi, & Tujuan
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Guidance */}
+              <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl transition-all border-l-8 border-l-blue-500">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <span className="material-symbols-outlined text-3xl">explore</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-xl text-slate-800">Guidance</h3>
+                    <p className="text-xs font-bold text-blue-500 uppercase tracking-tighter">Bimbingan (To Guide)</p>
+                  </div>
+                </div>
+                <div className="space-y-3 mb-6">
+                  {['To Direct (Mengarahkan)', 'To Pilot (Memandu)', 'To Manage (Mengelola)', 'To Steer (Menyetir)'].map((t, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-blue-50/50 p-2 rounded-xl border border-blue-100/50">
+                      <span className="material-symbols-outlined text-blue-500 text-sm">check_circle</span>
+                      <span className="text-sm font-semibold text-slate-600">{t}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-slate-500 leading-relaxed italic border-t pt-4">Terminologi: Proses bantuan berkelanjutan untuk mencapai pemahaman dan realisasi diri sesuai potensi.</p>
+              </div>
+
+              {/* Counseling */}
+              <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl transition-all border-l-8 border-l-emerald-500">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                    <span className="material-symbols-outlined text-3xl">psychology</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-xl text-slate-800">Counseling</h3>
+                    <p className="text-xs font-bold text-emerald-500 uppercase tracking-tighter">Konseling (Face-to-Face)</p>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                  Hubungan profesional (<span className="font-bold text-emerald-600">professional relationship</span>) atau tatap muka yang bertujuan meningkatkan kemampuan <span className="italic font-bold">self-adjustment</span> (penyesuaian diri) secara efektif terhadap diri dan lingkungan.
+                </p>
+                <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+                   <p className="text-xs font-bold text-emerald-800 uppercase mb-1 flex items-center gap-1"><span className="material-symbols-outlined text-xs">info</span> Fokus Utama</p>
+                   <p className="text-xs text-emerald-700 font-medium">Pengembangan kemampuan adaptasi siswa dalam menghadapi tantangan personal dan akademis.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Fungsi BK Grid */}
+            <div className="bg-slate-50 rounded-[2.5rem] p-8 md:p-10">
+              <h4 className="font-bold text-slate-800 mb-8 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">grid_view</span> Fungsi Bimbingan dan Konseling
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {[
+                  { icon: 'visibility', title: 'Pemahaman', desc: 'Memahami karakteristik siswa' },
+                  { icon: 'shield', title: 'Preventif', desc: 'Pencegahan masalah' },
+                  { icon: 'healing', title: 'Perbaikan', desc: 'Pemecahan masalah (Kuratif)' },
+                  { icon: 'auto_awesome', title: 'Pemeliharaan', desc: 'Mengembangkan potensi optimal' },
+                  { icon: 'volunteer_activism', title: 'Fasilitasi', desc: 'Memberikan kemudahan tumbuh' }
+                ].map((f, i) => (
+                  <div key={i} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm text-center flex flex-col items-center group hover:border-primary transition-all">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                      <span className="material-symbols-outlined">{f.icon}</span>
+                    </div>
+                    <p className="font-bold text-slate-800 text-xs mb-1">{f.title}</p>
+                    <p className="text-[10px] text-slate-400 leading-tight font-medium">{f.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Aspek Tujuan */}
+            <div className="space-y-4">
+               <h4 className="font-bold text-slate-800 flex items-center gap-2 px-2">
+                <span className="material-symbols-outlined text-primary">target</span> 3 Aspek Tujuan (Tugas Perkembangan)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { title: 'Pribadi-Sosial', color: 'bg-indigo-600', desc: 'Toleransi, jujur, interaksi sosial, dan resolusi konflik.' },
+                  { title: 'Akademik (Belajar)', color: 'bg-amber-500', desc: 'Sikap belajar positif, motivasi tinggi, dan keterampilan efektif.' },
+                  { title: 'Karier', color: 'bg-rose-500', desc: 'Pemahaman potensi diri dan perencanaan masa depan logis.' }
+                ].map((a, i) => (
+                  <div key={i} className="relative overflow-hidden bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <div className={`absolute top-0 right-0 w-20 h-20 ${a.color} opacity-5 rounded-full -mr-10 -mt-10`}></div>
+                    <div className={`w-8 h-1 ${a.color} rounded-full mb-4`}></div>
+                    <h5 className="font-black text-slate-800 mb-2 uppercase text-xs tracking-wider">{a.title}</h5>
+                    <p className="text-xs text-slate-500 leading-relaxed font-medium">{a.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Section 2: Prinsip-Prinsip */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
+              <span className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">02</span>
+              Prinsip-Prinsip Dasar BK
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               {[
+                 { t: 'Bimbingan untuk Semua', d: 'Melayani semua tanpa memandang latar belakang sosial.' },
+                 { t: 'Individualisasi', d: 'Menitikberatkan pada keunikan setiap individu.' },
+                 { t: 'Menekankan Aspek Positif', d: 'Fokus pada kekuatan dan keberhasilan siswa.' },
+                 { t: 'Usaha Bersama', d: 'Tanggung jawab kolektif seluruh elemen sekolah & orang tua.' },
+                 { t: 'Pengambilan Keputusan Mandiri', d: 'Mampu memilih jalan secara bertanggung jawab.' },
+                 { t: 'Lintas Aspek Kehidupan', d: 'Mencakup masyarakat, keluarga, dan dunia kerja.' }
+               ].map((p, i) => (
+                 <div key={i} className="flex gap-4 p-5 bg-white border border-slate-100 rounded-3xl items-start hover:border-yellow-400 transition-all">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-400/10 text-yellow-600 text-[10px] flex items-center justify-center font-black">{i+1}</span>
+                    <div>
+                      <h4 className="font-bold text-slate-800 text-sm mb-1">{p.t}</h4>
+                      <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{p.d}</p>
+                    </div>
+                 </div>
+               ))}
+            </div>
+          </section>
+
+          {/* Section 3: Asas-Asas */}
+          <section className="bg-primary p-8 md:p-12 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+            <div className="relative z-10">
+              <h2 className="text-2xl md:text-3xl font-headline font-black mb-10 flex items-center gap-4">
+                <span className="material-symbols-outlined text-yellow-400 text-4xl">verified_user</span>
+                Asas-Asas (Kode Etik BK)
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 {[
+                   { t: 'Kerahasiaan', icon: 'lock', d: 'Data konseli tidak boleh diketahui pihak lain.' },
+                   { t: 'Kesukarelaan', icon: 'favorite', d: 'Ikuti layanan tanpa paksaan (kemauan sendiri).' },
+                   { t: 'Keterbukaan', icon: 'meet_anywhere', d: 'Jujur dan terbuka dalam memberi informasi.' },
+                   { t: 'Kekinian', icon: 'event', d: 'Fokus pada masalah saat ini (here and now).' },
+                   { t: 'Kemandirian', icon: 'person_celebrate', d: 'Menjadi pribadi mandiri tanpa bergantung.' },
+                   { t: 'Keahlian', icon: 'workspace_premium', d: 'Dilakukan secara profesional oleh ahli terlatih.' },
+                   { t: 'Alih Tangan', icon: 'forward_to_inbox', d: 'Merujuk ke ahli lain jika di luar wewenang.' },
+                   { t: 'Tut Wuri Handayani', icon: 'star', d: 'Mengayomi, teladan, dan memberi dorongan.' }
+                 ].map((a, i) => (
+                   <div key={i} className="bg-white/10 backdrop-blur-md border border-white/10 p-6 rounded-3xl hover:bg-white/20 transition-all">
+                      <span className="material-symbols-outlined text-yellow-400 mb-3">{a.icon}</span>
+                      <h4 className="font-bold text-sm mb-1 uppercase tracking-tighter">{a.t}</h4>
+                      <p className="text-[10px] text-white/60 font-medium leading-normal">{a.d}</p>
+                   </div>
+                 ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Section 4: Jenis Layanan */}
+          <section className="space-y-6">
+            <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
+              <span className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">04</span>
+              Jenis-Jenis Layanan Konkret
+            </h2>
+            <div className="bg-white border rounded-[2.5rem] overflow-hidden shadow-sm">
+                <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x">
+                   {[
+                     { t: 'Layanan Orientasi', d: 'Pengenalan lingkungan sekolah baru.' },
+                     { t: 'Layanan Informasi', d: 'Pemberian data pendidikan, jabatan, dan sosial.' },
+                     { t: 'Layanan Pembelajaran', d: 'Mengembangkan sikap dan kebiasaan belajar benar.' },
+                     { t: 'Layanan Penempatan', d: 'Memilih jurusan/ekskul sesuai bakat.' },
+                     { t: 'Penguasaan Konten', d: 'Membantu penguasaan kompetensi tertentu.' },
+                     { t: 'Konseling Individual', d: 'Tatap muka mendalam untuk masalah perorangan.' },
+                     { t: 'Konseling Kelompok', d: 'Dinamika kelompok untuk pemecahan masalah.' },
+                     { t: 'Konsultasi & Mediasi', d: 'Membantu pihak ketiga (ortu) & selesaikan konflik.' }
+                   ].map((l, i) => (
+                     <div key={i} className="p-6 flex items-center gap-5 group hover:bg-slate-50 transition-all">
+                        <span className="text-xl font-black text-slate-100 group-hover:text-primary transition-colors">{String(i + 1).padStart(2, '0')}</span>
+                        <div>
+                          <p className="font-bold text-slate-800 text-sm">{l.t}</p>
+                          <p className="text-xs text-slate-400 font-medium">{l.d}</p>
+                        </div>
+                     </div>
+                   ))}
+                </div>
+            </div>
+          </section>
+
+          {/* Verification Button Section */}
+          <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
+             {!status ? (
+               <div className="w-full max-w-xl text-center">
+                  <div className="mb-6">
+                     <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-4 py-2 rounded-full border border-yellow-200 text-[10px] font-black uppercase tracking-widest mb-4">
+                        <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                        Konfirmasi Pemahaman
+                     </div>
+                     <h3 className="text-xl font-black text-slate-800 mb-2">Sudah Selesai Membaca?</h3>
+                     <p className="text-sm text-slate-500 font-medium">Klik tombol di bawah untuk melaporkan bahwa Anda telah mempelajari materi ini kepada tutor.</p>
+                  </div>
+                  <button 
+                    onClick={() => handleAction("Saya telah membaca dan memahami seluruh materi Konsep Dasar Bimbingan dan Konseling (BK) ini secara mandiri.")}
+                    disabled={loading}
+                    className="w-full bg-[#1e293b] text-white font-black py-5 rounded-[2rem] hover:bg-black transition-all shadow-2xl shadow-slate-200 flex items-center justify-center gap-3 group"
+                  >
+                    {loading ? 'MEMPROSES LAPORAN...' : 'TANDAI SELESAI MEMPELAJARI'}
+                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">verified</span>}
+                  </button>
+               </div>
+             ) : (
+               <div className="w-full max-w-xl bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-500/20 flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                     <span className="material-symbols-outlined text-4xl">done_all</span>
+                  </div>
+                  <h3 className="text-xl font-black mb-1">Materi Berhasil Diselesaikan!</h3>
+                  <p className="text-white/80 text-sm font-medium mb-6">Laporan Anda telah terkirim dan tercatat di dashboard tutor.</p>
+                  <div className="bg-white/10 px-6 py-4 rounded-2xl w-full border border-white/10 text-left">
+                     <p className="text-[10px] font-black uppercase text-white/40 mb-1">Status Kehadiran</p>
+                     <p className="text-xs italic font-serif opacity-90">"{status.content}"</p>
+                  </div>
+               </div>
+             )}
+          </div>
+        </div>
+      );
+    }
+
     return <div className="bg-blue-50 p-10 rounded-3xl text-center text-slate-400 font-medium">Baca instruksi modul untuk bagian ini.</div>;
   };
 
