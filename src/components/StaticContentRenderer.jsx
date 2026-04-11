@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FEEDBACK_MESSAGES } from '../data/mockData';
+import { LkpdClass6A } from './LkpdClass6A';
 
 export const StaticContentRenderer = ({ 
   sectionName, 
@@ -19,8 +20,22 @@ export const StaticContentRenderer = ({
   cls,
   courseCode,
   COURSE_DATA,
+  submissions,
   handleSubmit
 }) => {
+  if (sectionName === "LKPD (Lembar Kerja Peserta Didik)" && id === "3") {
+    return (
+       <LkpdClass6A 
+         user={user}
+         meetingId={meetingId}
+         status={status}
+         submissions={submissions}
+         onComplete={handleAction}
+         loading={loading}
+       />
+    );
+  }
+
   if (sectionName === "Video Pembelajaran" && id === "3") {
     const videoId = "g1xgaTWoOiM";
     return (
