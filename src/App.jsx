@@ -4908,7 +4908,7 @@ function SectionPage({ user }) {
       return (
         <div className="space-y-10 md:space-y-12 pb-10">
           {/* Header Silabus */}
-          <div className="relative bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[2rem] md:rounded-[4rem] p-8 md:p-16 overflow-hidden shadow-2xl border border-white border-opacity-5">
+          <div className="relative bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-[1.5rem] md:rounded-[4rem] p-6 md:p-16 overflow-hidden shadow-2xl border border-white border-opacity-5">
             <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500 bg-opacity-20 rounded-full -mr-48 -mt-48 blur-[120px]"></div>
             <div className="relative z-10">
               <span className="inline-flex items-center gap-2 bg-indigo-500 text-white px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6">
@@ -4926,8 +4926,8 @@ function SectionPage({ user }) {
           {/* Grid Modul */}
           <div className="grid grid-cols-1 gap-8 md:gap-12">
             {/* Modul 1 */}
-            <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-indigo-500">
-               <div className="p-8 md:p-14">
+            <div className="bg-white rounded-[1.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-indigo-500">
+               <div className="p-5 md:p-14">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-slate-50 pb-8">
                      <div className="flex items-center gap-5">
                         <div className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center shadow-inner">
@@ -5005,8 +5005,8 @@ function SectionPage({ user }) {
             </div>
 
             {/* Modul 2 */}
-            <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-emerald-500">
-               <div className="p-8 md:p-14">
+            <div className="bg-white rounded-[1.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-emerald-500">
+               <div className="p-5 md:p-14">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-slate-50 pb-8">
                      <div className="flex items-center gap-5">
                         <div className="w-16 h-16 md:w-20 md:h-20 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center shadow-inner">
@@ -5072,8 +5072,8 @@ function SectionPage({ user }) {
             </div>
 
             {/* Modul 3 */}
-            <div className="bg-white rounded-[2.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-amber-500">
-               <div className="p-8 md:p-14">
+            <div className="bg-white rounded-[1.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-amber-500">
+               <div className="p-5 md:p-14">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-slate-50 pb-8">
                      <div className="flex items-center gap-5">
                         <div className="w-16 h-16 md:w-20 md:h-20 bg-amber-50 text-amber-600 rounded-3xl flex items-center justify-center shadow-inner">
@@ -5090,7 +5090,7 @@ function SectionPage({ user }) {
                      {[
                         { 
                           title: "Gangguan Pendengaran", 
-                          icon: "hear_threshold",
+                          icon: "hearing",
                           items: ["Batasan & Penggolongan", "Identifikasi Anak", "Karakteristik Anak", "Strategi Penanganan"]
                         },
                         { 
@@ -5130,36 +5130,7 @@ function SectionPage({ user }) {
             </>
           )}
 
-          {/* Materi Pengayaan Section */}
-          <section className="space-y-6 md:space-y-8 mt-12">
-            <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
-               <span className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-lg md:text-xl shadow-lg shadow-indigo-600 shadow-opacity-20">
-                 <span className="material-symbols-outlined">video_library</span>
-               </span>
-               <div>
-                  <h2 className="text-lg md:text-2xl font-black text-indigo-900 leading-tight uppercase tracking-tight">Materi Pengayaan</h2>
-                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Tayangan Visual Pendukung</p>
-               </div>
-            </div>
-
-            <div className="bg-white p-4 md:p-8 rounded-[1.5rem] md:rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden group">
-               <div className="aspect-video relative rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl">
-                  <iframe
-                    className="w-full h-full relative z-10"
-                    src={`https://www.youtube.com/embed/L9CWP3bNFA8`}
-                    title="Materi Pengayaan"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                  <div className="absolute inset-0 bg-indigo-900 bg-opacity-5 animate-pulse"></div>
-               </div>
-               <div className="mt-6 flex items-center gap-3 px-2">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                  <p className="text-xs md:text-sm text-slate-500 font-bold italic">Tonton video pengayaan di atas sebagai referensi tambahan sebelum menjawab pertanyaan evaluasi.</p>
-               </div>
-            </div>
-          </section>
+          {/* HIDDEN MATERIAL PENGAYAAN AS REQUESTED */}
 
           {/* Verification Section */}
           <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
@@ -5184,13 +5155,13 @@ function SectionPage({ user }) {
                     Pertanyaan Verifikasi:
                   </label>
                   <p className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 leading-snug">
-                    Apa yang dimaksud dengan perkembangan normatif dan nonnormatif?
+                    Kira - kira kamu tertarik degan modul berapa?
                   </p>
 
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Ketik jawaban lengkap Anda di sini..."
+                    placeholder="Sebutkan modul yang paling menarik bagi Anda..."
                     className="w-full min-h-[120px] md:min-h-[150px] bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl p-4 md:p-5 text-[11px] md:text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-4 md:mb-6"
                   ></textarea>
 
