@@ -138,6 +138,12 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
   const [isLandscape, setIsLandscape] = useState(true);
   const [dragging, setDragging] = useState(null);
   const [shake, setShake] = useState(null);
+  const [showTutorial, setShowTutorial] = useState(true);
+
+  // Fungsi Inisial Nama
+  const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
 
   useEffect(() => {
     const checkOrientation = () => setIsLandscape(window.innerWidth > window.innerHeight);
@@ -207,26 +213,70 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
 
   return (
     <div className="relative min-h-[600px] w-full bg-white rounded-[3rem] overflow-hidden border-4 border-slate-100 shadow-2xl flex flex-col">
+       </div>
+
+       {/* Tutorial Overlay */}
+       {showTutorial && (
+         <div className="fixed inset-0 z-[70] bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-6">
+            <div className="bg-white rounded-[2.5rem] p-10 max-w-xl w-full shadow-2xl animate-in fade-in zoom-in duration-300 relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+               <div className="relative z-10 text-center">
+                  <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary mx-auto mb-6">
+                     <span className="material-symbols-outlined text-5xl">auto_stories</span>
+                  </div>
+                  <h2 className="text-3xl font-black text-slate-800 mb-2">Misi Kelompok!</h2>
+                  <p className="text-slate-500 font-medium mb-8">Halo Mahasiswa! Mari susun Peta Pikiran BK (Bimbingan Konseling) bersama rekan tim Anda.</p>
+                  
+                  <div className="space-y-4 text-left mb-10">
+                     <div className="flex gap-4 items-start bg-slate-50 p-4 rounded-2xl">
+                        <span className="w-8 h-8 rounded-full bg-blue-500 text-white flex-shrink-0 flex items-center justify-center font-black text-xs">1</span>
+                        <p className="text-sm font-bold text-slate-600">Geser (Drag) gelembung teks di bawah ke Cabang (Zona) yang benar sesuai materi (Skor 60).</p>
+                     </div>
+                     <div className="flex gap-4 items-start bg-slate-50 p-4 rounded-2xl">
+                        <span className="w-8 h-8 rounded-full bg-emerald-500 text-white flex-shrink-0 flex items-center justify-center font-black text-xs">2</span>
+                        <p className="text-sm font-bold text-slate-600">Setelah lengkap, pecahkan Studi Kasus yang muncul untuk raih skor tambahan (Skor 40).</p>
+                     </div>
+                     <div className="flex gap-4 items-start bg-slate-50 p-4 rounded-2xl">
+                        <span className="w-8 h-8 rounded-full bg-yellow-500 text-white flex-shrink-0 flex items-center justify-center font-black text-xs">3</span>
+                        <p className="text-sm font-bold text-slate-600">Pastikan skor mencapai 100 sebelum kelompok menekan tombol Kirim.</p>
+                     </div>
+                  </div>
+
+                  <button onClick={() => setShowTutorial(false)} className="w-full bg-primary text-white py-5 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20">SAYA MENGERTI, MULAI!</button>
+               </div>
+            </div>
+         </div>
+       )}
+
        {/* UI Header */}
        <div className="p-6 bg-slate-50/80 backdrop-blur-sm border-b border-slate-100 flex justify-between items-center relative z-20">
           <div className="flex items-center gap-4">
              <div className="flex flex-col">
                 <p className="text-[10px] font-black uppercase text-primary/40 tracking-widest leading-none mb-1">Collaborative LKPD</p>
-                <h4 className="font-headline font-black text-slate-800 flex items-center gap-2">
-                   {myGroup ? `Kelompok ${myGroup.group_num}` : 'Individu'}
+                <div className="flex items-center gap-3">
+                   <h4 className="font-headline font-black text-slate-800">
+                      {myGroup ? `Kelompok ${myGroup.group_num}` : 'Individu'}
+                   </h4>
                    {myGroup && (
-                     <div className="flex -space-x-2 ml-2">
-                        {myGroup.members.slice(0, 3).map((m, i) => (
-                           <div key={i} className="w-6 h-6 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-[8px] font-black text-slate-600 uppercase" title={m.name}>
-                              {m.name[0]}
+                     <div className="flex -space-x-1.5">
+                        {myGroup.members.map((m, i) => (
+                           <div key={i} className="w-7 h-7 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center text-[9px] font-black text-primary leading-none ring-1 ring-slate-200 transition-transform hover:-translate-y-1 cursor-help group/avatar relative" title={m.name}>
+                              {getInitials(m.name)}
+                              {/* Tooltip Name */}
+                              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/avatar:opacity-100 whitespace-nowrap z-[100] font-medium pointer-events-none transition-opacity">
+                                 {m.name}
+                              </div>
                            </div>
                         ))}
                      </div>
                    )}
-                </h4>
+                </div>
              </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+             <button onClick={() => setShowTutorial(true)} className="w-10 h-10 bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all shadow-sm">
+                <span className="material-symbols-outlined text-xl">info</span>
+             </button>
              <div className="bg-white shadow-sm border border-slate-100 px-6 py-2 rounded-2xl flex items-center gap-2">
                 <span className="material-symbols-outlined text-yellow-500 text-xl font-bold fill-1">stars</span>
                 <span className="font-black text-slate-800 text-xl">{score}</span>
@@ -244,21 +294,30 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
        )}
 
        {/* Game Board */}
-       <div className="flex-1 p-10 relative flex items-center justify-center">
-          <svg className="absolute inset-0 w-full h-full pointer-events-none">
-             {/* Dynamic connector lines would go here */}
+       <div className="flex-1 p-10 relative flex items-center justify-center min-h-[450px]">
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+             {MIND_MAP_DATA.zones.map((zone, idx) => {
+                const angles = [190, 350, 270]; // Adjusted angles: Left, Right, Up (actually down but y is inverted)
+                const dist = isLandscape ? 260 : 200;
+                const rad = (angles[idx] * Math.PI) / 180;
+                const tx = 50 + (Math.cos(rad) * dist) / 10; // Simple percentage based logic for SVG center
+                const ty = 50 + (Math.sin(rad) * dist) / 10;
+                return (
+                   <line key={idx} x1="50%" y1="50%" x2={`${tx}%`} y2={`${ty}%`} stroke="currentColor" strokeWidth="4" strokeDasharray="8,8" className={zone.textColor} />
+                );
+             })}
           </svg>
           
           <div className="relative w-full h-full flex items-center justify-center">
              {/* Center Node */}
-             <div className="w-32 h-32 bg-primary rounded-full flex items-center justify-center text-white font-black text-center p-4 shadow-2xl z-10 ring-8 ring-blue-50">
-                MIND MAP BK
+             <div className="w-24 h-24 md:w-32 md:h-32 bg-primary rounded-full flex items-center justify-center text-white font-black text-center p-4 shadow-2xl z-10 ring-8 ring-blue-50/50">
+                <span className="text-xs md:text-sm">MIND MAP BK</span>
              </div>
 
              {/* Zones */}
              {MIND_MAP_DATA.zones.map((zone, idx) => {
-                const angles = [210, 330, 90]; // Angles for 3 zones
-                const dist = isLandscape ? 220 : 180;
+                const angles = [190, 350, 270]; 
+                const dist = isLandscape ? 260 : 200;
                 const rad = (angles[idx] * Math.PI) / 180;
                 const x = Math.cos(rad) * dist;
                 const y = Math.sin(rad) * dist;
@@ -268,17 +327,17 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                     key={zone.id}
                     onDragOver={e => e.preventDefault()}
                     onDrop={() => dragging && handleDrop(dragging, zone.id)}
-                    className={`absolute w-52 h-52 md:w-64 md:h-64 rounded-full border-4 border-dashed animate-[pulse_3s_infinite] flex flex-col items-center justify-center transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-')}/30`}
+                    className={`absolute w-44 h-44 md:w-56 md:h-56 rounded-full border-[3px] border-dashed animate-[pulse_5s_infinite] flex flex-col items-center justify-start pt-6 transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-')}/40`}
                     style={{ transform: `translate(${x}px, ${y}px)` }}
                   >
-                     <div className={`p-3 rounded-2xl ${zone.color} text-white text-[10px] font-black uppercase tracking-widest mb-4 shadow-lg`}>
+                     <div className={`p-2.5 px-5 rounded-2xl ${zone.color} text-white text-[9px] font-black uppercase tracking-widest mb-3 shadow-lg -mt-2`}>
                         {zone.label}
                      </div>
-                     <div className="flex flex-wrap justify-center gap-2 px-4 min-h-[40px]">
+                     <div className="flex flex-wrap justify-center gap-1.5 px-3 min-h-[40px] w-full items-center">
                         {Object.entries(placedItems).filter(([_, zid]) => zid === zone.id).map(([iid]) => {
                            const item = MIND_MAP_DATA.items.find(i => i.id === iid);
                            return (
-                             <div key={iid} className={`px-4 py-2 rounded-xl text-white font-black text-[10px] shadow-sm animate-in zoom-in duration-300 ${zone.color}`}>
+                             <div key={iid} className={`px-3 py-1.5 rounded-xl text-white font-black text-[9px] shadow-md animate-in zoom-in duration-300 ${zone.color} border border-white/20`}>
                                 {item.label}
                              </div>
                            );
@@ -1153,7 +1212,89 @@ function DashboardTutor({ user }) {
               )}
            </div>
         ) : (
-          <div className="overflow-x-auto">
+           <div className="p-0">
+             {/* Rekapitulasi LKPD Kelompok Section */}
+             {(activeTab === '1' || activeTab === '2') && (
+               <div className="p-8 bg-slate-50/50 border-b border-slate-100">
+                  <div className="flex items-center gap-3 mb-6">
+                     <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shadow-sm border border-slate-100">
+                        <span className="material-symbols-outlined text-3xl">hub</span>
+                     </div>
+                     <div>
+                        <h3 className="text-xl font-headline font-black text-slate-800 leading-tight">Rekapitulasi LKPD Kelompok</h3>
+                        <p className="text-xs text-slate-500 font-medium tracking-tight">Hasil pengerjaan Mind Map & Studi Kasus per tim (Sesi {selectedMeeting})</p>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                     {(() => {
+                        const groupSubs = submissions.filter(s => 
+                           s.class_id === activeTab && 
+                           s.meeting_num === selectedMeeting && 
+                           s.student_email.startsWith('GROUP_LKPD_')
+                        );
+                        
+                        // Temukan sistem grup untuk tahu total kelompok seharusnya
+                        const systemGroupRow = submissions.find(s => s.student_email === 'SYSTEM_GROUP' && s.class_id === activeTab && s.meeting_num === selectedMeeting);
+                        const allGroups = systemGroupRow ? JSON.parse(systemGroupRow.content) : [];
+
+                        if (allGroups.length === 0) {
+                           return <div className="col-span-full py-10 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200 text-slate-400 font-bold text-sm">Kelompok belum dibuat untuk sesi ini.</div>;
+                        }
+
+                        return allGroups.map((g, i) => {
+                           const sub = groupSubs.find(s => s.student_email.endsWith(`_G${g.group_num}`));
+                           return (
+                              <div key={i} className={`bg-white rounded-3xl p-6 border-2 transition-all ${sub ? 'border-emerald-100 shadow-lg shadow-emerald-500/5' : 'border-slate-100 opacity-60'}`}>
+                                 <div className="flex justify-between items-start mb-4">
+                                    <h4 className="font-black text-slate-800 flex items-center gap-2">
+                                       <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs ${sub ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'}`}>{g.group_num}</span>
+                                       Kelompok {g.group_num}
+                                    </h4>
+                                    {sub ? (
+                                       <span className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">Sudah Kirim</span>
+                                    ) : (
+                                       <span className="bg-slate-100 text-slate-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">Belum Kirim</span>
+                                    )}
+                                 </div>
+
+                                 {sub ? (
+                                    <div className="space-y-4">
+                                       <div className="flex items-center gap-3">
+                                          <div className="flex-1 bg-slate-50 px-4 py-2 rounded-2xl">
+                                             <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Skor Game</p>
+                                             <p className="font-black text-primary text-xl">
+                                                {sub.content.match(/SKOR GAME: (\d+)/)?.[1] || '0'}/100
+                                             </p>
+                                          </div>
+                                       </div>
+                                       <div className="bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100">
+                                          <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-2">Jawaban Kasus</p>
+                                          <p className="text-xs font-bold text-slate-700 italic leading-relaxed">
+                                             "{sub.content.split('JAWABAN KASUS SISWA A: ')[1] || 'Tidak ada jawaban'}"
+                                          </p>
+                                       </div>
+                                       <p className="text-[9px] text-slate-300 font-medium italic">Dikirim pada: {new Date(sub.created_at).toLocaleString('id-ID')}</p>
+                                    </div>
+                                 ) : (
+                                    <div className="py-6 flex flex-col items-center">
+                                       <span className="material-symbols-outlined text-3xl text-slate-200 mb-2">hourglass_empty</span>
+                                       <p className="text-[10px] text-slate-400 font-bold uppercase">Menunggu Laporan</p>
+                                    </div>
+                                 )}
+                              </div>
+                           );
+                        });
+                     })()}
+                  </div>
+               </div>
+             )}
+
+             <div className="overflow-x-auto p-8">
+               <div className="mb-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary">person</span>
+                  <h3 className="text-lg font-headline font-black text-slate-800">Daftar Mahasiswa (Individu)</h3>
+               </div>
              <table className="w-full text-xs text-left">
               <thead>
                 <tr className="bg-primary text-white uppercase tracking-wider font-bold">
