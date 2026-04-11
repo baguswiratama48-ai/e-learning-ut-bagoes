@@ -1114,14 +1114,116 @@ export const StaticContentRenderer = ({
              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="space-y-4">
                    <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-indigo-500">Kegiatan Belajar 1</h4>
-                   <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                      <li>Pengertian Kelainan atau Abnormal</li>
-                      <li>Model Medis (Medical Model)</li>
-                   </ul>
+                   <div className="space-y-2">
+                     <p className="font-bold text-slate-700 text-sm">A. Hakikat Perkembangan Anak yang Bersifat Nonnormatif</p>
+                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-none pl-4">
+                        <li>1. Pengertian</li>
+                        <li>
+                          2. Apakah yang Disebut Kelainan atau Abnormal
+                          <ul className="pl-4 mt-1 space-y-1 list-[lower-alpha]">
+                            <li>Model Medis (Medical Model)</li>
+                            <li>Penyimpangan dari Rata-rata</li>
+                            <li>Penyimpangan dari Ideal</li>
+                          </ul>
+                        </li>
+                        <li>3. Ciri-ciri Anak dengan Perkembangan Nonnormatif</li>
+                     </ul>
+                   </div>
+                </div>
+
+                <div className="space-y-4">
+                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-indigo-500">Kegiatan Belajar 2</h4>
+                   <div className="space-y-4">
+                     <div className="space-y-2">
+                       <p className="font-bold text-slate-700 text-sm">A. Faktor yang Memengaruhi Perkembangan Nonnormatif dan Identifikasi Penanganan Anak</p>
+                       <ul className="space-y-1 text-sm text-slate-500 font-medium list-none pl-4">
+                          <li>1. Cetak Biru Biologis</li>
+                          <li>2. Genetik atau Lingkungan</li>
+                          <li>3. Konteks Sosial</li>
+                       </ul>
+                     </div>
+                     <div className="space-y-2">
+                       <p className="font-bold text-slate-700 text-sm">B. Cara Identifikasi dan Penanganan</p>
+                       <ul className="space-y-1 text-sm text-slate-500 font-medium list-none pl-4">
+                          <li>1. Wawancara</li>
+                          <li>2. Kuesioner</li>
+                          <li>3. Observasi</li>
+                       </ul>
+                     </div>
+                   </div>
                 </div>
              </div>
           </div>
-          {/* Other modules follow same logic */}
+
+          {/* Modul 2 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
+             <div className="border-b border-slate-100 pb-4 mb-6">
+                <h2 className="text-emerald-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 2</h2>
+                <p className="text-xl font-bold text-slate-800">Anak dengan Gangguan Fisik</p>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-4">
+                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-emerald-500">Kegiatan Belajar 1</h4>
+                   <div className="space-y-2">
+                     <p className="font-bold text-slate-700 text-sm">Anak dengan Cerebral Palsy</p>
+                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
+                        <li>Batasan Cerebral Palsy</li>
+                        <li>Tipe-tipe Cerebral Palsy</li>
+                        <li>Karakteristik Anak dengan Cerebral Palsy</li>
+                        <li>Strategi Penanganan Anak dengan Cerebral Palsy</li>
+                     </ul>
+                   </div>
+                </div>
+
+                <div className="space-y-4">
+                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-emerald-500">Kegiatan Belajar 2</h4>
+                   <div className="space-y-2">
+                     <p className="font-bold text-slate-700 text-sm">Anak yang Rentan Sakit</p>
+                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
+                        <li>Pengertian</li>
+                        <li>Penyakit yang Umum Diderita Anak: Karakteristik Anak dan Penanganannya</li>
+                     </ul>
+                   </div>
+                </div>
+             </div>
+          </div>
+
+          {/* Modul 3 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
+             <div className="border-b border-slate-100 pb-4 mb-6">
+                <h2 className="text-rose-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 3</h2>
+                <p className="text-xl font-bold text-slate-800">Anak dengan Gangguan Panca Indra</p>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-4">
+                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-rose-500">Kegiatan Belajar 1</h4>
+                   <div className="space-y-2">
+                     <p className="font-bold text-slate-700 text-sm">Anak dengan Gangguan Pendengaran</p>
+                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
+                        <li>Batasan dan Penggolongan Gangguan Pendengaran</li>
+                        <li>Identifikasi Anak dengan Gangguan Pendengaran</li>
+                        <li>Karakteristik Anak dengan Gangguan Pendengaran</li>
+                        <li>Strategi Penanganan Anak dengan Gangguan Pendengaran</li>
+                     </ul>
+                   </div>
+                </div>
+
+                <div className="space-y-4">
+                   <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-rose-500">Kegiatan Belajar 2</h4>
+                   <div className="space-y-2">
+                     <p className="font-bold text-slate-700 text-sm">Anak dengan Gangguan Penglihatan</p>
+                     <ul className="space-y-1 text-sm text-slate-500 font-medium list-[lower-alpha] pl-5">
+                        <li>Batasan Gangguan Penglihatan</li>
+                        <li>Identifikasi Anak dengan Gangguan Penglihatan</li>
+                        <li>Karakteristik Anak dengan Gangguan Penglihatan</li>
+                        <li>Strategi Penanganan Anak dengan Gangguan Penglihatan</li>
+                     </ul>
+                   </div>
+                </div>
+             </div>
+          </div>
         </div>
 
         <div className="mt-16 pt-10 border-t border-slate-100 flex flex-col items-center">
