@@ -754,11 +754,11 @@ function InteractiveQuiz({
       s.student_email === user.email && s.section_name === "Kuis dan Latihan",
   );
 
-  if (statusRow && gameState !== "FINISHED") {
-    // Jika sudah dikerjakan, bypass ke finished
-    setGameState("FINISHED");
-    // Parse answers from content (which usually stores JSON if formatted nicely, but here we just show success based on existing submissions)
-  }
+  useEffect(() => {
+    if (statusRow && gameState !== "FINISHED") {
+      setGameState("FINISHED");
+    }
+  }, [statusRow, gameState]);
 
   const handleSelect = (ansId) => {
     setAnswers((prev) => ({ ...prev, [currentIdx]: ansId }));
@@ -1323,7 +1323,7 @@ function InteractiveMindMap({
       </div>
       <div
         className="flex-1 relative flex items-center justify-center overflow-hidden"
-        style={{ minHeight: "380px" }}
+        style={{ minHeight: "480px" }}
       >
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
@@ -1353,9 +1353,9 @@ function InteractiveMindMap({
         </div>
         {MIND_MAP_DATA.zones.map((zone, idx) => {
           const positions = [
-            { left: "calc(50% - 230px)", top: "calc(50% - 80px)" },
-            { left: "calc(50% + 90px)", top: "calc(50% - 80px)" },
-            { left: "calc(50% - 80px)", top: "calc(50% - 230px)" },
+            { left: "calc(50% - 220px)", top: "calc(50% - 50px)" },
+            { left: "calc(50% + 80px)", top: "calc(50% - 50px)" },
+            { left: "calc(50% - 70px)", top: "calc(50% - 180px)" },
           ];
           const pos = positions[idx];
           const placedInZone = Object.entries(placedItems).filter(
@@ -1371,7 +1371,7 @@ function InteractiveMindMap({
               style={{ ...pos, zIndex: 5 }}
             >
               <div
-                className={`px-3 py-1 rounded-xl ${zone.color} text-white text-[8px] font-black uppercase tracking-wider shadow-md mb-2`}
+                className={`pointer-events-none px-3 py-1 rounded-xl ${zone.color} text-white text-[8px] font-black uppercase tracking-wider shadow-md mb-2`}
               >
                 {zone.label}
               </div>
@@ -4259,6 +4259,17 @@ function SectionPage({ user }) {
               </div>
             </div>
           )}
+        </div>
+      ) : (id === "1" || id === "2") &&
+        sectionName === "Kuis dan Latihan" ? (
+        <div className="space-y-4">
+          <InteractiveQuiz
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
         </div>
       ) : (id === "1" || id === "2") &&
         sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
