@@ -1829,19 +1829,24 @@ function SectionPage({ user }) {
                   {myGroup?.group_num === g.group_num && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">Tim Anda</div>
                   )}
-                  <h3 className={`text-xl font-headline font-black mb-6 flex items-center gap-3 ${myGroup?.group_num === g.group_num ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}>
-                    <span className={`w-10 h-10 rounded-2xl flex items-center justify-center ${myGroup?.group_num === g.group_num ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-slate-100 text-slate-400'}`}>
-                       {g.group_num}
-                    </span>
-                    Kelompok {g.group_num}
-                  </h3>
+                  <div className="flex justify-between items-start mb-6">
+                    <h3 className={`text-xl font-headline font-black flex items-center gap-3 ${myGroup?.group_num === g.group_num ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}>
+                      <span className={`w-10 h-10 rounded-2xl flex items-center justify-center ${myGroup?.group_num === g.group_num ? 'bg-primary text-white shadow-lg shadow-primary/30' : 'bg-slate-100 text-slate-400'}`}>
+                        {g.group_num}
+                      </span>
+                      Kelompok {g.group_num}
+                    </h3>
+                    <div className="bg-slate-100 px-3 py-1 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-tighter">
+                      {g.members.length} Orang
+                    </div>
+                  </div>
                   <div className="space-y-4">
                      {g.members.map((m, mi) => (
                        <div key={mi} className={`flex items-center gap-4 p-3 rounded-2xl border transition-all ${m.email === user.email ? 'bg-primary/5 border-primary/20' : 'border-slate-50 group-hover:border-slate-100 bg-slate-50/50'}`}>
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs ${m.email === user.email ? 'bg-primary text-white' : 'bg-white text-slate-400 border border-slate-200'}`}>
-                             {m.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                             {mi + 1}
                           </div>
-                          <div className="overflow-hidden">
+                          <div className="overflow-hidden flex-1">
                              <p className={`font-bold text-xs truncate ${m.email === user.email ? 'text-primary' : 'text-slate-700'}`}>{m.name}</p>
                              <p className="text-[9px] text-slate-400 font-medium">{m.nim}</p>
                           </div>
