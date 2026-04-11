@@ -326,7 +326,7 @@ function InteractiveMindMap({ user, classId, meetingId, onComplete, submissions 
                     key={zone.id}
                     onDragOver={e => e.preventDefault()}
                     onDrop={() => dragging && handleDrop(dragging, zone.id)}
-                    className={`absolute w-44 h-44 md:w-56 md:h-56 rounded-full border-[3px] border-dashed animate-[pulse_5s_infinite] flex flex-col items-center justify-start pt-6 transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-')}/40`}
+                    className={`absolute w-44 h-44 md:w-56 md:h-56 rounded-full border-[3px] border-dashed animate-[pulse_5s_infinite] flex flex-col items-center justify-start pt-6 transition-all ${zone.bgColor} ${zone.color.replace('bg-', 'border-') + "/40"}`}
                     style={{ transform: `translate(${x}px, ${y}px)` }}
                   >
                      <div className={`p-2.5 px-5 rounded-2xl ${zone.color} text-white text-[9px] font-black uppercase tracking-widest mb-3 shadow-lg -mt-2`}>
@@ -1263,7 +1263,7 @@ function DashboardTutor({ user }) {
                                           <div className="flex-1 bg-slate-50 px-4 py-2 rounded-2xl">
                                              <p className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">Skor Game</p>
                                              <p className="font-black text-primary text-xl">
-                                                {sub.content.match(/SKOR GAME: (\d+)/)?.[1] || '0'}/100
+                                                {(sub.content.match(/SKOR GAME: (\d+)/)?.[1] || '0') + " / 100"}
                                              </p>
                                           </div>
                                        </div>
