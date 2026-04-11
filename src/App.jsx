@@ -2255,8 +2255,8 @@ function Login({ onLogin }) {
     );
 
     if (student) {
-      // If student belongs to a different class, warn them
-      if (student.classId !== id) {
+      // If student belongs to a different class, warn them (except for demo account)
+      if (student.classId !== id && student.email !== "demo@ecampus.ut.ac.id") {
         const targetClass = CLASSES.find((c) => c.id === student.classId);
         setError(
           `Gagal: Mahasiswa ini terdaftar di ${targetClass?.title || "kelas lain"}. Tidak bisa masuk kelas ini.`,
@@ -2472,8 +2472,10 @@ function DashboardTutor({ user }) {
     if (!activeTab || activeTab === "record_m1") return;
     setGenerating(true);
     try {
-      // Include all students in the class (including demo account if for testing)
-      const classStudents = STUDENTS.filter((s) => s.classId === activeTab);
+      // Include all students in the class (excluding demo account for groups)
+      const classStudents = STUDENTS.filter(
+        (s) => s.classId === activeTab && s.email !== "demo@ecampus.ut.ac.id",
+      );
       if (classStudents.length === 0) return;
 
       // Shuffle using Fisher-Yates
