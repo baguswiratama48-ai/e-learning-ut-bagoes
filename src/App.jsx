@@ -4744,6 +4744,58 @@ function SectionPage({ user }) {
             </div>
           </section>
 
+          {/* Kesimpulan Section */}
+          <section className="space-y-8">
+            <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
+               <span className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-amber-500 shadow-opacity-20">
+                 <span className="material-symbols-outlined">summarize</span>
+               </span>
+               <div>
+                  <h2 className="text-2xl font-black text-amber-900 leading-tight">Kesimpulan Materi</h2>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Perbandingan Normatif vs Nonnormatif</p>
+               </div>
+            </div>
+
+            <div className="bg-white border rounded-[2.5rem] overflow-hidden shadow-xl border-slate-100">
+               <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                     <thead>
+                        <tr className="bg-slate-900 text-white">
+                           <th className="p-6 text-xs font-black uppercase tracking-widest border-r border-white border-opacity-10">Aspek</th>
+                           <th className="p-6 text-xs font-black uppercase tracking-widest border-r border-white border-opacity-10">Normatif</th>
+                           <th className="p-6 text-xs font-black uppercase tracking-widest">Nonnormatif</th>
+                        </tr>
+                     </thead>
+                     <tbody className="text-sm font-medium text-slate-600">
+                        {[
+                           { a: "Sifat", n: "Umum & wajar", nn: "Tidak umum / menyimpang" },
+                           { a: "Kesesuaian usia", n: "Sesuai tahap perkembangan", nn: "Tidak sesuai tahap" },
+                           { a: "Pola", n: "Teratur & bisa diprediksi", nn: "Tidak teratur" },
+                           { a: "Dampak", n: "Tidak mengganggu", nn: "Bisa mengganggu fungsi anak" },
+                           { a: "Contoh", n: "Belajar membaca di SD", nn: "Keterlambatan bicara" }
+                        ].map((row, i) => (
+                           <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                              <td className="p-6 font-black text-slate-800 border-r border-slate-100">{row.a}</td>
+                              <td className="p-6 border-r border-slate-100">
+                                 <span className="inline-flex items-center gap-2 text-emerald-600">
+                                    <span className="material-symbols-outlined text-sm">check_circle</span>
+                                    {row.n}
+                                 </span>
+                              </td>
+                              <td className="p-6">
+                                 <span className="inline-flex items-center gap-2 text-rose-500">
+                                    <span className="material-symbols-outlined text-sm">error</span>
+                                    {row.nn}
+                                 </span>
+                              </td>
+                           </tr>
+                        ))}
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+          </section>
+
           {/* Verification Section */}
           <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
             {!status ? (
