@@ -3710,7 +3710,191 @@ function SectionPage({ user }) {
       );
     }
 
+    if (sectionName === "Informasi Modul" && id === "3") {
+      return (
+        <div className="space-y-10 md:space-y-16 pb-10">
+          {/* Hero Section */}
+          <div className="relative bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-primary bg-opacity-20 rounded-full -mr-40 -mt-40 blur-[120px]"></div>
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
+                <span className="material-symbols-outlined text-sm md:text-base">book</span> Informasi Mata Kuliah
+              </span>
+              <h1 className="text-3xl md:text-6xl font-headline font-black text-white mb-4 leading-tight">
+                Penanganan Anak <br className="hidden md:block" /> Berkebutuhan Khusus
+              </h1>
+              <div className="flex flex-wrap gap-3 md:gap-4 mt-8">
+                <div className="bg-white bg-opacity-10 backdrop-blur-md px-4 py-2 rounded-xl border border-white border-opacity-10 text-white text-xs md:text-sm font-bold flex items-center gap-2">
+                    <span className="material-symbols-outlined text-yellow-400">code</span> PAUD4208
+                </div>
+                <div className="bg-white bg-opacity-10 backdrop-blur-md px-4 py-2 rounded-xl border border-white border-opacity-10 text-white text-xs md:text-sm font-bold flex items-center gap-2">
+                    <span className="material-symbols-outlined text-emerald-400">history_edu</span> 4 SKS
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Pengantar Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+            <div className="space-y-6 md:space-y-8">
+              <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all border-l-[12px] border-l-primary">
+                <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+                  <span className="material-symbols-outlined text-primary">diversity_1</span>
+                  Aspek Perkembangan
+                </h3>
+                <p className="text-slate-600 font-medium leading-[1.8] text-sm md:text-base text-justify">
+                  Setiap aspek perkembangan manusia saling berkaitan antara satu dengan lainnya. Apabila satu aspek perkembangan mengalami masalah atau gangguan maka ada kemungkinan aspek perkembangan lainnya pun akan terpengaruh dan bisa membuat perkembangan secara umum menjadi tidak optimal. 
+                </p>
+                <div className="mt-6 bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                  <p className="text-xs md:text-sm text-slate-500 italic font-medium leading-relaxed">
+                    "Di lembaga PAUD dapat ditemui anak yang tampak ceria, namun terkadang kita melihat anak yang memiliki keseimbangan buruk atau koordinasi motorik yang tidak sempurna."
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-indigo-500 to-[#1a2169] p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] text-white shadow-xl shadow-indigo-500 shadow-opacity-10">
+                <h3 className="text-xl md:text-2xl font-black mb-6 flex items-center gap-3 text-yellow-400">
+                  <span className="material-symbols-outlined">child_care</span>
+                  Masa Kritis (3-6 Tahun)
+                </h3>
+                <p className="text-blue-50 text-opacity-90 font-medium leading-[1.8] text-sm md:text-base text-justify">
+                  Anak usia prasekolah berada pada masa kritis karena mulai membangun rasa percaya terhadap dunia di sekitarnya. Mereka belajar untuk mandiri, membangun kontrol diri, serta belajar mengambil inisiatif dalam kegiatan sosial.
+                </p>
+                <p className="mt-6 text-yellow-200 text-xs md:text-sm font-bold flex items-center gap-2">
+                   <span className="material-symbols-outlined text-sm">priority_high</span> Pendidik PAUD wajib mengidentifikasi gangguan sedini mungkin.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm flex flex-col">
+              <div className="flex items-center gap-4 mb-8 md:mb-10">
+                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary bg-opacity-10 text-primary flex items-center justify-center">
+                    <span className="material-symbols-outlined text-3xl md:text-4xl text-primary font-black">inventory_2</span>
+                 </div>
+                 <div>
+                    <h3 className="text-xl md:text-2xl font-black text-slate-800">Struktur BMP</h3>
+                    <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Buku Materi Pokok PAUD4208</p>
+                 </div>
+              </div>
+              
+              <div className="space-y-4 md:space-y-6 flex-1">
+                <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium">
+                  Informasi ini dirancang agar mahasiswa dapat mengidentifikasi dan mengambil tindakan yang tepat dalam penanganan anak berkebutuhan khusus secara mandiri maupun kolaboratif.
+                </p>
+
+                <div className="bg-slate-50 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 border border-slate-100 mt-auto">
+                    <h4 className="font-black text-slate-800 text-xs md:text-sm mb-4 uppercase tracking-tighter flex items-center gap-2 border-b border-slate-200 pb-3">
+                        <span className="material-symbols-outlined text-sm">list_alt</span> Ringkasan 12 Modul:
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                        {[
+                            "M1: Anak dengan Perkembangan Nonnormatif",
+                            "M2: Anak dengan Gangguan Fisik",
+                            "M3: Anak dengan Gangguan Panca Indra",
+                            "M4: Anak dengan Gangguan Autism",
+                            "M5: Anak dengan Gangguan Perilaku",
+                            "M6: Anak dengan Gangguan Belajar",
+                            "M7: Anak dengan Gangguan Bahasa",
+                            "M8: Anak dengan Gangguan Emosi",
+                            "M9: Masalah Rutinitas Harian",
+                            "M10: Gangguan Attachment",
+                            "M11: Maltreatment pada Anak",
+                            "M12: Kerjasama Penanganan"
+                        ].map((modul, i) => (
+                            <div key={i} className="flex gap-3 items-center group cursor-default">
+                                <span className="w-6 h-6 rounded-lg bg-white border border-slate-200 text-primary text-[10px] font-black flex flex-shrink-0 items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{i+1}</span>
+                                <span className="text-[11px] md:text-xs font-bold text-slate-500 group-hover:text-slate-800 transition-colors uppercase">{modul}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Full List Grid (Visual Accent) */}
+          <section className="space-y-6 md:space-y-10">
+             <div className="text-center space-y-2">
+                <h2 className="text-2xl md:text-4xl font-headline font-black text-slate-800 uppercase tracking-tighter">Detail Kurikulum Modul</h2>
+                <p className="text-xs md:text-sm text-slate-400 font-medium">Kompetensi yang akan dipelajari di mata kuliah PAUD4208</p>
+             </div>
+             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                {[
+                  "Perkembangan Nonnormatif", "Gangguan Fisik", "Gangguan Panca Indra", "Gangguan Autism",
+                  "Gangguan Perilaku", "Gangguan Belajar", "Gangguan Bahasa", "Gangguan Emosi",
+                  "Rutinitas Harian", "Gangguan Attachment", "Maltreatment", "Kerjasama Penanganan"
+                ].map((name, i) => (
+                  <div key={i} className="bg-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary transition-all group flex flex-col items-center text-center">
+                     <span className="text-primary font-black text-xl md:text-2xl mb-2 opacity-20 group-hover:opacity-100 transition-opacity">{String(i+1).padStart(2, '0')}</span>
+                     <p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 mb-1 group-hover:text-primary">Modul {i+1}</p>
+                     <p className="text-[10px] md:text-xs font-bold text-slate-700 leading-tight">{name}</p>
+                  </div>
+                ))}
+             </div>
+          </section>
+
+          {/* Verification Section */}
+          <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
+            {!status ? (
+              <div className="w-full max-w-xl">
+                <div className="text-center mb-6 md:mb-8">
+                  <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-yellow-200 text-[9px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-4">
+                    <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                    Konfirmasi Pemahaman
+                  </div>
+                  <h3 className="text-lg md:text-xl font-black text-slate-800 mb-1 md:mb-2 text-center uppercase">
+                    Evaluasi Struktur Modul
+                  </h3>
+                </div>
+
+                <div className="bg-white border-2 border-primary border-opacity-10 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 shadow-xl shadow-primary shadow-opacity-5">
+                  <label className="block text-[11px] md:text-sm font-black text-primary uppercase tracking-tight mb-3 md:mb-4 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm">question_answer</span>
+                    Pertanyaan:
+                  </label>
+                  <p className="text-base md:text-lg font-bold text-slate-800 mb-6 md:mb-8 leading-snug">
+                    Modul mana yang menurutmu menantang?
+                  </p>
+
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Contoh: Modul 4 tentang Autism, karena..."
+                    className="w-full min-h-[120px] md:min-h-[150px] bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl p-4 md:p-6 text-[11px] md:text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-4 md:mb-8"
+                  ></textarea>
+
+                  <button
+                    onClick={() => handleAction(content)}
+                    disabled={loading || !content.trim()}
+                    className="w-full bg-primary text-white font-black py-4 md:py-5 rounded-xl md:rounded-2xl hover:bg-[#1a2169] transition-all flex items-center justify-center gap-2 md:gap-3 group disabled:opacity-50 shadow-lg shadow-primary shadow-opacity-20 text-xs md:text-base tracking-widest"
+                  >
+                    {loading ? "MENGIRIM..." : "KIRIM ANALISIS MODUL"}
+                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm md:text-base font-bold">send</span>}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="w-full max-w-xl bg-[#1e293b] text-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl shadow-slate-900 shadow-opacity-20 flex flex-col items-center text-center border border-white border-opacity-10">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-primary rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-primary shadow-opacity-40">
+                  <span className="material-symbols-outlined text-2xl md:text-4xl">check</span>
+                </div>
+                <h3 className="text-lg md:text-2xl font-black mb-2 text-yellow-400 uppercase tracking-tighter">Analisis Modul Terdaftar!</h3>
+                <p className="text-slate-400 text-[11px] md:text-sm font-medium mb-6 md:mb-8 leading-relaxed">
+                  Tutor akan meninjau jawaban Anda. Silakan lanjut ke menu Pertanyaan Pemantik atau Materi Pembelajaran.
+                </p>
+                <div className="bg-white bg-opacity-5 px-5 py-4 md:px-8 md:py-6 rounded-2xl w-full border border-white border-opacity-5 text-left">
+                  <p className="text-[9px] md:text-[10px] font-black uppercase text-blue-400 mb-2 tracking-widest">Opini Anda:</p>
+                  <p className="text-[11px] md:text-xs italic font-medium opacity-80 leading-relaxed">"{status.content}"</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
     if (sectionName === "Informasi Modul") {
+
       const modulContent = COURSE_DATA[courseCode]?.[sectionName];
       return (
         <div className="space-y-10">
