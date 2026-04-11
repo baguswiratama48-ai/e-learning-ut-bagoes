@@ -1,4 +1,6 @@
 import { useState, useEffect, Fragment } from "react";
+import { StaticContentRenderer } from "./components/StaticContentRenderer";
+
 import {
   Routes,
   Route,
@@ -2543,7 +2545,15 @@ function Login({ onLogin }) {
     </div>
   );
 }
-
+function DashboardTutor({ user }) {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("1");
+  const [submissions, setSubmissions] = useState([]);
+  const [moduleContent, setModuleContent] = useState([]);
+  const [unlocking, setUnlocking] = useState(null);
+  const [selectedMeeting, setSelectedMeeting] = useState("1");
+  const [groupCount, setGroupCount] = useState(5);
   const [generating, setGenerating] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [pageSize, setPageSize] = useState(10);
@@ -2755,8 +2765,8 @@ function Login({ onLogin }) {
     { id: "3", label: "Kelas 6A" },
     { id: "4", label: "Kelas 5A" },
     { id: "demo", label: "Demo" },
-    { id: "record_m1", label: "📂 Record Modul 1" },
   ];
+
 
   const studentList = (() => {
     let filtered = STUDENTS.filter(
@@ -3477,8 +3487,7 @@ function Login({ onLogin }) {
                                             {curStars > 0 && (
                                               <div className="mt-2 bg-yellow-50 border border-yellow-100 p-2 rounded-md">
                                                 <p className="text-[9px] text-yellow-700 italic leading-snug">
-                                                  "{FEEDBACK_MESSAGES[curStars]}
-                                                  "
+                                                  "{FEEDBACK_MESSAGES[curStars]}"
                                                 </p>
                                               </div>
                                             )}
@@ -3774,1766 +3783,75 @@ function SectionPage({ user }) {
 
   if (!user || user.role !== "student") return <Navigate to={`/class/${id}`} />;
 
-  const renderStaticContent = () => {
-    if (sectionName === "Video Pembelajaran" && id === "3") {
-      const videoId = "g1xgaTWoOiM";
-      return (
-        <div className="space-y-10 md:space-y-12 pb-10">
-          {/* Video Player Card */}
-          <div className="bg-white rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-slate-100 overflow-hidden group">
-            <div className="aspect-video relative">
-              <iframe
-                className="w-full h-full relative z-10"
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title="Video Pembelajaran"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-              <div className="absolute inset-0 bg-primary bg-opacity-5 animate-pulse"></div>
-            </div>
-            <div className="p-6 md:p-10 bg-slate-50 border-t items-center flex flex-col md:flex-row justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500 shadow-opacity-30">
-                  <span className="material-symbols-outlined text-2xl md:text-3xl font-black">
-                    play_circle
-                  </span>
-                </div>
-                <div>
-                  <p className="font-black text-slate-800 text-base md:text-xl leading-tight">
-                    Video Pembelajaran Utama
-                  </p>
-                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-                    SPDA4401 | Kelas 6A
-                  </p>
-                </div>
-              </div>
-              <a
-                href={`https://youtu.be/${videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full md:w-auto text-xs font-black text-white uppercase bg-slate-900 px-8 py-4 rounded-2xl hover:bg-black transition-all shadow-xl shadow-slate-900 shadow-opacity-10 flex items-center justify-center gap-2"
-              >
-                Tonton di YouTube
-                <span className="material-symbols-outlined text-sm">open_in_new</span>
-              </a>
-            </div>
+  function renderStaticContent() {
+    const staticContent = COURSE_DATA[courseCode]?.[sectionName];
+    return (
+      <div className="space-y-8">
+        {staticContent ? (
+          <div className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-sm leading-relaxed text-justify">
+            {staticContent}
           </div>
-
-          {/* Evaluation Section */}
-          <div className="bg-[#1e293b] text-white p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-2xl relative overflow-hidden border border-white border-opacity-5">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary bg-opacity-20 rounded-full -mr-48 -mt-48 blur-[120px]"></div>
-            
-            <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
-                <span className="w-2 h-2 bg-slate-900 rounded-full animate-pulse"></span>
-                Evaluasi Video
-              </div>
-              <h4 className="font-headline font-black text-2xl md:text-4xl text-white mb-6 leading-tight uppercase tracking-tighter text-center">
-                Apa yang kamu pelajari dari video ini?
-              </h4>
-              <p className="text-slate-400 text-sm md:text-base font-medium mb-10 leading-relaxed text-center">
-                Tuangkan pemahaman Anda setelah menonton tayangan di atas dalam bentuk rangkuman singkat dan jelas di bawah ini.
-              </p>
-
-              {status ? (
-                <div className="w-full bg-white bg-opacity-5 backdrop-blur-md p-6 md:p-10 rounded-[2.5rem] border border-white border-opacity-10 shadow-inner text-left">
-                  <p className="text-[9px] md:text-[10px] text-yellow-400 font-black uppercase tracking-widest mb-4 opacity-70">Laporan Belajar Anda:</p>
-                  <div className="bg-white bg-opacity-5 p-4 rounded-2xl">
-                     <p className="text-sm md:text-lg text-slate-200 leading-relaxed italic font-serif opacity-90">"{status.content}"</p>
-                  </div>
-                  <div className="mt-8 flex items-center gap-3 py-3 px-6 bg-green-500 bg-opacity-20 rounded-2xl border border-green-500 border-opacity-30 w-fit">
-                    <span className="material-symbols-outlined text-green-400">check_circle</span>
-                    <p className="text-[10px] text-green-400 font-black uppercase tracking-widest">Berhasil Terkirim</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="w-full space-y-6">
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Tuliskan analisis Anda di sini..."
-                    className="w-full min-h-[180px] md:min-h-[220px] bg-white bg-opacity-5 border border-white border-opacity-10 rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 text-sm md:text-lg text-white placeholder:text-slate-600 focus:bg-white focus:bg-opacity-10 focus:border-yellow-400 outline-none transition-all resize-none"
-                  ></textarea>
-                  <button
-                    onClick={() => handleAction(content)}
-                    disabled={loading || !content.trim()}
-                    className="w-full bg-yellow-400 text-slate-900 font-black py-5 md:py-7 rounded-2xl md:rounded-[2.5rem] hover:bg-yellow-300 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-yellow-400 shadow-opacity-20 flex items-center justify-center gap-3 text-sm md:text-xl tracking-widest uppercase disabled:opacity-30"
-                  >
-                    {loading ? "MENGIRIM JAWABAN..." : "KIRIM JAWABAN KE TUTOR"}
-                    {!loading && <span className="material-symbols-outlined font-black">send</span>}
-                  </button>
-                </div>
-              )}
-            </div>
+        ) : (
+          <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-16 text-center">
+            <span className="material-symbols-outlined text-5xl text-slate-300 mb-4">import_contacts</span>
+            <h3 className="text-xl font-black text-slate-400">Materi Belum Tersedia</h3>
+            <p className="text-sm text-slate-400 mt-2">Konten materi untuk bagian {sectionName} sedang dalam tahap penyusunan.</p>
           </div>
-
-          {status && tutorFeedback && (
-            <div className="bg-yellow-50 border border-yellow-200 p-8 md:p-12 rounded-[2.5rem] md:rounded-[4rem] flex flex-col md:flex-row items-center gap-8 shadow-sm">
-              <div className="w-20 h-20 md:w-24 md:h-24 bg-yellow-400 rounded-3xl flex items-center justify-center shadow-lg shadow-yellow-400 shadow-opacity-40">
-                <span className="material-symbols-outlined text-white text-5xl">stars</span>
-              </div>
-              <div className="text-center md:text-left">
-                <p className="font-black text-yellow-700 mb-1 text-xl md:text-3xl uppercase tracking-tighter">Hasil Penilaian</p>
-                <p className="text-sm md:text-lg text-yellow-800 mb-6 italic font-medium">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || "Tutor telah memberikan penilaian."}"</p>
-                <div className="flex justify-center md:justify-start gap-2 text-yellow-500">
-                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
-                    <span key={i} className="material-symbols-outlined text-3xl md:text-4xl fill-1">star</span>
-                  ))}
-                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
-                    <span key={i} className="material-symbols-outlined text-3xl md:text-4xl text-slate-200">star</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionName === "Video Pembelajaran" && (id === "1" || id === "2")) {
-      const videoId = "GYlmNScMEl4";
-      const wordCount = content.trim()
-        ? content
-            .trim()
-            .split(new RegExp("\\s+"))
-            .filter((w) => w.length > 0).length
-        : 0;
-      const isWordCountEnough = wordCount >= 100;
-
-      return (
-        <div className="space-y-8">
-          <div className="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden">
-            <div className="aspect-video">
-              <iframe
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title="Video Pembelajaran"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-            <div className="p-6 bg-slate-50 border-t items-center flex justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-red-600 text-[18px]">
-                    movie
-                  </span>
-                </div>
-                <p className="font-bold text-slate-800 text-sm">
-                  Video Pembelajaran Kelas 8B & 8C
-                </p>
-              </div>
-              <a
-                href={`https://youtu.be/${videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[10px] font-bold text-primary uppercase bg-white border px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
-              >
-                Buka di YouTube
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-[#0f172a] text-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white border-opacity-5">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary bg-opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400 bg-opacity-10 rounded-full -ml-24 -mb-24 blur-[80px]"></div>
-
-            <div className="relative z-10">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h4 className="font-headline font-bold text-xl md:text-2xl text-yellow-400 tracking-tight flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-xl bg-yellow-400 bg-opacity-20 flex items-center justify-center">
-                      <span className="material-symbols-outlined text-yellow-400">
-                        description
-                      </span>
-                    </span>
-                    Kesimpulan Video
-                  </h4>
-                  <p className="text-slate-400 text-sm mt-2 font-medium">
-                    Susunlah poin-poin penting dari video yang telah Anda
-                    tonton.
-                  </p>
-                </div>
-                {!status && (
-                  <div
-                    className={`px-4 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${isWordCountEnough ? "bg-green-500 bg-opacity-10 border-green-500 border-opacity-30 text-green-400" : "bg-white bg-opacity-5 border-white border-opacity-10 text-slate-400"}`}
-                  >
-                    <span
-                      className={`w-2 h-2 rounded-full ${isWordCountEnough ? "bg-green-500 animate-pulse" : "bg-slate-500"}`}
-                    ></span>
-                    Syarat: 100 Kata
-                  </div>
-                )}
-              </div>
-
-              {status ? (
-                <div className="space-y-4">
-                  <div className="bg-white bg-opacity-5 backdrop-blur-sm p-6 md:p-8 rounded-[2rem] border border-white border-opacity-10 shadow-inner">
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-[10px] text-yellow-400 text-opacity-70 border border-yellow-400 border-opacity-30 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">
-                        Laporan Mahasiswa
-                      </span>
-                    </div>
-                    <p className="text-sm md:text-base text-slate-200 leading-[1.8] text-justify italic font-serif">
-                      {status.content}
-                    </p>
-                    <div className="mt-8 flex items-center gap-3 py-3 px-5 bg-green-500 bg-opacity-10 rounded-2xl border border-green-500 border-opacity-20 w-fit">
-                      <span className="material-symbols-outlined text-green-400 text-xl font-bold">
-                        verified
-                      </span>
-                      <p className="text-xs text-green-400 font-bold uppercase tracking-widest">
-                        Terkirim & Terarsip
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="relative group">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 from-opacity-20 to-primary to-opacity-20 rounded-[2rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
-                    <textarea
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder="Masukkan analisis dan kesimpulan Anda di sini (Minimal 100 kata)..."
-                      className="relative w-full bg-[#1e293b] bg-opacity-50 border border-white border-opacity-10 rounded-[2rem] p-6 md:p-8 text-sm md:text-base text-white placeholder:text-slate-500 focus:bg-[#1e293b] focus:border-yellow-400 focus:border-opacity-50 outline-none min-h-[300px] resize-none transition-all leading-relaxed text-justify"
-                    ></textarea>
-
-                    <div className="absolute bottom-6 right-6 flex items-center gap-3">
-                      <p
-                        className={`text-xs font-black tracking-tighter transition-colors ${isWordCountEnough ? "text-green-400" : "text-slate-500"}`}
-                      >
-                        {wordCount.toLocaleString()}{" "}
-                        <span className="opacity-50">{" / "} 100 KATA</span>
-                      </p>
-                      <div className="w-10 h-10 rounded-full bg-black bg-opacity-40 flex items-center justify-center border border-white border-opacity-5">
-                        {isWordCountEnough ? (
-                          <span className="material-symbols-outlined text-green-400 text-lg">
-                            check_circle
-                          </span>
-                        ) : (
-                          <div className="w-1.5 h-1.5 rounded-full bg-slate-600 animate-pulse"></div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col md:flex-row gap-4 items-center justify-between pt-2">
-                    <p className="text-[11px] text-slate-500 font-medium italic order-2 md:order-1">
-                      * Kesimpulan yang dikirim tidak dapat diubah kembali.
-                      Mohon teliti.
-                    </p>
-                    <button
-                      onClick={() => handleAction(content)}
-                      disabled={loading || !isWordCountEnough}
-                      className="w-full md:w-auto min-w-[240px] bg-yellow-400 text-slate-900 font-black py-4 px-8 rounded-2xl hover:bg-yellow-300 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 shadow-xl shadow-yellow-400 shadow-opacity-10 flex items-center justify-center gap-3 order-1 md:order-2"
-                    >
-                      {loading ? "MEMPROSES..." : "KIRIM KESIMPULAN VIDEO"}
-                      {!loading && isWordCountEnough && (
-                        <span className="material-symbols-outlined font-bold">
-                          send
-                        </span>
-                      )}
-                    </button>
-                  </div>
-
-                  {!isWordCountEnough && content.trim().length > 0 && (
-                    <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
-                      <span className="material-symbols-outlined text-red-400">
-                        priority_high
-                      </span>
-                      <p className="text-xs text-red-300 font-bold uppercase tracking-wider">
-                        Kurang {100 - wordCount} kata lagi untuk membuka akses
-                        tombol kirim.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {status && tutorFeedback && (
-            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                stars
-              </span>
-              <div>
-                <p className="font-bold text-yellow-700 mb-1 text-lg">
-                  Nilai Kesimpulan Anda
-                </p>
-                <p className="text-sm text-yellow-800 mb-3 italic">
-                  "
-                  {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                    "Tutor telah memberikan penilaian."}
-                  "
-                </p>
-                <div className="flex gap-1 text-yellow-500">
-                  {Array(parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined fill-1 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                  {Array(5 - parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined text-slate-300 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionName === "Informasi Modul" && id === "3") {
-      return (
-        <div className="space-y-10 md:space-y-16 pb-10">
-          {/* Hero Section */}
-          <div className="relative bg-gradient-to-br from-[#1e293b] to-[#334155] rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-primary bg-opacity-20 rounded-full -mr-40 -mt-40 blur-[120px]"></div>
-            <div className="relative z-10">
-              <span className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
-                <span className="material-symbols-outlined text-sm md:text-base">book</span> Informasi Mata Kuliah
-              </span>
-              <h1 className="text-3xl md:text-6xl font-headline font-black text-white mb-4 leading-tight">
-                Penanganan Anak <br className="hidden md:block" /> Berkebutuhan Khusus
-              </h1>
-              <div className="flex flex-wrap gap-3 md:gap-4 mt-8">
-                <div className="bg-white bg-opacity-10 backdrop-blur-md px-4 py-2 rounded-xl border border-white border-opacity-10 text-white text-xs md:text-sm font-bold flex items-center gap-2">
-                    <span className="material-symbols-outlined text-yellow-400">code</span> PAUD4208
-                </div>
-                <div className="bg-white bg-opacity-10 backdrop-blur-md px-4 py-2 rounded-xl border border-white border-opacity-10 text-white text-xs md:text-sm font-bold flex items-center gap-2">
-                    <span className="material-symbols-outlined text-emerald-400">history_edu</span> 4 SKS
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Pengantar Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-            <div className="space-y-6 md:space-y-8">
-              <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all border-l-[12px] border-l-primary">
-                <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary">diversity_1</span>
-                  Aspek Perkembangan
-                </h3>
-                <p className="text-slate-600 font-medium leading-[1.8] text-sm md:text-base text-justify">
-                  Setiap aspek perkembangan manusia saling berkaitan antara satu dengan lainnya. Apabila satu aspek perkembangan mengalami masalah atau gangguan maka ada kemungkinan aspek perkembangan lainnya pun akan terpengaruh dan bisa membuat perkembangan secara umum menjadi tidak optimal. 
-                </p>
-                <div className="mt-6 bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
-                  <p className="text-xs md:text-sm text-slate-500 italic font-medium leading-relaxed">
-                    "Di lembaga PAUD dapat ditemui anak yang tampak ceria, namun terkadang kita melihat anak yang memiliki keseimbangan buruk atau koordinasi motorik yang tidak sempurna."
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-br from-indigo-500 to-[#1a2169] p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] text-white shadow-xl shadow-indigo-500 shadow-opacity-10">
-                <h3 className="text-xl md:text-2xl font-black mb-6 flex items-center gap-3 text-yellow-400">
-                  <span className="material-symbols-outlined">child_care</span>
-                  Masa Kritis (3-6 Tahun)
-                </h3>
-                <p className="text-blue-50 text-opacity-90 font-medium leading-[1.8] text-sm md:text-base text-justify">
-                  Anak usia prasekolah berada pada masa kritis karena mulai membangun rasa percaya terhadap dunia di sekitarnya. Mereka belajar untuk mandiri, membangun kontrol diri, serta belajar mengambil inisiatif dalam kegiatan sosial.
-                </p>
-                <p className="mt-6 text-yellow-200 text-xs md:text-sm font-bold flex items-center gap-2">
-                   <span className="material-symbols-outlined text-sm">priority_high</span> Pendidik PAUD wajib mengidentifikasi gangguan sedini mungkin.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm flex flex-col">
-              <div className="flex items-center gap-4 mb-8 md:mb-10">
-                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-primary bg-opacity-10 text-primary flex items-center justify-center">
-                    <span className="material-symbols-outlined text-3xl md:text-4xl text-primary font-black">inventory_2</span>
-                 </div>
-                 <div>
-                    <h3 className="text-xl md:text-2xl font-black text-slate-800">Struktur BMP</h3>
-                    <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Buku Materi Pokok PAUD4208</p>
-                 </div>
-              </div>
-              
-              <div className="space-y-4 md:space-y-6 flex-1">
-                <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium">
-                  Informasi ini dirancang agar mahasiswa dapat mengidentifikasi dan mengambil tindakan yang tepat dalam penanganan anak berkebutuhan khusus secara mandiri maupun kolaboratif.
-                </p>
-
-                <div className="bg-slate-50 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 border border-slate-100 mt-auto">
-                    <h4 className="font-black text-slate-800 text-xs md:text-sm mb-4 uppercase tracking-tighter flex items-center gap-2 border-b border-slate-200 pb-3">
-                        <span className="material-symbols-outlined text-sm">list_alt</span> Ringkasan 12 Modul:
-                    </h4>
-                    <div className="grid grid-cols-1 gap-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                        {[
-                            "M1: Anak dengan Perkembangan Nonnormatif",
-                            "M2: Anak dengan Gangguan Fisik",
-                            "M3: Anak dengan Gangguan Panca Indra",
-                            "M4: Anak dengan Gangguan Autism",
-                            "M5: Anak dengan Gangguan Perilaku",
-                            "M6: Anak dengan Gangguan Belajar",
-                            "M7: Anak dengan Gangguan Bahasa",
-                            "M8: Anak dengan Gangguan Emosi",
-                            "M9: Masalah Rutinitas Harian",
-                            "M10: Gangguan Attachment",
-                            "M11: Maltreatment pada Anak",
-                            "M12: Kerjasama Penanganan"
-                        ].map((modul, i) => (
-                            <div key={i} className="flex gap-3 items-center group cursor-default">
-                                <span className="w-6 h-6 rounded-lg bg-white border border-slate-200 text-primary text-[10px] font-black flex flex-shrink-0 items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{i+1}</span>
-                                <span className="text-[11px] md:text-xs font-bold text-slate-500 group-hover:text-slate-800 transition-colors uppercase">{modul}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Full List Grid (Visual Accent) */}
-          <section className="space-y-6 md:space-y-10">
-             <div className="text-center space-y-2">
-                <h2 className="text-2xl md:text-4xl font-headline font-black text-slate-800 uppercase tracking-tighter">Detail Kurikulum Modul</h2>
-                <p className="text-xs md:text-sm text-slate-400 font-medium">Kompetensi yang akan dipelajari di mata kuliah PAUD4208</p>
-             </div>
-             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                {[
-                  "Perkembangan Nonnormatif", "Gangguan Fisik", "Gangguan Panca Indra", "Gangguan Autism",
-                  "Gangguan Perilaku", "Gangguan Belajar", "Gangguan Bahasa", "Gangguan Emosi",
-                  "Rutinitas Harian", "Gangguan Attachment", "Maltreatment", "Kerjasama Penanganan"
-                ].map((name, i) => (
-                  <div key={i} className="bg-white p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:border-primary transition-all group flex flex-col items-center text-center">
-                     <span className="text-primary font-black text-xl md:text-2xl mb-2 opacity-20 group-hover:opacity-100 transition-opacity">{String(i+1).padStart(2, '0')}</span>
-                     <p className="text-[9px] md:text-[10px] font-black uppercase text-slate-400 mb-1 group-hover:text-primary">Modul {i+1}</p>
-                     <p className="text-[10px] md:text-xs font-bold text-slate-700 leading-tight">{name}</p>
-                  </div>
-                ))}
-             </div>
-          </section>
-
-          {/* Verification Section */}
-          <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
-            {!status ? (
-              <div className="w-full max-w-xl">
-                <div className="text-center mb-6 md:mb-8">
-                  <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-yellow-200 text-[9px] md:text-[10px] font-black uppercase tracking-widest mb-3 md:mb-4">
-                    <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
-                    Konfirmasi Pemahaman
-                  </div>
-                  <h3 className="text-lg md:text-xl font-black text-slate-800 mb-1 md:mb-2 text-center uppercase">
-                    Evaluasi Struktur Modul
-                  </h3>
-                </div>
-
-                <div className="bg-white border-2 border-primary border-opacity-10 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 shadow-xl shadow-primary shadow-opacity-5">
-                  <label className="block text-[11px] md:text-sm font-black text-primary uppercase tracking-tight mb-3 md:mb-4 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">question_answer</span>
-                    Pertanyaan:
-                  </label>
-                  <p className="text-base md:text-lg font-bold text-slate-800 mb-6 md:mb-8 leading-snug">
-                    Modul mana yang menurutmu menantang?
-                  </p>
-
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Contoh: Modul 4 tentang Autism, karena..."
-                    className="w-full min-h-[120px] md:min-h-[150px] bg-slate-50 border border-slate-100 rounded-xl md:rounded-2xl p-4 md:p-6 text-[11px] md:text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-4 md:mb-8"
-                  ></textarea>
-
-                  <button
-                    onClick={() => handleAction(content)}
-                    disabled={loading || !content.trim()}
-                    className="w-full bg-primary text-white font-black py-4 md:py-5 rounded-xl md:rounded-2xl hover:bg-[#1a2169] transition-all flex items-center justify-center gap-2 md:gap-3 group disabled:opacity-50 shadow-lg shadow-primary shadow-opacity-20 text-xs md:text-base tracking-widest"
-                  >
-                    {loading ? "MENGIRIM..." : "KIRIM ANALISIS MODUL"}
-                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm md:text-base font-bold">send</span>}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="w-full max-w-xl bg-[#1e293b] text-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl shadow-slate-900 shadow-opacity-20 flex flex-col items-center text-center border border-white border-opacity-10">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-primary rounded-full flex items-center justify-center mb-4 md:mb-6 shadow-lg shadow-primary shadow-opacity-40">
-                  <span className="material-symbols-outlined text-2xl md:text-4xl">check</span>
-                </div>
-                <h3 className="text-lg md:text-2xl font-black mb-2 text-yellow-400 uppercase tracking-tighter">Analisis Modul Terdaftar!</h3>
-                <p className="text-slate-400 text-[11px] md:text-sm font-medium mb-6 md:mb-8 leading-relaxed">
-                  Tutor akan meninjau jawaban Anda. Silakan lanjut ke menu Pertanyaan Pemantik atau Materi Pembelajaran.
-                </p>
-                <div className="bg-white bg-opacity-5 px-5 py-4 md:px-8 md:py-6 rounded-2xl w-full border border-white border-opacity-5 text-left">
-                  <p className="text-[9px] md:text-[10px] font-black uppercase text-blue-400 mb-2 tracking-widest">Opini Anda:</p>
-                  <p className="text-[11px] md:text-xs italic font-medium opacity-80 leading-relaxed">"{status.content}"</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    if (sectionName === "Informasi Modul") {
-
-      const modulContent = COURSE_DATA[courseCode]?.[sectionName];
-      return (
-        <div className="space-y-10">
-          {modulContent ? (
-            modulContent
-          ) : (
-            <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-16 text-center">
-              <span className="material-symbols-outlined text-5xl text-slate-300 mb-4">
-                library_books
-              </span>
-              <h3 className="text-xl font-black text-slate-400">
-                Informasi Modul Segera Hadir
-              </h3>
-              <p className="text-sm text-slate-400 mt-2">
-                Konten untuk mata kuliah {courseCode} sedang dalam proses
-                transkripsi oleh tim Tutor.
-              </p>
-            </div>
-          )}
-
-          <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400 bg-opacity-10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-            <h4 className="font-bold text-lg mb-4 text-yellow-400 uppercase tracking-tighter flex items-center gap-2">
-              <span className="material-symbols-outlined">quiz</span> Pertanyaan
-              Verifikasi
-            </h4>
-            <p className="text-sm mb-6 leading-relaxed font-medium">
-              Sebutkan Judul 6 Modul yang ada di Mata Kuliah SPGK4307 {"/"}{" "}
-              Bimbingan Konseling di SD
-            </p>
-
-            {status ? (
-              <div className="space-y-4">
-                <div className="bg-white bg-opacity-10 p-4 rounded-xl border border-white border-opacity-20">
-                  <p className="text-[10px] text-white text-opacity-50 uppercase font-bold mb-2">
-                    Jawaban Anda:
-                  </p>
-                  <p className="text-sm italic">"{status.content}"</p>
-                  <div className="mt-4 flex items-center gap-2 text-green-400 text-xs font-bold">
-                    <span className="material-symbols-outlined text-sm">
-                      verified
-                    </span>{" "}
-                    Terkirim ke Tutor
-                  </div>
-                </div>
-                {/* Tutor feedback removed from inside the forms box */}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Ketik jawaban Anda di sini..."
-                  className="w-full bg-white bg-opacity-5 border border-white border-opacity-20 rounded-xl p-4 text-sm focus:bg-white bg-opacity-10 focus:border-yellow-400 outline-none min-h-[120px]"
-                ></textarea>
-                <button
-                  onClick={() => handleAction(content)}
-                  disabled={loading || !content.trim()}
-                  className="w-full bg-yellow-400 text-slate-900 font-bold py-3 rounded-xl hover:bg-yellow-300 transition-all disabled:opacity-50"
-                >
-                  {loading ? "Mengirim..." : "Kirim Jawaban"}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {status && tutorFeedback && (
-            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm mt-8">
-              <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                stars
-              </span>
-              <div>
-                <p className="font-bold text-yellow-700 mb-1 text-lg">
-                  Nilai dari Tutor
-                </p>
-                <p className="text-sm text-yellow-800 mb-3 italic">
-                  "
-                  {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                    "Tutor telah memberikan penilaian."}
-                  "
-                </p>
-                <div className="flex gap-1 text-yellow-500">
-                  {Array(parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined fill-1 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                  {Array(5 - parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined text-slate-300 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (sectionName === "Pertanyaan Pemantik" && id === "3") {
-      const cases = [
-        {
-          id: 1,
-          title: "Kasus 1",
-          icon: "nightlight",
-          color: "indigo",
-          content: "Seorang ibu bercerita dalam sebuah arisan bahwa anaknya sekarang ini jika tidur tidak mau sendiri, padahal sebelumnya dia hanya ditemani sebentar sebelum tertidur. Tapi sekarang harus ditemani terus menerus, kalau ditinggal akan berteriak-teriak dan menangis seperti ketakutan. “Aku sampe susah nafas karena dipeluk kencang betul” kata sang ibu.",
-          question: "Apa pertanyaan pertama yang akan anda ajukan?"
-        },
-        {
-          id: 2,
-          title: "Kasus 2",
-          icon: "family_restroom",
-          color: "rose",
-          content: "“Wah kesel bener aku sama anakku” kata seorang bapak mengenai anak laki-lakinya. Masa tadi malam waktu kami makan bersama, tiba-tiba dia bilang mau jadi perempuan saja, karena jadi anak laki-laki itu “enggak” enak karena kalo main sering kasar. Memang selama ini saya tahu dia dekat sekali dengan ibunya, bahkan secara berkelakar saya selalu bilang dia sebagai “anak mama”. Tapi seumur hidup saya tidak pernah terpikirkan dan tidak akan pernah mengizinkan kalau anak laki-laki saya ingin jadi perempuan.",
-          question: "Apa pertanyaan pertama yang akan anda ajukan?"
-        }
-      ];
-
-      const allAnswered = pemantikAnswers[0]?.trim().length > 0 && pemantikAnswers[1]?.trim().length > 0;
-      const combinedContent = cases
-        .map((c, i) => `[${c.title}]\nKonteks: ${c.content}\nJawaban: ${pemantikAnswers[i]}`)
-        .join("\n\n---\n\n");
-
-      return (
-        <div className="space-y-6 md:space-y-12 pb-10">
-          {/* Header Section */}
-          <div className="bg-gradient-to-br from-[#1e1e2e] to-[#2d2d4a] p-6 md:p-14 rounded-[2rem] md:rounded-[4rem] text-white shadow-2xl relative overflow-hidden border border-white border-opacity-5">
-            <div className="absolute top-0 right-0 w-64 h-64 md:w-80 md:h-80 bg-indigo-500 bg-opacity-20 rounded-full -mr-32 -mt-32 md:-mr-40 md:-mt-40 blur-[80px] md:blur-[100px]"></div>
-            <div className="relative z-10">
-              <span className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[9px] md:text-xs font-black uppercase tracking-widest mb-4 md:mb-6">
-                <span className="material-symbols-outlined text-xs md:text-base">clinical_notes</span> Studi Kasus Psikopatologi
-              </span>
-              <h1 className="text-2xl md:text-5xl font-headline font-black mb-3 md:mb-4 leading-tight uppercase tracking-tighter">
-                Pertanyaan <br /> Pemantik
-              </h1>
-              <p className="text-slate-400 text-xs md:text-base font-medium max-w-xl leading-relaxed italic opacity-80 md:opacity-100">
-                "Memahami dinamika emosi dan perilaku anak melalui sudut pandang profesional."
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:gap-10">
-            {cases.map((item, i) => (
-              <div key={i} className="bg-white rounded-[1.5rem] md:rounded-[3.5rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all group border-l-[8px] md:border-l-[16px]" style={{ borderLeftColor: item.id === 1 ? '#6366f1' : '#f43f5e' }}>
-                <div className="p-5 md:p-12">
-                  <div className="flex items-start justify-between mb-6 md:mb-10">
-                    <div className="flex items-center gap-4 md:gap-5">
-                      <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl flex items-center justify-center text-white shadow-lg`} style={{ backgroundColor: item.id === 1 ? '#6366f1' : '#f43f5e' }}>
-                         <span className="material-symbols-outlined text-2xl md:text-3xl font-black">{item.icon}</span>
-                      </div>
-                      <div>
-                        <h3 className="text-lg md:text-2xl font-black text-slate-800 uppercase tracking-tight">{item.title}</h3>
-                        <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5 md:mt-1">Skenario Analisis</p>
-                      </div>
-                    </div>
-                    <div className="hidden md:flex flex-col items-end">
-                       <span className="text-4xl font-black text-slate-100 group-hover:text-slate-200 transition-colors">0{item.id}</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 p-5 md:p-10 rounded-[1.2rem] md:rounded-[2.5rem] border border-slate-100 mb-6 md:mb-10 relative">
-                    <span className="absolute -top-3 left-4 md:-top-4 md:left-6 text-3xl md:text-5xl text-slate-200 font-serif leading-none italic opacity-50">“</span>
-                    <p className="text-xs md:text-lg text-slate-600 leading-relaxed md:leading-[1.8] font-medium text-justify">
-                      {item.content}
-                    </p>
-                    <span className="absolute -bottom-6 right-4 md:-bottom-10 md:right-6 text-3xl md:text-5xl text-slate-200 font-serif leading-none italic opacity-50 transform rotate-180">“</span>
-                  </div>
-
-                  <div className="space-y-4 md:space-y-6">
-                    <div className="flex items-center gap-3">
-                       <div className="w-1.5 h-6 md:w-2 md:h-8 rounded-full bg-primary bg-opacity-20"></div>
-                       <h4 className="font-black text-slate-800 text-[11px] md:text-base uppercase tracking-widest">{item.question}</h4>
-                    </div>
-
-                    {status ? (
-                      <div className="bg-white border-2 border-slate-50 p-5 md:p-8 rounded-[1.2rem] md:rounded-[2rem] shadow-inner relative">
-                         <p className="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 md:mb-3">Analisis Anda:</p>
-                         <p className="text-xs md:text-base text-slate-700 italic font-serif leading-relaxed">
-                           "{status.content.split("\n\n---\n\n")[i]?.split("Jawaban: ")[1] || "Jawaban belum tersedia."}"
-                         </p>
-                         <div className="absolute top-4 right-4 md:top-6 md:right-6">
-                            <span className="material-symbols-outlined text-green-500 text-lg md:text-2xl">verified</span>
-                         </div>
-                      </div>
-                    ) : (
-                      <textarea
-                        value={pemantikAnswers[i] || ""}
-                        onChange={(e) => {
-                          const updated = [...pemantikAnswers];
-                          updated[i] = e.target.value;
-                          setPemantikAnswers(updated);
-                        }}
-                        placeholder="Ketik pertanyaan atau langkah pertama Anda di sini..."
-                        className="w-full bg-slate-50 border border-slate-100 rounded-xl md:rounded-3xl p-5 md:p-8 text-xs md:text-base focus:bg-white focus:border-indigo-400 focus:ring-1 outline-none transition-all min-h-[100px] md:min-h-[150px] resize-none shadow-sm"
-                      ></textarea>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {!status && (
-            <div className="pt-6 md:pt-10 flex flex-col items-center">
-               <button
-                  onClick={() => handleAction(combinedContent)}
-                  disabled={loading || !allAnswered}
-                  className="w-full max-w-xl bg-slate-900 text-white font-black py-4 md:py-7 rounded-[1.2rem] md:rounded-[2.5rem] hover:bg-black md:hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 shadow-2xl shadow-indigo-500 shadow-opacity-20 flex items-center justify-center gap-3 md:gap-4 text-xs md:text-xl tracking-widest uppercase group"
-               >
-                  {loading ? "MENGIRIM ANALISIS..." : "KIRIM SEMUA ANALISIS"}
-                  {!loading && <span className="material-symbols-outlined font-black group-hover:translate-x-1 transition-transform text-sm md:text-base">send</span>}
-               </button>
-               {!allAnswered && (
-                 <p className="text-[10px] md:text-xs font-bold text-rose-500 mt-4 animate-pulse">Mohon analisis kedua kasus sebelum mengirim jawaban.</p>
-               )}
-            </div>
-          )}
-
-          {status && tutorFeedback && (
-            <div className="bg-yellow-50 border border-yellow-200 p-6 md:p-12 rounded-[1.5rem] md:rounded-[4rem] flex flex-col md:flex-row items-center gap-6 md:gap-8 shadow-sm animate-in fade-in slide-in-from-bottom-4">
-              <div className="w-16 h-16 md:w-24 md:h-24 bg-yellow-400 rounded-[1.2rem] md:rounded-3xl flex items-center justify-center shadow-lg shadow-yellow-400 shadow-opacity-40">
-                <span className="material-symbols-outlined text-white text-3xl md:text-5xl">stars</span>
-              </div>
-              <div className="text-center md:text-left">
-                <p className="font-black text-yellow-700 mb-1 text-lg md:text-3xl uppercase tracking-tighter leading-tight">Feedback Analisis Kasus</p>
-                <p className="text-xs md:text-lg text-yellow-800 mb-4 md:mb-6 italic font-medium">"{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || "Tutor telah memberikan penilaian."}"</p>
-                <div className="flex justify-center md:justify-start gap-1 md:gap-2 text-yellow-500">
-                  {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
-                    <span key={i} className="material-symbols-outlined text-2xl md:text-4xl fill-1">star</span>
-                  ))}
-                  {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
-                    <span key={i} className="material-symbols-outlined text-2xl md:text-4xl text-slate-200">star</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    if (
-      sectionName === "Pertanyaan Pemantik" &&
-      (cls?.classId === "1" || cls?.classId === "2" || ["1", "2"].includes(id))
-    ) {
-      const questions = getPemantikForStudent(user.nim || "0");
-      const allAnswered = pemantikAnswers.every((a) => a.trim().length > 0);
-      const combinedContent = questions
-        .map(
-          (q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${pemantikAnswers[i]}`,
-        )
-        .join("\n\n");
-
-      return (
-        <div className="space-y-6">
-          <div className="bg-primary bg-opacity-5 p-5 rounded-2xl border border-primary border-opacity-10">
-            <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-2">
-              <span className="material-symbols-outlined text-sm">
-                tips_and_updates
-              </span>{" "}
-              Pertanyaan Pemantik
-            </p>
-            <p className="text-sm text-slate-600 font-medium">
-              Jawablah 3 pertanyaan di bawah ini sesuai dengan pemahaman Anda.
-              Pertanyaan bersifat pribadi dan berbeda untuk setiap mahasiswa.
-            </p>
-          </div>
-
+        )}
+        <div className="bg-[#1e293b] text-white p-8 md:p-12 rounded-[3rem] shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-20 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+          <h4 className="font-headline font-black text-xl mb-6 text-yellow-400 uppercase tracking-tight flex items-center gap-3">
+            <span className="material-symbols-outlined">history_edu</span>
+            Laporan Belajar Mandiri
+          </h4>
           {status ? (
-            <div className="space-y-4">
-              <div className="bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center gap-3">
-                <span className="material-symbols-outlined text-green-500 text-3xl">
-                  check_circle
-                </span>
-                <div>
-                  <p className="font-bold text-green-700">
-                    Jawaban Sudah Terkirim ke Tutor
-                  </p>
-                  <p className="text-xs text-green-600">
-                    Jawaban Anda telah disimpan dan tidak bisa diubah kecuali
-                    tutor membuka kembali.
-                  </p>
-                </div>
+            <div className="bg-white bg-opacity-5 border border-white border-opacity-10 p-6 rounded-2xl">
+              <p className="text-[10px] text-yellow-400 font-black uppercase tracking-widest mb-3 opacity-60">Catatan Anda:</p>
+              <p className="text-sm italic font-medium leading-relaxed">"{status.content}"</p>
+              <div className="mt-6 flex items-center gap-2 text-green-400">
+                <span className="material-symbols-outlined text-sm">verified</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Terkirim ke Tutor</span>
               </div>
-
-              {/* Tutor feedback shifted to bottom */}
-
-              {questions.map((q, i) => (
-                <div
-                  key={i}
-                  className="bg-white border rounded-2xl p-5 shadow-sm"
-                >
-                  <p className="text-xs font-bold text-primary uppercase mb-2">
-                    Pertanyaan {i + 1}
-                  </p>
-                  <p className="text-sm font-medium text-slate-700 mb-3">{q}</p>
-                  <div className="bg-slate-50 p-3 rounded-xl border-l-4 border-primary border-opacity-30">
-                    <p className="text-sm text-slate-600 italic">
-                      "
-                      {pemantikAnswers[i] ||
-                        status.content
-                          .split("\n\n")
-                          [i]?.split("Jawaban: ")[1] ||
-                        "-"}
-                      "
-                    </p>
-                  </div>
-                </div>
-              ))}
             </div>
           ) : (
-            <div className="space-y-5">
-              {questions.map((q, i) => (
-                <div
-                  key={i}
-                  className="bg-white border rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start gap-3 mb-4">
-                    <span className="bg-primary text-white text-xs font-bold px-2 py-1 rounded-lg shrink-0">
-                      {i + 1}
-                    </span>
-                    <p className="text-sm font-semibold text-slate-800 leading-relaxed">
-                      {q}
-                    </p>
-                  </div>
-                  <textarea
-                    value={pemantikAnswers[i]}
-                    onChange={(e) => {
-                      const updated = [...pemantikAnswers];
-                      updated[i] = e.target.value;
-                      setPemantikAnswers(updated);
-                    }}
-                    placeholder="Tulis jawaban Anda di sini..."
-                    className="w-full bg-slate-50 border rounded-xl p-4 text-sm focus:bg-white focus:border-primary outline-none transition-all min-h-[100px] resize-none"
-                  />
-                </div>
-              ))}
+            <div className="space-y-6">
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Ketik catatan belajar Anda..."
+                className="w-full bg-white bg-opacity-5 border border-white border-opacity-10 rounded-2xl p-6 text-sm focus:bg-white focus:bg-opacity-10 focus:border-yellow-400 outline-none min-h-[150px] transition-all resize-none"
+              ></textarea>
               <button
-                onClick={() => handleAction(combinedContent)}
-                disabled={loading || !allAnswered}
-                className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary shadow-opacity-20 hover:bg-[#1a2169] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                onClick={() => handleAction(content)}
+                disabled={loading || !content.trim()}
+                className="w-full bg-yellow-400 text-slate-900 font-black py-4 rounded-2xl hover:bg-yellow-300 transition-all flex items-center justify-center gap-2 uppercase"
               >
-                {loading
-                  ? "Mengirim..."
-                  : !allAnswered
-                    ? "Lengkapi Semua Jawaban Terlebih Dahulu"
-                    : "Kirim Semua Jawaban"}
+                {loading ? "MENGIRIM..." : "SIMPAN CATATAN BELAJAR"}
               </button>
             </div>
           )}
-
-          {status && tutorFeedback && (
-            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm mt-8">
-              <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                stars
-              </span>
-              <div>
-                <p className="font-bold text-yellow-700 mb-1 text-lg">
-                  Nilai dari Tutor
-                </p>
-                <p className="text-sm text-yellow-800 mb-3 italic">
-                  "
-                  {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                    "Tutor telah memberikan penilaian."}
-                  "
-                </p>
-                <div className="flex gap-1 text-yellow-500">
-                  {Array(parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined fill-1 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                  {Array(5 - parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined text-slate-300 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
-      );
-    }
-
-    if (sectionName === "Materi Pembelajaran" && (id === "1" || id === "2")) {
-      return (
-        <div className="space-y-12 pb-10">
-          {/* Hero Section */}
-          <div className="relative bg-gradient-to-br from-[#0c3352] to-[#1a4a6e] rounded-[3rem] p-10 overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-400 bg-opacity-10 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
-            <div className="relative z-10 text-center">
-              <span className="inline-block bg-yellow-400 text-primary text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase tracking-widest shadow-lg shadow-yellow-400 shadow-opacity-20">
-                Modul Utama
-              </span>
-              <h1 className="text-3xl md:text-5xl font-headline font-black text-white mb-4 leading-tight">
-                Konsep Dasar Bimbingan {"&"} Konseling (BK)
-              </h1>
-              <p className="text-blue-100 text-opacity-70 max-w-2xl mx-auto text-sm md:text-base font-medium">
-                Ringkasan materi pembelajaran yang disusun secara sistematis
-                untuk pemahaman mendalam tentang layanan BK di sekolah dasar.
-              </p>
-            </div>
-          </div>
-
-          {/* Section 1: Pengertian, Fungsi, & Tujuan */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
-              <span className="w-10 h-10 rounded-2xl bg-primary bg-opacity-10 flex items-center justify-center text-primary">
-                01
-              </span>
-              Pengertian, Fungsi, {"&"} Tujuan
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Guidance */}
-              <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl transition-all border-l-8 border-l-blue-500">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                    <span className="material-symbols-outlined text-3xl">
-                      explore
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl text-slate-800">
-                      Guidance
-                    </h3>
-                    <p className="text-xs font-bold text-blue-500 uppercase tracking-tighter">
-                      Bimbingan (To Guide)
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-3 mb-6">
-                  {[
-                    "To Direct (Mengarahkan)",
-                    "To Pilot (Memandu)",
-                    "To Manage (Mengelola)",
-                    "To Steer (Menyetir)",
-                  ].map((t, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3 bg-blue-50 bg-opacity-50 p-2 rounded-xl border border-blue-100 border-opacity-50"
-                    >
-                      <span className="material-symbols-outlined text-blue-500 text-sm">
-                        check_circle
-                      </span>
-                      <span className="text-sm font-semibold text-slate-600">
-                        {t}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-slate-500 leading-relaxed italic border-t pt-4">
-                  Terminologi: Proses bantuan berkelanjutan untuk mencapai
-                  pemahaman dan realisasi diri sesuai potensi.
-                </p>
-              </div>
-
-              {/* Counseling */}
-              <div className="bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm hover:shadow-xl transition-all border-l-8 border-l-emerald-500">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                    <span className="material-symbols-outlined text-3xl">
-                      psychology
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl text-slate-800">
-                      Counseling
-                    </h3>
-                    <p className="text-xs font-bold text-emerald-500 uppercase tracking-tighter">
-                      Konseling (Face-to-Face)
-                    </p>
-                  </div>
-                </div>
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                  Hubungan profesional (
-                  <span className="font-bold text-emerald-600">
-                    professional relationship
-                  </span>
-                  ) atau tatap muka yang bertujuan meningkatkan kemampuan{" "}
-                  <span className="italic font-bold">self-adjustment</span>{" "}
-                  (penyesuaian diri) secara efektif terhadap diri dan
-                  lingkungan.
-                </p>
-                <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
-                  <p className="text-xs font-bold text-emerald-800 uppercase mb-1 flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs">
-                      info
-                    </span>{" "}
-                    Fokus Utama
-                  </p>
-                  <p className="text-xs text-emerald-700 font-medium">
-                    Pengembangan kemampuan adaptasi siswa dalam menghadapi
-                    tantangan personal dan akademis.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Fungsi BK Grid */}
-            <div className="bg-slate-50 rounded-[2.5rem] p-8 md:p-10">
-              <h4 className="font-bold text-slate-800 mb-8 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">
-                  grid_view
-                </span>{" "}
-                Fungsi Bimbingan dan Konseling
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                {[
-                  {
-                    icon: "visibility",
-                    title: "Pemahaman",
-                    desc: "Memahami karakteristik siswa",
-                  },
-                  {
-                    icon: "shield",
-                    title: "Preventif",
-                    desc: "Pencegahan masalah",
-                  },
-                  {
-                    icon: "healing",
-                    title: "Perbaikan",
-                    desc: "Pemecahan masalah (Kuratif)",
-                  },
-                  {
-                    icon: "auto_awesome",
-                    title: "Pemeliharaan",
-                    desc: "Mengembangkan potensi optimal",
-                  },
-                  {
-                    icon: "volunteer_activism",
-                    title: "Fasilitasi",
-                    desc: "Memberikan kemudahan tumbuh",
-                  },
-                ].map((f, i) => (
-                  <div
-                    key={i}
-                    className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm text-center flex flex-col items-center group hover:border-primary transition-all"
-                  >
-                    <div className="w-12 h-12 rounded-2xl bg-primary bg-opacity-5 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <span className="material-symbols-outlined">
-                        {f.icon}
-                      </span>
-                    </div>
-                    <p className="font-bold text-slate-800 text-xs mb-1">
-                      {f.title}
-                    </p>
-                    <p className="text-[10px] text-slate-400 leading-tight font-medium">
-                      {f.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Aspek Tujuan */}
-            <div className="space-y-4">
-              <h4 className="font-bold text-slate-800 flex items-center gap-2 px-2">
-                <span className="material-symbols-outlined text-primary">
-                  target
-                </span>{" "}
-                3 Aspek Tujuan (Tugas Perkembangan)
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                  {
-                    title: "Pribadi-Sosial",
-                    color: "bg-indigo-600",
-                    desc: "Toleransi, jujur, interaksi sosial, dan resolusi konflik.",
-                  },
-                  {
-                    title: "Akademik (Belajar)",
-                    color: "bg-amber-500",
-                    desc: "Sikap belajar positif, motivasi tinggi, dan keterampilan efektif.",
-                  },
-                  {
-                    title: "Karier",
-                    color: "bg-rose-500",
-                    desc: "Pemahaman potensi diri dan perencanaan masa depan logis.",
-                  },
-                ].map((a, i) => (
-                  <div
-                    key={i}
-                    className="relative overflow-hidden bg-white p-6 rounded-3xl border border-slate-100 shadow-sm"
-                  >
-                    <div
-                      className={`absolute top-0 right-0 w-20 h-20 ${a.color} opacity-5 rounded-full -mr-10 -mt-10`}
-                    ></div>
-                    <div
-                      className={`w-8 h-1 ${a.color} rounded-full mb-4`}
-                    ></div>
-                    <h5 className="font-black text-slate-800 mb-2 uppercase text-xs tracking-wider">
-                      {a.title}
-                    </h5>
-                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                      {a.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Section 2: Prinsip-Prinsip */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
-              <span className="w-10 h-10 rounded-2xl bg-primary bg-opacity-10 flex items-center justify-center text-primary">
-                02
-              </span>
-              Prinsip-Prinsip Dasar BK
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                {
-                  t: "Bimbingan untuk Semua",
-                  d: "Melayani semua tanpa memandang latar belakang sosial.",
-                },
-                {
-                  t: "Individualisasi",
-                  d: "Menitikberatkan pada keunikan setiap individu.",
-                },
-                {
-                  t: "Menekankan Aspek Positif",
-                  d: "Fokus pada kekuatan dan keberhasilan siswa.",
-                },
-                {
-                  t: "Usaha Bersama",
-                  d: 'Tanggung jawab kolektif seluruh elemen sekolah {"&"} orang tua.',
-                },
-                {
-                  t: "Pengambilan Keputusan Mandiri",
-                  d: "Mampu memilih jalan secara bertanggung jawab.",
-                },
-                {
-                  t: "Lintas Aspek Kehidupan",
-                  d: "Mencakup masyarakat, keluarga, dan dunia kerja.",
-                },
-              ].map((p, i) => (
-                <div
-                  key={i}
-                  className="flex gap-4 p-5 bg-white border border-slate-100 rounded-3xl items-start hover:border-yellow-400 transition-all"
-                >
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-yellow-400 bg-opacity-10 text-yellow-600 text-[10px] flex items-center justify-center font-black">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h4 className="font-bold text-slate-800 text-sm mb-1">
-                      {p.t}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
-                      {p.d}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Section 3: Asas-Asas */}
-          <section className="bg-primary p-8 md:p-12 rounded-[3.5rem] text-white shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-white bg-opacity-5 rounded-full -mr-48 -mt-48 blur-3xl"></div>
-            <div className="relative z-10">
-              <h2 className="text-2xl md:text-3xl font-headline font-black mb-10 flex items-center gap-4">
-                <span className="material-symbols-outlined text-yellow-400 text-4xl">
-                  verified_user
-                </span>
-                Asas-Asas (Kode Etik BK)
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  {
-                    t: "Kerahasiaan",
-                    icon: "lock",
-                    d: "Data konseli tidak boleh diketahui pihak lain.",
-                  },
-                  {
-                    t: "Kesukarelaan",
-                    icon: "favorite",
-                    d: "Ikuti layanan tanpa paksaan (kemauan sendiri).",
-                  },
-                  {
-                    t: "Keterbukaan",
-                    icon: "campaign",
-                    d: "Jujur dan terbuka dalam memberi informasi.",
-                  },
-                  {
-                    t: "Kekinian",
-                    icon: "event",
-                    d: "Fokus pada masalah saat ini (here and now).",
-                  },
-                  {
-                    t: "Kemandirian",
-                    icon: "person_celebrate",
-                    d: "Menjadi pribadi mandiri tanpa bergantung.",
-                  },
-                  {
-                    t: "Keahlian",
-                    icon: "workspace_premium",
-                    d: "Dilakukan secara profesional oleh ahli terlatih.",
-                  },
-                  {
-                    t: "Alih Tangan",
-                    icon: "forward_to_inbox",
-                    d: "Merujuk ke ahli lain jika di luar wewenang.",
-                  },
-                  {
-                    t: "Tut Wuri Handayani",
-                    icon: "star",
-                    d: "Mengayomi, teladan, dan memberi dorongan.",
-                  },
-                ].map((a, i) => (
-                  <div
-                    key={i}
-                    className="bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-10 p-6 rounded-3xl hover:bg-white bg-opacity-20 transition-all"
-                  >
-                    <span className="material-symbols-outlined text-yellow-400 mb-3">
-                      {a.icon}
-                    </span>
-                    <h4 className="font-bold text-sm mb-1 uppercase tracking-tighter">
-                      {a.t}
-                    </h4>
-                    <p className="text-[10px] text-white text-opacity-60 font-medium leading-normal">
-                      {a.d}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Section 4: Jenis Layanan */}
-          <section className="space-y-6">
-            <h2 className="text-2xl font-headline font-black text-primary flex items-center gap-3">
-              <span className="w-10 h-10 rounded-2xl bg-primary bg-opacity-10 flex items-center justify-center text-primary">
-                04
-              </span>
-              Jenis-Jenis Layanan Konkret
-            </h2>
-            <div className="bg-white border rounded-[2.5rem] overflow-hidden shadow-sm">
-              <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x">
-                {[
-                  {
-                    t: "Layanan Orientasi",
-                    d: "Pengenalan lingkungan sekolah baru.",
-                  },
-                  {
-                    t: "Layanan Informasi",
-                    d: "Pemberian data pendidikan, jabatan, dan sosial.",
-                  },
-                  {
-                    t: "Layanan Pembelajaran",
-                    d: "Mengembangkan sikap dan kebiasaan belajar benar.",
-                  },
-                  {
-                    t: "Layanan Penempatan",
-                    d: "Memilih jurusan atau ekskul sesuai bakat.",
-                  },
-                  {
-                    t: "Penguasaan Konten",
-                    d: "Membantu penguasaan kompetensi tertentu.",
-                  },
-                  {
-                    t: "Konseling Individual",
-                    d: "Tatap muka mendalam untuk masalah perorangan.",
-                  },
-                  {
-                    t: "Konseling Kelompok",
-                    d: "Dinamika kelompok untuk pemecahan masalah.",
-                  },
-                  {
-                    t: 'Konsultasi {"&"} Mediasi',
-                    d: 'Membantu pihak ketiga (ortu) {"&"} selesaikan konflik.',
-                  },
-                ].map((l, i) => (
-                  <div
-                    key={i}
-                    className="p-6 flex items-center gap-5 group hover:bg-slate-50 transition-all"
-                  >
-                    <span className="text-xl font-black text-slate-100 group-hover:text-primary transition-colors">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <p className="font-bold text-slate-800 text-sm">{l.t}</p>
-                      <p className="text-xs text-slate-400 font-medium">
-                        {l.d}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Verification Button Section */}
-          <div className="mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
-            {!status ? (
-              <div className="w-full max-w-xl">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 bg-yellow-50 text-yellow-700 px-4 py-2 rounded-full border border-yellow-200 text-[10px] font-black uppercase tracking-widest mb-4">
-                    <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
-                    Konfirmasi Pemahaman
-                  </div>
-                  <h3 className="text-xl font-black text-slate-800 mb-2">
-                    Evaluasi Materi
-                  </h3>
-                  <p className="text-sm text-slate-500 font-medium">
-                    Tuliskan jawaban Anda untuk pertanyaan di bawah ini untuk
-                    mengirimkan laporan belajar ke tutor.
-                  </p>
-                </div>
-
-                <div className="bg-white border-2 border-primary border-opacity-10 rounded-[2.5rem] p-8 shadow-xl shadow-primary shadow-opacity-5">
-                  <label className="block text-sm font-black text-primary uppercase tracking-tight mb-4 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm">
-                      question_answer
-                    </span>
-                    Pertanyaan Verifikasi:
-                  </label>
-                  <p className="text-lg font-bold text-slate-800 mb-6 leading-snug">
-                    Apa Pengertian, Fungsi, dan Tujuan Bimbingan dan Konseling?
-                  </p>
-
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Ketik jawaban lengkap Anda di sini..."
-                    className="w-full min-h-[150px] bg-slate-50 border border-slate-100 rounded-2xl p-5 text-sm focus:bg-white focus:border-primary focus:ring-1 outline-none transition-all resize-none mb-6"
-                  ></textarea>
-
-                  <button
-                    onClick={() => handleAction(content)}
-                    disabled={loading || !content.trim()}
-                    className="w-full bg-[#1e293b] text-white font-black py-5 rounded-2xl hover:bg-black transition-all flex items-center justify-center gap-3 group disabled:opacity-50"
-                  >
-                    {loading ? "MENGIRIM JAWABAN..." : "KIRIM JAWABAN KE TUTOR"}
-                    {!loading && (
-                      <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-                        send
-                      </span>
-                    )}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="w-full max-w-xl bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-500 shadow-opacity-20 flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                  <span className="material-symbols-outlined text-4xl">
-                    done_all
-                  </span>
-                </div>
-                <h3 className="text-xl font-black mb-1">Jawaban Terkirim!</h3>
-                <p className="text-white text-opacity-80 text-sm font-medium mb-6">
-                  Laporan belajar Anda telah masuk ke sistem. Silakan tunggu
-                  feedback/nilai dari tutor.
-                </p>
-                <div className="bg-white bg-opacity-10 px-6 py-4 rounded-2xl w-full border border-white border-opacity-10 text-left">
-                  <p className="text-[10px] font-black uppercase text-white text-opacity-40 mb-1">
-                    Jawaban Anda:
-                  </p>
-                  <p className="text-xs italic font-serif opacity-90">
-                    "{status.content}"
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    if (sectionName === "Materi Pembelajaran" && id === "3") {
-      return (
-        <div className="space-y-8 pb-10">
-          {/* Header Silabus Sederhana */}
-          <div className="bg-slate-900 rounded-2xl p-8 text-white">
-            <h1 className="text-2xl font-black mb-2 uppercase tracking-tight">
-              SPDA4401 - PENANGANAN ANAK BK
-            </h1>
-            <p className="text-slate-400 text-sm font-medium italic">
-              Silabus Mata Kuliah Modul 1 sampai Modul 3
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {/* Modul 1 */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
-               <div className="border-b border-slate-100 pb-4 mb-6">
-                  <h2 className="text-indigo-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 1</h2>
-                  <p className="text-xl font-bold text-slate-800">Hakikat Perkembangan Anak yang Bersifat Nonnormatif</p>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div className="space-y-4">
-                     <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-indigo-500">Kegiatan Belajar 1</h4>
-                     <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                        <li>Pengertian Kelainan atau Abnormal</li>
-                        <li>Model Medis (Medical Model)</li>
-                        <li>Penyimpangan dari Rata-rata / Ideal</li>
-                        <li>Ciri-ciri Anak Perkembangan Nonnormatif</li>
-                     </ul>
-                  </div>
-                  <div className="space-y-4">
-                     <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-indigo-500">Kegiatan Belajar 2</h4>
-                     <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                        <li>Faktor Memengaruhi: Biologis, Genetik, Lingkungan, Konteks Sosial</li>
-                        <li>Identifikasi & Penanganan: Wawancara, Kuesioner, Observasi</li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-
-            {/* Modul 2 */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
-               <div className="border-b border-slate-100 pb-4 mb-6">
-                  <h2 className="text-emerald-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 2</h2>
-                  <p className="text-xl font-bold text-slate-800">Anak dengan Gangguan Fisik</p>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div className="space-y-4">
-                     <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-emerald-500">Kegiatan Belajar 1</h4>
-                     <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                        <li>Batasan & Tipe Cerebral Palsy</li>
-                        <li>Karakteristik Cerebral Palsy</li>
-                        <li>Strategi Penanganan</li>
-                     </ul>
-                  </div>
-                  <div className="space-y-4">
-                     <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-emerald-500">Kegiatan Belajar 2</h4>
-                     <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                        <li>Pengertian Anak Rentan Sakit</li>
-                        <li>Penyakit Umum & Penanganan</li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-
-            {/* Modul 3 */}
-            <div className="bg-white rounded-[1.5rem] md:rounded-[4rem] shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all border-t-[12px] border-amber-500">
-               <div className="p-5 md:p-14">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 border-b border-slate-50 pb-8">
-                     <div className="flex items-center gap-5">
-                        <div className="w-16 h-16 md:w-20 md:h-20 bg-amber-50 text-amber-600 rounded-3xl flex items-center justify-center shadow-inner">
-                           <span className="material-symbols-outlined text-4xl font-black">visibility</span>
-                        </div>
-                        <div>
-                           <h2 className="text-[10px] md:text-xs font-black text-amber-500 uppercase tracking-widest mb-1">Modul 03</h2>
-                           <h3 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight leading-tight">Anak Dengan <br /> Gangguan Panca Indra</h3>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-                     {[
-                        { 
-                          title: "Gangguan Pendengaran", 
-                          icon: "hearing",
-                          items: ["Batasan & Penggolongan", "Identifikasi Anak", "Karakteristik Anak", "Strategi Penanganan"]
-                        },
-                        { 
-                          title: "Gangguan Penglihatan", 
-                          icon: "visibility_off",
-                          items: ["Batasan Gangguan", "Identifikasi Anak", "Karakteristik Anak", "Strategi Penanganan"]
-                        }
-                     ].map((kb, idx) => (
-                        <div key={idx} className="relative group">
-                           <div className="absolute inset-0 bg-amber-500 bg-opacity-0 group-hover:bg-opacity-5 rounded-[2rem] transition-all -m-4"></div>
-                           <h4 className="font-black text-amber-900 text-xs md:text-sm uppercase tracking-widest mb-5 flex items-center gap-3">
-                              <span className="material-symbols-outlined text-xl">{kb.icon}</span>
-                              KB {idx + 1}: {kb.title}
-                           </h4>
-                           <div className="grid grid-cols-1 gap-3">
-                              {kb.items.map((item, i) => (
-                                 <div key={i} className="flex items-center gap-3 py-2 border-b border-amber-100">
-                                    <span className="text-[9px] font-black text-amber-400">0{i+1}</span>
-                                    <span className="text-[11px] md:text-xs font-bold text-slate-600">{item}</span>
-                                 </div>
-                              ))}
-                           </div>
-                        </div>
-            {/* Modul 3 */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10">
-               <div className="border-b border-slate-100 pb-4 mb-6">
-                  <h2 className="text-amber-600 font-black text-xs uppercase tracking-widest mb-1">MODUL 3</h2>
-                  <p className="text-xl font-bold text-slate-800">Anak dengan Gangguan Panca Indra</p>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div className="space-y-4">
-                     <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-amber-500">Gangguan Pendengaran</h4>
-                     <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                        <li>Batasan & Penggolongan</li>
-                        <li>Identifikasi & Penanganan</li>
-                     </ul>
-                  </div>
-                  <div className="space-y-4">
-                     <h4 className="font-black text-slate-900 text-sm uppercase underline underline-offset-4 decoration-amber-500">Gangguan Penglihatan</h4>
-                     <ul className="space-y-2 text-sm text-slate-500 font-medium list-disc pl-5">
-                        <li>Batasan Gangguan</li>
-                        <li>Identifikasi & Penanganan</li>
-                     </ul>
-                  </div>
-               </div>
-            </div>
-          </div>
-
-          {/* HIDDEN DETAILED CONTENT (AS REQUESTED) */}
-          {false && (
-            <>
-              {/*
-              [KONTEN DETAIL MODUL 1 DISINI]
-              (Disembunyikan agar kode tetap bersih namun bisa diakses jika dibutuhkan)
-              */}
-            </>
-          )}
-
-          {/* HIDDEN MATERIAL PENGAYAAN AS REQUESTED */}
-
-          <div className="mt-16 pt-10 border-t border-slate-100 flex flex-col items-center">
-            {!status ? (
-              <div className="w-full max-w-xl">
-                <div className="text-center mb-8">
-                  <h3 className="text-xl font-black text-slate-800 mb-2">Evaluasi Materi</h3>
-                  <p className="text-sm text-slate-500 font-medium italic">Kira - kira kamu tertarik degan modul berapa?</p>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 md:p-8">
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Tuliskan modul yang paling menarik bagi Anda..."
-                    className="w-full min-h-[150px] bg-white border border-slate-200 rounded-xl p-4 text-sm focus:border-indigo-500 outline-none transition-all resize-none mb-6 font-medium"
-                  ></textarea>
-
-                  <button
-                    onClick={() => handleAction(content)}
-                    disabled={loading || !content.trim()}
-                    className="w-full bg-slate-900 text-white font-black py-4 rounded-xl hover:bg-black transition-all flex items-center justify-center gap-3 group disabled:opacity-50"
-                  >
-                    KIRIM JAWABAN
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="w-full max-w-xl bg-emerald-600 text-white p-8 rounded-2xl shadow-xl flex flex-col items-center text-center">
-                <h3 className="text-xl font-black mb-1">Jawaban Terkirim!</h3>
-                <p className="text-white text-opacity-80 text-sm font-medium mb-6">
-                  Laporan belajar Anda telah masuk ke sistem.
-                </p>
-                <div className="bg-white bg-opacity-10 px-6 py-4 rounded-xl w-full border border-white border-opacity-10 text-left">
-                  <p className="text-[10px] font-black uppercase text-white text-opacity-40 mb-1">Jawaban Anda:</p>
-                  <p className="text-xs italic opacity-90">"{status.content}"</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-    }
-
-    if (sectionName === "Pembagian Kelompok") {
-      const groupRow = submissions.find(
-        (s) =>
-          s.student_email === "SYSTEM_GROUP" &&
-          s.section_name === "GENERATED_GROUPS",
-      );
-      const groups = groupRow ? JSON.parse(groupRow.content) : null;
-      const myGroup = groups?.find((g) =>
-        g.members.some((m) => m.email === user.email),
-      );
-
-      if (!groups) {
-        return (
-          <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-20 text-center flex flex-col items-center">
-            <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-slate-200 rotate-3 border border-slate-100">
-              <span className="material-symbols-outlined text-5xl text-primary animate-pulse">
-                pending_actions
-              </span>
-            </div>
-            <h3 className="text-2xl font-headline font-black text-slate-800 mb-3 tracking-tight">
-              Kelompok Belum Dibuat Oleh Tutor
-            </h3>
-            <p className="text-sm text-slate-500 max-w-sm font-medium leading-relaxed italic">
-              Mohon bersabar, tutor Anda sedang memproses pembagian tim untuk
-              sesi diskusi ini. Silakan refresh halaman atau tunggu instruksi
-              selanjutnya.
-            </p>
-          </div>
-        );
-      }
-
-      return (
-        <div className="space-y-10">
-          {myGroup ? (
-            <div className="bg-gradient-to-br from-primary to-[#1a2169] rounded-[3.5rem] p-10 md:p-14 text-white shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-white bg-opacity-5 rounded-full -mr-40 -mt-40 blur-3xl"></div>
-              <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 bg-yellow-400 text-primary px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
-                  <span className="material-symbols-outlined text-sm animate-bounce">
-                    stars
-                  </span>{" "}
-                  Informasi Kelompok Anda
-                </div>
-                <h1 className="text-4xl md:text-6xl font-headline font-black mb-4">
-                  Kelompok {myGroup.group_num}
-                </h1>
-                <p className="text-blue-100 text-opacity-60 font-medium max-w-xl text-sm md:text-base leading-relaxed">
-                  Anda telah terdaftar di Kelompok {myGroup.group_num} untuk
-                  Pertemuan {meetingId}. Silakan berdiskusi dan berkolaborasi
-                  dengan rekan tim Anda di bawah ini.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-yellow-50 border border-yellow-200 p-8 rounded-[3rem] text-center">
-              <p className="font-bold text-yellow-800">
-                Nama Anda tidak ditemukan dalam daftar kelompok sesi ini. Mohon
-                hubungi tutor.
-              </p>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {groups.map((g, i) => (
-              <div
-                key={i}
-                className={`bg-white border rounded-[2.5rem] p-8 shadow-sm transition-all ${myGroup?.group_num === g.group_num ? "ring-4 ring-primary ring-offset-4 border-primary scale-[1.02] shadow-2xl relative" : "hover:border-slate-300 group"}`}
-              >
-                {myGroup?.group_num === g.group_num && (
-                  <div className="absolute -top-4 left-1 bg-opacity-2 -translate-x-1 bg-opacity-2 bg-primary text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter">
-                    Tim Anda
-                  </div>
-                )}
-                <div className="flex justify-between items-start mb-6">
-                  <h3
-                    className={`text-xl font-headline font-black flex items-center gap-3 ${myGroup?.group_num === g.group_num ? "text-primary" : "text-slate-400 group-hover:text-slate-600"}`}
-                  >
-                    <span
-                      className={`w-10 h-10 rounded-2xl flex items-center justify-center ${myGroup?.group_num === g.group_num ? "bg-primary text-white shadow-lg shadow-primary shadow-opacity-30" : "bg-slate-100 text-slate-400"}`}
-                    >
-                      {g.group_num}
-                    </span>
-                    Kelompok {g.group_num}
-                  </h3>
-                  <div className="bg-slate-100 px-3 py-1 rounded-full text-[10px] font-black text-slate-400 uppercase tracking-tighter">
-                    {g.members.length} Orang
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  {g.members.map((m, mi) => (
-                    <div
-                      key={mi}
-                      className={`flex items-center gap-4 p-3 rounded-2xl border transition-all ${m.email === user.email ? "bg-primary bg-opacity-5 border-primary border-opacity-20" : "border-slate-50 group-hover:border-slate-100 bg-slate-50 bg-opacity-50"}`}
-                    >
-                      <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs ${m.email === user.email ? "bg-primary text-white" : "bg-white text-slate-400 border border-slate-200"}`}
-                      >
-                        {mi + 1}
-                      </div>
-                      <div className="overflow-hidden flex-1">
-                        <p
-                          className={`font-bold text-xs truncate ${m.email === user.email ? "text-primary" : "text-slate-700"}`}
-                        >
-                          {m.name}
-                        </p>
-                        <p className="text-[9px] text-slate-400 font-medium">
-                          {m.nim}
-                        </p>
-                      </div>
-                      {m.email === user.email && (
-                        <span className="material-symbols-outlined text-primary text-lg ml-auto">
-                          person
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="bg-blue-50 p-10 rounded-3xl text-center text-slate-400 font-medium">
-        Baca instruksi modul untuk bagian ini.
       </div>
     );
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!content.trim()) return;
-    setLoading(true);
-    try {
-      await supabase.from("submissions").insert([
-        {
-          student_email: user.email,
-          class_id: id,
-          meeting_num: meetingId,
-          section_name: sectionName,
-          content,
-        },
-      ]);
-      setSuccess(true);
-      setContent("");
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }
 
   return (
-    <div className="bg-white rounded-3xl p-6 md:p-8 border shadow-sm min-h-[60vh] mt-4 mb-10 mx-4">
-      <Link
-        to={`/class/${id}/meeting/${meetingId}`}
-        className="inline-flex items-center text-slate-400 font-bold mb-8 text-sm hover:text-primary"
-      >
-        <span className="material-symbols-outlined text-sm mr-1">
-          arrow_back
-        </span>{" "}
-        Kembali
-      </Link>
-      <h2 className="font-headline font-bold text-2xl md:text-3xl text-primary mb-6">
-        {sectionName}
-      </h2>
+    <div className="max-w-4xl mx-auto py-8 px-4 pb-24">
+      <div className="flex items-center gap-3 mb-8">
+        <Link
+          to={`/class/${id}/meeting/${meetingId}`}
+          className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all shadow-sm"
+        >
+          <span className="material-symbols-outlined text-[20px]">arrow_back</span>
+        </Link>
+        <div>
+          <h2 className="font-headline font-black text-2xl text-slate-800 leading-tight">{sectionName}</h2>
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
+            Pertemuan {meetingId} • {courseCode}
+          </p>
+        </div>
+      </div>
+
       {!isInput ? (
         renderStaticContent()
       ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
@@ -5546,26 +3864,18 @@ function SectionPage({ user }) {
             onComplete={(content) => handleAction(content)}
           />
           {tutorFeedback && (
-             <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
-               <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                 stars
-               </span>
-               <div>
-                 <p className="font-bold text-yellow-700 mb-1 text-lg">
-                   Nilai dari Tutor
-                 </p>
-                 <p className="text-sm text-yellow-800 mb-1 italic">
-                   "
-                   {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                     tutorFeedback.content}
-                   "
-                 </p>
-               </div>
-             </div>
-           )}
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
         </div>
-      ) : (id === "1" || id === "2") &&
-        sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
+      ) : (id === "1" || id === "2") && sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
         <div className="space-y-4">
           <InteractiveMindMap
             user={user}
@@ -5575,28 +3885,16 @@ function SectionPage({ user }) {
             onComplete={async (totalScore, caseAnswer) => {
               setLoading(true);
               try {
-                // Get group info for collective submission
-                const groupRow = submissions.find(
-                  (s) =>
-                    s.student_email === "SYSTEM_GROUP" &&
-                    s.section_name === "GENERATED_GROUPS",
-                );
-                const groups = groupRow ? JSON.parse(groupRow.content) : null;
-                const myGroup = groups?.find((g) =>
-                  g.members.some((m) => m.email === user.email),
-                );
-
                 const payload = {
-                  student_email: user.email, // Sekarang simpan per individu mahasiswa
+                  student_email: user.email,
                   class_id: id,
                   meeting_num: meetingId,
                   section_name: sectionName,
                   content: `SKOR GAME: ${totalScore} per 100\nJAWABAN KASUS SISWA A: ${caseAnswer}`,
                 };
-
                 await supabase.from("submissions").insert([payload]);
                 setSuccess(true);
-                alert(`Luar biasa! Laporan individu Anda berhasil dikirim.`);
+                alert("Luar biasa! Laporan individu Anda berhasil dikirim.");
               } catch (err) {
                 console.log(err);
               } finally {
@@ -5615,195 +3913,92 @@ function SectionPage({ user }) {
             onComplete={(content) => handleAction(content)}
           />
           {tutorFeedback && (
-             <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
-               <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                 stars
-               </span>
-               <div>
-                 <p className="font-bold text-yellow-700 mb-1 text-lg">
-                   Nilai dari Tutor
-                 </p>
-                 <p className="text-sm text-yellow-800 mb-1 italic">
-                   "
-                   {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                     tutorFeedback.content}
-                   "
-                 </p>
-               </div>
-             </div>
-           )}
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       ) : (id === "1" || id === "2") && sectionName === "Rangkuman" ? (
         <div className="space-y-8">
-          {/* Header Instruksi */}
-          <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-10 text-white relative overflow-hidden shadow-2xl border border-white border-opacity-5">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary bg-opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+          <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-10 text-white relative overflow-hidden shadow-2xl">
             <div className="relative z-10">
-               <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 shadow-lg shadow-yellow-400 shadow-opacity-20">
-                  <span className="material-symbols-outlined text-sm">assignment</span> Tugas Rangkuman
-               </div>
-               <h3 className="text-2xl md:text-3xl font-black mb-4">Buatlah Rangkuman Modul 1</h3>
-               <div className="bg-rose-500 bg-opacity-10 border border-rose-500 border-opacity-30 p-4 rounded-2xl flex items-center gap-3 mb-8">
-                  <span className="material-symbols-outlined text-rose-500 animate-pulse">block</span>
-                  <p className="text-sm font-black text-rose-400 uppercase tracking-tighter">Jangan Menggunakan AI!!</p>
-               </div>
-               
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {[
-                    "KB 1: Pengertian, Fungsi, dan Tujuan BK",
-                    "KB 2: Prinsip-Prinsip BK",
-                    "KB 3: Asas-Asas BK",
-                    "KB 4: Jenis-Jenis Layanan BK"
-                  ].map((kb, idx) => (
-                    <div key={idx} className="bg-white bg-opacity-5 border border-white border-opacity-10 p-4 rounded-2xl flex items-center gap-3">
-                       <span className="w-8 h-8 rounded-xl bg-white bg-opacity-10 flex items-center justify-center text-[10px] font-black">{idx+1}</span>
-                       <p className="text-xs font-bold text-slate-300">{kb}</p>
-                    </div>
-                  ))}
-               </div>
+              <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+                <span className="material-symbols-outlined text-sm">assignment</span> Tugas Rangkuman
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black mb-4">Buatlah Rangkuman Modul 1</h3>
+              <div className="bg-rose-500 bg-opacity-10 border border-rose-500 border-opacity-30 p-4 rounded-2xl flex items-center gap-3 mb-8">
+                <span className="material-symbols-outlined text-rose-500 animate-pulse">block</span>
+                <p className="text-sm font-black text-rose-400 uppercase tracking-tighter">Jangan Menggunakan AI!!</p>
+              </div>
             </div>
           </div>
-
           {status ? (
-            <div className="space-y-6">
-              <div className="bg-green-50 border border-green-200 p-8 md:p-12 rounded-[3rem] text-center flex flex-col items-center">
-                <span className="material-symbols-outlined text-5xl text-green-500 mb-4">verified</span>
-                <h4 className="text-xl font-black text-slate-800 mb-2">Rangkuman Berhasil Dikirim</h4>
-                <p className="text-sm text-slate-500 font-medium mb-8">Terima kasih. Rangkuman Anda telah terekam dan siap dinilai oleh Tutor.</p>
-                <div className="bg-white p-8 rounded-3xl w-full text-left shadow-sm border border-green-100 max-w-2xl">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Isi Rangkuman Anda:</p>
-                  <p className="text-sm text-slate-700 leading-relaxed italic text-justify whitespace-pre-wrap">"{status.content}"</p>
-                </div>
+            <div className="bg-green-50 border border-green-200 p-8 rounded-[3rem] text-center flex flex-col items-center">
+              <span className="material-symbols-outlined text-5xl text-green-500 mb-4">verified</span>
+              <h4 className="text-xl font-black text-slate-800 mb-2">Rangkuman Berhasil Dikirim</h4>
+              <div className="bg-white p-8 rounded-3xl w-full text-left shadow-sm border border-green-100 max-w-2xl mt-6">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Isi Rangkuman Anda:</p>
+                <p className="text-sm text-slate-700 leading-relaxed italic text-justify whitespace-pre-wrap">"{status.content}"</p>
               </div>
-              {tutorFeedback && (
-                <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 animate-in slide-in-from-top-4 duration-500">
-                  <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                    stars
-                  </span>
-                  <div>
-                    <p className="font-bold text-yellow-700 mb-1 text-lg">
-                      Nilai dari Tutor
-                    </p>
-                    <p className="text-sm text-yellow-800 mb-1 italic">
-                      "
-                      {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                        tutorFeedback.content}
-                      "
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
           ) : (
             <div className="space-y-6">
-               <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-slate-900 rounded-[2.5rem] blur opacity-10 group-focus-within:opacity-40 transition duration-1000"></div>
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Ketik rangkuman Anda di sini... (Harap ketik manual, jangan copy-paste hasil AI)"
-                    className="relative w-full min-h-[400px] bg-slate-50 border border-slate-200 rounded-[2.5rem] p-8 md:p-10 text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-primary outline-none transition-all leading-relaxed text-justify shadow-inner"
-                  ></textarea>
-
-                  <div className="absolute bottom-6 right-8 flex items-center gap-4 bg-white bg-opacity-80 backdrop-blur-md px-4 py-2 rounded-2xl border shadow-sm">
-                     <p className={`text-xs font-black tracking-tighter transition-colors ${content.trim().split(/\s+/).filter(w => w.length > 0).length >= 200 ? "text-green-600" : "text-slate-400"}`}>
-                        {content.trim().split(/\s+/).filter(w => w.length > 0).length} / 200 KATA
-                     </p>
-                     {content.trim().split(/\s+/).filter(w => w.length > 0).length >= 200 ? (
-                        <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span>
-                     ) : (
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse"></div>
-                     )}
-                  </div>
-               </div>
-
-               <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
-                  <p className="text-[11px] text-slate-400 font-medium italic order-2 md:order-1 flex items-center gap-2">
-                     <span className="material-symbols-outlined text-sm">info</span>
-                     Rangkuman yang sudah dikirim tidak dapat diubah kembali.
+              <div className="relative">
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Ketik rangkuman Anda di sini... (Harap ketik manual, jangan copy-paste hasil AI)"
+                  className="w-full min-h-[400px] bg-slate-50 border border-slate-200 rounded-[2.5rem] p-8 md:p-10 text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-primary outline-none transition-all leading-relaxed text-justify shadow-inner"
+                ></textarea>
+                <div className="absolute bottom-6 right-8 flex items-center gap-2 bg-white bg-opacity-80 backdrop-blur-md px-4 py-2 rounded-2xl border shadow-sm">
+                  <p className={`text-xs font-black tracking-tighter transition-colors ${content.trim().split(/\s+/).filter(w => w.length > 0).length >= 200 ? "text-green-600" : "text-slate-400"}`}>
+                    {content.trim().split(/\s+/).filter(w => w.length > 0).length} / 200 KATA
                   </p>
-                  <button
-                    onClick={() => handleAction(content)}
-                    disabled={loading || content.trim().split(/\s+/).filter(w => w.length > 0).length < 200}
-                    className="w-full md:w-auto min-w-[280px] bg-primary text-white font-black py-5 px-10 rounded-2xl hover:bg-[#1a2169] hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-3 order-1 md:order-2"
-                  >
-                    {loading ? "MENGIRIM..." : "KIRIM RANGKUMAN"}
-                    <span className="material-symbols-outlined font-black">send</span>
-                  </button>
-               </div>
-
-               {content.trim().length > 0 && content.trim().split(/\s+/).filter(w => w.length > 0).length < 200 && (
-                  <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
-                     <span className="material-symbols-outlined text-amber-500">priority_high</span>
-                     <p className="text-xs text-amber-700 font-bold uppercase tracking-wider">
-                        Kurang {200 - content.trim().split(/\s+/).filter(w => w.length > 0).length} kata lagi untuk mengaktifkan tombol kirim.
-                     </p>
-                  </div>
-               )}
+                  {content.trim().split(/\s+/).filter(w => w.length > 0).length >= 200
+                    ? <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span>
+                    : <div className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse"></div>
+                  }
+                </div>
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <p className="text-[11px] text-slate-400 font-medium italic order-2 md:order-1 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  Rangkuman yang sudah dikirim tidak dapat diubah kembali.
+                </p>
+                <button
+                  onClick={() => handleAction(content)}
+                  disabled={loading || content.trim().split(/\s+/).filter(w => w.length > 0).length < 200}
+                  className="w-full md:w-auto min-w-[280px] bg-primary text-white font-black py-5 px-10 rounded-2xl hover:bg-[#1a2169] hover:scale-105 active:scale-95 transition-all disabled:opacity-30 shadow-xl flex items-center justify-center gap-3 order-1 md:order-2"
+                >
+                  {loading ? "MENGIRIM..." : "KIRIM RANGKUMAN"}
+                  <span className="material-symbols-outlined font-black">send</span>
+                </button>
+              </div>
+              {content.trim().length > 0 && content.trim().split(/\s+/).filter(w => w.length > 0).length < 200 && (
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
+                  <span className="material-symbols-outlined text-amber-500">priority_high</span>
+                  <p className="text-xs text-amber-700 font-bold uppercase tracking-wider">
+                    Kurang {200 - content.trim().split(/\s+/).filter(w => w.length > 0).length} kata lagi untuk mengaktifkan tombol kirim.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
       ) : status ? (
-        <div className="space-y-6">
-          <div className="bg-green-50 text-green-700 p-6 md:p-10 rounded-3xl text-center flex flex-col items-center border border-green-200">
-            <span className="material-symbols-outlined text-5xl mb-4 text-green-500">
-              check_circle
-            </span>
-            <p className="font-bold text-xl mb-4">
-              Jawaban Anda Sudah Terkirim!
-            </p>
-            <div className="bg-white p-6 rounded-2xl w-full text-left shadow-sm border border-green-100">
-              <p className="text-xs font-bold text-slate-400 uppercase mb-2">
-                Jawaban Anda:
-              </p>
-              <p className="text-sm text-slate-700 whitespace-pre-wrap italic">
-                "{status.content}"
-              </p>
-            </div>
-          </div>
-          {tutorFeedback && (
-            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
-              <span className="material-symbols-outlined text-yellow-500 text-4xl">
-                stars
-              </span>
-              <div>
-                <p className="font-bold text-yellow-700 mb-1 text-lg">
-                  Nilai dari Tutor
-                </p>
-                <p className="text-sm text-yellow-800 mb-3 italic">
-                  "
-                  {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                    "Tutor telah memberikan penilaian."}
-                  "
-                </p>
-                <div className="flex gap-1 text-yellow-500">
-                  {Array(parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined fill-1 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                  {Array(5 - parseInt(tutorFeedback.content))
-                    .fill(0)
-                    .map((_, i) => (
-                      <span
-                        key={i}
-                        className="material-symbols-outlined text-slate-300 text-2xl"
-                      >
-                        star
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="bg-green-50 text-green-700 p-6 md:p-10 rounded-3xl text-center flex flex-col items-center border border-green-200">
+          <span className="material-symbols-outlined text-5xl mb-4 text-green-500">check_circle</span>
+          <p className="font-bold text-xl mb-2">Jawaban Anda Sudah Terkirim!</p>
+          <p className="text-sm font-medium opacity-70">Jawaban sedang ditinjau oleh Tutor.</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-6">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -5811,14 +4006,15 @@ function SectionPage({ user }) {
             className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all resize-none"
           ></textarea>
           <button
-            type="submit"
-            disabled={loading}
+            onClick={() => handleAction(content)}
+            disabled={loading || !content.trim()}
             className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary shadow-opacity-20 hover:bg-[#1a2169] transition-all"
           >
             {loading ? "Sedang Mengirim..." : "Kirim Jawaban"}
           </button>
-        </form>
+        </div>
       )}
+
       <div className="mt-10 pt-6 border-t border-slate-100">
         <Link
           to={`/class/${id}/meeting/${meetingId}`}
