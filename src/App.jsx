@@ -737,6 +737,59 @@ const MIND_MAP_DATA = {
   ],
 };
 
+const STUDY_CASE_STAGES = [
+  {
+    step: 1,
+    title: "Analisis Masalah",
+    scenario:
+      "Tahap 1: Seorang siswa ketakutan menceritakan bahwa ia menjadi korban bullying karena tidak ingin teman-temannya tahu. Namun, ia sangat butuh bantuan segera. Apa fokus utama kelompok Anda?",
+    options: [
+      { id: "A", t: "Mencari siapa pelaku bullying", correct: false },
+      { id: "B", t: "Memberikan rasa aman dan perlindungan", correct: true },
+    ],
+  },
+  {
+    step: 2,
+    title: "Pemilihan Layanan",
+    scenario:
+      "Tahap 2: Untuk menangani trauma siswa tersebut secara privat agar privasinya terjaga, layanan mana yang paling tepat digunakan?",
+    options: [
+      { id: "A", t: "Konseling Individual", correct: true },
+      { id: "B", t: "Bimbingan Kelompok", correct: false },
+    ],
+  },
+  {
+    step: 3,
+    title: "Penerapan Asas",
+    scenario:
+      "Tahap 3: Agar siswa tersebut mau terbuka, asas apa yang HARU paling ditekankan oleh guru pembimbing?",
+    options: [
+      { id: "A", t: "Asas Kerahasiaan", correct: true },
+      { id: "B", t: "Asas Keahlian", correct: false },
+    ],
+  },
+  {
+    step: 4,
+    title: "Tindakan Strategis",
+    scenario:
+      "Tahap 4: Jika kasus ini melibatkan kekerasan fisik yang serius di luar kapasitas guru, tindakan apa yang harus dilakukan sesuai asas BK?",
+    options: [
+      { id: "A", t: "Alih Tangan Kasus (Referral)", correct: true },
+      { id: "B", t: "Menyelesaikan sendiri agar tidak malu", correct: false },
+    ],
+  },
+  {
+    step: 5,
+    title: "Prinsip Profesional",
+    scenario:
+      "Tahap 5: Apa komitmen akhir kelompok Anda sebagai calon guru profesional dalam menjaga ekosistem BK di sekolah?",
+    options: [
+      { id: "A", t: "Menjamin setiap individu dihargai dan dibantu", correct: true },
+      { id: "B", t: "Membantu hanya siswa yang bermasalah saja", correct: false },
+    ],
+  },
+];
+
 const REFLECTION_QUESTIONS = [
   "Setelah mengikuti sesi hari ini, apa satu pemahaman baru mengenai hakikat Bimbingan dan Konseling yang menurut Anda paling menantang namun sangat penting untuk diterapkan di SD?",
   "Dari semua materi yang sudah kita diskusikan (Etimologi, Asas, dan Jenis Layanan), bagian mana yang membuat Anda merasa paling siap untuk menjadi guru yang mengayomi siswa?",
@@ -1166,8 +1219,10 @@ function InteractiveMindMap({
   const [dragging, setDragging] = useState(null);
   const [wrongItem, setWrongItem] = useState(null);
   const [allDone, setAllDone] = useState(false);
-  const [challengeAnswer, setChallengeAnswer] = useState(null);
+  const [challengeStep, setChallengeStep] = useState(0);
+  const [challengeSelections, setChallengeSelections] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     const check = () => setIsLandscape(window.innerWidth > window.innerHeight);
@@ -1327,92 +1382,137 @@ function InteractiveMindMap({
   }
 
   if (gameState === "CHALLENGE") {
-    return (
-      <div className="fixed inset-0 z-[60] bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-        <div className="bg-white rounded-[3rem] p-8 md:p-10 max-w-2xl w-full shadow-2xl animate-in zoom-in duration-300">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-14 h-14 bg-red-100 rounded-3xl flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-red-500">
-                crisis_alert
+    const currentChallenge = STUDY_CASE_STAGES[challengeStep];
+    const userAns = challengeSelections[challengeStep];
+
+    if (isSuccess) {
+      return (
+        <div className="fixed inset-0 z-[80] bg-slate-900 flex items-center justify-center p-4">
+          <div className="bg-white rounded-[3rem] p-8 md:p-12 max-w-xl w-full shadow-2xl text-center animate-in zoom-in duration-500">
+            <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-500 mx-auto mb-6">
+              <span className="material-symbols-outlined text-6xl">
+                check_circle
               </span>
             </div>
-            <div>
-              <p className="text-[10px] font-black uppercase text-red-500 tracking-widest">
-                TANTANGAN AKHIR
-              </p>
-              <h2 className="text-2xl font-black text-slate-800">
-                Studi Kasus
-              </h2>
+            <h2 className="text-3xl font-black text-slate-800 mb-4">
+              MISI BERHASIL!
+            </h2>
+            <p className="text-slate-500 font-medium mb-8">
+              Luar biasa! Analisis kelompok Anda sangat tajam. Hasil LKPD telah
+              berhasil terkirim ke sistem Bapak Bagus Panca Wiratama.
+            </p>
+            <button
+              onClick={() => window.history.back()}
+              className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-3"
+            >
+              <span className="material-symbols-outlined">home</span>
+              KEMBALI KE KELAS
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="fixed inset-0 z-[60] bg-black bg-opacity-80 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
+        <div className="bg-white rounded-[3rem] p-6 md:p-10 max-w-2xl w-full shadow-2xl animate-in slide-in-from-bottom duration-500 my-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl text-red-500">
+                  forum
+                </span>
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase text-red-500 tracking-widest">
+                  Diskusi Kelompok
+                </p>
+                <h2 className="text-xl font-black text-slate-800">
+                  Tantangan Tahap {challengeStep + 1}
+                </h2>
+              </div>
+            </div>
+            <div className="px-4 py-1.5 bg-slate-100 rounded-full text-xs font-black text-slate-400">
+              {challengeStep + 1} / 5
             </div>
           </div>
-          <div className="bg-amber-50 border border-amber-200 p-6 rounded-2xl mb-6">
-            <p className="text-xs font-black text-amber-600 uppercase tracking-widest mb-2">
-              Skenario:
-            </p>
-            <p className="text-base font-semibold text-slate-700 leading-relaxed italic">
-              "Seorang siswa ketakutan menceritakan bahwa ia menjadi korban
-              bullying karena tidak ingin teman-temannya tahu. Namun, ia butuh
-              bantuan segera."
+
+          <div className="bg-slate-50 border-l-4 border-red-500 p-6 rounded-2xl mb-8">
+            <p className="text-base font-bold text-slate-700 leading-relaxed">
+              {currentChallenge.scenario}
             </p>
           </div>
-          <p className="text-sm font-bold text-slate-500 mb-5 uppercase tracking-tight">
-            Pilih kombinasi elemen yang PALING TEPAT:
-          </p>
-          <div className="grid grid-cols-1 gap-4 mb-6">
-            {[
-              {
-                id: "A",
-                label: "Layanan Mediasi & Asas Keterbukaan",
-                correct: false,
-                desc: "Mediasi untuk konflik antar pihak.",
-              },
-              {
-                id: "B",
-                label: "Konseling Individual & Asas Kerahasiaan",
-                correct: true,
-                desc: "Tepat! Menjaga privasi siswa.",
-              },
-            ].map((opt) => (
+
+          <div className="grid grid-cols-1 gap-4 mb-8">
+            {currentChallenge.options.map((opt) => (
               <button
                 key={opt.id}
-                onClick={() => setChallengeAnswer(opt)}
-                disabled={challengeAnswer !== null}
-                className={`p-5 rounded-2xl border-2 text-left transition-all font-semibold text-sm ${challengeAnswer === null ? "border-slate-200 hover:border-primary hover:bg-primary hover:bg-opacity-5" : opt.correct ? "border-emerald-500 bg-emerald-50 text-emerald-800" : challengeAnswer?.id === opt.id ? "border-red-400 bg-red-50 text-red-700" : "border-slate-200 opacity-50"}`}
+                onClick={() =>
+                  setChallengeSelections({
+                    ...challengeSelections,
+                    [challengeStep]: opt,
+                  })
+                }
+                disabled={userAns !== undefined}
+                className={`p-6 rounded-2xl border-2 text-left transition-all font-bold text-base flex items-center gap-4 ${userAns === undefined ? "border-slate-100 hover:border-primary hover:bg-primary hover:bg-opacity-5" : userAns.id === opt.id ? (opt.correct ? "border-emerald-500 bg-emerald-50 text-emerald-800" : "border-red-500 bg-red-50 text-red-800") : "opacity-40 border-slate-100"}`}
               >
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-black text-xs ${challengeAnswer === null ? "bg-slate-100 text-slate-600" : opt.correct ? "bg-emerald-500 text-white" : challengeAnswer?.id === opt.id ? "bg-red-500 text-white" : "bg-slate-100 text-slate-400"}`}
-                  >
-                    {opt.id}
+                <span
+                  className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-black ${userAns === undefined ? "bg-slate-100 text-slate-400" : userAns.id === opt.id ? "bg-white text-inherit" : "bg-slate-50 text-slate-300"}`}
+                >
+                  {opt.id}
+                </span>
+                {opt.t}
+                {userAns?.id === opt.id && (
+                  <span className="material-symbols-outlined ml-auto">
+                    {opt.correct ? "verified" : "error"}
                   </span>
-                  {opt.label}
-                </div>
+                )}
               </button>
             ))}
           </div>
-          {challengeAnswer !== null && (
-            <button
-              onClick={async () => {
-                setIsSubmitting(true);
-                try {
-                  await onComplete(
-                    score + (challengeAnswer.correct ? 40 : 10),
-                    challengeAnswer.label,
-                  );
-                } finally {
-                  setIsSubmitting(false);
-                }
-              }}
-              disabled={isSubmitting}
-              className="w-full bg-primary text-white py-4 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-20 flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              {isSubmitting ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+
+          {userAns && (
+            <div className="animate-in fade-in slide-in-from-top duration-300">
+              {challengeStep < STUDY_CASE_STAGES.length - 1 ? (
+                <button
+                  onClick={() => setChallengeStep(challengeStep + 1)}
+                  className="w-full bg-slate-800 text-white py-5 rounded-2xl font-black flex items-center justify-center gap-2 hover:bg-slate-700 transition-all"
+                >
+                  LANJUT KE TAHAP {challengeStep + 2}
+                  <span className="material-symbols-outlined text-sm">
+                    arrow_forward
+                  </span>
+                </button>
               ) : (
-                <span className="material-symbols-outlined">send</span>
+                <button
+                  onClick={async () => {
+                    setIsSubmitting(true);
+                    try {
+                      const finalReport = STUDY_CASE_STAGES.map((s, idx) => {
+                        const sel = challengeSelections[idx];
+                        return `T${s.step}: ${sel.t} (${sel.correct ? "TEPAT" : "KURANG TEPAT"})`;
+                      }).join("\n");
+
+                      await onComplete(score, finalReport);
+                      setIsSuccess(true);
+                    } catch (err) {
+                      alert("Terjadi kesalahan, mohon coba lagi.");
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                  disabled={isSubmitting}
+                  className="w-full bg-primary text-white py-5 rounded-2xl font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary shadow-opacity-30 flex items-center justify-center gap-3 disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <span className="material-symbols-outlined">send</span>
+                  )}
+                  {isSubmitting ? "MENGIRIM..." : "KIRIM HASIL LKPD"}
+                </button>
               )}
-              {isSubmitting ? "MENGIRIM..." : "KIRIM HASIL LKPD"}
-            </button>
+            </div>
           )}
         </div>
       </div>
