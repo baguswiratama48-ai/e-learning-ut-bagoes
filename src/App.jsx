@@ -3621,13 +3621,26 @@ function SectionPage({ user }) {
       );
     }
 
-    if (
-      sectionName === "Informasi Modul" &&
-      COURSE_DATA[courseCode]?.[sectionName]
-    ) {
+    if (sectionName === "Informasi Modul") {
+      const modulContent = COURSE_DATA[courseCode]?.[sectionName];
       return (
         <div className="space-y-10">
-          {COURSE_DATA[courseCode][sectionName]}
+          {modulContent ? (
+            modulContent
+          ) : (
+            <div className="bg-slate-50 border-2 border-dashed rounded-[3rem] p-16 text-center">
+              <span className="material-symbols-outlined text-5xl text-slate-300 mb-4">
+                library_books
+              </span>
+              <h3 className="text-xl font-black text-slate-400">
+                Informasi Modul Segera Hadir
+              </h3>
+              <p className="text-sm text-slate-400 mt-2">
+                Konten untuk mata kuliah {courseCode} sedang dalam proses
+                transkripsi oleh tim Tutor.
+              </p>
+            </div>
+          )}
 
           <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400 bg-opacity-10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
