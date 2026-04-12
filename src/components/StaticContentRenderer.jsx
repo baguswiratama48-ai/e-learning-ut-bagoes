@@ -1466,6 +1466,113 @@ export const StaticContentRenderer = ({
     );
   }
 
+  if (sectionName === "Pertanyaan Pemantik" && id === "4") {
+    const questions5A = [
+      "Berdasarkan pengalaman Anda mengajar di SD, strategi pembelajaran apa yang paling sering Anda gunakan? Jelaskan alasan Anda memilih strategi tersebut dan bagaimana dampaknya terhadap keaktifan siswa di kelas!",
+      "Menurut Anda, apa tantangan terbesar dalam menerapkan strategi pembelajaran yang berpusat pada siswa (student-centered) di lingkungan SD? Bagaimana Anda akan mengatasi tantangan tersebut?"
+    ];
+    const allAnswered5A = pemantikAnswers[0]?.trim().length > 0 && pemantikAnswers[1]?.trim().length > 0;
+    const combinedContent5A = questions5A
+      .map((q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${pemantikAnswers[i]}`)
+      .join("\n\n");
+
+    return (
+      <div className="space-y-8 pb-10">
+        {/* Hero */}
+        <div className="bg-gradient-to-br from-teal-900 to-[#134e4a] rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-teal-400 bg-opacity-10 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-2 bg-teal-400 text-teal-900 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-5">
+              <span className="material-symbols-outlined text-sm">tips_and_updates</span> Pertanyaan Pemantik
+            </span>
+            <h2 className="text-2xl md:text-4xl font-black leading-tight mb-3">
+              Pertanyaan <br className="hidden md:block" /> Pemantik
+            </h2>
+            <p className="text-white text-opacity-60 text-sm md:text-base font-medium max-w-lg">
+              Jawablah 2 pertanyaan berikut berdasarkan pengalaman mengajar Anda di SD. Refleksikan setiap jawaban secara mendalam.
+            </p>
+          </div>
+        </div>
+
+        {status ? (
+          <div className="space-y-5">
+            <div className="bg-green-50 border border-green-200 p-5 rounded-2xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-green-500 text-3xl">check_circle</span>
+              <div>
+                <p className="font-bold text-green-700">Jawaban Sudah Terkirim ke Tutor</p>
+                <p className="text-xs text-green-600">Jawaban Anda telah disimpan dan tidak bisa diubah kecuali tutor membuka kembali.</p>
+              </div>
+            </div>
+
+            {questions5A.map((q, i) => (
+              <div key={i} className="bg-white border rounded-2xl p-6 shadow-sm">
+                <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-2">Pertanyaan {i + 1}</p>
+                <p className="text-sm font-semibold text-slate-800 mb-4 leading-relaxed">{q}</p>
+                <div className="bg-teal-50 p-4 rounded-xl border-l-4 border-teal-500">
+                  <p className="text-sm text-slate-700 italic leading-relaxed">
+                    "{pemantikAnswers[i] || status.content.split("\n\n")[i]?.split("Jawaban: ")[1] || "-"}"
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {questions5A.map((q, i) => (
+              <div key={i} className="bg-white border border-slate-100 rounded-[2rem] p-6 md:p-8 shadow-sm hover:shadow-lg transition-shadow">
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="w-10 h-10 bg-teal-100 text-teal-600 rounded-xl flex items-center justify-center shrink-0 font-black text-sm shadow-sm">
+                    {i + 1}
+                  </div>
+                  <p className="text-sm md:text-base font-semibold text-slate-800 leading-relaxed">{q}</p>
+                </div>
+                <textarea
+                  value={pemantikAnswers[i] || ""}
+                  onChange={(e) => {
+                    const updated = [...pemantikAnswers];
+                    updated[i] = e.target.value;
+                    setPemantikAnswers(updated);
+                  }}
+                  placeholder="Tulis jawaban reflektif Anda di sini..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-5 text-sm focus:bg-white focus:border-teal-400 outline-none transition-all min-h-[140px] resize-none leading-relaxed"
+                />
+              </div>
+            ))}
+            <button
+              onClick={() => handleAction(combinedContent5A)}
+              disabled={loading || !allAnswered5A}
+              className="w-full bg-teal-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-teal-200 hover:bg-teal-700 transition-all disabled:opacity-40 disabled:cursor-not-allowed text-sm uppercase tracking-wider"
+            >
+              {loading ? "Mengirim..." : !allAnswered5A ? "Lengkapi 2 Jawaban Terlebih Dahulu" : "Kirim Jawaban ke Tutor"}
+            </button>
+          </div>
+        )}
+
+        {status && tutorFeedback && (
+          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 p-6 md:p-8 rounded-3xl flex items-center gap-5 shadow-sm">
+            <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+              <span className="material-symbols-outlined text-yellow-500 text-3xl">stars</span>
+            </div>
+            <div>
+              <p className="font-black text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+              <p className="text-sm text-yellow-800 font-semibold italic">
+                "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || "Tutor telah memberikan penilaian."}"
+              </p>
+              <div className="flex gap-1 mt-2 text-yellow-500">
+                {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                  <span key={i} className="material-symbols-outlined fill-1 text-2xl">star</span>
+                ))}
+                {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                  <span key={i} className="material-symbols-outlined text-slate-300 text-2xl">star</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (sectionName === "Pertanyaan Pemantik" && id === "3") {
     const cases = [
       {
