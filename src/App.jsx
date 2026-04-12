@@ -4105,7 +4105,7 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {!isInput || (["3", "4"].includes(id) && sectionName === "LKPD (Lembar Kerja Peserta Didik)") ? (
+      {!isInput || (["3", "4"].includes(id) && ["LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan"].includes(sectionName)) ? (
           renderStaticContent()
         ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
