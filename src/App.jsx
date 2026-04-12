@@ -516,6 +516,126 @@ const STUDENTS = [
     email: "877603946@ecampus.ut.ac.id",
     classId: "3",
   },
+  {
+    nim: "860692226",
+    name: "AHMAD FEBRY RAFSANJANI",
+    email: "860692226@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877606024",
+    name: "ENDAH GUSTRIHAYATI",
+    email: "877606024@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877762336",
+    name: "IMROATUL MIFTAH ADITIN",
+    email: "877762336@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877763528",
+    name: "ALEFANNO MIRZARA LUIRDENSA",
+    email: "877763528@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877763639",
+    name: "ARDILA BUNGA WIJAYA",
+    email: "877763639@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877764845",
+    name: "AJENG NURUL QHOMARIAH",
+    email: "877764845@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877765016",
+    name: "ISNAENI KHASANAH",
+    email: "877765016@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877765023",
+    name: "EKA SUSANTI",
+    email: "877765023@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877765245",
+    name: "AGE VINA PANDU WINATA",
+    email: "877765245@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877765324",
+    name: "SERLY LISTIANI",
+    email: "877765324@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877766831",
+    name: "BERLIANA ERISA PUTRI",
+    email: "877766831@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877766903",
+    name: "USWAH NUR AZIZAH",
+    email: "877766903@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877768978",
+    name: "HENDRA KURNIAWAN",
+    email: "877768978@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "877769615",
+    name: "META NOVI ASARI",
+    email: "877769615@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "878210888",
+    name: "TRIA SEPTIA NINGSIH",
+    email: "878210888@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "878211106",
+    name: "SRI SUPATMI",
+    email: "878211106@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "878211414",
+    name: "TIKA ANJELIKA",
+    email: "878211414@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "878212011",
+    name: "PUTRI RAMA DANI",
+    email: "878212011@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "878212272",
+    name: "CITRA ANISA",
+    email: "878212272@ecampus.ut.ac.id",
+    classId: "4",
+  },
+  {
+    nim: "878212606",
+    name: "B HESTI CHARITA",
+    email: "878212606@ecampus.ut.ac.id",
+    classId: "4",
+  },
   // === AKUN UJICOBA (DUMMY) - bisa dipakai masuk ke semua kelas ===
   {
     nim: "000000000",
@@ -1391,13 +1511,13 @@ function InteractiveReflection({
               </span>
             </h4>
           </div>
-          <p className={`text-sm font-bold ${classId === "3" ? "text-fuchsia-600" : "text-indigo-600"}`}>
+          <p className={`text-sm font-bold ${classId === "3" ? "text-fuchsia-600" : classId === "4" ? "text-teal-600" : "text-indigo-600"}`}>
             {Math.round(progress)}%
           </p>
         </div>
         <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-500 ease-out ${classId === "3" ? "bg-fuchsia-600" : "bg-indigo-600"}`}
+            className={`h-full rounded-full transition-all duration-500 ease-out ${classId === "3" ? "bg-fuchsia-600" : classId === "4" ? "bg-teal-600" : "bg-indigo-600"}`}
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -1407,7 +1527,7 @@ function InteractiveReflection({
       <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 min-h-[450px] flex flex-col relative overflow-hidden">
         <div className="relative z-10 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-8">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${classId === "3" ? "bg-fuchsia-50 text-fuchsia-600" : "bg-indigo-50 text-indigo-600"}`}>
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${classId === "3" ? "bg-fuchsia-50 text-fuchsia-600" : classId === "4" ? "bg-teal-50 text-teal-600" : "bg-indigo-50 text-indigo-600"}`}>
               <span className="material-symbols-outlined">psychology</span>
             </div>
             <div className="h-px flex-1 bg-slate-100"></div>
@@ -1429,7 +1549,7 @@ function InteractiveReflection({
               setAnswers({ ...answers, [currentIdx]: e.target.value })
             }
             placeholder={currentIdx === 4 && classId === "3" ? "Tuliskan kesan & pesan Anda untuk Pak Bagus..." : "Ketik refleksi Anda secara mendalam di sini..."}
-            className={`flex-1 min-h-[200px] p-6 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-4 outline-none transition-all resize-none text-slate-700 leading-relaxed font-medium ${classId === "3" ? "focus:border-fuchsia-500 focus:ring-fuchsia-500 focus:ring-opacity-10" : "focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-10"}`}
+            className={`flex-1 min-h-[200px] p-6 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-4 outline-none transition-all resize-none text-slate-700 leading-relaxed font-medium ${classId === "3" ? "focus:border-fuchsia-500 focus:ring-fuchsia-500 focus:ring-opacity-10" : classId === "4" ? "focus:border-teal-500 focus:ring-teal-500 focus:ring-opacity-10" : "focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-10"}`}
           ></textarea>
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-slate-100">
@@ -1446,7 +1566,7 @@ function InteractiveReflection({
               <button
                 onClick={handleSubmit}
                 disabled={loading || !answers[currentIdx]?.trim()}
-                className={`w-full md:w-auto px-8 py-3 text-white rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 ${classId === "3" ? "bg-fuchsia-600 hover:bg-fuchsia-700" : "bg-indigo-600 hover:bg-indigo-700"}`}
+                className={`w-full md:w-auto px-8 py-3 text-white rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 ${classId === "3" ? "bg-fuchsia-600 hover:bg-fuchsia-700" : classId === "4" ? "bg-teal-600 hover:bg-teal-700" : "bg-indigo-600 hover:bg-indigo-700"}`}
               >
                 {loading ? "MENGIRIM..." : "KIRIM REFLEKSI FINAL"}
                 <span className="material-symbols-outlined text-sm">send</span>

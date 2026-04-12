@@ -71,6 +71,8 @@ export const StaticContentRenderer = ({
               const moduleLabel =
                 id === "3"
                   ? `Modul ${g.group_num}`
+                  : id === "4"
+                  ? `Topik ${g.group_num}`
                   : `Topik ${g.group_num}`;
 
               return (
@@ -78,12 +80,12 @@ export const StaticContentRenderer = ({
                   key={g.group_num}
                   className={`relative group bg-white rounded-[2.5rem] p-8 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${
                     isMyGroup
-                      ? "border-teal-500 shadow-xl shadow-teal-500 shadow-opacity-10 ring-4 ring-teal-500 ring-opacity-5"
+                      ? id === "4" ? "border-teal-500 shadow-xl shadow-teal-500 shadow-opacity-10 ring-4 ring-teal-500 ring-opacity-5" : "border-indigo-500 shadow-xl shadow-indigo-500 shadow-opacity-10 ring-4 ring-indigo-500 ring-opacity-5"
                       : "border-slate-100 shadow-sm hover:border-teal-200"
                   }`}
                 >
                   {isMyGroup && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg animate-bounce">
+                    <div className={`absolute -top-3 left-1/2 -translate-x-1/2 ${id === "4" ? "bg-teal-500" : "bg-indigo-500"} text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg animate-bounce`}>
                       Kelompok Anda
                     </div>
                   )}
@@ -92,7 +94,7 @@ export const StaticContentRenderer = ({
                     <div
                       className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner ${
                         isMyGroup
-                          ? "bg-teal-500 text-white"
+                          ? id === "4" ? "bg-teal-500 text-white" : "bg-indigo-500 text-white"
                           : "bg-slate-100 text-slate-400"
                       }`}
                     >
