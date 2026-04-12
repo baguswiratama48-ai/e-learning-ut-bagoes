@@ -2786,7 +2786,7 @@ function DashboardTutor({ user }) {
       setGenerating(false);
     }
   };
-  };
+
 
   const handleResetGroups = async () => {
     if (!activeTab || activeTab === "record_m1") return;
