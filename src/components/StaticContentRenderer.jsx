@@ -1388,9 +1388,6 @@ export const StaticContentRenderer = ({
     );
   }
 
-    );
-  }
-
   if (sectionName === "Materi Pembelajaran" && id === "4") {
     return (
       <div className="space-y-10 md:space-y-16 pb-10">
