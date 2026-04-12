@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FEEDBACK_MESSAGES } from '../data/mockData';
 import { LkpdClass6A } from './LkpdClass6A';
+import { LkpdClass5A } from './LkpdClass5A';
 
 export const StaticContentRenderer = ({ 
   sectionName, 
@@ -684,28 +685,14 @@ export const StaticContentRenderer = ({
 
   if (sectionName === "LKPD (Lembar Kerja Peserta Didik)" && id === "4") {
     return (
-      <div className="space-y-10 pb-10">
-        <div className="bg-gradient-to-br from-teal-900 to-black rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500 opacity-5 rounded-full blur-3xl -ml-32 -mb-32"></div>
-          <div className="relative z-10">
-            <span className="inline-flex items-center gap-2 bg-teal-400 text-teal-900 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
-              <span className="material-symbols-outlined text-sm">assignment</span> Interactive Challenge
-            </span>
-            <h2 className="text-3xl md:text-5xl font-black mb-4 tracking-tighter uppercase">Lembar Kerja Terintegrasi</h2>
-            <p className="text-teal-100 text-opacity-70 max-w-2xl text-sm md:text-lg font-medium">
-               Uji pemahaman Anda melalui tantangan interaktif yang dirancang untuk mengasah keterampilan perencanaan pembelajaran.
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-slate-50 border border-slate-100 rounded-[3rem] p-12 text-center">
-            <span className="material-symbols-outlined text-5xl text-teal-200 mb-6">dynamic_form</span>
-            <h3 className="text-2xl font-black text-slate-400 mb-2">LKPD Interaktif Segera Hadir</h3>
-            <p className="text-slate-400 text-sm font-medium italic">
-              "Sedang dalam tahap pengembangan untuk memberikan pengalaman belajar terbaik."
-            </p>
-        </div>
-      </div>
+      <LkpdClass5A 
+        user={user}
+        meetingId={meetingId}
+        status={status}
+        submissions={submissions}
+        onComplete={handleAction}
+        loading={loading}
+      />
     );
   }
   
