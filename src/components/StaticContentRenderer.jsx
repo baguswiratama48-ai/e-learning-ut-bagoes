@@ -1388,6 +1388,318 @@ export const StaticContentRenderer = ({
     );
   }
 
+    );
+  }
+
+  if (sectionName === "Materi Pembelajaran" && id === "4") {
+    return (
+      <div className="space-y-10 md:space-y-16 pb-10">
+        {/* Teal Hero Section */}
+        <div className="relative bg-gradient-to-br from-teal-900 via-[#134e4a] to-[#0f3b39] rounded-[2rem] md:rounded-[4.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-teal-400 bg-opacity-10 rounded-full -mr-40 -mt-40 blur-[120px]"></div>
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-2 bg-teal-400 text-[#042f2e] px-3 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 shadow-lg shadow-teal-400 shadow-opacity-20">
+              <span className="material-symbols-outlined text-sm md:text-base">auto_stories</span> Modul Utama
+            </span>
+            <h1 className="text-3xl md:text-6xl font-headline font-black text-white mb-4 leading-tight">
+              Strategi Pembelajaran <br className="hidden md:block" /> di Sekolah Dasar
+            </h1>
+            <p className="text-teal-100 text-opacity-70 max-w-2xl text-sm md:text-lg font-medium leading-relaxed">
+               Memahami landasan, prinsip, dan ragam strategi untuk menciptakan pengalaman belajar yang bermakna bagi siswa SD.
+            </p>
+          </div>
+        </div>
+
+        {/* Part 1: Konsep Belajar & Pembelajaran */}
+        <section className="space-y-8">
+           <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 bg-opacity-10 text-teal-600 flex items-center justify-center font-black text-xl border border-teal-100 italic">01</div>
+              <h2 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter">Konsep Dasar</h2>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+              <div className="bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all border-l-[12px] border-l-teal-500 group relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-teal-50 rounded-full -mr-16 -mt-16 group-hover:bg-teal-100 transition-colors"></div>
+                 <div className="relative z-10">
+                    <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-4 flex items-center gap-2">
+                       <span className="material-symbols-outlined text-teal-600">psychology</span> Belajar
+                    </h3>
+                    <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium text-justify mb-6">
+                       Proses perubahan perilaku yang terjadi pada individu sebagai hasil dari pengalaman dan interaksi dengan lingkungan. Meliputi aspek **Kognitif, Afektif, dan Psikomotor**.
+                    </p>
+                    <div className="space-y-3 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-200 pb-2">Ciri-ciri Utama:</p>
+                       {[
+                         "Proses, bukan hasil langsung.",
+                         "Perubahan relatif permanen.",
+                         "Hasil pengalaman/latihan.",
+                         "Sadar dan bertujuan."
+                       ].map((t, i) => (
+                         <div key={i} className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-teal-500 text-sm">verified</span>
+                            <span className="text-xs md:text-sm font-bold text-slate-700">{t}</span>
+                         </div>
+                       ))}
+                    </div>
+                 </div>
+              </div>
+
+              <div className="bg-[#042f2e] p-8 rounded-[2.5rem] shadow-2xl relative group overflow-hidden border border-teal-800">
+                 <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-teal-500 opacity-10 rounded-full blur-3xl"></div>
+                 <h3 className="text-xl md:text-2xl font-black text-teal-400 mb-4 flex items-center gap-2">
+                    <span className="material-symbols-outlined">co_present</span> Pembelajaran
+                 </h3>
+                 <p className="text-teal-50 text-opacity-80 text-sm md:text-base leading-relaxed font-medium text-justify mb-8">
+                    Proses yang dirancang guru untuk membantu siswa agar terjadi proses belajar. Guru berperan sebagai **Fasilitator** yang menciptakan kondisi aktif bagi siswa.
+                 </p>
+                 <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { icon: "target", t: "Tujuan" },
+                      { icon: "menu_book", t: "Materi" },
+                      { icon: "tactic", t: "Metode" },
+                      { icon: "video_library", t: "Media" },
+                      { icon: "fact_check", t: "Evaluasi" }
+                    ].map((item, i) => (
+                      <div key={i} className="bg-white bg-opacity-5 border border-white border-opacity-10 p-3 rounded-xl flex items-center gap-2 hover:bg-opacity-10 transition-all">
+                         <span className="material-symbols-outlined text-teal-400 text-sm">{item.icon}</span>
+                         <span className="text-[10px] md:text-xs font-black text-teal-100 uppercase tracking-tight">{item.t}</span>
+                      </div>
+                    ))}
+                 </div>
+              </div>
+           </div>
+        </section>
+
+        {/* Part 2: Prinsip-prinsip Belajar */}
+        <section className="bg-slate-50 rounded-[3rem] p-8 md:p-16 border border-slate-100">
+           <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-4xl font-headline font-black text-slate-800 uppercase tracking-tighter">Prinsip-prinsip Pembelajaran</h2>
+              <p className="text-slate-400 text-xs md:text-sm font-medium mt-2">6 Pilar utama keberhasilan proses belajar mengajar di Sekolah Dasar.</p>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { n: "01", t: "Aktivitas", d: "Siswa harus aktif secara fisik dan mental. Contoh: diskusi, eksperimen.", icon: "groups_3" },
+                { n: "02", t: "Motivasi", d: "Motivasi mempengaruhi keberhasilan. Contoh: pemberian pujian/penghargaan.", icon: "auto_awesome" },
+                { n: "03", t: "Perhatian", d: "Menjaga fokus siswa melalui media menarik untuk hasil optimal.", icon: "visibility" },
+                { n: "04", t: "Individu", d: "Menyesuaikan kemampuan & karakteristik siswa yang berbeda-beda.", icon: "person_search" },
+                { n: "05", t: "Pengulangan", d: "Memperkuat pemahaman melalui latihan soal secara berkala.", icon: "update" },
+                { n: "06", t: "Langsung", d: "Siswa belajar lebih baik melalui pengalaman nyata (praktikum).", icon: "touch_app" }
+              ].map((p, i) => (
+                <div key={i} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col">
+                   <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mb-6 group-hover:bg-teal-500 group-hover:text-white transition-all shadow-inner">
+                      <span className="material-symbols-outlined text-2xl font-black">{p.icon}</span>
+                   </div>
+                   <h4 className="font-black text-slate-800 text-lg mb-2 uppercase tracking-tight flex items-center gap-2">
+                      <span className="text-[10px] font-black text-teal-500 opacity-50">{p.n}</span> {p.t}
+                   </h4>
+                   <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed">{p.d}</p>
+                </div>
+              ))}
+           </div>
+        </section>
+
+        {/* Part 3: Pendekatan, Strategi, Metode, Teknik */}
+        <section className="space-y-8">
+           <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500 bg-opacity-10 text-teal-600 flex items-center justify-center font-black text-xl border border-teal-100 italic">02</div>
+              <h2 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter">Hierarki Strategi</h2>
+           </div>
+
+           <div className="relative">
+              {/* Hierarki Diagram (Mobile Optimized) */}
+              <div className="space-y-4">
+                 {[
+                    { label: "PENDEKATAN", d: "Sudut pandang/dasar pemikiran umum. Contoh: Konstruktivisme.", bg: "bg-teal-900 text-white", icon: "explore" },
+                    { label: "STRATEGI", d: "Rencana umum mencapai tujuan. Contoh: Kooperatif.", bg: "bg-teal-700 text-white", icon: "tactic" },
+                    { label: "METODE", d: "Cara kerja melaksanakan strategi. Contoh: Ceramah, Diskusi.", bg: "bg-teal-500 text-white", icon: "psychology" },
+                    { label: "TEKNIK", d: "Langkah konkret & operasional. Contoh: Ice Breaking, Grup.", bg: "bg-teal-100 text-teal-900 border-2 border-teal-500 border-opacity-10", icon: "step_outline" }
+                 ].map((h, i) => (
+                    <div key={i} className={`flex items-start gap-4 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] shadow-lg relative ${h.bg} transform hover:scale-[1.01] transition-all`}>
+                       <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-white bg-opacity-20 flex items-center justify-center shrink-0">
+                          <span className="material-symbols-outlined text-xl md:text-3xl font-black">{h.icon}</span>
+                       </div>
+                       <div>
+                          <div className="flex items-center gap-2 mb-1">
+                             <div className="w-4 h-4 rounded-full bg-white bg-opacity-30 flex items-center justify-center text-[8px] font-black">{i+1}</div>
+                             <h4 className="font-black text-sm md:text-lg uppercase tracking-widest">{h.label}</h4>
+                          </div>
+                          <p className={`text-[11px] md:text-base font-medium opacity-90 ${i === 3 ? "text-teal-800" : "text-white"}`}>{h.d}</p>
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           </div>
+        </section>
+
+        {/* Part 4: Faktor Penentu */}
+        <section className="bg-slate-900 text-white rounded-[3rem] p-8 md:p-14 relative overflow-hidden shadow-2xl">
+           <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500 opacity-20 rounded-full -mr-40 -mt-40 blur-[100px]"></div>
+           <div className="relative z-10 flex flex-col md:flex-row gap-12">
+              <div className="md:w-1/3">
+                 <span className="inline-block bg-teal-500 text-teal-900 text-[10px] font-black px-3 py-1 rounded-full mb-4 uppercase">Decision Making</span>
+                 <h2 className="text-3xl font-black leading-tight mb-4 tracking-tighter uppercase">5 Faktor Penentu Strategi</h2>
+                 <p className="text-slate-400 text-sm font-medium leading-relaxed">Guru harus mempertimbangkan variabel-variabel ini sebelum memilih metode yang tepat di kelas.</p>
+              </div>
+              <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
+                 {[
+                    { t: "Tujuan Sesuai", d: "Kognitif, Afektif, Psikomotor wajib selaras.", icon: "flag" },
+                    { t: "Karakter Siswa", d: "SD: Aktif, suka bermain, belajar konkret.", icon: "child_care" },
+                    { t: "Materi Belajar", d: "Materi konkret vs abstrak butuh penanganan beda.", icon: "menu_book" },
+                    { t: "Kondisi Kelas", d: "Jumlah siswa, waktu, dan fasilitas yang ada.", icon: "meeting_room" },
+                    { t: "Kemampuan Guru", d: "Penguasaan strategi oleh guru memegang kunci.", icon: "school" }
+                 ].map((f, i) => (
+                    <div key={i} className="bg-white bg-opacity-5 p-6 rounded-2xl border border-white border-opacity-10 flex items-start gap-4">
+                       <span className="material-symbols-outlined text-teal-400 font-black">{f.icon}</span>
+                       <div>
+                          <p className="font-black text-teal-300 text-sm mb-1 uppercase tracking-tight">{f.t}</p>
+                          <p className="text-[11px] text-slate-400 leading-relaxed font-medium">{f.d}</p>
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           </div>
+        </section>
+
+        {/* Part 5: Jenis Strategi & Contoh */}
+        <section className="space-y-12">
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Ragam Strategi */}
+              <div className="space-y-6">
+                 <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tighter flex items-center gap-3">
+                    <span className="w-10 h-10 rounded-xl bg-teal-500 text-white flex items-center justify-center"><span className="material-symbols-outlined">grid_view</span></span>
+                    Ragam Strategi
+                 </h3>
+                 <div className="divide-y divide-slate-100 bg-white border border-slate-100 rounded-[2.5rem] p-6 shadow-sm">
+                    {[
+                       { t: "Ekspositori", d: "Guru menyampaikan langsung (Ceramah).", icon: "campaign" },
+                       { id: "Inkuiri", t: "Siswa menemukan pengetahuan sendiri.", icon: "manage_search" },
+                       { t: "Kooperatif", d: "Belajar bersama dalam kelompok.", icon: "diversity_1" },
+                       { t: "Kontekstual (CTL)", d: "Dikaitkan dengan kehidupan nyata.", icon: "real_estate_agent" },
+                       { t: "Berbasis Masalah (PBL)", d: "Dimulai dari masalah nyata.", icon: "quiz" },
+                       { t: "Berbasis Proyek (PjBL)", d: "Menghasilkan produk/karya nyata.", icon: "architecture" }
+                    ].map((s, i) => (
+                       <div key={i} className="py-4 first:pt-0 last:pb-0 flex items-center gap-4 group">
+                          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-teal-50 transition-colors">
+                             <span className="material-symbols-outlined text-teal-900 group-hover:text-teal-600 transition-colors">{s.icon}</span>
+                          </div>
+                          <div>
+                             <h4 className="font-bold text-slate-800 text-sm">{s.t}</h4>
+                             <p className="text-[11px] text-slate-400 font-medium">{s.d}</p>
+                          </div>
+                       </div>
+                    ))}
+                 </div>
+              </div>
+
+              {/* Case Study Example */}
+              <div className="bg-teal-50 rounded-[3rem] p-8 md:p-12 border border-teal-100 relative overflow-hidden">
+                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-50 rounded-full blur-2xl"></div>
+                 <span className="inline-block bg-teal-200 text-teal-800 text-[10px] font-black px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest shadow-sm">Penerapan Riil</span>
+                 <h3 className="text-2xl font-black text-teal-900 mb-6 uppercase tracking-tight">Project Based Learning</h3>
+                 <div className="space-y-6 relative z-10">
+                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-teal-100">
+                       <p className="text-[10px] font-black text-teal-500 uppercase mb-2">Tema Materi:</p>
+                       <p className="font-bold text-slate-800">Lingkungan Bersih di Sekolah</p>
+                    </div>
+                    <div className="space-y-4">
+                       {[
+                         "Siswa mengamati lingkungan sekolah.",
+                         "Mengidentifikasi masalah kebersihan.",
+                         "Berdiskusi dalam kelompok kooperatif.",
+                         "Membuat poster edukasi hemat energi/bersih.",
+                         "Presentasi hasil karya di depan kelas."
+                       ].map((step, i) => (
+                         <div key={i} className="flex gap-4 items-start">
+                            <div className="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center shrink-0 text-[10px] font-black border-2 border-white shadow-sm">{i+1}</div>
+                            <p className="text-sm font-semibold text-teal-800">{step}</p>
+                         </div>
+                       ))}
+                    </div>
+                 </div>
+                 <div className="mt-10 pt-6 border-t border-teal-200 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-teal-400">info</span>
+                    <p className="text-[11px] text-teal-700 font-bold italic leading-snug">Siswa belajar lebih baik jika terlibat langsung dalam memecahkan masalah.</p>
+                 </div>
+              </div>
+           </div>
+        </section>
+
+        {/* Part 6: Kesimpulan */}
+        <section className="bg-gradient-to-br from-teal-500 to-[#0f766e] text-white p-8 md:p-14 rounded-[3rem] md:rounded-[4.5rem] text-center shadow-xl">
+           <span className="material-symbols-outlined text-5xl mb-6 scale-110">format_quote</span>
+           <h3 className="text-2xl md:text-3xl font-black mb-4 uppercase tracking-tighter">Kesimpulan Tutorial</h3>
+           <p className="max-w-3xl mx-auto text-teal-50 text-opacity-90 leading-relaxed font-medium text-sm md:text-lg italic">
+              "Belajar adalah perubahan perilaku, sedangkan pembelajaran adalah fasilitas guru. Pemilihan strategi yang cerdas adalah kunci utama kesuksesan transfer ilmu di Sekolah Dasar."
+           </p>
+        </section>
+
+        {/* Verification Section */}
+        <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
+          {!status ? (
+            <div className="w-full max-w-xl">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 px-4 py-2 rounded-full border border-teal-200 text-[10px] font-black uppercase tracking-widest mb-4">
+                  <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
+                  Konfirmasi Pemahaman
+                </div>
+                <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2 text-center uppercase tracking-tight">
+                  Evaluasi Strategi Belajar
+                </h3>
+                <p className="text-slate-400 text-xs md:text-sm font-medium">Buatlah rangkuman singkat (minimal 100 kata) mengenai perbedaan antara Pendekatan, Strategi, dan Metode menurut pemahaman Anda setelah membaca materi di atas.</p>
+              </div>
+
+              <div className="bg-white border-2 border-teal-500 border-opacity-10 rounded-[3rem] p-10 shadow-xl shadow-teal-500 shadow-opacity-5">
+                <label className="block text-sm font-black text-teal-600 uppercase tracking-tight mb-4 flex items-center gap-2 font-headline">
+                  <span className="material-symbols-outlined text-sm">edit_note</span>
+                  Ringkasan Belajar Anda:
+                </label>
+
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Ketik analisis Anda di sini (Mulai dari perbedaan hirarki hingga faktor penentunya)..."
+                  className="w-full min-h-[220px] bg-slate-50 border border-slate-100 rounded-[2rem] p-8 text-sm md:text-base focus:bg-white focus:border-teal-500 focus:ring-1 outline-none transition-all resize-none mb-6 font-medium leading-relaxed"
+                ></textarea>
+
+                <button
+                  onClick={() => handleAction(content)}
+                  disabled={loading || !content.trim() || content.trim().split(/\s+/).length < 50}
+                  className="w-full bg-[#0d2d2a] text-white font-black py-5 rounded-[2rem] hover:bg-black transition-all flex items-center justify-center gap-3 group disabled:opacity-50 text-base tracking-widest uppercase shadow-lg shadow-teal-900 shadow-opacity-20"
+                >
+                  {loading ? "MENGIRIM JAWABAN..." : content.trim().split(/\s+/).length < 50 ? `KURANG ${50 - content.trim().split(/\s+/).length} KATA LAGI` : "KIRIM RANGKUMAN KE TUTOR"}
+                  {!loading && (
+                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform font-bold">
+                      send
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full max-w-xl bg-[#042f2e] text-white p-10 rounded-[3rem] shadow-xl shadow-teal-900 shadow-opacity-40 flex flex-col items-center text-center border border-teal-800">
+              <div className="w-16 h-16 bg-teal-500 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-teal-500 shadow-opacity-30">
+                <span className="material-symbols-outlined text-4xl">
+                  verified
+                </span>
+              </div>
+              <h3 className="text-2xl font-black mb-2 uppercase tracking-tight">Rangkuman Terkirim!</h3>
+              <p className="text-teal-50 text-opacity-80 text-sm font-medium mb-8 leading-relaxed">
+                Terima kasih telah menuntaskan materi Strategi Pembelajaran. Tutor akan memberikan umpan balik segera.
+              </p>
+              <div className="bg-white bg-opacity-5 px-8 py-6 rounded-2xl w-full border border-white border-opacity-10 text-left">
+                <p className="text-[10px] font-black uppercase text-teal-400 mb-2 tracking-widest">Konten Rangkuman:</p>
+                <p className="text-xs md:text-sm italic font-serif opacity-90 leading-relaxed text-teal-50">
+                  "{status.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (sectionName === "Materi Pembelajaran" && (id === "1" || id === "2")) {
     return (
       <div className="space-y-12 pb-10">
