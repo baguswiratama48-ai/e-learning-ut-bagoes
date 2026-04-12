@@ -1158,6 +1158,13 @@ const REFLECTION_QUESTIONS_DATA = {
     "Sebutkan satu strategi (seperti modifikasi lingkungan belajar atau komunikasi) yang paling mungkin akan segera Anda terapkan di sekolah Anda sendiri?",
     "Mengapa Bapak/Ibu merasa perlu melibatkan orang tua dan teman sebaya siswa ABK dalam proses belajar (berdasarkan materi Konteks Sosial)?",
     "Bagaimana kesan Anda terhadap bimbingan dan cara penyampaian materi oleh Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selama tutorial ini? Apa harapan atau saran Anda untuk beliau agar sesi berikutnya semakin luar biasa?"
+  ],
+  "4": [
+    "Setelah mengikuti sesi 1 hari ini, apa satu pemahaman baru mengenai Strategi Pembelajaran Kontemporer yang menurut Anda paling menantang namun penting untuk diterapkan di SD?",
+    "Dari materi yang sudah kita diskusikan (Prinsip Belajar, Strategi, dan Metode), bagian mana yang membuat Anda merasa paling siap untuk melakukan perubahan di kelas Anda?",
+    "Bagaimana perasaan Anda belajar menggunakan fitur interaktif (Misi Explorer & Kuis 20 Soal) hari ini? Apakah membantu Anda memahami konsep pedagogi dengan lebih menyenangkan?",
+    "Apa satu komitmen atau janji pribadi Anda untuk mulai menerapkan strategi pembelajaran yang lebih berpusat pada siswa (student-centered) di sekolah Anda?",
+    "Tuliskan kesan dan pesan Anda untuk Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selaku tutor hari ini. Hal apa yang paling menginspirasi Anda dari cara beliau membimbing sesi ini?"
   ]
 };
 
