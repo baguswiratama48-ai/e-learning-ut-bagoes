@@ -3633,8 +3633,28 @@ function DashboardTutor({ user }) {
                                               </button>
                                             </div>
                                             <div className="bg-slate-50 border border-slate-100 p-2.5 rounded-lg mb-3">
-                                              {secName ===
-                                              "Pertanyaan Pemantik" ? (
+                                              {secName === "Kuis dan Latihan" ? (() => {
+                                                const scoreMatch = answer.content?.match(/SKOR AKHIR: (\d+)/);
+                                                const score = scoreMatch ? parseInt(scoreMatch[1]) : null;
+                                                const filled = answer.content?.match(/Terisi: (\d+) dari/)?.[1];
+                                                const isPassed = score !== null && score >= 70;
+                                                return score !== null ? (
+                                                  <div className="flex items-center gap-3">
+                                                    <div className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center shrink-0 ${isPassed ? 'bg-emerald-500' : 'bg-amber-500'}`}>
+                                                      <span className="text-white font-black text-lg leading-none">{score}</span>
+                                                      <span className="text-white text-[8px] font-bold opacity-80">/ 100</span>
+                                                    </div>
+                                                    <div>
+                                                      <p className={`font-black text-sm ${isPassed ? 'text-emerald-600' : 'text-amber-600'}`}>
+                                                        {isPassed ? '✓ LULUS' : '✗ TIDAK LULUS'}
+                                                      </p>
+                                                      <p className="text-[10px] text-slate-400">Kuis 20 Soal • Terisi: {filled || '?'}/20 soal</p>
+                                                    </div>
+                                                  </div>
+                                                ) : (
+                                                  <p className="text-xs text-slate-500 italic">{answer.content}</p>
+                                                );
+                                              })() : secName === "Pertanyaan Pemantik" ? (
                                                 <div className="max-h-[120px] overflow-y-auto pr-1 custom-scrollbar">
                                                   {answer.content
                                                     .split("\n\n")

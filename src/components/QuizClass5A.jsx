@@ -317,26 +317,56 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
     const finalScore = calculateScore();
     const dbScore = statusRow?.content?.match(/SKOR AKHIR: (\d+)/)?.[1];
     const scoreToShow = dbScore ? parseInt(dbScore) : finalScore;
+    const isPassed = scoreToShow >= 70;
+    const correct = Math.round(scoreToShow / 5);
+    const wrong = 20 - correct;
 
     return (
       <div className="max-w-2xl mx-auto py-10 px-4 animate-in zoom-in duration-500">
-        <div className="bg-white rounded-[2.5rem] p-12 shadow-2xl border border-emerald-100 text-center relative">
-          <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner border-4 border-white">
+        <div className="bg-white rounded-[2.5rem] p-10 md:p-12 shadow-2xl border border-emerald-100 text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+          <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner border-4 border-white">
             <span className="material-symbols-outlined text-5xl text-emerald-500">
-              {scoreToShow >= 80 ? 'workspace_premium' : 'auto_awesome'}
+              {isPassed ? 'workspace_premium' : 'auto_awesome'}
             </span>
           </div>
           <h2 className="text-3xl font-black text-slate-800 mb-2">Evaluasi Selesai!</h2>
-          <p className="text-slate-500 mb-10">Berikut adalah pencapaian Anda hari ini:</p>
+          <p className="text-slate-500 mb-8 font-medium">Berikut adalah pencapaian Anda hari ini:</p>
           
-          <div className="bg-slate-900 rounded-[2.5rem] p-12 mb-8 relative group">
+          {/* Score Box */}
+          <div className="bg-slate-900 rounded-[2.5rem] p-10 mb-6 relative group cursor-default">
              <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 transition-all rounded-[2.5rem]"></div>
-             <p className="text-emerald-400 text-xs font-black tracking-[0.3em] uppercase mb-1">Skor Akhir</p>
-             <h3 className="text-7xl font-black text-white">{scoreToShow}</h3>
+             <p className="text-emerald-400 text-[10px] font-black tracking-[0.3em] uppercase mb-1">Skor Akhir</p>
+             <h3 className="text-7xl font-black text-white mb-2">{scoreToShow}</h3>
+             <p className="text-slate-400 text-xs font-semibold">dari 100 poin</p>
+          </div>
+
+          {/* Summary Grid */}
+          <div className="grid grid-cols-3 gap-3 mb-8">
+            <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+              <p className="text-2xl font-black text-emerald-600">{correct}</p>
+              <p className="text-[10px] font-bold text-emerald-500 uppercase">Benar</p>
+            </div>
+            <div className="bg-red-50 p-4 rounded-2xl border border-red-100">
+              <p className="text-2xl font-black text-red-500">{wrong}</p>
+              <p className="text-[10px] font-bold text-red-400 uppercase">Salah</p>
+            </div>
+            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+              <p className="text-2xl font-black text-slate-700">20</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase">Total Soal</p>
+            </div>
+          </div>
+
+          {/* Status Badge */}
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-black text-sm mb-6 ${
+            isPassed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+          }`}>
+            <span className="material-symbols-outlined text-base">{isPassed ? 'check_circle' : 'info'}</span>
+            {isPassed ? 'LULUS — Nilai di atas KKM 70' : 'PERLU PERBAIKAN — Nilai di bawah KKM 70'}
           </div>
 
           <p className="text-sm font-medium text-slate-400">
-            Nilai Anda telah tersimpan secara otomatis<br/>di Dashboard Tutor SPGK4307.
+            Nilai Anda telah tersimpan secara otomatis<br/>di Dashboard Tutor SPGK4410.
           </p>
         </div>
       </div>
