@@ -1164,7 +1164,8 @@ const REFLECTION_QUESTIONS_DATA = {
     "Bagaimana cara Bapak/Ibu menyesuaikan strategi pembelajaran agar sesuai dengan karakteristik perkembangan siswa SD yang bersifat konkret dan aktif?",
     "Dari materi hari ini (Tujuan & Metode), tantangan apa yang paling sering Bapak/Ibu hadapi saat mencoba menerapkan strategi inkuiri atau penemuan di tingkat SD?",
     "Apa satu komitmen nyata Bapak/Ibu untuk mulai mengurangi metode ceramah murni dan beralih ke strategi kontemporer yang lebih berpusat pada siswa SD (student-centered)?",
-    "Tuangkan kesan dan pesan Bapak/Ibu untuk Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selaku tutor. Hal apa dari beliau yang paling menginspirasi Bapak/Ibu untuk menjadi guru SD yang lebih inovatif?"
+    "Tuangkan kesan dan pesan Bapak/Ibu untuk Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selaku tutor. Hal apa dari beliau yang paling menginspirasi Bapak/Ibu untuk menjadi guru SD yang lebih inovatif?",
+    "Terkait dengan cara penyampaian materi pada HARI INI (seperti simulasi mind map, interaksi, dan pengaturan kuis), apa saran atau masukan dari Anda agar Bapak Bagus dapat memfasilitasi proses belajar Anda dengan lebih baik lagi di pertemuan berikutnya?"
   ]
 };
 
