@@ -173,8 +173,18 @@ export const LkpdClass6A = ({
     catch(e) { return null }
   }).filter(Boolean);
 
-  const getAnswerText = (groupNum, questionId) => {
-     const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId);
+  const getMyAnswerText = (groupNum, questionId) => {
+     const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId && d.student_email === user.email);
+     return ansRow ? ansRow._p.text : null;
+  };
+
+  const getLeaderAnswerText = (groupNum, questionId) => {
+     const g = allGroups.find(x => x.group_num === groupNum);
+     if (!g) return null;
+     const leader = g.members.find(m => m.isLeader);
+     const leaderEmail = leader ? leader.email : null;
+
+     const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId && d.student_email === leaderEmail);
      return ansRow ? ansRow._p.text : null;
   };
 
@@ -194,7 +204,7 @@ export const LkpdClass6A = ({
             <div>
               <h1 className="font-headline font-black text-2xl md:text-4xl mb-3 tracking-tight leading-tight">Misi Kelompok {activeGroupNum} (Modul {activeGroupNum})</h1>
               <p className="text-slate-400 text-xs md:text-sm font-medium max-w-2xl leading-relaxed mb-6">
-                Ini adalah ruang diskusi terpadu. Anggota biasa dapat berdiskusi (Komentar) di materi kelompok lain, sementara Anggota yang ditunjuk sebagai <span className="text-yellow-400 font-black">KETUA</span> bertugas memposting poin presentasi utamanya.
+                Ini adalah ruang diskusi terpadu. Semua anggota <span className="font-bold text-white">wajib mengisi seluruh poin materi</span> di bawah ini sebagai tugas individu. Namun, <span className="text-yellow-400 font-black">HANYA JAWABAN KETUA</span> yang akan dipublikasikan ke Pusat Data untuk didiskusikan lintas kelompok.
               </p>
               <div className="inline-flex flex-wrap items-center gap-3 bg-white bg-opacity-10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white border-opacity-10">
                 <span className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-black text-slate-900 shrink-0 text-xl">
@@ -209,9 +219,9 @@ export const LkpdClass6A = ({
               </div>
             </div>
             {!isLeader && (
-              <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 px-5 py-4 rounded-2xl w-full md:w-auto">
-                 <p className="text-red-400 font-bold mb-1 text-sm"><span className="material-symbols-outlined text-sm inline-block translate-y-0.5">lock</span> Hak Posting Terkunci</p>
-                 <p className="text-xs text-red-300 leading-relaxed max-w-[200px]">Hanya Ketua Kelompok yang dapat mengisi kerangka Topik Utama presentasi Modul ini.</p>
+              <div className="bg-slate-800 bg-opacity-50 border border-slate-700 px-5 py-4 rounded-2xl w-full md:w-auto">
+                 <p className="text-slate-300 font-bold mb-1 text-sm"><span className="material-symbols-outlined text-sm inline-block translate-y-0.5">info</span> Info Tayangan Publik</p>
+                 <p className="text-xs text-slate-400 leading-relaxed max-w-[200px]">Tugas Anda hanya dinilai oleh Tutor. Hanya Jawaban Ketua Kelompok yang akan rilis ke tayangan publik.</p>
               </div>
             )}
          </div>
@@ -222,12 +232,16 @@ export const LkpdClass6A = ({
         <div className={`absolute top-0 left-0 w-2 h-full rounded-l-3xl ${activeGroupNum === 1 ? 'bg-indigo-500' : activeGroupNum === 2 ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
         <div className="mb-6 flex justify-between items-center">
             <h3 className="font-black text-xl text-slate-800">Draft Pengerjaan Topik Modul {activeGroupNum}</h3>
-            {isLeader && <span className="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full animate-pulse flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">edit</span> Anda bisa mengetik</span>}
+            {isLeader ? (
+               <span className="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full animate-pulse flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">public</span> Jawaban Anda Akan Tayang ke Publik</span>
+            ) : (
+               <span className="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full flex items-center gap-1">Tugas Pribadi (Privat)</span>
+            )}
         </div>
         
         <div className="space-y-6">
             {currentQuestions.map((questionText, idx) => {
-               const savedAnswer = getAnswerText(activeGroupNum, questionText);
+               const savedAnswer = getMyAnswerText(activeGroupNum, questionText);
 
                return (
               <div key={idx} className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
@@ -236,42 +250,27 @@ export const LkpdClass6A = ({
                     {questionText}
                   </label>
                   
-                  {isLeader ? (
-                    <div>
-                      <textarea 
-                        className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm focus:border-primary focus:ring-1 outline-none min-h-[100px] text-slate-700"
-                        placeholder="Ketik poin penjelasan untuk dikirim ke Panel Pusat Data..."
-                        defaultValue={savedAnswer || formData[questionText] || ""}
-                        onChange={(e) => setFormData({...formData, [questionText]: e.target.value})}
-                      ></textarea>
-                      <div className="mt-3 flex justify-between items-center">
-                         {savedAnswer ? 
-                            <span className="text-xs font-bold text-emerald-600 flex items-center gap-1"><span className="material-symbols-outlined text-sm">cloud_done</span> Poin ini telah tayang</span>
-                            : <span className="text-xs font-bold text-slate-400">Belum ditayangkan</span>
-                         }
-                         <button 
-                            onClick={() => handlePostAnswer(questionText, idx)}
-                            disabled={loadingItems[questionText]}
-                            className="bg-slate-800 hover:bg-black text-white text-xs font-black px-5 py-2.5 rounded-lg flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 shadow-md"
-                         >
-                            {loadingItems[questionText] ? "MENYIMPAN..." : savedAnswer ? "UPDATE POSTINGAN" : "POSTING POIN KE PANEL"}
-                         </button>
-                      </div>
+                  <div>
+                    <textarea 
+                      className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm focus:border-primary focus:ring-1 outline-none min-h-[100px] text-slate-700"
+                      placeholder="Ketik poin penjelasan materi untuk disetor..."
+                      defaultValue={savedAnswer || formData[questionText] || ""}
+                      onChange={(e) => setFormData({...formData, [questionText]: e.target.value})}
+                    ></textarea>
+                    <div className="mt-3 flex justify-between items-center">
+                       {savedAnswer ? 
+                          <span className="text-xs font-bold text-emerald-600 flex items-center gap-1"><span className="material-symbols-outlined text-sm">cloud_done</span> Terekam di Sistem</span>
+                          : <span className="text-xs font-bold text-slate-400">Belum disetor</span>
+                       }
+                       <button 
+                          onClick={() => handlePostAnswer(questionText, idx)}
+                          disabled={loadingItems[questionText]}
+                          className="bg-slate-800 hover:bg-black text-white text-xs font-black px-5 py-2.5 rounded-lg flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 shadow-md"
+                       >
+                          {loadingItems[questionText] ? "MENYIMPAN..." : savedAnswer ? "PERBARUI JAWABAN" : "SIMPAN JAWABAN"}
+                       </button>
                     </div>
-                  ) : (
-                    <div className="p-5 bg-white border border-slate-200 rounded-xl">
-                      {savedAnswer ? (
-                         <div className="space-y-2">
-                           <span className="text-[10px] uppercase font-black tracking-widest text-emerald-500 flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">public</span> SUDAH TAYANG KE PUBLIK</span>
-                           <p className="text-sm text-slate-700 font-serif leading-relaxed text-justify">{savedAnswer}</p>
-                         </div>
-                      ) : (
-                         <p className="text-xs text-slate-400 font-bold italic flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[16px] animate-spin">sync</span> Menunggu Ketua memposting poin ini...
-                         </p>
-                      )}
-                    </div>
-                  )}
+                  </div>
               </div>
             )})}
         </div>
@@ -312,11 +311,12 @@ export const LkpdClass6A = ({
                     </div>
                     
                     {questionsArray.map((qText, qIdx) => {
-                       const postContent = getAnswerText(gNum, qText);
+                       const postContent = getLeaderAnswerText(gNum, qText);
                        if (!postContent) return null; // Skip if leader hasn't posted
 
                        const comments = getComments(gNum, qText);
-                       const postAuthor = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === gNum && d._p.questionId === qText)._p.authorName;
+                       const leaderNode = allGroups.find(x => x.group_num === gNum)?.members.find(m => m.isLeader);
+                       const postAuthorName = leaderNode ? leaderNode.name : "Ketua Kelompok";
 
                        return (
                          <div key={qIdx} className="bg-white rounded-3xl border border-indigo-100 shadow-sm overflow-hidden flex flex-col md:flex-row">
@@ -325,7 +325,7 @@ export const LkpdClass6A = ({
                                <div className="flex items-center gap-2 mb-4">
                                   <span className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><span className="material-symbols-outlined text-[14px] text-indigo-600">record_voice_over</span></span>
                                   <div>
-                                     <p className="font-bold text-xs text-slate-800">{postAuthor} <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Ketua Kel. {gNum}</span></p>
+                                     <p className="font-bold text-xs text-slate-800">{postAuthorName} <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Ketua Kel. {gNum}</span></p>
                                      <p className="text-[10px] text-slate-400 font-medium">Memposting Topik Utama</p>
                                   </div>
                                </div>
@@ -353,7 +353,7 @@ export const LkpdClass6A = ({
                                <div className="flex gap-2">
                                   <input 
                                      type="text" 
-                                     placeholder={`Tanggapi bahasan ${postAuthor}...`}
+                                     placeholder={`Tanggapi tulisan / tanya ke ketua kelompok ${gNum}...`}
                                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs focus:border-indigo-500 focus:ring-1 outline-none"
                                      value={commentInputs[`${gNum}_${qText}`] || ""}
                                      onChange={e => setCommentInputs({...commentInputs, [`${gNum}_${qText}`]: e.target.value})}
