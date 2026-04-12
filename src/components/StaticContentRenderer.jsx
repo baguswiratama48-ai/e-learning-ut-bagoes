@@ -1509,8 +1509,8 @@ export const StaticContentRenderer = ({
                 <p className="text-[10px] font-black text-teal-500 uppercase tracking-widest mb-2">Pertanyaan {i + 1}</p>
                 <p className="text-sm font-semibold text-slate-800 mb-4 leading-relaxed">{q}</p>
                 <div className="bg-teal-50 p-4 rounded-xl border-l-4 border-teal-500">
-                  <p className="text-sm text-slate-700 italic leading-relaxed">
-                    "{pemantikAnswers[i] || status.content.split("\n\n")[i]?.split("Jawaban: ")[1] || "-"}"
+                  <p className="text-sm text-slate-700 italic leading-relaxed whitespace-pre-wrap">
+                    "{pemantikAnswers[i] || status.content.split(/\n\n(?=Pertanyaan \d+:)/)[i]?.split("\nJawaban: ")[1] || "-"}"
                   </p>
                 </div>
               </div>
@@ -1651,7 +1651,7 @@ export const StaticContentRenderer = ({
                   {status ? (
                     <div className="bg-white border-2 border-slate-50 p-5 md:p-8 rounded-[1.2rem] md:rounded-[2rem] shadow-inner relative">
                        <p className="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 md:mb-3">Analisis Anda:</p>
-                       <p className="text-xs md:text-base text-slate-700 italic font-serif leading-relaxed">
+                       <p className="text-xs md:text-base text-slate-700 italic font-serif leading-relaxed whitespace-pre-wrap">
                          "{status.content.split("\n\n---\n\n")[i]?.split("Jawaban: ")[1] || "Jawaban belum tersedia."}"
                        </p>
                        <div className="absolute top-4 right-4 md:top-6 md:right-6">
@@ -1769,12 +1769,12 @@ export const StaticContentRenderer = ({
                 </p>
                 <p className="text-sm font-medium text-slate-700 mb-3">{q}</p>
                 <div className="bg-slate-50 p-3 rounded-xl border-l-4 border-primary border-opacity-30">
-                  <p className="text-sm text-slate-600 italic">
+                  <p className="text-sm text-slate-600 italic whitespace-pre-wrap">
                     "
                     {pemantikAnswers[i] ||
                       status.content
-                        .split("\n\n")
-                        [i]?.split("Jawaban: ")[1] ||
+                        .split(/\n\n(?=Pertanyaan \d+:)/)
+                        [i]?.split("\nJawaban: ")[1] ||
                       "-"}
                     "
                   </p>

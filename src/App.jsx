@@ -3671,7 +3671,7 @@ function DashboardTutor({ user }) {
                                               })() : secName === "Pertanyaan Pemantik" ? (
                                                 <div className="max-h-[120px] overflow-y-auto pr-1 custom-scrollbar">
                                                   {answer.content
-                                                    .split("\n\n")
+                                                    .split(/\n\n(?=Pertanyaan \d+:|---|\[Kasus \d+\])/)
                                                     .map((block, bi) => {
                                                       const parts =
                                                         block.split(
@@ -3684,11 +3684,11 @@ function DashboardTutor({ user }) {
                                                         >
                                                           <p className="text-[9px] text-slate-400 leading-tight mb-0.5">
                                                             {parts[0]?.replace(
-                                                              `Pertanyaan ${bi + 1}: `,
+                                                              /Pertanyaan \d+:\s/g,
                                                               `Q${bi + 1}: `,
-                                                            )}
+                                                            ).replace(/\[Kasus \d+\]\nKonteks: /g, `KASUS ${bi + 1}: `).replace(/^---\n/, '')}
                                                           </p>
-                                                          <p className="text-[10px] font-medium text-slate-700 italic border-l-2 border-primary border-opacity-20 pl-1.5 leading-snug">
+                                                          <p className="text-[10px] font-medium text-slate-700 italic border-l-2 border-primary border-opacity-20 pl-1.5 leading-snug whitespace-pre-wrap">
                                                             "{parts[1] || "-"}"
                                                           </p>
                                                         </div>
