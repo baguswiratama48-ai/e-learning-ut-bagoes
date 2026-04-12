@@ -331,6 +331,12 @@ const STUDENTS = [
     classId: "1",
   },
   {
+    nim: "860080386",
+    name: "CICA ATIKA",
+    email: "860080386@ecampus.ut.ac.id",
+    classId: "1",
+  },
+  {
     nim: "859781448",
     name: "CHINTYA YESI MEILIN",
     email: "859781448@ecampus.ut.ac.id",

@@ -1409,7 +1409,7 @@ export const StaticContentRenderer = ({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Ketik jawaban Anda di sini..."
-                className="w-full bg-white bg-opacity-5 border border-white border-opacity-20 rounded-xl p-4 text-sm focus:bg-white bg-opacity-10 focus:border-yellow-400 outline-none min-h-[120px]"
+                className="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-xl p-4 text-sm text-white placeholder:text-slate-400 focus:bg-white focus:bg-opacity-15 focus:border-yellow-400 outline-none min-h-[120px] resize-none transition-all"
               ></textarea>
               <button
                 onClick={() => handleAction(content)}
