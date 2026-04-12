@@ -794,6 +794,99 @@ export const StaticContentRenderer = ({
           </div>
         </section>
 
+        {/* Peta Konsep Section */}
+        <section className="bg-slate-50 rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-16 border border-slate-200 border-opacity-50 relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-500 via-teal-200 to-teal-500"></div>
+           <div className="relative z-10">
+              <div className="text-center mb-12">
+                 <span className="material-symbols-outlined text-teal-500 text-4xl mb-4">account_tree</span>
+                 <h2 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter">Peta Kompetensi Belajar</h2>
+                 <p className="text-slate-400 text-xs md:text-sm font-medium max-w-xl mx-auto mt-2">Alur pencapaian kompetensi mulai dari Hakikat Strategi hingga mahir dalam menerapkan Pembelajaran yang Efektif.</p>
+              </div>
+
+              {/* Visual Flowchart - Mobile Optimized */}
+              <div className="flex flex-col items-center space-y-4 md:space-y-6">
+                 {/* Level 1: Goal */}
+                 <div className="w-full max-w-2xl bg-teal-900 text-white p-6 rounded-3xl shadow-xl text-center border-b-4 border-teal-700">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-teal-300 mb-2">Kompetensi Utama (Target Akhir)</p>
+                    <p className="text-sm md:text-base font-bold leading-relaxed italic">"Mampu merencanakan dan melaksanakan proses pembelajaran yang efektif di SD kelas kontemporer."</p>
+                 </div>
+
+                 <span className="material-symbols-outlined text-teal-300 animate-bounce">south</span>
+
+                 {/* Top Level: Modul 12 */}
+                 <div className="w-full max-w-md bg-white border-2 border-teal-500 p-4 rounded-2xl shadow-sm text-center">
+                    <span className="text-[10px] font-black text-teal-500">MODUL 12</span>
+                    <p className="font-bold text-slate-800 text-sm">Menerapkan Pembelajaran yang Efektif</p>
+                 </div>
+
+                 <span className="material-symbols-outlined text-slate-300">expand_less</span>
+
+                 {/* Level: Modul 11 */}
+                 <div className="w-full max-w-md bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center">
+                    <span className="text-[10px] font-black text-slate-400">MODUL 11</span>
+                    <p className="font-bold text-slate-700 text-sm italic">Menerapkan Disiplin Kelas</p>
+                 </div>
+
+                 <span className="material-symbols-outlined text-slate-300">expand_less</span>
+
+                 {/* Level: Modul 10 */}
+                 <div className="w-full max-w-md bg-white border border-slate-200 p-4 rounded-2xl shadow-sm text-center">
+                    <span className="text-[10px] font-black text-slate-400">MODUL 10</span>
+                    <p className="font-bold text-slate-700 text-sm italic">Menerapkan Pengelolaan Kelas</p>
+                 </div>
+
+                 <span className="material-symbols-outlined text-slate-300">expand_less</span>
+
+                 {/* Parallel Level: Modul 9 & 8 */}
+                 <div className="grid grid-cols-2 gap-3 w-full max-w-2xl">
+                    <div className="bg-teal-50 border border-teal-100 p-4 rounded-2xl text-center">
+                       <span className="text-[9px] font-black text-teal-600">MODUL 09</span>
+                       <p className="font-bold text-teal-900 text-[11px] md:text-xs">Kegiatan Remedial & Pengayaan</p>
+                    </div>
+                    <div className="bg-teal-50 border border-teal-100 p-4 rounded-2xl text-center">
+                       <span className="text-[9px] font-black text-teal-600">MODUL 08</span>
+                       <p className="font-bold text-teal-900 text-[11px] md:text-xs">Keterampilan Dasar Mengajar 2</p>
+                    </div>
+                 </div>
+
+                 <span className="material-symbols-outlined text-slate-300">expand_less</span>
+
+                 {/* Major Foundations: Modul 7, 3, 4, 5, 6 */}
+                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2 w-full">
+                    {[
+                       { id: 7, t: "Keterampilan Dasar Mengajar 1" },
+                       { id: 3, t: "Model Pembelajaran" },
+                       { id: 4, t: "Prosedur Pembelajaran" },
+                       { id: 5, t: "Pemilihan Metode" },
+                       { id: 6, t: "Media Pembelajaran" }
+                    ].map(m => (
+                       <div key={m.id} className="bg-white border border-slate-100 p-3 rounded-xl text-center shadow-sm">
+                          <span className="text-[8px] font-black text-slate-400">MODUL {String(m.id).padStart(2, '0')}</span>
+                          <p className="text-[9px] font-bold text-slate-600 leading-tight mt-1">{m.t}</p>
+                       </div>
+                    ))}
+                 </div>
+
+                 <span className="material-symbols-outlined text-slate-300">expand_less</span>
+
+                 {/* Level 2: Karakteristik */}
+                 <div className="w-full max-w-sm bg-slate-100 border border-slate-200 p-4 rounded-2xl text-center">
+                    <span className="text-[10px] font-black text-slate-400 uppercase">Tahap 2</span>
+                    <p className="font-bold text-slate-700 text-sm">Karakteristik Strategi Pembelajaran di SD</p>
+                 </div>
+
+                 <span className="material-symbols-outlined text-teal-400">north</span>
+
+                 {/* Bottom Level: Modul 1 (The Start) */}
+                 <div className="w-full max-w-sm bg-teal-500 text-white p-5 rounded-3xl shadow-lg text-center animate-pulse">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-teal-100 mb-1">Titik Awal (Start Here)</p>
+                    <p className="font-black text-sm md:text-base tracking-tight">MODUL 1: Hakikat Strategi Pembelajaran</p>
+                 </div>
+              </div>
+           </div>
+        </section>
+
         {/* Verification Section */}
         <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
           {!status ? (
@@ -801,31 +894,35 @@ export const StaticContentRenderer = ({
               <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 px-4 py-2 rounded-full border border-teal-200 text-[10px] font-black uppercase tracking-widest mb-4">
                   <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
-                  Eksplorasi Modul
+                  Garis Start Mahasiswa
                 </div>
-                <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2 text-center uppercase tracking-tight">
-                  Apa Harapan Belajar Anda?
+                <h3 className="text-xl md:text-3xl font-black text-slate-800 mb-2 text-center uppercase tracking-tighter">
+                  Analisis Jalur Belajar 🗺️
                 </h3>
-                <p className="text-slate-400 text-xs md:text-sm font-medium">Dari 12 modul di atas, bagian mana yang menurut Anda paling menantang untuk dipraktikkan di kelas?</p>
+                <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed">
+                  Setelah melihat <strong>Peta Kompetensi</strong> di atas, modul nomor berapa yang menurut Anda akan menjadi "Pintu Masuk" termudah, dan modul nomor berapa yang Anda anggap sebagai "Puncak Tantangan" terbesar dalam tutorial ini?
+                </p>
               </div>
 
-              <div className="bg-white border-2 border-teal-500 border-opacity-10 rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-teal-500 shadow-opacity-5 relative">
+              <div className="bg-white border-2 border-teal-500 border-opacity-10 rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-teal-500 shadow-opacity-5 relative group overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500 opacity-[0.02] rounded-full -mr-16 -mt-16 group-hover:opacity-[0.05] transition-opacity"></div>
+                
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Contoh: Modul 10 (Pengelolaan Kelas), karena saya sulit menghadapi siswa yang aktif..."
-                  className="w-full min-h-[160px] bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm focus:bg-white focus:border-teal-500 focus:ring-1 outline-none transition-all resize-none mb-6 font-medium"
+                  placeholder="Ceritakan prediksi Anda di sini (Contoh: Modul 1 termudah, Modul 10 puncak tantangan karena...)"
+                  className="w-full min-h-[160px] bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm md:text-base focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500 focus:ring-opacity-5 outline-none transition-all resize-none mb-6 font-medium text-slate-700 placeholder:text-slate-400"
                 ></textarea>
 
                 <button
                   onClick={() => handleAction(content)}
                   disabled={loading || !content.trim()}
-                  className="w-full bg-[#0d2d2a] text-white font-black py-5 rounded-2xl hover:bg-black transition-all flex items-center justify-center gap-3 group disabled:opacity-50 text-base tracking-widest"
+                  className="w-full bg-[#0d2d2a] text-white font-black py-5 rounded-2xl hover:bg-black hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group disabled:opacity-50 text-sm md:text-base tracking-widest uppercase shadow-xl shadow-teal-900 shadow-opacity-10"
                 >
-                  {loading ? "MENGIRIM ANALISIS..." : "SIMPAN KONFIRMASI PEMAHAMAN"}
+                  {loading ? "MENGIRIM ANALISIS..." : "SIMPAN ANALISIS JALUR BELAJAR"}
                   {!loading && (
                     <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform font-bold">
-                      send
+                      map
                     </span>
                   )}
                 </button>
@@ -838,12 +935,12 @@ export const StaticContentRenderer = ({
                   task_alt
                 </span>
               </div>
-              <h3 className="text-2xl font-black mb-2 uppercase tracking-tight">Analisis Berhasil!</h3>
+              <h3 className="text-2xl font-black mb-2 uppercase tracking-tight">Analisis Terdata! 🗺️</h3>
               <p className="text-white text-opacity-80 text-sm font-medium mb-8">
-                Laporan pemahaman Anda mengenai struktur modul Strategi Pembelajaran telah tersimpan. Tutor akan segera meninjaunya.
+                Laporan analisis jalur belajar Anda telah tersimpan. Peta kompetensi ini akan memandu Anda hingga Modul 12.
               </p>
               <div className="bg-black bg-opacity-20 px-8 py-6 rounded-2xl w-full border border-white border-opacity-10 text-left">
-                <p className="text-[10px] font-black uppercase text-teal-200 mb-2">Jawaban Anda:</p>
+                <p className="text-[10px] font-black uppercase text-teal-200 mb-2">Analisis Jalur Anda:</p>
                 <p className="text-xs md:text-sm italic font-serif opacity-90 leading-relaxed text-slate-100">
                   "{status.content}"
                 </p>
