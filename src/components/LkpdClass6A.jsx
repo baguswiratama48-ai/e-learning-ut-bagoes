@@ -135,26 +135,34 @@ export const LkpdClass6A = ({
     };
 
     try {
-      // Check if already posted by this group for this question
+      // Robust Check: Find ONLY this specific student's previous answer for this question
+      // This prevents teammates in the same group from overwriting each other.
       const existing = liveData.find(d => {
          try {
             const p = JSON.parse(d.content);
-            return p.type === 'answer' && p.groupNum === activeGroupNum && p.questionId === questionText;
+            return d.student_email === user.email && 
+                   p.type === 'answer' && 
+                   p.questionId === questionText &&
+                   String(d.class_id) === String(classId || '3') &&
+                   String(d.meeting_num) === String(meetingId);
          } catch(e){return false;}
       });
 
+      let res;
       if (existing) {
-         await supabase.from('submissions').update({content: payload.content}).eq('id', existing.id);
+         res = await supabase.from('submissions').update({content: payload.content}).eq('id', existing.id);
       } else {
-         await supabase.from('submissions').insert([payload]);
+         res = await supabase.from('submissions').insert([payload]);
       }
       
+      if (res.error) throw res.error;
+
       setSyncStatus(prev => ({...prev, [questionText]: 'saved'}));
       await fetchLiveDiscussions();
     } catch(err) {
-      console.error(err);
+      console.error("CRITICAL_SAVE_ERROR:", err);
       setSyncStatus(prev => ({...prev, [questionText]: 'error'}));
-      alert("Gagal mem-posting ke server. Jangan khawatir, jawaban Anda tetap tersimpan di browser ini (Draft). Silakan coba klik SIMPAN lagi.");
+      alert(`Gagal menyimpan ke server: ${err.message || "Koneksi terputus"}. \n\nTenang Pak/Bu, jawaban Anda aman di browser ini. Silakan klik SIMPAN lagi.`);
     } finally {
       setLoadingItems(prev => ({...prev, [questionText]: false}));
     }
