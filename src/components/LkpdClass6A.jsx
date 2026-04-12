@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../supabaseClient'; // Ensure this path is correct
 
 const MODUL_1_QUESTIONS = [
   "Pengertian Hakikat Perkembangan Anak yang Bersifat Nonnormatif",
@@ -37,28 +38,47 @@ const MODUL_3_QUESTIONS = [
 export const LkpdClass6A = ({
   user,
   meetingId,
-  status,
-  submissions,
-  onComplete,
-  loading
+  submissions: initialSubmissions,
+  classId
 }) => {
+  const [liveData, setLiveData] = useState([]);
   const [formData, setFormData] = useState({});
+  const [loadingItems, setLoadingItems] = useState({});
+  const [commentInputs, setCommentInputs] = useState({});
 
-  // Temukan Grup
-  const groupRow = submissions.find(
+  // 1. Dapatkan Grup & Ketua
+  const groupRow = initialSubmissions.find(
     (s) => s.student_email === "SYSTEM_GROUP" && s.meeting_num === meetingId
   );
-  
   const allGroups = groupRow ? JSON.parse(groupRow.content) : [];
-  
-  // Mahasiswa saat ini ada di grup mana?
-  const myGroup = allGroups.find(g => 
-    g.members.some(m => m.email === user.email)
-  );
+  const myGroup = allGroups.find(g => g.members.some(m => m.email === user.email));
+  const activeGroupNum = myGroup ? myGroup.group_num : 1;
+  const isLeader = myGroup 
+    ? myGroup.members.find(m => m.email === user.email)?.isLeader === true 
+    : user.email === "demo@ecampus.ut.ac.id"; // demo is leader of group 1
+
+  const currentQuestions = activeGroupNum === 1 ? MODUL_1_QUESTIONS : activeGroupNum === 2 ? MODUL_2_QUESTIONS : MODUL_3_QUESTIONS;
+
+  // 2. Local fetcher for Discussion
+  const fetchLiveDiscussions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('submissions')
+        .select('*')
+        .eq('class_id', classId || '3')
+        .eq('meeting_num', meetingId)
+        .in('section_name', ['LKPD_6A_DISCUSSION']);
+      if (data) setLiveData(data);
+    } catch(err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    fetchLiveDiscussions();
+    const interval = setInterval(fetchLiveDiscussions, 10000); // auto refresh every 10s
+    return () => clearInterval(interval);
+  }, [meetingId, classId]);
 
   if (!groupRow || allGroups.length === 0) {
     return (
@@ -70,43 +90,99 @@ export const LkpdClass6A = ({
     );
   }
 
-  if (!myGroup && user.email !== "demo@ecampus.ut.ac.id") {
-    // Fallback if somehow they are not in a group
-    return (
-      <div className="bg-white border border-red-100 bg-red-50 p-10 rounded-[2.5rem] text-center text-red-600 mt-10">
-         <span className="material-symbols-outlined text-4xl mb-4">error</span>
-         <h3 className="font-black text-xl mb-2">Anda tidak terdaftar di kelompok manapun.</h3>
-      </div>
-    );
-  }
-
-  // Jika demo account, kasih ke kelompok 1 by default
-  const activeGroupNum = myGroup ? myGroup.group_num : 1;
-
-  const currentQuestions = activeGroupNum === 1 
-     ? MODUL_1_QUESTIONS 
-     : activeGroupNum === 2 
-        ? MODUL_2_QUESTIONS 
-        : MODUL_3_QUESTIONS;
-
-  const handleAction = () => {
-    // Validate if ALL strictly filled
-    const isAllFilled = currentQuestions.every(q => formData[q] && formData[q].trim().length > 0);
+  // --- Handlers ---
+  const handlePostAnswer = async (questionText, qIdx) => {
+    const val = formData[questionText];
+    if (!val || val.trim().length === 0) return;
     
-    if (!isAllFilled) {
-      alert("Harap isi seluruh kolom materi yang ditugaskan sebelum mengirim laporan kelompok Anda!");
-      return;
+    setLoadingItems(prev => ({...prev, [questionText]: true}));
+    
+    const payload = {
+      student_email: user.email,
+      class_id: classId || '3',
+      meeting_num: meetingId,
+      section_name: 'LKPD_6A_DISCUSSION',
+      content: JSON.stringify({
+        type: 'answer',
+        groupNum: activeGroupNum,
+        questionId: questionText,
+        text: val,
+        authorName: user.name || user.email.split('@')[0],
+        timestamp: new Date().toISOString()
+      })
+    };
+
+    try {
+      // Check if already posted by this group for this question
+      const existing = liveData.find(d => {
+         try {
+            const p = JSON.parse(d.content);
+            return p.type === 'answer' && p.groupNum === activeGroupNum && p.questionId === questionText;
+         } catch(e){return false;}
+      });
+
+      if (existing) {
+         await supabase.from('submissions').update({content: payload.content}).eq('id', existing.id);
+      } else {
+         await supabase.from('submissions').insert([payload]);
+      }
+      // Hapus local draft biar kelihatan clean (Atau biarkan saja gpp)
+      await fetchLiveDiscussions();
+    } catch(err) {
+      console.error(err);
+      alert("Gagal mem-posting jawaban.");
+    } finally {
+      setLoadingItems(prev => ({...prev, [questionText]: false}));
     }
-    const finalPayload = JSON.stringify({
-      groupNum: activeGroupNum,
-      answers: formData
-    });
-    onComplete(finalPayload);
   };
 
-  const otherSubmissions = submissions.filter(
-    (s) => s.section_name === "LKPD (Lembar Kerja Peserta Didik)" && s.student_email !== "SYSTEM_GROUP" && s.meeting_num === meetingId
-  );
+  const handlePostComment = async (targetGroupNum, questionId) => {
+    const key = `${targetGroupNum}_${questionId}`;
+    const txt = commentInputs[key];
+    if (!txt || txt.trim().length === 0) return;
+
+    const payload = {
+      student_email: user.email,
+      class_id: classId || '3',
+      meeting_num: meetingId,
+      section_name: 'LKPD_6A_DISCUSSION',
+      content: JSON.stringify({
+        type: 'comment',
+        targetGroupNum: targetGroupNum,
+        questionId: questionId,
+        text: txt,
+        authorName: user.name || user.email.split('@')[0],
+        authorGroup: activeGroupNum || 0,
+        timestamp: new Date().toISOString()
+      })
+    };
+
+    try {
+      await supabase.from('submissions').insert([payload]);
+      setCommentInputs({...commentInputs, [key]: ''});
+      await fetchLiveDiscussions();
+    } catch (e) {
+      alert("Gagal mengirim komentar.");
+    }
+  };
+
+  // --- Rendering Helpers ---
+  // Get all parsed data
+  const parsedData = liveData.map(d => {
+    try { return { ...d, _p: JSON.parse(d.content) } } 
+    catch(e) { return null }
+  }).filter(Boolean);
+
+  const getAnswerText = (groupNum, questionId) => {
+     const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId);
+     return ansRow ? ansRow._p.text : null;
+  };
+
+  const getComments = (groupNum, questionId) => {
+     return parsedData.filter(d => d._p.type === 'comment' && d._p.targetGroupNum === groupNum && d._p.questionId === questionId)
+                      .sort((a,b) => new Date(a._p.timestamp) - new Date(b._p.timestamp));
+  };
+
 
   return (
     <div className="space-y-8 md:space-y-12 pb-10">
@@ -114,136 +190,190 @@ export const LkpdClass6A = ({
       {/* HEADER INFO */}
       <div className="bg-slate-900 text-white rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden border-b-8 border-b-yellow-400 mt-8">
          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
-         <div className="relative z-10">
-            <h1 className="font-headline font-black text-2xl md:text-4xl mb-3 tracking-tight leading-tight">Misi Kelompok {activeGroupNum} (Modul {activeGroupNum})</h1>
-            <p className="text-slate-400 text-xs md:text-sm font-medium max-w-2xl leading-relaxed mb-6">
-              Silakan isi bahan materi spesifik sesuai bagian kelompok kalian di bawah ini dengan berdiskusi. Laporan ini wajib diisi utuh sebagai bahan catatan lintas pandang untuk kelompok lain.
-            </p>
-            <div className="inline-flex flex-wrap items-center gap-3 bg-white bg-opacity-10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white border-opacity-10">
-               <span className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-black text-slate-900 shrink-0 text-xl">
-                  {activeGroupNum}
-               </span>
-               <div>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-slate-300 mb-0.5">Posisi Kamu Saat Ini</p>
-                  <p className="font-bold text-xs">Anggota Kelompok {activeGroupNum}</p>
-               </div>
+         <div className="relative z-10 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+            <div>
+              <h1 className="font-headline font-black text-2xl md:text-4xl mb-3 tracking-tight leading-tight">Misi Kelompok {activeGroupNum} (Modul {activeGroupNum})</h1>
+              <p className="text-slate-400 text-xs md:text-sm font-medium max-w-2xl leading-relaxed mb-6">
+                Ini adalah ruang diskusi terpadu. Anggota biasa dapat berdiskusi (Komentar) di materi kelompok lain, sementara Anggota yang ditunjuk sebagai <span className="text-yellow-400 font-black">KETUA</span> bertugas memposting poin presentasi utamanya.
+              </p>
+              <div className="inline-flex flex-wrap items-center gap-3 bg-white bg-opacity-10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white border-opacity-10">
+                <span className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-black text-slate-900 shrink-0 text-xl">
+                    {activeGroupNum}
+                </span>
+                <div>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-300 mb-0.5">Role / Jabatan Anda</p>
+                    <p className="font-bold text-xs flex items-center gap-1">
+                      {isLeader ? <><span className="material-symbols-outlined text-sm text-yellow-400">workspace_premium</span> Ketua Kelompok {activeGroupNum}</> : `Anggota Kelompok ${activeGroupNum}`}
+                    </p>
+                </div>
+              </div>
             </div>
+            {!isLeader && (
+              <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 px-5 py-4 rounded-2xl w-full md:w-auto">
+                 <p className="text-red-400 font-bold mb-1 text-sm"><span className="material-symbols-outlined text-sm inline-block translate-y-0.5">lock</span> Hak Posting Terkunci</p>
+                 <p className="text-xs text-red-300 leading-relaxed max-w-[200px]">Hanya Ketua Kelompok yang dapat mengisi kerangka Topik Utama presentasi Modul ini.</p>
+              </div>
+            )}
          </div>
       </div>
 
-      {/* FORM INPUT AREA */}
-      {!status ? (
-        <div className="bg-white rounded-3xl shadow-xl shadow-slate-200 shadow-opacity-40 p-5 md:p-8 border border-slate-100 relative">
-          <div className={`absolute top-0 left-0 w-2 h-full rounded-l-3xl ${activeGroupNum === 1 ? 'bg-indigo-500' : activeGroupNum === 2 ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-          <div className="space-y-6">
-             {currentQuestions.map((questionText, idx) => (
-                <div key={idx} className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
-                   <label className="block text-xs md:text-sm font-bold text-slate-800 mb-3 leading-snug">
-                     <span className="inline-block bg-white text-slate-500 px-2.5 py-1 rounded-lg text-[10px] font-black mr-2 border border-slate-200">{idx+1}</span>
-                     {questionText}
-                   </label>
-                   <textarea 
-                     className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm focus:border-primary focus:ring-1 outline-none min-h-[100px] text-slate-700"
-                     placeholder="Ketik penjelasan mendalam dari modul di sini..."
-                     value={formData[questionText] || ""}
-                     onChange={(e) => setFormData({...formData, [questionText]: e.target.value})}
-                   ></textarea>
-                </div>
-             ))}
-          </div>
-          <hr className="my-8 border-slate-100" />
-          <button 
-             onClick={handleAction}
-             disabled={loading}
-             className="w-full bg-slate-900 hover:bg-black text-white font-black py-4 rounded-xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-xl disabled:opacity-50 text-sm md:text-base"
-          >
-             KIRIM MISI KELOMPOK {activeGroupNum}
-             <span className="material-symbols-outlined text-yellow-400">send</span>
-          </button>
+      {/* TUGAS UTAMA (Hanya Ketua yang bisa isi) */}
+      <div className="bg-white rounded-3xl shadow-xl shadow-slate-200 shadow-opacity-40 p-5 md:p-8 border border-slate-100 relative">
+        <div className={`absolute top-0 left-0 w-2 h-full rounded-l-3xl ${activeGroupNum === 1 ? 'bg-indigo-500' : activeGroupNum === 2 ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+        <div className="mb-6 flex justify-between items-center">
+            <h3 className="font-black text-xl text-slate-800">Draft Pengerjaan Topik Modul {activeGroupNum}</h3>
+            {isLeader && <span className="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full animate-pulse flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">edit</span> Anda bisa mengetik</span>}
         </div>
-      ) : (
-        <div className="bg-emerald-50 border border-emerald-200 p-8 md:p-12 rounded-3xl text-center shadow-inner relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 bg-opacity-10 blur-xl rounded-full"></div>
-           <span className="material-symbols-outlined text-6xl text-emerald-500 mb-4 relative z-10">task_alt</span>
-           <h3 className="font-black text-2xl text-emerald-900 mb-2 relative z-10">Tugas Kelompok {activeGroupNum} Selesai!</h3>
-           <p className="text-emerald-700 font-medium text-sm md:text-base relative z-10 max-w-xl mx-auto leading-relaxed">
-             Materi Anda telah terekam aman di sistem. Sekarang, tinjau hasil penelitian silang dari teman-temanmu di kelompok lainnya di bawah ini.
-           </p>
-        </div>
-      )}
+        
+        <div className="space-y-6">
+            {currentQuestions.map((questionText, idx) => {
+               const savedAnswer = getAnswerText(activeGroupNum, questionText);
 
-      {/* GALLERY OF SUBMISSIONS */}
-      <div className="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-5 md:p-10 mb-20 md:mb-10 mt-10 shadow-sm">
-         <div className="text-center mb-8 md:mb-12">
-            <h2 className="font-headline font-black text-xl md:text-3xl text-slate-800 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3 mb-3">
-               <span className="material-symbols-outlined text-4xl text-primary mb-2 md:mb-0">explore</span>
-               Pusat Data Lintas Kelompok
+               return (
+              <div key={idx} className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
+                  <label className="block text-xs md:text-sm font-bold text-slate-800 mb-3 leading-snug">
+                    <span className="inline-block bg-white text-slate-500 px-2.5 py-1 rounded-lg text-[10px] font-black mr-2 border border-slate-200">{idx+1}</span>
+                    {questionText}
+                  </label>
+                  
+                  {isLeader ? (
+                    <div>
+                      <textarea 
+                        className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm focus:border-primary focus:ring-1 outline-none min-h-[100px] text-slate-700"
+                        placeholder="Ketik poin penjelasan untuk dikirim ke Panel Pusat Data..."
+                        defaultValue={savedAnswer || formData[questionText] || ""}
+                        onChange={(e) => setFormData({...formData, [questionText]: e.target.value})}
+                      ></textarea>
+                      <div className="mt-3 flex justify-between items-center">
+                         {savedAnswer ? 
+                            <span className="text-xs font-bold text-emerald-600 flex items-center gap-1"><span className="material-symbols-outlined text-sm">cloud_done</span> Poin ini telah tayang</span>
+                            : <span className="text-xs font-bold text-slate-400">Belum ditayangkan</span>
+                         }
+                         <button 
+                            onClick={() => handlePostAnswer(questionText, idx)}
+                            disabled={loadingItems[questionText]}
+                            className="bg-slate-800 hover:bg-black text-white text-xs font-black px-5 py-2.5 rounded-lg flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 shadow-md"
+                         >
+                            {loadingItems[questionText] ? "MENYIMPAN..." : savedAnswer ? "UPDATE POSTINGAN" : "POSTING POIN KE PANEL"}
+                         </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-5 bg-white border border-slate-200 rounded-xl">
+                      {savedAnswer ? (
+                         <div className="space-y-2">
+                           <span className="text-[10px] uppercase font-black tracking-widest text-emerald-500 flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">public</span> SUDAH TAYANG KE PUBLIK</span>
+                           <p className="text-sm text-slate-700 font-serif leading-relaxed text-justify">{savedAnswer}</p>
+                         </div>
+                      ) : (
+                         <p className="text-xs text-slate-400 font-bold italic flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[16px] animate-spin">sync</span> Menunggu Ketua memposting poin ini...
+                         </p>
+                      )}
+                    </div>
+                  )}
+              </div>
+            )})}
+        </div>
+      </div>
+
+      {/* GALLERY OF DISCUSSIONS (INTERACTIVE THREAD) */}
+      <div className="bg-indigo-50 bg-opacity-50 border border-indigo-100 rounded-[2.5rem] p-5 md:p-10 mt-16 shadow-inner">
+         <div className="text-center mb-10 md:mb-12">
+            <h2 className="font-headline font-black text-2xl md:text-3xl text-indigo-900 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3 mb-3">
+               <span className="material-symbols-outlined text-4xl text-indigo-500 mb-2 md:mb-0">forum</span>
+               Pusat Diskusi LKPD
             </h2>
-            <p className="text-slate-500 text-xs md:text-sm font-medium px-4">Di sini Anda bisa mempelajari ringkasan materi dari kelompok spesialis modul lain.</p>
+            <p className="text-indigo-700 text-xs md:text-sm font-medium px-4">Ruang debat dan tanya jawab silang antar Modul 1, 2, dan 3.</p>
          </div>
 
-         {otherSubmissions.length === 0 ? (
-            <div className="text-center bg-white p-10 rounded-3xl border border-slate-100 shadow-sm">
-               <span className="material-symbols-outlined text-slate-300 text-5xl mb-4">hourglass_empty</span>
-               <p className="text-slate-500 font-medium text-sm">Belum ada mahasiswa yang mengumpulkan tugas untuk dipelajari.</p>
-            </div>
-         ) : (
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
-               {[1, 2, 3].map(gNum => {
-                  const subsForThisGroup = otherSubmissions.filter(s => {
-                    try {
-                       const parsed = JSON.parse(s.content);
-                       return parsed.groupNum === gNum;
-                    } catch(e) { return false; }
-                  });
-
-                  if(subsForThisGroup.length === 0) {
-                     return (
-                       <div key={gNum} className="bg-white p-6 rounded-3xl border-2 border-dashed border-slate-200 shadow-sm opacity-50 text-center">
-                          <h4 className="font-black text-slate-400 mb-2 text-lg">Kelompok {gNum}</h4>
-                          <span className="material-symbols-outlined text-slate-300 text-3xl mb-2">more_horiz</span>
-                          <p className="text-xs text-slate-400 font-medium italic">Menunggu anggota kelompok {gNum} mengumpulkan materinya...</p>
-                       </div>
-                     );
-                  }
-
+         <div className="space-y-16">
+            {[1, 2, 3].map(gNum => {
+               const questionsArray = gNum === 1 ? MODUL_1_QUESTIONS : gNum === 2 ? MODUL_2_QUESTIONS : MODUL_3_QUESTIONS;
+               const answersByThisGroup = parsedData.filter(d => d._p.type === 'answer' && d._p.groupNum === gNum);
+               
+               if (answersByThisGroup.length === 0) {
                   return (
-                    <div key={gNum} className="space-y-6">
-                       {subsForThisGroup.map((sub, idx) => {
-                          let data;
-                          try {
-                            data = JSON.parse(sub.content).answers;
-                          } catch(e) { data = {}; }
-                          
-                          // Look for author's name
-                          const author = submissions.find(m => m.student_email === sub.student_email)?.student_email || sub.student_email;
-                          const authorName = author.split('@')[0];
-
-                          return (
-                            <div key={idx} className="bg-white p-5 md:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all h-full flex flex-col">
-                                <div className="border-b border-slate-50 pb-4 mb-4">
-                                   <div className="flex items-center gap-2 mb-1.5">
-                                      <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${gNum === 1 ? 'bg-indigo-100 text-indigo-600' : gNum === 2 ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>{gNum}</span>
-                                      <h4 className="font-black text-slate-800 text-base">Modul {gNum}</h4>
-                                   </div>
-                                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sumber Laporan: {authorName}</p>
-                                </div>
-                                <div className="flex-1 space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar pr-3">
-                                   {Object.keys(data).map((k, itx) => (
-                                      <div key={itx} className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                         <p className="text-[10px] md:text-xs font-black text-slate-700 mb-2 leading-relaxed">{k}</p>
-                                         <p className="text-xs text-slate-600 font-serif leading-relaxed text-justify">{data[k]}</p>
-                                      </div>
-                                   ))}
-                                </div>
-                            </div>
-                          );
-                       })}
+                    <div key={gNum} className="text-center bg-white p-8 rounded-3xl border border-indigo-100 shadow-sm opacity-60">
+                       <h4 className="font-black text-indigo-800 text-lg mb-2">Modul {gNum} (Kelompok {gNum})</h4>
+                       <p className="text-sm text-slate-400 font-medium ita">Kelompok ini belum mem-posting topik apapun ke panel diskusi.</p>
                     </div>
                   );
-               })}
-            </div>
-         )}
+               }
+
+               return (
+                 <div key={gNum} className="space-y-6">
+                    <div className="flex items-center gap-4 mb-2">
+                       <span className="w-12 h-12 bg-white flex items-center justify-center rounded-2xl font-black text-xl text-indigo-600 shadow-sm border border-indigo-100">M{gNum}</span>
+                       <div>
+                         <h3 className="font-black text-2xl text-slate-800">Materi Modul {gNum}</h3>
+                         <p className="text-sm font-medium text-slate-500">Dipresentasikan oleh Kelompok {gNum}</p>
+                       </div>
+                    </div>
+                    
+                    {questionsArray.map((qText, qIdx) => {
+                       const postContent = getAnswerText(gNum, qText);
+                       if (!postContent) return null; // Skip if leader hasn't posted
+
+                       const comments = getComments(gNum, qText);
+                       const postAuthor = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === gNum && d._p.questionId === qText)._p.authorName;
+
+                       return (
+                         <div key={qIdx} className="bg-white rounded-3xl border border-indigo-100 shadow-sm overflow-hidden flex flex-col md:flex-row">
+                            {/* LEFT SIDE: POST */}
+                            <div className="w-full md:w-1/2 p-6 md:p-8 bg-white md:border-r border-indigo-50 border-b md:border-b-0">
+                               <div className="flex items-center gap-2 mb-4">
+                                  <span className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><span className="material-symbols-outlined text-[14px] text-indigo-600">record_voice_over</span></span>
+                                  <div>
+                                     <p className="font-bold text-xs text-slate-800">{postAuthor} <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Ketua Kel. {gNum}</span></p>
+                                     <p className="text-[10px] text-slate-400 font-medium">Memposting Topik Utama</p>
+                                  </div>
+                               </div>
+                               <h4 className="font-black text-sm text-indigo-900 mb-3 leading-snug break-words">{qText}</h4>
+                               <p className="text-sm text-slate-600 font-serif leading-relaxed text-justify whitespace-pre-line">{postContent}</p>
+                            </div>
+
+                            {/* RIGHT SIDE: THREAD */}
+                            <div className="w-full md:w-1/2 bg-slate-50 p-6 flex flex-col">
+                               <p className="text-xs font-black uppercase text-slate-400 mb-4 tracking-widest flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">forum</span> Komentar & Diskusi ({comments.length})</p>
+                               
+                               <div className="flex-1 overflow-y-auto mb-4 space-y-4 max-h-[300px] custom-scrollbar pr-2">
+                                  {comments.map((c, ci) => (
+                                     <div key={ci} className={`p-4 rounded-2xl ${c._p.authorGroup === gNum ? 'bg-indigo-100 bg-opacity-50 ml-6 border border-indigo-200' : 'bg-white border border-slate-200 mr-6 shadow-sm'}`}>
+                                        <div className="flex items-center gap-1.5 mb-1.5">
+                                           <span className="material-symbols-outlined text-[14px] text-slate-400">person</span>
+                                           <p className="text-[10px] font-bold text-slate-700">{c._p.authorName} <span className="font-medium opacity-60">(Kelompok {c._p.authorGroup})</span></p>
+                                        </div>
+                                        <p className="text-xs text-slate-600 leading-relaxed font-serif break-words">{c._p.text}</p>
+                                     </div>
+                                  ))}
+                                  {comments.length === 0 && <p className="text-[10px] font-bold italic text-slate-400 text-center py-6">Jadilah yang pertama mengkritisi presentasi ini...</p>}
+                               </div>
+
+                               <div className="flex gap-2">
+                                  <input 
+                                     type="text" 
+                                     placeholder={`Tanggapi bahasan ${postAuthor}...`}
+                                     className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs focus:border-indigo-500 focus:ring-1 outline-none"
+                                     value={commentInputs[`${gNum}_${qText}`] || ""}
+                                     onChange={e => setCommentInputs({...commentInputs, [`${gNum}_${qText}`]: e.target.value})}
+                                     onKeyDown={e => e.key === 'Enter' && handlePostComment(gNum, qText)}
+                                  />
+                                  <button 
+                                     onClick={() => handlePostComment(gNum, qText)}
+                                     className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-xl flex items-center justify-center transition-colors shadow-sm"
+                                  >
+                                     <span className="material-symbols-outlined text-[16px]">send</span>
+                                  </button>
+                               </div>
+                            </div>
+                         </div>
+                       );
+                    })}
+                 </div>
+               );
+            })}
+         </div>
       </div>
 
     </div>

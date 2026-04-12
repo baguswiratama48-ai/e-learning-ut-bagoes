@@ -2688,10 +2688,12 @@ function DashboardTutor({ user }) {
       }));
 
       shuffled.forEach((student, index) => {
-        groups[index % groupCount].members.push({
+        const groupIndex = index % groupCount;
+        groups[groupIndex].members.push({
           nim: student.nim,
           name: student.name,
           email: student.email,
+          isLeader: groups[groupIndex].members.length === 0, // First person becomes leader by default
         });
       });
 
@@ -2725,6 +2727,40 @@ function DashboardTutor({ user }) {
     } catch (err) {
       console.log(err);
       alert("Gagal mengacak kelompok.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleSetLeader = async (groupNum, newLeaderEmail) => {
+    if (!activeTab || activeTab === "record_m1") return;
+    setGenerating(true);
+    try {
+      const systemGroupRow = submissions.find(
+        (s) =>
+          s.student_email === "SYSTEM_GROUP" &&
+          s.class_id === activeTab &&
+          s.meeting_num === selectedMeeting,
+      );
+      if (!systemGroupRow) return;
+
+      const groups = JSON.parse(systemGroupRow.content);
+      const groupToUpdate = groups.find((g) => g.group_num === groupNum);
+      if (groupToUpdate) {
+        groupToUpdate.members.forEach((m) => {
+          m.isLeader = m.email === newLeaderEmail;
+        });
+      }
+
+      await supabase
+        .from("submissions")
+        .update({ content: JSON.stringify(groups) })
+        .eq("id", systemGroupRow.id);
+
+      await fetchData();
+    } catch (err) {
+      console.log(err);
+      alert("Gagal mengubah ketua kelompok.");
     } finally {
       setGenerating(false);
     }
@@ -3082,13 +3118,14 @@ function DashboardTutor({ user }) {
                         (s) =>
                           s.class_id === activeTab &&
                           s.meeting_num === selectedMeeting &&
-                          s.section_name === "LKPD (Lembar Kerja Peserta Didik)" &&
+                          (s.section_name === "LKPD (Lembar Kerja Peserta Didik)" || s.section_name === "LKPD_6A_DISCUSSION") &&
                           members.some((m) => m.email === s.student_email),
                       );
 
+                      const uniqueEmails = new Set(memberSubs.map(s => s.student_email));
                       const isEveryoneDone =
                         members.length > 0 &&
-                        memberSubs.length === members.length;
+                        uniqueEmails.size === members.length;
                       const averageScore = isEveryoneDone
                         ? (activeTab === "3" 
                             ? 100 
@@ -3156,7 +3193,7 @@ function DashboardTutor({ user }) {
                               </button>
                             ) : (
                               <span className="bg-slate-100 text-slate-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">
-                                {memberSubs.length} / {members.length} Terkirim
+                                {uniqueEmails.size} / {members.length} Terkirim
                               </span>
                             )}
                           </div>
@@ -3188,8 +3225,15 @@ function DashboardTutor({ user }) {
                                       className="flex items-center justify-between"
                                     >
                                       <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
-                                        <p className="text-xs font-bold text-slate-600 truncate max-w-[120px]">
+                                        <button
+                                          onClick={() => handleSetLeader(g.group_num, m.email)}
+                                          disabled={generating}
+                                          className={`w-5 h-5 rounded-full flex items-center justify-center transition-all ${m.isLeader ? 'bg-yellow-400 text-white shadow-sm ring-2 ring-yellow-400 ring-offset-1' : 'bg-slate-200 text-slate-400 hover:bg-yellow-100 hover:text-yellow-500'}`}
+                                          title={m.isLeader ? "Ketua Kelompok (Hak Posting Topik)" : "Jadikan Ketua Kelompok"}
+                                        >
+                                          <span className="material-symbols-outlined text-[12px] font-black">{m.isLeader ? 'stars' : 'star'}</span>
+                                        </button>
+                                        <p className={`text-xs font-bold truncate max-w-[120px] ${m.isLeader ? 'text-slate-800' : 'text-slate-600'}`}>
                                           {m.name}
                                         </p>
                                       </div>
@@ -3743,7 +3787,7 @@ function SectionPage({ user }) {
         .select("*")
         .eq("class_id", id)
         .eq("meeting_num", meetingId)
-        .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS"]);
+        .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD"]);
         
       if (!(id === "3" && sectionName === "LKPD (Lembar Kerja Peserta Didik)")) {
         query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
