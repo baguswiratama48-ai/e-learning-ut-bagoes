@@ -3201,7 +3201,7 @@ function DashboardTutor({ user }) {
         ) : (
           <div className="p-0">
             {/* Rekapitulasi LKPD Kelompok Section */}
-            {(activeTab === "1" || activeTab === "2" || activeTab === "3") && (
+            {(activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && (
               <div className="p-8 bg-slate-50 bg-opacity-50 border-b border-slate-100">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-primary shadow-sm border border-slate-100">
@@ -3214,7 +3214,7 @@ function DashboardTutor({ user }) {
                       Rekapitulasi LKPD Kelompok
                     </h3>
                     <p className="text-xs text-slate-500 font-medium tracking-tight">
-                      Hasil pengerjaan Mind Map & Studi Kasus per tim (Sesi{" "}
+                      Hasil pengerjaan {activeTab === "4" ? "Misi Explorer" : "Mind Map & Studi Kasus"} per tim (Sesi{" "}
                       {selectedMeeting})
                     </p>
                   </div>
@@ -3254,7 +3254,7 @@ function DashboardTutor({ user }) {
                         (s) =>
                           String(s.class_id) === String(activeTab) &&
                           String(s.meeting_num) === String(selectedMeeting) &&
-                          (s.section_name === "LKPD (Lembar Kerja Peserta Didik)" || s.section_name === "LKPD_6A_DISCUSSION") &&
+                          (s.section_name === "LKPD (Lembar Kerja Peserta Didik)" || s.section_name === "LKPD_6A_DISCUSSION" || s.section_name.startsWith("LKPD_5A_STAGE_")) &&
                           members.some((m) => m.email === s.student_email),
                       );
 
@@ -3263,7 +3263,7 @@ function DashboardTutor({ user }) {
                         members.length > 0 &&
                         uniqueEmails.size === members.length;
                       const averageScore = isEveryoneDone
-                        ? (activeTab === "3" 
+                        ? (activeTab === "3" || activeTab === "4" 
                             ? 100 
                             : Math.round(
                                 memberSubs.reduce((acc, s) => {
@@ -3304,16 +3304,20 @@ function DashboardTutor({ user }) {
                                       const emailsToDelete = members.map(
                                         (m) => m.email,
                                       );
-                                      await supabase
+                                      let deleteQuery = supabase
                                         .from("submissions")
                                         .delete()
                                         .eq("class_id", activeTab)
                                         .eq("meeting_num", selectedMeeting)
-                                        .eq(
-                                          "section_name",
-                                          "LKPD (Lembar Kerja Peserta Didik)",
-                                        )
                                         .in("student_email", emailsToDelete);
+                                        
+                                      if (activeTab === "4") {
+                                        deleteQuery = deleteQuery.ilike("section_name", "LKPD_5A_STAGE_%");
+                                      } else {
+                                        deleteQuery = deleteQuery.eq("section_name", "LKPD (Lembar Kerja Peserta Didik)");
+                                      }
+                                      
+                                      await deleteQuery;
                                       fetchData();
                                     } finally {
                                       setUnlocking(null);
@@ -3348,6 +3352,13 @@ function DashboardTutor({ user }) {
                                   if (sub) {
                                     if (activeTab === "3") {
                                       score = "SELESAI";
+                                    } else if (activeTab === "4") {
+                                      const mStages = memberSubs.filter(s => s.student_email === m.email).map(s => {
+                                         const match = s.section_name.match(/STAGE_(\d+)/);
+                                         return match ? parseInt(match[1]) : 0;
+                                      });
+                                      const maxStage = Math.max(0, ...mStages);
+                                      score = maxStage === 4 ? "TUNTAS" : maxStage > 0 ? `MISI ${maxStage}` : null;
                                     } else {
                                       score = (sub.content.match(
                                         new RegExp("SKOR GAME: (\\d+)"),
@@ -3413,8 +3424,11 @@ function DashboardTutor({ user }) {
                               onClick={() => {
                                 // Tampilkan detail jawaban kasus yang pertama kirim sebagai referensi tim
                                 if (memberSubs.length > 0) {
+                                  const content = activeTab === "4" 
+                                    ? memberSubs.map(s => `[${s.section_name}]\n${s.content}`).join("\n\n---\n\n")
+                                    : memberSubs[0].content;
                                   alert(
-                                    `REFERENSI JAWABAN KASUS (Awal):\n\n${memberSubs[0].content}`,
+                                    `REFERENSI JAWABAN (Awal):\n\n${content}`,
                                   );
                                 }
                               }}
