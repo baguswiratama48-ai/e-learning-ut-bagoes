@@ -48,7 +48,7 @@ export const LkpdClass6A = ({
 
   // 1. Dapatkan Grup & Ketua
   const groupRow = initialSubmissions.find(
-    (s) => s.student_email === "SYSTEM_GROUP" && s.meeting_num === meetingId
+    (s) => s.student_email === "SYSTEM_GROUP" && String(s.meeting_num) === String(meetingId)
   );
   const allGroups = groupRow ? JSON.parse(groupRow.content) : [];
   const myGroup = allGroups.find(g => g.members.some(m => m.email === user.email));

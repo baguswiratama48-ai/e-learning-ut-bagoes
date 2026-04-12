@@ -2756,8 +2756,8 @@ function DashboardTutor({ user }) {
       const systemGroupRow = submissions.find(
         (s) =>
           s.student_email === "SYSTEM_GROUP" &&
-          s.class_id === activeTab &&
-          s.meeting_num === selectedMeeting,
+          String(s.class_id) === String(activeTab) &&
+          String(s.meeting_num) === String(selectedMeeting),
       );
       if (!systemGroupRow) return;
 
@@ -2775,6 +2775,7 @@ function DashboardTutor({ user }) {
         .eq("id", systemGroupRow.id);
 
       await fetchData();
+      alert("Berhasil memperbarui Ketua Kelompok! Jawaban Ketua kini tayang di Pusat Diskusi.");
     } catch (err) {
       console.log(err);
       alert("Gagal mengubah ketua kelompok.");
@@ -3105,8 +3106,8 @@ function DashboardTutor({ user }) {
                   {(() => {
                     const groupSubs = submissions.filter(
                       (s) =>
-                        s.class_id === activeTab &&
-                        s.meeting_num === selectedMeeting &&
+                        String(s.class_id) === String(activeTab) &&
+                        String(s.meeting_num) === String(selectedMeeting) &&
                         s.student_email.startsWith("GROUP_LKPD_"),
                     );
 
@@ -3114,8 +3115,8 @@ function DashboardTutor({ user }) {
                     const systemGroupRow = submissions.find(
                       (s) =>
                         s.student_email === "SYSTEM_GROUP" &&
-                        s.class_id === activeTab &&
-                        s.meeting_num === selectedMeeting,
+                        String(s.class_id) === String(activeTab) &&
+                        String(s.meeting_num) === String(selectedMeeting),
                     );
                     const allGroups = systemGroupRow
                       ? JSON.parse(systemGroupRow.content)
@@ -3133,8 +3134,8 @@ function DashboardTutor({ user }) {
                       const members = g.members;
                       const memberSubs = submissions.filter(
                         (s) =>
-                          s.class_id === activeTab &&
-                          s.meeting_num === selectedMeeting &&
+                          String(s.class_id) === String(activeTab) &&
+                          String(s.meeting_num) === String(selectedMeeting) &&
                           (s.section_name === "LKPD (Lembar Kerja Peserta Didik)" || s.section_name === "LKPD_6A_DISCUSSION") &&
                           members.some((m) => m.email === s.student_email),
                       );

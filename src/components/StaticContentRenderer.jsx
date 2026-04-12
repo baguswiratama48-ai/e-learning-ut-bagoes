@@ -25,7 +25,7 @@ export const StaticContentRenderer = ({
 }) => {
   if (sectionName === "Pembagian Kelompok") {
     const groupRow = submissions.find(
-      (s) => s.student_email === "SYSTEM_GROUP" && s.meeting_num === meetingId
+      (s) => s.student_email === "SYSTEM_GROUP" && String(s.meeting_num) === String(meetingId)
     );
     const groups = groupRow ? JSON.parse(groupRow.content) : [];
     const myGroup = groups.find((g) =>
