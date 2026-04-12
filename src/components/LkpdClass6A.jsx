@@ -202,14 +202,9 @@ export const LkpdClass6A = ({
      return ansRow ? ansRow._p.text : null;
   };
 
-  const getLeaderAnswerText = (groupNum, questionId) => {
-     const g = allGroups.find(x => x.group_num === groupNum);
-     if (!g) return null;
-     const leader = g.members.find(m => !!m.isLeader);
-     const leaderEmail = leader ? leader.email : null;
-
-     const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId && d.student_email === leaderEmail);
-     return ansRow ? ansRow._p.text : null;
+  const getGroupAnswers = (groupNum, questionId) => {
+    return parsedData.filter(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId)
+                     .sort((a,b) => new Date(b._p.timestamp) - new Date(a._p.timestamp)); // Newest first
   };
 
   const getComments = (groupNum, questionId) => {
@@ -228,7 +223,7 @@ export const LkpdClass6A = ({
             <div>
               <h1 className="font-headline font-black text-2xl md:text-4xl mb-3 tracking-tight leading-tight">Misi Kelompok {activeGroupNum} (Modul {activeGroupNum})</h1>
               <p className="text-slate-400 text-xs md:text-sm font-medium max-w-2xl leading-relaxed mb-6">
-                Ini adalah ruang diskusi terpadu. Semua anggota <span className="font-bold text-white">wajib mengisi seluruh poin materi</span> di bawah ini sebagai tugas individu. Namun, <span className="text-yellow-400 font-black">HANYA JAWABAN KETUA</span> yang akan dipublikasikan ke Pusat Data untuk didiskusikan lintas kelompok.
+                Ini adalah ruang diskusi kolaboratif. Begitu Anda atau anggota kelompok Anda klik <span className="text-white font-bold">SIMPAN KE SERVER</span>, jawaban tersebut akan <span className="text-yellow-400 font-black">OTOMATIS TAYANG</span> di Pusat Diskusi untuk dikomentari oleh kelompok lain.
               </p>
               <div className="inline-flex flex-wrap items-center gap-3 bg-white bg-opacity-10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white border-opacity-10">
                 <span className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-black text-slate-900 shrink-0 text-xl">
@@ -243,9 +238,9 @@ export const LkpdClass6A = ({
               </div>
             </div>
             {!isLeader && (
-              <div className="bg-slate-800 bg-opacity-50 border border-slate-700 px-5 py-4 rounded-2xl w-full md:w-auto">
-                 <p className="text-slate-300 font-bold mb-1 text-sm"><span className="material-symbols-outlined text-sm inline-block translate-y-0.5">info</span> Info Tayangan Publik</p>
-                 <p className="text-xs text-slate-400 leading-relaxed max-w-[200px]">Tugas Anda hanya dinilai oleh Tutor. Hanya Jawaban Ketua Kelompok yang akan rilis ke tayangan publik.</p>
+              <div className="bg-emerald-800 bg-opacity-40 border border-emerald-700 px-5 py-4 rounded-2xl w-full md:w-auto">
+                 <p className="text-emerald-300 font-bold mb-1 text-sm"><span className="material-symbols-outlined text-sm inline-block translate-y-0.5">public</span> Publikasi Otomatis Aktif</p>
+                 <p className="text-xs text-emerald-100/70 leading-relaxed max-w-[200px]">Setiap modul yang Anda simpan akan langsung rilis ke tayangan publik kelompok lain.</p>
               </div>
             )}
          </div>
@@ -256,11 +251,7 @@ export const LkpdClass6A = ({
         <div className={`absolute top-0 left-0 w-2 h-full rounded-l-3xl ${activeGroupNum === 1 ? 'bg-indigo-500' : activeGroupNum === 2 ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
         <div className="mb-6 flex justify-between items-center">
             <h3 className="font-black text-xl text-slate-800">Draft Pengerjaan Topik Modul {activeGroupNum}</h3>
-            {isLeader ? (
-               <span className="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full animate-pulse flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">public</span> Jawaban Anda Akan Tayang ke Publik</span>
-            ) : (
-               <span className="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full flex items-center gap-1">Tugas Pribadi (Privat)</span>
-            )}
+               <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full animate-pulse flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">public</span> Jawaban Langsung Tayang ke Publik</span>
         </div>
         
         <div className="space-y-6">
@@ -376,26 +367,28 @@ export const LkpdClass6A = ({
                     </div>
                     
                     {questionsArray.map((qText, qIdx) => {
-                       const postContent = getLeaderAnswerText(gNum, qText);
-                       if (!postContent) return null; // Skip if leader hasn't posted
+                       const groupAnswers = getGroupAnswers(gNum, qText);
+                       if (groupAnswers.length === 0) return null;
 
                        const comments = getComments(gNum, qText);
-                       const leaderNode = allGroups.find(x => x.group_num === gNum)?.members.find(m => m.isLeader);
-                       const postAuthorName = leaderNode ? leaderNode.name : "Ketua Kelompok";
 
                        return (
                          <div key={qIdx} className="bg-white rounded-3xl border border-indigo-100 shadow-sm overflow-hidden flex flex-col md:flex-row">
-                            {/* LEFT SIDE: POST */}
-                            <div className="w-full md:w-1/2 p-6 md:p-8 bg-white md:border-r border-indigo-50 border-b md:border-b-0">
-                               <div className="flex items-center gap-2 mb-4">
-                                  <span className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><span className="material-symbols-outlined text-[14px] text-indigo-600">record_voice_over</span></span>
-                                  <div>
-                                     <p className="font-bold text-xs text-slate-800">{postAuthorName} <span className="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Ketua Kel. {gNum}</span></p>
-                                     <p className="text-[10px] text-slate-400 font-medium">Memposting Topik Utama</p>
-                                  </div>
-                               </div>
-                               <h4 className="font-black text-sm text-indigo-900 mb-3 leading-snug break-words">{qText}</h4>
-                               <p className="text-sm text-slate-600 font-serif leading-relaxed text-justify whitespace-pre-line">{postContent}</p>
+                            {/* LEFT SIDE: POSTS (Possibly multiple) */}
+                            <div className="w-full md:w-1/2 p-6 md:p-8 bg-white md:border-r border-indigo-50 border-b md:border-b-0 space-y-8">
+                               {groupAnswers.map((ans, ai) => (
+                                 <div key={ai} className={ai > 0 ? "pt-8 border-t border-slate-100" : ""}>
+                                   <div className="flex items-center gap-2 mb-4">
+                                      <span className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><span className="material-symbols-outlined text-[14px] text-indigo-600">person</span></span>
+                                      <div>
+                                         <p className="font-bold text-xs text-slate-800">{ans._p.authorName} <span className="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Kontributor Kel. {gNum}</span></p>
+                                         <p className="text-[10px] text-slate-400 font-medium">{new Date(ans._p.timestamp).toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' })} • Topik Utama</p>
+                                      </div>
+                                   </div>
+                                   <h4 className="font-black text-sm text-indigo-900 mb-3 leading-snug break-words">{qText}</h4>
+                                   <p className="text-sm text-slate-600 font-serif leading-relaxed text-justify whitespace-pre-line bg-slate-50/50 p-4 rounded-2xl">{ans._p.text}</p>
+                                 </div>
+                               ))}
                             </div>
 
                             {/* RIGHT SIDE: THREAD */}
