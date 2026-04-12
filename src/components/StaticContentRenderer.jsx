@@ -674,6 +674,187 @@ export const StaticContentRenderer = ({
     );
   }
 
+  if (sectionName === "Informasi Modul" && id === "4") {
+    return (
+      <div className="space-y-10 md:space-y-16 pb-10">
+        {/* Hero Section */}
+        <div className="relative bg-gradient-to-br from-teal-900 via-[#134e4a] to-[#0f3b39] rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-teal-400 bg-opacity-10 rounded-full -mr-40 -mt-40 blur-[120px]"></div>
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-2 bg-teal-400 text-[#042f2e] px-3 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 shadow-lg shadow-teal-400 shadow-opacity-20">
+              <span className="material-symbols-outlined text-sm md:text-base">auto_stories</span> Informasi Mata Kuliah
+            </span>
+            <h1 className="text-3xl md:text-6xl font-headline font-black text-white mb-4 leading-tight">
+              Strategi Pembelajaran <br className="hidden md:block" /> Kontemporer di SD
+            </h1>
+            <div className="flex flex-wrap gap-3 md:gap-4 mt-8">
+              <div className="bg-white bg-opacity-10 backdrop-blur-md px-4 py-2 rounded-xl border border-white border-opacity-10 text-white text-xs md:text-sm font-bold flex items-center gap-2">
+                  <span className="material-symbols-outlined text-teal-300">code</span> SPGK4410
+              </div>
+              <div className="bg-white bg-opacity-10 backdrop-blur-md px-4 py-2 rounded-xl border border-white border-opacity-10 text-white text-xs md:text-sm font-bold flex items-center gap-2">
+                  <span className="material-symbols-outlined text-teal-300">school</span> S1 PGSD
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pengantar Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+          <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all border-l-[12px] border-l-teal-500">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+              <span className="material-symbols-outlined text-teal-500">description</span>
+              Deskripsi Mata Kuliah
+            </h3>
+            <p className="text-slate-600 font-medium leading-[1.8] text-sm md:text-base text-justify">
+              Mata kuliah Strategi Pembelajaran di SD merupakan mata kuliah yang akan membekali Anda dengan pengetahuan dan keterampilan dalam merencanakan dan melaksanakan proses pembelajaran yang efektif di SD. Melalui mata kuliah ini, Anda akan mendapat kesempatan untuk mengkaji hakikat strategi pembelajaran dan mengidentifikasi metode dan media yang tepat untuk anak SD, serta Anda akan dituntut untuk berlatih mengelola pembelajaran dan mengelola kelas.
+            </p>
+            <div className="mt-8 bg-teal-50 p-6 rounded-3xl border border-teal-100 flex items-start gap-4">
+               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-sm text-teal-600">
+                  <span className="material-symbols-outlined">lightbulb</span>
+               </div>
+               <p className="text-sm text-teal-800 font-bold leading-relaxed">
+                  Kemampuan profesional Anda akan meningkat karena Anda akan mampu mengembangkan pengetahuan dan keterampilan dalam mengelola pembelajaran di SD.
+               </p>
+            </div>
+          </div>
+
+          <div className="bg-slate-50 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-200 border-opacity-50">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-8 flex items-center gap-3 uppercase tracking-tighter">
+              <span className="material-symbols-outlined text-teal-600">task_alt</span>
+              Capaian Pembelajaran
+            </h3>
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+              {[
+                "Menjelaskan hakikat strategi pembelajaran.",
+                "Menjelaskan karakteristik pembelajaran di SD.",
+                "Menjelaskan model-model pembelajaran.",
+                "Menjelaskan prosedur pembelajaran.",
+                "Menjelaskan kriteria pemilihan dan penggunaan metode mengajar.",
+                "Menjelaskan kriteria pemilihan media pembelajaran.",
+                "Menjelaskan keterampilan dasar mengajar.",
+                "Menerapkan keterampilan dasar mengajar.",
+                "Menerapkan fungsi kegiatan remedial dan pengayaan.",
+                "Menerapkan pengelolaan kelas.",
+                "Menerapkan disiplin kelas.",
+                "Menjelaskan pembelajaran yang efektif."
+              ].map((point, index) => (
+                <div key={index} className="flex gap-4 items-start group">
+                  <div className="w-6 h-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center shrink-0 group-hover:bg-teal-500 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <span className="material-symbols-outlined text-[14px] font-black">check</span>
+                  </div>
+                  <p className="text-slate-600 text-sm md:text-base font-semibold group-hover:text-slate-900 transition-colors leading-snug">{point}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Kurikulum Modul Grid */}
+        <section className="space-y-8 md:space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-100 pb-8">
+            <div className="max-w-xl">
+              <h2 className="text-2xl md:text-4xl font-headline font-black text-slate-800 uppercase tracking-tighter">
+                Struktur Kurikulum Modul
+              </h2>
+              <p className="text-slate-400 text-xs md:text-sm font-medium mt-2">
+                Materi mata kuliah ini diuraikan dalam 12 modul komprehensif untuk penguasaan strategi yang utuh.
+              </p>
+            </div>
+            <div className="bg-teal-50 px-4 py-2 rounded-xl border border-teal-100 text-teal-700 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+               Total 12 Modul Pembelajaran
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {[
+              "Hakikat Strategi Pembelajaran",
+              "Pembelajaran di Sekolah Dasar",
+              "Model Belajar & Rumpun Model Mengajar",
+              "Prosedur Pembelajaran",
+              "Pemilihan Metode Mengajar",
+              "Media Pembelajaran",
+              "Keterampilan Dasar Mengajar 1",
+              "Keterampilan Dasar Mengajar 2",
+              "Kegiatan Remedial & Pengayaan",
+              "Pengelolaan Kelas",
+              "Disiplin Kelas",
+              "Pembelajaran yang Efektif"
+            ].map((title, i) => (
+              <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-20 h-20 bg-teal-50 rounded-full -mr-10 -mt-10 group-hover:bg-teal-100 transition-colors"></div>
+                <div className="relative z-10">
+                   <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-black text-xs mb-4 shadow-inner">
+                      {String(i + 1).padStart(2, '0')}
+                   </div>
+                   <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1 group-hover:text-teal-400 transition-colors">Modul {i+1}</p>
+                   <h4 className="font-bold text-slate-800 text-sm md:text-base leading-snug group-hover:text-teal-900 transition-colors">{title}</h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Verification Section */}
+        <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center">
+          {!status ? (
+            <div className="w-full max-w-xl">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 px-4 py-2 rounded-full border border-teal-200 text-[10px] font-black uppercase tracking-widest mb-4">
+                  <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
+                  Eksplorasi Modul
+                </div>
+                <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2 text-center uppercase tracking-tight">
+                  Apa Harapan Belajar Anda?
+                </h3>
+                <p className="text-slate-400 text-xs md:text-sm font-medium">Dari 12 modul di atas, bagian mana yang menurut Anda paling menantang untuk dipraktikkan di kelas?</p>
+              </div>
+
+              <div className="bg-white border-2 border-teal-500 border-opacity-10 rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-teal-500 shadow-opacity-5 relative">
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Contoh: Modul 10 (Pengelolaan Kelas), karena saya sulit menghadapi siswa yang aktif..."
+                  className="w-full min-h-[160px] bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm focus:bg-white focus:border-teal-500 focus:ring-1 outline-none transition-all resize-none mb-6 font-medium"
+                ></textarea>
+
+                <button
+                  onClick={() => handleAction(content)}
+                  disabled={loading || !content.trim()}
+                  className="w-full bg-[#0d2d2a] text-white font-black py-5 rounded-2xl hover:bg-black transition-all flex items-center justify-center gap-3 group disabled:opacity-50 text-base tracking-widest"
+                >
+                  {loading ? "MENGIRIM ANALISIS..." : "SIMPAN KONFIRMASI PEMAHAMAN"}
+                  {!loading && (
+                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform font-bold">
+                      send
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full max-w-xl bg-teal-600 text-white p-10 rounded-[3rem] shadow-xl shadow-teal-600 shadow-opacity-20 flex flex-col items-center text-center animate-in fade-in zoom-in duration-500">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-4xl">
+                  task_alt
+                </span>
+              </div>
+              <h3 className="text-2xl font-black mb-2 uppercase tracking-tight">Analisis Berhasil!</h3>
+              <p className="text-white text-opacity-80 text-sm font-medium mb-8">
+                Laporan pemahaman Anda mengenai struktur modul Strategi Pembelajaran telah tersimpan. Tutor akan segera meninjaunya.
+              </p>
+              <div className="bg-black bg-opacity-20 px-8 py-6 rounded-2xl w-full border border-white border-opacity-10 text-left">
+                <p className="text-[10px] font-black uppercase text-teal-200 mb-2">Jawaban Anda:</p>
+                <p className="text-xs md:text-sm italic font-serif opacity-90 leading-relaxed text-slate-100">
+                  "{status.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (sectionName === "Informasi Modul") {
     const modulContent = COURSE_DATA[courseCode]?.[sectionName];
     return (
