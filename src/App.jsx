@@ -2727,11 +2727,19 @@ function DashboardTutor({ user }) {
     const key = `${studentEmail}_${sectionName}`;
     setUnlocking(key);
     try {
-      await supabase
+      let deleteQuery = supabase
         .from("submissions")
         .delete()
-        .eq("student_email", studentEmail)
-        .eq("section_name", sectionName);
+        .eq("student_email", studentEmail);
+        
+      if (activeTab === "4" && (sectionName.startsWith("LKPD_5A_STAGE_") || sectionName === "LKPD (Lembar Kerja Peserta Didik)")) {
+        deleteQuery = deleteQuery.or(`section_name.ilike.LKPD_5A_STAGE_%,section_name.eq."LKPD (Lembar Kerja Peserta Didik)"`);
+      } else {
+        deleteQuery = deleteQuery.eq("section_name", sectionName);
+      }
+      
+      await deleteQuery;
+
       // Let's also delete the feedback if they are resetting the answer
       await supabase
         .from("submissions")
@@ -3528,12 +3536,30 @@ function DashboardTutor({ user }) {
                             {(currentPage - 1) * pageSize + index + 1}
                           </td>
                           <td className="px-4 py-4 border-r">
-                            <p className="font-bold text-slate-800 uppercase leading-none mb-1">
-                              {student.name}
-                            </p>
-                            <p className="text-[10px] text-slate-400 font-medium tracking-tighter">
-                              {student.nim} • {student.email}
-                            </p>
+                            <div className="flex items-center justify-between gap-4">
+                              <div>
+                                <p className="font-bold text-slate-800 uppercase leading-none mb-1">
+                                  {student.name}
+                                </p>
+                                <p className="text-[10px] text-slate-400 font-medium tracking-tighter">
+                                  {student.nim} • {student.email}
+                                </p>
+                              </div>
+                              {activeTab === "4" && (() => {
+                                const mStages = studentSubs.filter(s => s.section_name.startsWith("LKPD_5A_STAGE_")).map(s => {
+                                   const match = s.section_name.match(/STAGE_(\d+)/);
+                                   return match ? parseInt(match[1]) : 0;
+                                });
+                                const maxStage = Math.max(0, ...mStages);
+                                if (maxStage === 0) return null;
+                                return (
+                                  <div className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase flex items-center gap-1 ${maxStage === 4 ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
+                                    <span className="material-symbols-outlined text-[12px]">{maxStage === 4 ? 'verified' : 'pending'}</span>
+                                    {maxStage === 4 ? 'Tuntas' : `Misi ${maxStage}`}
+                                  </div>
+                                );
+                              })()}
+                            </div>
                           </td>
                           <td className="px-4 py-4 border-r text-center">
                             <span className="inline-block bg-primary bg-opacity-10 text-primary font-bold px-3 py-1 rounded-full text-sm">
@@ -3636,9 +3662,22 @@ function DashboardTutor({ user }) {
                                                     })}
                                                 </div>
                                               ) : (
-                                                <p className="text-[11px] font-medium text-slate-700 italic max-h-[120px] overflow-y-auto custom-scrollbar pr-1">
-                                                  "{answer.content}"
-                                                </p>
+                                                <div className="text-[11px] font-medium text-slate-700 max-h-[160px] overflow-y-auto custom-scrollbar pr-1">
+                                                  {(() => {
+                                                    try {
+                                                      const parsed = JSON.parse(answer.content);
+                                                      if (parsed.answers) {
+                                                        return Object.entries(parsed.answers).map(([key, val], idx) => (
+                                                          <div key={idx} className="mb-2 border-l-2 border-slate-200 pl-2">
+                                                            <p className="text-[9px] font-black text-slate-400 uppercase">{key}</p>
+                                                            <p className="italic">"{typeof val === 'object' ? JSON.stringify(val) : val}"</p>
+                                                          </div>
+                                                        ));
+                                                      }
+                                                    } catch (e) {}
+                                                    return <p className="italic">"{answer.content}"</p>;
+                                                  })()}
+                                                </div>
                                               )}
                                             </div>
                                           </div>
@@ -3929,6 +3968,7 @@ function SectionPage({ user }) {
       const sectionNamesToFetch = [
         sectionName,
         `TUTOR_FEEDBACK_${sectionName}`,
+        ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4"] : [])
       ];
 
       // Fetch personal answers + system-generated groups + everyone's LKPD for class 6A cross-visibility
