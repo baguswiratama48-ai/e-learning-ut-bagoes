@@ -44,7 +44,29 @@ export const LkpdClass6A = ({
   const [liveData, setLiveData] = useState([]);
   const [formData, setFormData] = useState({});
   const [loadingItems, setLoadingItems] = useState({});
+  const [syncStatus, setSyncStatus] = useState({}); // 'draft', 'syncing', 'saved', 'error'
   const [commentInputs, setCommentInputs] = useState({});
+
+  const STORAGE_KEY = `lkpd_draft_${user.email}_${meetingId}`;
+
+  // 1. Load Draft from LocalStorage on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(STORAGE_KEY);
+    if (savedDraft) {
+      try {
+        setFormData(JSON.parse(savedDraft));
+      } catch (e) {
+        console.error("Failed to parse draft", e);
+      }
+    }
+  }, [meetingId]);
+
+  // Save to LocalStorage whenever formData changes
+  useEffect(() => {
+    if (Object.keys(formData).length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+  }, [formData]);
 
   // 1. Dapatkan Grup & Ketua
   const groupRow = initialSubmissions.find(
@@ -95,12 +117,12 @@ export const LkpdClass6A = ({
     const val = formData[questionText];
     if (!val || val.trim().length === 0) return;
     
-    setLoadingItems(prev => ({...prev, [questionText]: true}));
+    setSyncStatus(prev => ({...prev, [questionText]: 'syncing'}));
     
     const payload = {
       student_email: user.email,
-      class_id: classId || '3',
-      meeting_num: meetingId,
+      class_id: String(classId || '3'),
+      meeting_num: String(meetingId),
       section_name: 'LKPD_6A_DISCUSSION',
       content: JSON.stringify({
         type: 'answer',
@@ -126,11 +148,13 @@ export const LkpdClass6A = ({
       } else {
          await supabase.from('submissions').insert([payload]);
       }
-      // Hapus local draft biar kelihatan clean (Atau biarkan saja gpp)
+      
+      setSyncStatus(prev => ({...prev, [questionText]: 'saved'}));
       await fetchLiveDiscussions();
     } catch(err) {
       console.error(err);
-      alert("Gagal mem-posting jawaban.");
+      setSyncStatus(prev => ({...prev, [questionText]: 'error'}));
+      alert("Gagal mem-posting ke server. Jangan khawatir, jawaban Anda tetap tersimpan di browser ini (Draft). Silakan coba klik SIMPAN lagi.");
     } finally {
       setLoadingItems(prev => ({...prev, [questionText]: false}));
     }
@@ -242,36 +266,77 @@ export const LkpdClass6A = ({
         <div className="space-y-6">
             {currentQuestions.map((questionText, idx) => {
                const savedAnswer = getMyAnswerText(activeGroupNum, questionText);
+               const status = syncStatus[questionText] || (savedAnswer ? 'saved' : 'none');
 
                return (
-              <div key={idx} className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100">
-                  <label className="block text-xs md:text-sm font-bold text-slate-800 mb-3 leading-snug">
-                    <span className="inline-block bg-white text-slate-500 px-2.5 py-1 rounded-lg text-[10px] font-black mr-2 border border-slate-200">{idx+1}</span>
+                <div key={idx} className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100 relative group transition-all hover:shadow-md">
+                  <label className="block text-xs md:text-sm font-bold text-slate-800 mb-3 leading-snug flex items-center gap-2">
+                    <span className="inline-block bg-white text-slate-500 px-2.5 py-1 rounded-lg text-[10px] font-black border border-slate-200">{idx+1}</span>
                     {questionText}
                   </label>
-                  
-                  <div>
-                    <textarea 
-                      className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm focus:border-primary focus:ring-1 outline-none min-h-[100px] text-slate-700"
-                      placeholder="Ketik poin penjelasan materi untuk disetor..."
-                      defaultValue={savedAnswer || formData[questionText] || ""}
-                      onChange={(e) => setFormData({...formData, [questionText]: e.target.value})}
+
+                  <div className="relative">
+                    <textarea
+                      value={formData[questionText] || savedAnswer || ""}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [questionText]: e.target.value });
+                        setSyncStatus({ ...syncStatus, [questionText]: 'draft' });
+                      }}
+                      placeholder="Tuliskan hasil temuan materi Anda di sini..."
+                      className={`w-full min-h-[160px] p-5 rounded-2xl border transition-all resize-none text-slate-700 text-sm md:text-base leading-relaxed font-medium outline-none ${
+                        status === 'error' ? 'border-rose-300 bg-rose-50' : 
+                        status === 'saved' ? 'border-emerald-100 bg-white' : 
+                        'border-slate-200 bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10'
+                      }`}
                     ></textarea>
-                    <div className="mt-3 flex justify-between items-center">
-                       {savedAnswer ? 
-                          <span className="text-xs font-bold text-emerald-600 flex items-center gap-1"><span className="material-symbols-outlined text-sm">cloud_done</span> Terekam di Sistem</span>
-                          : <span className="text-xs font-bold text-slate-400">Belum disetor</span>
-                       }
-                       <button 
-                          onClick={() => handlePostAnswer(questionText, idx)}
-                          disabled={loadingItems[questionText]}
-                          className="bg-slate-800 hover:bg-black text-white text-xs font-black px-5 py-2.5 rounded-lg flex items-center gap-2 transition-transform hover:scale-105 active:scale-95 disabled:opacity-50 shadow-md"
-                       >
-                          {loadingItems[questionText] ? "MENYIMPAN..." : savedAnswer ? "PERBARUI JAWABAN" : "SIMPAN JAWABAN"}
-                       </button>
+                    
+                    {/* Status Indicators overlay */}
+                    <div className="absolute top-3 right-3 flex items-center gap-2">
+                       {status === 'draft' && (
+                         <span className="flex items-center gap-1 text-[9px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200 animate-pulse">
+                            <span className="material-symbols-outlined text-[12px]">edit_note</span> DRAFT DI BROWSER
+                         </span>
+                       )}
+                       {status === 'syncing' && (
+                         <span className="flex items-center gap-1 text-[9px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-100">
+                            <span className="material-symbols-outlined text-[12px] animate-spin">sync</span> SEDANG MENGIRIM...
+                         </span>
+                       )}
+                       {status === 'saved' && (
+                         <span className="flex items-center gap-1 text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+                            <span className="material-symbols-outlined text-[12px]">check_circle</span> TERSEDIA DI SERVER
+                         </span>
+                       )}
+                       {status === 'error' && (
+                         <span className="flex items-center gap-1 text-[9px] font-black text-rose-600 bg-rose-50 px-2 py-1 rounded-md border border-rose-100 shadow-sm">
+                            <span className="material-symbols-outlined text-[12px]">error</span> GAGAL SIMPAN
+                         </span>
+                       )}
                     </div>
                   </div>
-              </div>
+
+                  <div className="mt-4 flex justify-end items-center gap-4">
+                    {status === 'error' && (
+                       <p className="text-[10px] font-bold text-rose-500 animate-bounce">Tulisannya aman (ada di browser), silakan klik SIMPAN lagi ↑</p>
+                    )}
+                    <button
+                      onClick={() => handlePostAnswer(questionText, idx)}
+                      disabled={loadingItems[questionText] || status === 'syncing'}
+                      className={`px-8 py-2.5 rounded-xl font-black text-[10px] tracking-widest flex items-center gap-2 transform active:scale-95 transition-all shadow-md group-hover:shadow-lg ${
+                        status === 'saved' 
+                        ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200' 
+                        : status === 'error'
+                        ? 'bg-rose-600 text-white hover:bg-rose-700'
+                        : 'bg-slate-900 text-white hover:bg-black'
+                      }`}
+                    >
+                      {status === 'syncing' ? "SEDANG MENGIRIM..." : status === 'saved' ? "PERBARUI JAWABAN" : "SIMPAN KE SERVER"}
+                      <span className="material-symbols-outlined text-sm font-black">
+                        {status === 'saved' ? 'verified' : 'cloud_upload'}
+                      </span>
+                    </button>
+                  </div>
+                </div>
             )})}
         </div>
       </div>
