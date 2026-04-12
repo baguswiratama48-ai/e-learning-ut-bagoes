@@ -130,6 +130,7 @@ export const LkpdClass6A = ({
         questionId: questionText,
         text: val,
         authorName: user.name || user.email.split('@')[0],
+        authorNim: user.nim || "N/A",
         timestamp: new Date().toISOString()
       })
     };
@@ -184,6 +185,7 @@ export const LkpdClass6A = ({
         questionId: questionId,
         text: txt,
         authorName: user.name || user.email.split('@')[0],
+        authorNim: user.nim || "N/A",
         authorGroup: activeGroupNum || 0,
         timestamp: new Date().toISOString()
       })
@@ -389,7 +391,10 @@ export const LkpdClass6A = ({
                                    <div className="flex items-center gap-2 mb-4">
                                       <span className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><span className="material-symbols-outlined text-[14px] text-indigo-600">person</span></span>
                                       <div>
-                                         <p className="font-bold text-xs text-slate-800">{ans._p.authorName} <span className="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Kontributor Kel. {gNum}</span></p>
+                                         <p className="font-bold text-xs text-slate-800">
+                                           {ans._p.authorName} <span className="text-[10px] text-slate-400 font-normal">({ans._p.authorNim || "N/A"})</span>
+                                           <span className="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Kontributor Kel. {gNum}</span>
+                                         </p>
                                          <p className="text-[10px] text-slate-400 font-medium">{new Date(ans._p.timestamp).toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' })} • Topik Utama</p>
                                       </div>
                                    </div>
@@ -408,7 +413,10 @@ export const LkpdClass6A = ({
                                      <div key={ci} className={`p-4 rounded-2xl ${c._p.authorGroup === gNum ? 'bg-indigo-100 bg-opacity-50 ml-6 border border-indigo-200' : 'bg-white border border-slate-200 mr-6 shadow-sm'}`}>
                                         <div className="flex items-center gap-1.5 mb-1.5">
                                            <span className="material-symbols-outlined text-[14px] text-slate-400">person</span>
-                                           <p className="text-[10px] font-bold text-slate-700">{c._p.authorName} <span className="font-medium opacity-60">(Kelompok {c._p.authorGroup})</span></p>
+                                           <p className="text-[10px] font-bold text-slate-700">
+                                             {c._p.authorName} <span className="text-[9px] text-slate-400 font-normal">({c._p.authorNim || "N/A"})</span>
+                                             <span className="font-medium opacity-60 ml-1">(Kelompok {c._p.authorGroup})</span>
+                                           </p>
                                         </div>
                                         <p className="text-xs text-slate-600 leading-relaxed font-serif break-words">{c._p.text}</p>
                                      </div>
