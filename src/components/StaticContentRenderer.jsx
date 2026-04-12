@@ -23,6 +23,163 @@ export const StaticContentRenderer = ({
   submissions,
   handleSubmit
 }) => {
+  if (sectionName === "Pembagian Kelompok") {
+    const groupRow = submissions.find(
+      (s) => s.student_email === "SYSTEM_GROUP" && s.meeting_num === meetingId
+    );
+    const groups = groupRow ? JSON.parse(groupRow.content) : [];
+    const myGroup = groups.find((g) =>
+      g.members.some((m) => m.email === user.email)
+    );
+
+    return (
+      <div className="space-y-8 pb-10">
+        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 bg-teal-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+              <span className="material-symbols-outlined text-sm">groups</span>{" "}
+              Daftar Kelompok
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black mb-3">
+              Misi Kolaborasi Tim
+            </h2>
+            <p className="text-slate-400 text-sm md:text-base font-medium max-w-2xl leading-relaxed">
+              Cari nama Anda di dalam daftar kelompok di bawah ini. Diskusikan
+              tugas yang diberikan oleh Tutor sesuai dengan pembagian modul
+              masing-masing.
+            </p>
+          </div>
+        </div>
+
+        {groups.length === 0 ? (
+          <div className="bg-white border-2 border-dashed border-slate-200 p-16 rounded-[3rem] text-center">
+            <span className="material-symbols-outlined text-6xl text-slate-200 mb-4 scale-110">
+              pending_actions
+            </span>
+            <h3 className="text-xl font-black text-slate-800 mb-2">
+              Belum Ada Pembagian
+            </h3>
+            <p className="text-slate-400 text-sm font-medium">
+              Tutor belum melakukan pembagian kelompok untuk pertemuan ini.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {groups.map((g) => {
+              const isMyGroup = myGroup?.group_num === g.group_num;
+              const moduleLabel =
+                id === "3"
+                  ? `Modul ${g.group_num}`
+                  : `Topik ${g.group_num}`;
+
+              return (
+                <div
+                  key={g.group_num}
+                  className={`relative group bg-white rounded-[2.5rem] p-8 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${
+                    isMyGroup
+                      ? "border-teal-500 shadow-xl shadow-teal-500 shadow-opacity-10 ring-4 ring-teal-500 ring-opacity-5"
+                      : "border-slate-100 shadow-sm hover:border-teal-200"
+                  }`}
+                >
+                  {isMyGroup && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg animate-bounce">
+                      Kelompok Anda
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-start mb-6">
+                    <div
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner ${
+                        isMyGroup
+                          ? "bg-teal-500 text-white"
+                          : "bg-slate-100 text-slate-400"
+                      }`}
+                    >
+                      {g.group_num}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                        Penugasan
+                      </p>
+                      <p
+                        className={`font-black text-sm uppercase ${
+                          isMyGroup ? "text-teal-600" : "text-slate-800"
+                        }`}
+                      >
+                        {moduleLabel}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest border-b border-slate-50 pb-2">
+                      Anggota Tim ({g.members.length})
+                    </p>
+                    <div className="space-y-3">
+                      {g.members.map((m, mi) => (
+                        <div key={mi} className="flex items-center gap-3">
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black ${
+                              m.email === user.email
+                                ? "bg-teal-500 text-white"
+                                : "bg-slate-100 text-slate-500"
+                            }`}
+                          >
+                            {m.isLeader ? (
+                              <span className="material-symbols-outlined text-sm">
+                                stars
+                              </span>
+                            ) : (
+                              m.name.charAt(0)
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p
+                              className={`text-xs font-bold truncate ${
+                                m.email === user.email
+                                  ? "text-teal-600"
+                                  : "text-slate-700"
+                              }`}
+                            >
+                              {m.name}
+                              {m.isLeader && (
+                                <span className="ml-2 text-[8px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded uppercase font-black tracking-tighter shadow-sm whitespace-nowrap">
+                                  Ketua
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-[9px] text-slate-400 font-medium">
+                              {m.nim}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {id === "3" && (
+                    <div className="mt-8 pt-6 border-t border-slate-50">
+                      <Link
+                        to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent("LKPD (Lembar Kerja Peserta Didik)")}`}
+                        className="w-full bg-slate-50 hover:bg-teal-500 hover:text-white text-slate-400 text-[10px] font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-transparent hover:border-teal-400"
+                      >
+                        MULAI PENGERJAAN
+                        <span className="material-symbols-outlined text-sm">
+                          arrow_forward
+                        </span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (sectionName === "LKPD (Lembar Kerja Peserta Didik)" && id === "3") {
     return (
        <LkpdClass6A 
