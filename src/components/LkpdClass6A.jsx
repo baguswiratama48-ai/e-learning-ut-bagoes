@@ -205,7 +205,7 @@ export const LkpdClass6A = ({
   const getLeaderAnswerText = (groupNum, questionId) => {
      const g = allGroups.find(x => x.group_num === groupNum);
      if (!g) return null;
-     const leader = g.members.find(m => m.isLeader);
+     const leader = g.members.find(m => !!m.isLeader);
      const leaderEmail = leader ? leader.email : null;
 
      const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId && d.student_email === leaderEmail);
