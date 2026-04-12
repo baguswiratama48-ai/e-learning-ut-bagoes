@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FEEDBACK_MESSAGES } from '../data/mockData';
 import { LkpdClass6A } from './LkpdClass6A';
 import { LkpdClass5A } from './LkpdClass5A';
+import QuizClass5A from './QuizClass5A';
 
 export const StaticContentRenderer = ({ 
   sectionName, 
@@ -680,6 +681,17 @@ export const StaticContentRenderer = ({
             </p>
         </div>
       </div>
+    );
+  }
+
+  if (sectionName === "Kuis dan Latihan" && id === "4") {
+    return (
+      <QuizClass5A
+        user={user}
+        meetingId={meetingId}
+        submissions={submissions}
+        onComplete={handleAction}
+      />
     );
   }
 
