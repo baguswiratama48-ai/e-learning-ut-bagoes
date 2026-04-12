@@ -3925,7 +3925,7 @@ function SectionPage({ user }) {
         .eq("meeting_num", meetingId)
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD"]);
         
-      if (!(id === "3" && sectionName === "LKPD (Lembar Kerja Peserta Didik)")) {
+      if (!((id === "3" || id === "4") && sectionName === "LKPD (Lembar Kerja Peserta Didik)")) {
         query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
       }
 
@@ -4017,7 +4017,7 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {!isInput || (id === "3" && sectionName === "LKPD (Lembar Kerja Peserta Didik)") ? (
+      {!isInput || (["3", "4"].includes(id) && sectionName === "LKPD (Lembar Kerja Peserta Didik)") ? (
           renderStaticContent()
         ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
