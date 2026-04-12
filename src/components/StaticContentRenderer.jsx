@@ -23,6 +23,15 @@ export const StaticContentRenderer = ({
   submissions,
   handleSubmit
 }) => {
+  // --- DEKLARASI GLOBAL ---
+  const systemGroupRow = submissions.find(
+    (s) =>
+      s.student_email === "SYSTEM_GROUP" &&
+      String(s.class_id) === String(id) &&
+      String(s.meeting_num) === String(meetingId),
+  );
+  const groups = systemGroupRow ? JSON.parse(systemGroupRow.content) : [];
+
   // --- PRIORITAS KELAS 5A (SPGK4410) ---
 
   if (sectionName === "Informasi Modul" && id === "4") {
@@ -699,7 +708,8 @@ export const StaticContentRenderer = ({
       </div>
     );
   }
-
+  
+  if (sectionName === "Pembagian Kelompok") {
     const myGroup = groups.find((g) =>
       g.members.some((m) => m.email === user.email)
     );
@@ -1746,7 +1756,7 @@ export const StaticContentRenderer = ({
               </div>
             </div>
           </div>
-      /div>
+        )}
       </div>
     );
   }
