@@ -2725,25 +2725,26 @@ function DashboardTutor({ user }) {
         content: JSON.stringify(groups),
       };
 
-      // Delete old if exists for this meeting
-      await supabase
+      // Delete old if exists for this meeting (using robust filters)
+      const { error: deleteError } = await supabase
         .from("submissions")
         .delete()
         .eq("student_email", "SYSTEM_GROUP")
-        .eq("class_id", activeTab)
-        .eq("meeting_num", selectedMeeting)
-        .eq("section_name", sectionName);
+        .eq("class_id", String(activeTab))
+        .eq("meeting_num", String(selectedMeeting));
 
-      const { error } = await supabase.from("submissions").insert([payload]);
-      if (error) throw error;
+      if (deleteError) throw deleteError;
+
+      const { error: insertError } = await supabase.from("submissions").insert([payload]);
+      if (insertError) throw insertError;
 
       alert(
         `Berhasil mengacak ${classStudents.length} mahasiswa ke dalam ${groupCount} kelompok untuk Pertemuan ${selectedMeeting}!`,
       );
       await fetchData();
     } catch (err) {
-      console.log(err);
-      alert("Gagal mengacak kelompok.");
+      console.error("DEBUG_GENERATE:", err);
+      alert(`Gagal mengacak kelompok: ${err.message || "Unknown Error"}`);
     } finally {
       setGenerating(false);
     }
@@ -2769,19 +2770,22 @@ function DashboardTutor({ user }) {
         });
       }
 
-      await supabase
+      const { error: updateError } = await supabase
         .from("submissions")
         .update({ content: JSON.stringify(groups) })
         .eq("id", systemGroupRow.id);
 
+      if (updateError) throw updateError;
+
       await fetchData();
       alert("Berhasil memperbarui Ketua Kelompok! Jawaban Ketua kini tayang di Pusat Diskusi.");
     } catch (err) {
-      console.log(err);
-      alert("Gagal mengubah ketua kelompok.");
+      console.error("DEBUG_LEADER:", err);
+      alert(`Gagal memperbarui Ketua: ${err.message || "Unknown Error"}`);
     } finally {
       setGenerating(false);
     }
+  };
   };
 
   const handleResetGroups = async () => {

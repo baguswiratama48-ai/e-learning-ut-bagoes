@@ -126,8 +126,8 @@ export const StaticContentRenderer = ({
                                 : "bg-slate-100 text-slate-500"
                             }`}
                           >
-                            {m.isLeader ? (
-                              <span className="material-symbols-outlined text-sm">
+                            {!!m.isLeader ? (
+                              <span className="material-symbols-outlined text-sm text-yellow-400">
                                 stars
                               </span>
                             ) : (
@@ -136,15 +136,15 @@ export const StaticContentRenderer = ({
                           </div>
                           <div className="flex-1 min-w-0">
                             <p
-                              className={`text-xs font-bold truncate ${
+                              className={`text-xs font-bold truncate flex items-center gap-2 ${
                                 m.email === user.email
                                   ? "text-teal-600"
                                   : "text-slate-700"
                               }`}
                             >
                               {m.name}
-                              {m.isLeader && (
-                                <span className="ml-2 text-[8px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded uppercase font-black tracking-tighter shadow-sm whitespace-nowrap">
+                              {!!m.isLeader && (
+                                <span className="bg-yellow-100 text-yellow-700 text-[8px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">
                                   Ketua
                                 </span>
                               )}

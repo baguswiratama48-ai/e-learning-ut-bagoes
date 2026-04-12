@@ -76,7 +76,7 @@ export const LkpdClass6A = ({
   const myGroup = allGroups.find(g => g.members.some(m => m.email === user.email));
   const activeGroupNum = myGroup ? myGroup.group_num : 1;
   const isLeader = myGroup 
-    ? myGroup.members.find(m => m.email === user.email)?.isLeader === true 
+    ? !!myGroup.members.find(m => m.email === user.email)?.isLeader 
     : user.email === "demo@ecampus.ut.ac.id"; // demo is leader of group 1
 
   const currentQuestions = activeGroupNum === 1 ? MODUL_1_QUESTIONS : activeGroupNum === 2 ? MODUL_2_QUESTIONS : MODUL_3_QUESTIONS;
