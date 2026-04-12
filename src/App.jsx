@@ -1030,13 +1030,22 @@ const STUDY_CASE_STAGES = [
   },
 ];
 
-const REFLECTION_QUESTIONS = [
-  "Setelah mengikuti sesi hari ini, apa satu pemahaman baru mengenai hakikat Bimbingan dan Konseling yang menurut Anda paling menantang namun sangat penting untuk diterapkan di SD?",
-  "Dari semua materi yang sudah kita diskusikan (Etimologi, Asas, dan Jenis Layanan), bagian mana yang membuat Anda merasa paling siap untuk menjadi guru yang mengayomi siswa?",
-  "Bagaimana perasaan Anda belajar menggunakan fitur interaktif (Kuis 20 Soal & Games Mind Map) hari ini? Apakah membantu Anda lebih cepat paham dibandingkan metode biasa?",
-  "Apa satu janji atau komitmen pribadi Anda untuk terus meningkatkan kesehatan mental siswa di masa depan setelah mendapatkan ilmu dari pertemuan ini?",
-  "Ceritakan pak Bagus Panca Wiratama, S.Pd., M.Pd. itu seperti apa? (Tuliskan kesan Anda mengenai cara beliau mengajar, memberikan motivasi, atau inspirasi yang Anda dapatkan selama sesi bimbingan beliau).",
-];
+const REFLECTION_QUESTIONS_DATA = {
+  default: [
+    "Setelah mengikuti sesi hari ini, apa satu pemahaman baru mengenai hakikat Bimbingan dan Konseling yang menurut Anda paling menantang namun sangat penting untuk diterapkan di SD?",
+    "Dari semua materi yang sudah kita diskusikan (Etimologi, Asas, dan Jenis Layanan), bagian mana yang membuat Anda merasa paling siap untuk menjadi guru yang mengayomi siswa?",
+    "Bagaimana perasaan Anda belajar menggunakan fitur interaktif (Kuis 20 Soal & Games Mind Map) hari ini? Apakah membantu Anda lebih cepat paham dibandingkan metode biasa?",
+    "Apa satu janji atau komitmen pribadi Anda untuk terus meningkatkan kesehatan mental siswa di masa depan setelah mendapatkan ilmu dari pertemuan ini?",
+    "Tuliskan kesan Anda mengenai sosok Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selaku tutor Anda (cara mengajar, motivasi, atau inspirasi yang Anda dapatkan selama bimbingan beliau)."
+  ],
+  "3": [
+    "Setelah mempelajari Modul 1-3, ceritakan satu pemahaman baru yang mengubah cara pandang Anda saat melihat anak dengan hambatan perkembangan nonnormatif?",
+    "Apa tantangan emosional atau kendala teknik terbesar yang Anda bayangkan jika harus menangani siswa dengan gangguan fisik/indra di kelas reguler Anda?",
+    "Sebutkan satu strategi (seperti modifikasi lingkungan belajar atau komunikasi) yang paling mungkin akan segera Anda terapkan di sekolah Anda sendiri?",
+    "Mengapa Bapak/Ibu merasa perlu melibatkan orang tua dan teman sebaya siswa ABK dalam proses belajar (berdasarkan materi Konteks Sosial)?",
+    "Bagaimana kesan Anda terhadap bimbingan dan cara penyampaian materi oleh Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selama tutorial ini? Apa harapan atau saran Anda untuk beliau agar sesi berikutnya semakin luar biasa?"
+  ]
+};
 
 function InteractiveQuiz({
   user,
@@ -1315,15 +1324,17 @@ function InteractiveReflection({
   const [answers, setAnswers] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const questions = REFLECTION_QUESTIONS_DATA[classId] || REFLECTION_QUESTIONS_DATA.default;
+
   // Periksa apakah refleksi sudah pernah dikerjakan sebelumnya
   const statusRow = submissions.find(
     (s) => s.student_email === user.email && s.section_name === "Refleksi",
   );
 
-  const progress = ((currentIdx + 1) / REFLECTION_QUESTIONS.length) * 100;
+  const progress = ((currentIdx + 1) / questions.length) * 100;
 
   const handleNext = () => {
-    if (currentIdx < REFLECTION_QUESTIONS.length - 1) {
+    if (currentIdx < questions.length - 1) {
       setCurrentIdx(currentIdx + 1);
     }
   };
@@ -1336,7 +1347,7 @@ function InteractiveReflection({
 
   const handleSubmit = async () => {
     setLoading(true);
-    const content = REFLECTION_QUESTIONS.map(
+    const content = questions.map(
       (q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${answers[i] || "-"}`,
     ).join("\n\n");
     onComplete(content);
@@ -1376,17 +1387,17 @@ function InteractiveReflection({
             <h4 className="font-bold text-xl text-slate-800">
               Pertanyaan {currentIdx + 1}{" "}
               <span className="text-slate-400 font-medium text-base">
-                dari {REFLECTION_QUESTIONS.length}
+                dari {questions.length}
               </span>
             </h4>
           </div>
-          <p className="text-sm font-bold text-indigo-600">
+          <p className={`text-sm font-bold ${classId === "3" ? "text-fuchsia-600" : "text-indigo-600"}`}>
             {Math.round(progress)}%
           </p>
         </div>
         <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-indigo-600 rounded-full transition-all duration-500 ease-out"
+            className={`h-full rounded-full transition-all duration-500 ease-out ${classId === "3" ? "bg-fuchsia-600" : "bg-indigo-600"}`}
             style={{ width: `${progress}%` }}
           ></div>
         </div>
@@ -1396,14 +1407,20 @@ function InteractiveReflection({
       <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 min-h-[450px] flex flex-col relative overflow-hidden">
         <div className="relative z-10 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
-              <span className="material-symbols-outlined">description</span>
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${classId === "3" ? "bg-fuchsia-50 text-fuchsia-600" : "bg-indigo-50 text-indigo-600"}`}>
+              <span className="material-symbols-outlined">psychology</span>
             </div>
             <div className="h-px flex-1 bg-slate-100"></div>
           </div>
 
           <h3 className="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed mb-6">
-            {REFLECTION_QUESTIONS[currentIdx]}
+            {classId === "3" && currentIdx === 4 ? (
+              <span>
+                Bagaimana kesan Anda terhadap bimbingan dan cara penyampaian materi oleh <span className="text-yellow-500 font-black">Bapak Bagus Panca Wiratama, S.Pd., M.Pd.</span> selama tutorial ini? Apa harapan atau saran Anda untuk beliau agar sesi berikutnya semakin luar biasa?
+              </span>
+            ) : (
+              questions[currentIdx]
+            )}
           </h3>
 
           <textarea
@@ -1411,8 +1428,8 @@ function InteractiveReflection({
             onChange={(e) =>
               setAnswers({ ...answers, [currentIdx]: e.target.value })
             }
-            placeholder="Ketik refleksi Anda secara mendalam di sini..."
-            className="flex-1 min-h-[200px] p-6 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-10 outline-none transition-all resize-none text-slate-700 leading-relaxed font-medium"
+            placeholder={currentIdx === 4 && classId === "3" ? "Tuliskan kesan & pesan Anda untuk Pak Bagus..." : "Ketik refleksi Anda secara mendalam di sini..."}
+            className={`flex-1 min-h-[200px] p-6 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-4 outline-none transition-all resize-none text-slate-700 leading-relaxed font-medium ${classId === "3" ? "focus:border-fuchsia-500 focus:ring-fuchsia-500 focus:ring-opacity-10" : "focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-10"}`}
           ></textarea>
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-slate-100">
@@ -1425,11 +1442,11 @@ function InteractiveReflection({
               SEBELUMNYA
             </button>
 
-            {currentIdx === REFLECTION_QUESTIONS.length - 1 ? (
+            {currentIdx === questions.length - 1 ? (
               <button
                 onClick={handleSubmit}
                 disabled={loading || !answers[currentIdx]?.trim()}
-                className="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:bg-indigo-600"
+                className={`w-full md:w-auto px-8 py-3 text-white rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 ${classId === "3" ? "bg-fuchsia-600 hover:bg-fuchsia-700" : "bg-indigo-600 hover:bg-indigo-700"}`}
               >
                 {loading ? "MENGIRIM..." : "KIRIM REFLEKSI FINAL"}
                 <span className="material-symbols-outlined text-sm">send</span>
@@ -1438,7 +1455,7 @@ function InteractiveReflection({
               <button
                 onClick={handleNext}
                 disabled={!answers[currentIdx]?.trim()}
-                className="w-full md:w-auto px-8 py-3 bg-slate-800 text-white rounded-xl font-bold shadow-md hover:bg-slate-900 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full md:w-auto px-8 py-3 bg-slate-800 text-white rounded-xl font-bold shadow-md hover:bg-black transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 SELANJUTNYA
                 <span className="material-symbols-outlined text-sm">arrow_forward</span>
