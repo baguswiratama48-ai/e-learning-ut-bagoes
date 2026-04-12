@@ -1160,11 +1160,11 @@ const REFLECTION_QUESTIONS_DATA = {
     "Bagaimana kesan Anda terhadap bimbingan dan cara penyampaian materi oleh Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selama tutorial ini? Apa harapan atau saran Anda untuk beliau agar sesi berikutnya semakin luar biasa?"
   ],
   "4": [
-    "Setelah mengikuti sesi 1 hari ini, apa satu pemahaman baru mengenai Strategi Pembelajaran Kontemporer yang menurut Anda paling menantang namun penting untuk diterapkan di SD?",
-    "Dari materi yang sudah kita diskusikan (Prinsip Belajar, Strategi, dan Metode), bagian mana yang membuat Anda merasa paling siap untuk melakukan perubahan di kelas Anda?",
-    "Bagaimana perasaan Anda belajar menggunakan fitur interaktif (Misi Explorer & Kuis 20 Soal) hari ini? Apakah membantu Anda memahami konsep pedagogi dengan lebih menyenangkan?",
-    "Apa satu komitmen atau janji pribadi Anda untuk mulai menerapkan strategi pembelajaran yang lebih berpusat pada siswa (student-centered) di sekolah Anda?",
-    "Tuliskan kesan dan pesan Anda untuk Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selaku tutor hari ini. Hal apa yang paling menginspirasi Anda dari cara beliau membimbing sesi ini?"
+    "Setelah mengikuti sesi 1 hari ini, sebutkan satu contoh konkret strategi pembelajaran di SD yang menurut Bapak/Ibu paling efektif untuk meningkatkan keaktifan siswa di dalam kelas?",
+    "Bagaimana cara Bapak/Ibu menyesuaikan strategi pembelajaran agar sesuai dengan karakteristik perkembangan siswa SD yang bersifat konkret dan aktif?",
+    "Dari materi hari ini (Tujuan & Metode), tantangan apa yang paling sering Bapak/Ibu hadapi saat mencoba menerapkan strategi inkuiri atau penemuan di tingkat SD?",
+    "Apa satu komitmen nyata Bapak/Ibu untuk mulai mengurangi metode ceramah murni dan beralih ke strategi kontemporer yang lebih berpusat pada siswa SD (student-centered)?",
+    "Tuangkan kesan dan pesan Bapak/Ibu untuk Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selaku tutor. Hal apa dari beliau yang paling menginspirasi Bapak/Ibu untuk menjadi guru SD yang lebih inovatif?"
   ]
 };
 
