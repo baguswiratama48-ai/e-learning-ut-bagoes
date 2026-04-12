@@ -3662,20 +3662,54 @@ function DashboardTutor({ user }) {
                                                     })}
                                                 </div>
                                               ) : (
-                                                <div className="text-[11px] font-medium text-slate-700 max-h-[160px] overflow-y-auto custom-scrollbar pr-1">
+                                                <div className="text-[13px] font-bold text-slate-800 max-h-[160px] overflow-y-auto custom-scrollbar pr-1">
                                                   {(() => {
                                                     try {
                                                       const parsed = JSON.parse(answer.content);
-                                                      if (parsed.answers) {
-                                                        return Object.entries(parsed.answers).map(([key, val], idx) => (
-                                                          <div key={idx} className="mb-2 border-l-2 border-slate-200 pl-2">
-                                                            <p className="text-[9px] font-black text-slate-400 uppercase">{key}</p>
-                                                            <p className="italic">"{typeof val === 'object' ? JSON.stringify(val) : val}"</p>
+                                                      
+                                                      // Case A: Komentar Diskusi / Chat (Paling Sering Membuat Pusing)
+                                                      if (parsed.text) {
+                                                        return (
+                                                          <div className="p-4 bg-primary bg-opacity-5 rounded-2xl border-l-4 border-primary">
+                                                            <span className="material-symbols-outlined text-primary text-sm mb-2 block">format_quote</span>
+                                                            <p className="leading-relaxed text-slate-700">"{parsed.text}"</p>
+                                                            {parsed.targetGroupNum && (
+                                                              <p className="text-[9px] font-black text-primary uppercase mt-3 tracking-widest bg-white px-2 py-0.5 rounded-full w-fit">
+                                                                Target: Kelompok {parsed.targetGroupNum}
+                                                              </p>
+                                                            )}
                                                           </div>
-                                                        ));
+                                                        );
                                                       }
-                                                    } catch (e) {}
-                                                    return <p className="italic">"{answer.content}"</p>;
+
+                                                      // Case B: Hasil Misi / Pengerjaan Bertahap (Kelas 5A)
+                                                      if (parsed.answers) {
+                                                        return (
+                                                          <div className="space-y-2">
+                                                            {Object.entries(parsed.answers).map(([key, val], idx) => (
+                                                              <div key={idx} className="bg-slate-50 p-3 rounded-xl border border-slate-100 group/ans hover:bg-white hover:shadow-sm transition-all">
+                                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">{key.replace('mission', 'Misi ').replace('_', ' : ')}</p>
+                                                                <p className="font-semibold text-slate-700 italic leading-snug">
+                                                                  {typeof val === 'object' ? JSON.stringify(val) : val}
+                                                                </p>
+                                                              </div>
+                                                            ))}
+                                                          </div>
+                                                        );
+                                                      }
+
+                                                      // Fallback JSON (Prettified but small)
+                                                      return (
+                                                        <div className="opacity-40 hover:opacity-100 transition-opacity">
+                                                           <pre className="text-[9px] bg-slate-100 p-2 rounded-lg overflow-x-auto">
+                                                              {JSON.stringify(parsed, null, 2)}
+                                                           </pre>
+                                                        </div>
+                                                      );
+                                                    } catch (e) {
+                                                      // Bukan JSON atau Gagal Parse - Tampilkan langsung
+                                                      return <p className="italic leading-relaxed text-slate-600 font-medium">"{answer.content}"</p>;
+                                                    }
                                                   })()}
                                                 </div>
                                               )}
