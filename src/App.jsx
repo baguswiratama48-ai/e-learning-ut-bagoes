@@ -4268,6 +4268,21 @@ function SectionPage({ user }) {
         </div>
       )}
 
+      {/* Universal Tutor Feedback Display */}
+      {tutorFeedback && (
+        <div className="mt-8 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 p-6 md:p-8 rounded-3xl flex items-center gap-5 shadow-sm animate-in fade-in duration-500">
+          <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+            <span className="material-symbols-outlined text-yellow-500 text-3xl">stars</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-black text-yellow-700 mb-1 text-lg uppercase tracking-tight">Nilai dari Tutor</p>
+            <p className="text-sm text-yellow-800 font-semibold italic leading-relaxed">
+              "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="mt-10 pt-6 border-t border-slate-100">
         <Link
           to={`/class/${id}/meeting/${meetingId}`}
