@@ -1355,6 +1355,115 @@ export const StaticContentRenderer = ({
     );
   }
 
+  if (sectionName === "RAT/SAT" && (id === "1" || id === "2") && meetingId === "2") {
+    return (
+      <div className="space-y-10 md:space-y-16 pb-10">
+        <div className="relative bg-gradient-to-br from-indigo-900 via-[#312e81] to-[#1e1b4b] rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
+          <div className="relative z-10">
+            <span className="inline-flex items-center gap-2 bg-indigo-400 text-[#1e1b4b] px-3 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 shadow-lg shadow-indigo-400 shadow-opacity-20">
+              <span className="material-symbols-outlined text-sm md:text-base">auto_stories</span> RAT/SAT Sesi 2
+            </span>
+            <h1 className="text-3xl md:text-5xl font-headline font-black text-white mb-4 leading-tight">
+              Informasi Modul Sesi 2:<br className="hidden md:block" /> Karakteristik & Tugas Perkembangan
+            </h1>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+          {/* Capaian Pembelajaran */}
+          <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm transition-all border-l-[12px] border-l-indigo-500">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+              <span className="material-symbols-outlined text-indigo-500">task_alt</span>
+              Capaian Pembelajaran
+            </h3>
+            <ul className="space-y-4 text-slate-700 text-sm md:text-base font-medium">
+              <li className="flex gap-3 items-start">
+                <span className="material-symbols-outlined text-indigo-500 shrink-0">check_circle</span>
+                Mahasiswa mampu menguraikan konsep dasar komponen program layanan bimbingan dan konseling di SD.
+              </li>
+              <li className="flex gap-3 items-start">
+                <span className="material-symbols-outlined text-indigo-500 shrink-0">check_circle</span>
+                Mahasiswa mampu menguraikan karakteristik peserta didik dan mampu menganalisis serta mengevaluasi tugas perkembangan peserta didik Sekolah Dasar (SD).
+              </li>
+            </ul>
+          </div>
+
+          {/* Pokok Bahasan */}
+          <div className="bg-slate-50 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-slate-200 border-opacity-50">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+              <span className="material-symbols-outlined text-indigo-600">format_list_bulleted</span>
+              Pokok Bahasan dan Sub Pokok Bahasan
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <h4 className="font-bold text-slate-800 text-lg mb-2">Konsep Dasar Bimbingan dan Konseling di Sekolah Dasar</h4>
+                <div className="flex gap-2 items-start text-slate-600 text-sm font-medium">
+                   <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-indigo-400 shrink-0"></span> Jenis-jenis layanan Bimbingan dan Konseling
+                </div>
+              </div>
+              <div className="pt-4 border-t border-slate-200">
+                <h4 className="font-bold text-slate-800 text-lg mb-2">Karakteristik dan Tugas Perkembangan Peserta Didik di SD</h4>
+                <ul className="space-y-2 text-slate-600 text-sm font-medium">
+                  <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-indigo-400 shrink-0"></span> Konsep Karakteristik dan Tugas</li>
+                  <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-indigo-400 shrink-0"></span> Perkembangan Sekolah Dasar</li>
+                  <li className="flex gap-2 items-start"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-indigo-400 shrink-0"></span> Perkembangan Fisik-Motorik dan Upaya Bimbingannya</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Evaluasi */}
+        <div className="mt-10 md:mt-20 pt-10 border-t border-slate-100 flex flex-col items-center pb-8">
+            <h3 className="text-xl md:text-3xl font-black text-slate-800 mb-2 text-center uppercase tracking-tighter flex items-center gap-2">
+              Pertanyaan Evaluasi 💬
+            </h3>
+            <p className="text-slate-500 text-sm md:text-base font-medium leading-relaxed max-w-2xl text-center mb-8">
+               Dari pokok bahasan sesi 2 ini, mana yang menurutmu sulit untuk dipahami?
+            </p>
+
+          {!status ? (
+            <div className="w-full max-w-2xl bg-white border-2 border-indigo-500 border-opacity-10 rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-indigo-500 shadow-opacity-5 relative group overflow-hidden">
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Ketikan jawaban evaluasi Anda disini..."
+                  className="w-full min-h-[160px] bg-slate-50 border border-slate-100 rounded-2xl p-6 text-sm md:text-base focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-5 outline-none transition-all resize-none mb-6 font-medium text-slate-700 placeholder:text-slate-400"
+                ></textarea>
+
+                <button
+                  onClick={() => handleAction(content)}
+                  disabled={loading || !content.trim()}
+                  className="w-full bg-[#312e81] text-white font-black py-5 rounded-2xl hover:bg-[#1e1b4b] hover:scale-[1.01] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group disabled:opacity-50 text-sm md:text-base tracking-widest uppercase shadow-xl shadow-indigo-900 shadow-opacity-10"
+                >
+                  {loading ? "MENGIRIM EVALUASI..." : "KIRIM EVALUASI"}
+                  {!loading && (
+                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform font-bold">
+                      send
+                    </span>
+                  )}
+                </button>
+            </div>
+          ) : (
+            <div className="w-full max-w-2xl bg-indigo-600 text-white p-10 rounded-[3rem] shadow-xl shadow-indigo-600 shadow-opacity-20 flex flex-col items-center text-center animate-in fade-in zoom-in duration-500">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-4xl">
+                  task_alt
+                </span>
+              </div>
+              <h3 className="text-2xl font-black mb-2 uppercase tracking-tight">Evaluasi Terkirim!</h3>
+              <div className="bg-black bg-opacity-20 px-8 py-6 rounded-2xl w-full border border-white border-opacity-10 text-left mt-4">
+                <p className="text-[10px] font-black uppercase text-indigo-200 mb-2">Jawaban Anda:</p>
+                <p className="text-sm italic font-serif opacity-90 leading-relaxed text-slate-100">
+                  "{status.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (sectionName === "Informasi Modul") {
     const modulContent = COURSE_DATA[courseCode]?.[sectionName];

@@ -3943,12 +3943,17 @@ function ClassMenu({ user }) {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {MENUS.map((menu, i) => {
+        {MENUS.map((baseMenu, i) => {
+          let menu = baseMenu;
+          if (menu === "Informasi Modul" && (id === "1" || id === "2") && meetingId === "2") {
+            menu = "RAT/SAT";
+          }
+
           let icon = "edit_document";
           let colorClass = "bg-blue-50 text-blue-600";
           let iconName = "edit_document";
 
-          if (menu === "Informasi Modul") {
+          if (menu === "Informasi Modul" || menu === "RAT/SAT") {
             iconName = "info";
             colorClass = "bg-sky-50 text-sky-600";
           } else if (menu === "Pertanyaan Pemantik") {
