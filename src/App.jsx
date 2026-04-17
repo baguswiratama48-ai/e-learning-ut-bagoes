@@ -12,8 +12,7 @@ import { supabase } from "./supabaseClient";
 
 // Components
 import { StaticContentRenderer } from "./components/StaticContentRenderer";
-import QuizClass5A from "./components/QuizClass5A";
-import GamifiedLKPD6A from "./components/GamifiedLKPD6A";
+
 import InteractiveQuizClass8 from "./components/InteractiveQuizClass8";
 import InteractiveMindMap from "./components/interactive/InteractiveMindMap";
 import InteractiveReflection from "./components/interactive/InteractiveReflection";
