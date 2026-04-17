@@ -889,6 +889,7 @@ function SectionPage({ user }) {
       const sectionNamesToFetch = [
         sectionName,
         `TUTOR_FEEDBACK_${sectionName}`,
+        "LKM_COMMENT",
         ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4"] : [])
       ];
 
@@ -900,7 +901,7 @@ function SectionPage({ user }) {
         .eq("meeting_num", meetingId)
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD"]);
         
-      if (!((id === "3" || id === "4") && sectionName === "LKPD (Lembar Kerja Peserta Didik)")) {
+      if (!((id === "3" || id === "4") && sectionName === "LKPD (Lembar Kerja Peserta Didik)") && sectionName !== "Ayo Diskusi (LKPD)") {
         query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
       }
 
