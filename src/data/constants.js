@@ -9,8 +9,9 @@ export const CLASSES = [
 ];
 
 export const MENUS = [
-  "Materi Pembelajaran",
+  "Informasi Modul",
   "Peta Konsep",
+  "Materi Pembelajaran",
   "Pertanyaan Pemantik",
   "Video Pembelajaran",
   "Ayo Diskusi (LKPD)",
