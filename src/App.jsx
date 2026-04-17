@@ -890,6 +890,7 @@ function SectionPage({ user }) {
         sectionName,
         `TUTOR_FEEDBACK_${sectionName}`,
         "LKM_COMMENT",
+        "LKM_FORUM_POST",
         ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4"] : [])
       ];
 

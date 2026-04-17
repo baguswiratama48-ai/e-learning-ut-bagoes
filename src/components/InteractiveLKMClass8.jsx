@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../supabaseClient';
+import { STUDENTS } from '../data/students';
 
 const TASKS = {
   1: {
@@ -52,7 +53,7 @@ const TASKS = {
 };
 
 export default function InteractiveLKMClass8({ user, classId, meetingId, submissions, onComplete, status, loading }) {
-  // Check if group is generated
+  // Parsing group
   const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(meetingId));
   const groupsData = groupRow ? JSON.parse(groupRow.content) : null;
 
@@ -62,26 +63,59 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
   }, [groupsData, user.email]);
 
   const groupNumber = myGroupInfo ? myGroupInfo.group_num : 1;
-  const taskKey = ((groupNumber - 1) % 4) + 1; // Maps 1->1, 2->2, 3->3, 4->4, 5->1, etc
+  const taskKey = ((groupNumber - 1) % 4) + 1; 
   const currentTask = TASKS[taskKey];
 
-  const [activeTab, setActiveTab] = useState(status ? "FORUM" : "MY_LKM");
-  const [answers, setAnswers] = useState(() => Array(currentTask.questions.length).fill(""));
-  const [commentInputs, setCommentInputs] = useState({});
-  const [loadingComment, setLoadingComment] = useState(false);
+  // Local Storage Draft ID
+  const draftKey = `lkm_draft_${user?.email}_${classId}_${meetingId}`;
 
+  const [activeTab, setActiveTab] = useState("MY_LKM");
+  const [answers, setAnswers] = useState(() => {
+     const saved = localStorage.getItem(draftKey);
+     if (saved) {
+         try { return JSON.parse(saved); } catch(e) {}
+     }
+     return Array(currentTask.questions.length).fill("");
+  });
+
+  const [commentInputs, setCommentInputs] = useState({});
+  const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
+
+  // Save to local storage automatically
+  useEffect(() => {
+     localStorage.setItem(draftKey, JSON.stringify(answers));
+  }, [answers, draftKey]);
+
+  // Validations
   const isFormComplete = answers.every(a => a.trim().length >= 10);
   const remainingQuestions = answers.filter(a => a.trim().length < 10).length;
 
-  const allLKMSubmissions = useMemo(() => {
-    return (submissions || []).filter(s => s.section_name === "Ayo Diskusi (LKPD)" && s.student_email !== "SYSTEM_GROUP");
+  // Data fetching from props (submissions)
+  const allForumPosts = useMemo(() => {
+    return (submissions || [])
+      .filter(s => s.section_name === "LKM_FORUM_POST")
+      .map(p => {
+         try { return { ...p, parsed: JSON.parse(p.content) }; } catch(e) { return {...p, parsed: {}};}
+      })
+      .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
   }, [submissions]);
 
   const allComments = useMemo(() => {
-    return (submissions || []).filter(s => s.section_name === "LKM_COMMENT").map(c => {
-       try { return { ...c, parsed: JSON.parse(c.content) }; } catch(e) { return {...c, parsed: {targetId: null, comment: ""}};}
-    });
+    return (submissions || [])
+      .filter(s => s.section_name === "LKM_COMMENT")
+      .map(c => {
+         try { return { ...c, parsed: JSON.parse(c.content) }; } catch(e) { return {...c, parsed: {targetId: null, comment: ""}};}
+      })
+      .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
   }, [submissions]);
+
+  // Helper funcs
+  const getStudentProfile = (email) => {
+    const student = STUDENTS.find(s => s.email === email);
+    if (student) return { name: student.name, nim: student.nim };
+    const parts = email.split('@')[0].split('.');
+    return { name: parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' '), nim: "N/A" };
+  };
 
   const getStudentGroup = (email) => {
     if (!groupsData) return null;
@@ -89,15 +123,39 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
     return g ? g.group_num : null;
   };
 
-  const getNameFromEmail = (email) => {
-    const parts = email.split('@')[0].split('.');
-    return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+  const handleShareToForum = async (idx) => {
+     const answerText = answers[idx];
+     if(!answerText || answerText.trim().length < 10) return;
+     
+     setLoadingAction({ type: 'share', id: idx });
+     try {
+         const payload = {
+            student_email: user.email,
+            class_id: classId,
+            meeting_num: meetingId,
+            section_name: "LKM_FORUM_POST",
+            content: JSON.stringify({ 
+                questionIndex: idx, 
+                questionText: currentTask.questions[idx], 
+                answerText: answerText,
+                groupNum: groupNumber
+            })
+         };
+         await supabase.from("submissions").insert([payload]);
+         alert('Berhasil dibagikan ke forum diskusi!');
+         window.location.reload(); // Quick refresh to pull new data via App.jsx
+     } catch (err) {
+         console.error(err);
+         alert('Gagal membagikan.');
+     }
+     setLoadingAction({ type: null, id: null });
   };
 
   const handleAddComment = async (targetId) => {
      const commentInput = commentInputs[targetId];
      if(!commentInput || commentInput.trim().length === 0) return;
-     setLoadingComment(true);
+     
+     setLoadingAction({ type: 'comment', id: targetId });
      try {
          const payload = {
             student_email: user.email,
@@ -107,14 +165,16 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
             content: JSON.stringify({ targetId, comment: commentInput })
          };
          await supabase.from("submissions").insert([payload]);
+         setCommentInputs({...commentInputs, [targetId]: ""});
          window.location.reload();
      } catch (err) {
          console.error(err);
-         setLoadingComment(false);
+         alert("Gagal mengirim komentar.");
      }
+     setLoadingAction({ type: null, id: null });
   };
 
-  const handleSubmit = async () => {
+  const handleFinalSubmit = async () => {
     if (!isFormComplete) return;
     
     let docContent = `LEMBAR KERJA MAHASISWA (LKM)\nTopik Pokok: ${currentTask.title}\nKelompok: ${groupNumber}\n\n`;
@@ -133,11 +193,8 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
         </div>
         <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Kelompok Belum Dibentuk</h3>
         <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
-          Sistem mendeteksi bahwa Tutor belum melakukan pengacakan kelompok untuk sesi ini. Anda tidak dapat mengerjakan LKM sebelum kelompok ditentukan.
+          Tutor belum melakukan pengacakan kelompok. Anda belum bisa mengerjakan LKM.
         </p>
-        <button onClick={() => window.location.reload()} className="bg-white border-2 border-rose-200 text-rose-600 px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-rose-50 transition-all">
-          <span className="material-symbols-outlined">refresh</span> Cek Ulang Status Kelompok
-        </button>
       </div>
     );
   }
@@ -148,9 +205,9 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
         <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-amber-500 mb-6">
           <span className="material-symbols-outlined text-5xl">person_off</span>
         </div>
-        <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Anda Tidak Terdaftar di Kelompok Manapun</h3>
+        <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Tidak Ada Kelompok</h3>
         <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
-          Tutor telah membuat kelompok, tetapi akun Anda tidak terdaftar di dalamnya. Silakan hubungi Tutor Anda untuk pengecekan lebih lanjut.
+          Akun Anda tidak terdaftar dalam kelompok sesi ini. Harap hubungi Tutor.
         </p>
       </div>
     );
@@ -171,29 +228,27 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
                LKM Kelompok {groupNumber}
              </div>
              
-             {/* Tabs Toggle if Submitted */}
-             {status && (
-               <div className="flex bg-indigo-950/50 rounded-2xl p-1.5 backdrop-blur-md">
-                 <button
-                    onClick={() => setActiveTab("MY_LKM")}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "MY_LKM" ? "bg-white text-[#1a2169] shadow-md scale-100" : "text-indigo-200 hover:text-white"}`}
-                 >
-                    LKM SAYA
-                 </button>
-                 <button
-                    onClick={() => setActiveTab("FORUM")}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "FORUM" ? "bg-white text-[#1a2169] shadow-md scale-100" : "text-indigo-200 hover:text-white"}`}
-                 >
-                    FORUM DISKUSI <span className="bg-rose-500 text-white px-1.5 py-0.5 rounded-md text-[9px] font-black">{allLKMSubmissions.length}</span>
-                 </button>
-               </div>
-             )}
+             {/* Tabs Toggle */}
+             <div className="flex bg-indigo-950/50 rounded-2xl p-1.5 backdrop-blur-md">
+               <button
+                  onClick={() => setActiveTab("MY_LKM")}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "MY_LKM" ? "bg-white text-[#1a2169] shadow-md scale-100" : "text-indigo-200 hover:text-white"}`}
+               >
+                  LKM SAYA (DRAFT)
+               </button>
+               <button
+                  onClick={() => setActiveTab("FORUM")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "FORUM" ? "bg-white text-[#1a2169] shadow-md scale-100" : "text-indigo-200 hover:text-white"}`}
+               >
+                  FORUM DISKUSI <span className="bg-rose-500 text-white px-1.5 py-0.5 rounded-md text-[9px] font-black">{allForumPosts.length}</span>
+               </button>
+             </div>
           </div>
           <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 leading-tight">
             {currentTask.title}
           </h2>
           <p className="text-indigo-200 text-sm font-medium">
-             {activeTab === "MY_LKM" ? "Lengkapi setiap pertanyaan dengan uraian yang komprehensif." : "Lihat pengerjaan mahasiswa lain dan beri tanggapan/komentar yang membangun."}
+             {activeTab === "MY_LKM" ? "Isi dan simpan jawaban per soal. Anda dapat membagikan hasil diskusi tertentu ke forum." : "Beri tanggapan/komentar yang membangun pada jawaban spesifik teman Anda."}
           </p>
         </div>
       </div>
@@ -205,64 +260,109 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
               <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-inner text-green-500">
                 <span className="material-symbols-outlined text-6xl">verified</span>
               </div>
-              <h4 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">LKM Berhasil Dikirim</h4>
+              <h4 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">Seluruh Jawaban Berhasil Dikirim Ke Tutor</h4>
               <p className="text-slate-600 mb-8 max-w-md mx-auto">
-                LKM Anda telah berhasil dikirim. Sekarang Anda bisa beralih ke Tab <b>Forum Diskusi</b> (di atas) untuk melihat LKM milik teman-teman Anda.
+                LKM final Anda telah diserahkan. Anda masih bisa melihat dan berdiskusi di Tab <b>Forum Diskusi</b>.
               </p>
               <div className="bg-white p-6 md:p-8 rounded-3xl w-full text-left shadow-sm border border-green-100 max-w-3xl">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Arsip Pengiriman Anda:</p>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Arsip Pengiriman Akhir:</p>
                 <div className="text-sm text-slate-700 leading-relaxed font-medium font-serif whitespace-pre-wrap">{status.content}</div>
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-[2.5rem] p-6 text-slate-800 shadow-xl shadow-slate-200/50 border border-slate-100 space-y-6">
-              {currentTask.questions.map((question, idx) => (
-                <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl p-6 transition-colors focus-within:bg-indigo-50/30 focus-within:border-indigo-200">
-                  <div className="flex gap-4 mb-4 items-start">
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-black text-sm shrink-0 shadow-md">
-                      {idx + 1}
-                    </div>
-                    <p className="font-bold text-slate-700 leading-relaxed mt-1">{question}</p>
-                  </div>
-                  <div className="relative">
-                      <textarea
-                        value={answers[idx]}
-                        onChange={(e) => {
-                          const newAnswers = [...answers];
-                          newAnswers[idx] = e.target.value;
-                          setAnswers(newAnswers);
-                        }}
-                        className="w-full min-h-[120px] bg-white border border-slate-200 rounded-2xl p-5 text-sm outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-y placeholder:text-slate-400"
-                        placeholder="Ketik uraian jawaban Anda di sini minimal 10 karakter..."
-                      ></textarea>
-                      <div className="absolute right-3 bottom-3 flex items-center gap-1 bg-white/80 px-2 py-1 rounded-lg backdrop-blur text-[10px] font-bold text-slate-400 border border-slate-100">
-                        {answers[idx].trim().length < 10 ? (
-                          <><span className="text-rose-500">{answers[idx].trim().length}</span> / 10</>
-                        ) : (
-                          <><span className="material-symbols-outlined text-green-500 text-[14px]">check_circle</span> OK</>
-                        )}
-                      </div>
-                  </div>
-                </div>
-              ))}
+            <div className="bg-white rounded-[2.5rem] p-6 md:p-8 text-slate-800 shadow-xl shadow-slate-200/50 border border-slate-100 space-y-8">
+              
+              <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-start md:items-center gap-3">
+                 <span className="material-symbols-outlined text-amber-500 mt-1 md:mt-0 !text-[20px]">lightbulb</span>
+                 <p className="text-xs text-amber-700 font-bold leading-relaxed">
+                   Setiap huruf yang Anda ketik <b>otomatis tersimpan di perangkat (Draft)</b>. Anda dapat membagikan jawaban suatu nomor secara spesifik ke <b>Forum Diskusi</b> dengan menekan tombol bagikan di bawah masing-masing kotak.
+                 </p>
+              </div>
 
-              <div className="pt-6 mt-6 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isFormComplete ? 'bg-green-100 text-green-600' : 'bg-rose-100 text-rose-500'}`}>
-                      <span className="material-symbols-outlined text-2xl">{isFormComplete ? 'task_alt' : 'priority_high'}</span>
-                  </div>
-                  <div>
-                      <p className="text-sm font-black tracking-tight text-slate-800">{isFormComplete ? 'Semua Pertanyaan Terjawab' : `${remainingQuestions} Pertanyaan Belum Selesai`}</p>
-                      <p className="text-xs text-slate-500 font-medium">Pastikan semua kolom terisi dengan baik sebelum mengirim.</p>
-                  </div>
-                </div>
+              {currentTask.questions.map((question, idx) => {
+                const isShared = allForumPosts.some(p => p.student_email === user.email && p.parsed.questionIndex === idx);
+                const answerMissing = answers[idx].trim().length < 10;
 
+                return (
+                 <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl p-6 transition-colors focus-within:bg-indigo-50/30 focus-within:border-indigo-200 relative">
+                   {isShared && (
+                       <div className="absolute top-0 right-0 bg-green-500 text-white text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl rounded-tr-3xl flex items-center gap-1 shadow-md">
+                           <span className="material-symbols-outlined !text-[12px]">public</span> Dibagikan
+                       </div>
+                   )}
+                   <div className="flex gap-4 mb-4 items-start pr-12">
+                     <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-black text-sm shrink-0 shadow-md">
+                       {idx + 1}
+                     </div>
+                     <p className="font-bold text-slate-700 leading-relaxed mt-1 text-sm md:text-base">{question}</p>
+                   </div>
+                   
+                   <div className="relative mb-4">
+                       <textarea
+                         value={answers[idx]}
+                         onChange={(e) => {
+                           const newAnswers = [...answers];
+                           newAnswers[idx] = e.target.value;
+                           setAnswers(newAnswers);
+                         }}
+                         className="w-full min-h-[140px] bg-white border border-slate-200 rounded-2xl p-5 text-sm md:text-base outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-y placeholder:text-slate-300"
+                         placeholder="Uraikan jawaban Anda di sini..."
+                         autoComplete="off"
+                         spellCheck={false}
+                       ></textarea>
+                   </div>
+
+                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                       <div className="flex items-center gap-2 self-start md:self-center">
+                           {answerMissing ? (
+                              <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded-lg text-xs font-bold">Harap isi &gt; 10 karakter</span>
+                           ) : (
+                              <span className="bg-slate-200 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                                 <span className="material-symbols-outlined !text-[14px]">save</span> Tersimpan Lokal
+                              </span>
+                           )}
+                       </div>
+                       
+                       <button 
+                           onClick={() => handleShareToForum(idx)}
+                           disabled={isShared || answerMissing || loadingAction.type === 'share'}
+                           className={`w-full md:w-auto px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${isShared ? 'bg-green-50 text-green-600 border border-green-200 cursor-not-allowed' : 'bg-[#1a2169] text-white hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100'}`}
+                       >
+                           {loadingAction.type === 'share' && loadingAction.id === idx ? (
+                               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                           ) : isShared ? (
+                               <><span className="material-symbols-outlined !text-[18px]">check_circle</span> Sudah di Forum</>
+                           ) : (
+                               <><span className="material-symbols-outlined !text-[18px]">share</span> Bagikan ke Forum</>
+                           )}
+                       </button>
+                   </div>
+                 </div>
+                );
+              })}
+
+              {/* GLOBAL SUBMIT SECTION */}
+              <div className="pt-8 mt-4 border-t-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-4 text-center">
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 ${isFormComplete ? 'bg-green-100 text-green-600 shadow-inner' : 'bg-rose-100 text-rose-500 shadow-inner'}`}>
+                    <span className="material-symbols-outlined text-3xl">{isFormComplete ? 'task_alt' : 'priority_high'}</span>
+                </div>
+                <div>
+                   <h3 className="text-xl font-black text-slate-800 mb-1">Pengiriman Final LKM</h3>
+                   <p className="text-sm text-slate-500 font-medium max-w-md mx-auto">
+                     Jika seluruh {currentTask.questions.length} nomor sudah diisi dengan baik, tekan tombol ini untuk mengumpulkan dan mengirim seluruh jawaban utuh kepada Tutor.
+                   </p>
+                </div>
+                {remainingQuestions > 0 && (
+                     <p className="text-sm font-bold text-rose-500 animate-pulse mt-2">
+                        Masih ada {remainingQuestions} pertanyaan yang belum lengkap!
+                     </p>
+                )}
                 <button
-                    onClick={handleSubmit}
+                    onClick={handleFinalSubmit}
                     disabled={!isFormComplete || loading}
-                    className="w-full md:w-auto bg-primary text-white px-8 py-4 rounded-2xl font-black tracking-tight shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-3"
+                    className="w-full max-w-sm bg-gradient-to-r from-primary to-[#2a349c] text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-sm mt-4 shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-3"
                 >
-                  {loading ? "MENGIRIM..." : "KIRIM LKM SAYA"}
+                  {loading ? "MEMPROSES..." : "KIRIM SEMUA KE TUTOR"}
                   {!loading && <span className="material-symbols-outlined font-black">send</span>}
                 </button>
               </div>
@@ -273,73 +373,108 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
 
       {activeTab === "FORUM" && (
         <div className="space-y-6">
-          {allLKMSubmissions.map((sub, idx) => {
-             const subGroupNum = getStudentGroup(sub.student_email);
-             const subTaskKey = subGroupNum ? (((subGroupNum - 1) % 4) + 1) : 1;
-             const subTask = TASKS[subTaskKey];
-             const postComments = allComments.filter(c => c.parsed.targetId === sub.id);
+          <div className="bg-white border text-center border-slate-200 p-8 rounded-[2.5rem] shadow-sm">
+             <span className="material-symbols-outlined text-5xl text-indigo-300 mb-3 block">forum</span>
+             <h3 className="text-xl font-black text-slate-800">Ruang Diskusi Panel LKM</h3>
+             <p className="text-sm text-slate-500 mt-2 max-w-xl mx-auto">Tanggapi cuplikan jawaban yang dibagikan oleh kelompok lain. Setiap komentar terekam secara akademik atas nama NIM dari mahasiswa pengirim.</p>
+          </div>
+
+          {allForumPosts.map((post) => {
+             const postGroupNum = post.parsed.groupNum || getStudentGroup(post.student_email) || '?';
+             const profile = getStudentProfile(post.student_email);
+             const postComments = allComments.filter(c => c.parsed.targetId === post.id);
 
              return (
-               <div key={sub.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-lg shadow-slate-200/50">
-                 {/* Post Header */}
-                 <div className="bg-slate-50 border-b border-slate-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+               <div key={post.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-lg shadow-slate-200/40 transform transition-all duration-300 hover:shadow-xl">
+                 <div className="bg-slate-50 border-b border-slate-200 p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                    <div className="flex items-center gap-4">
-                     <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-black text-xl shadow-sm">
-                       {sub.student_email.charAt(0).toUpperCase()}
+                     <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full flex items-center justify-center font-black text-xl shadow-md border-2 border-white">
+                       {profile.name.charAt(0)}
                      </div>
                      <div>
-                       <p className="font-black text-slate-800 uppercase tracking-tight text-lg leading-none mb-1">{getNameFromEmail(sub.student_email)}</p>
-                       <p className="text-xs text-slate-500 font-medium">{new Date(sub.created_at).toLocaleString('id-ID', {dateStyle: 'medium', timeStyle: 'short'})}</p>
+                       <div className="flex items-center gap-2 mb-0.5">
+                           <p className="font-black text-slate-800 uppercase tracking-tight text-base md:text-lg leading-none">{profile.name}</p>
+                           <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-[9px] font-black tracking-widest">{profile.nim}</span>
+                       </div>
+                       <p className="text-xs text-slate-500 font-medium flex items-center gap-1">
+                          <span className="material-symbols-outlined !text-[12px]">schedule</span>
+                          {new Date(post.created_at).toLocaleString('id-ID', {dateStyle: 'medium', timeStyle: 'short'})}
+                       </p>
                      </div>
                    </div>
-                   <div className="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-xl text-xs font-bold shrink-0">
-                     Kelompok {subGroupNum || '?'}
+                   <div className="bg-indigo-100 border border-indigo-200 text-indigo-700 px-4 py-2 rounded-xl text-xs font-black shrink-0 self-start md:self-center shadow-sm">
+                     KELOMPOK {postGroupNum}
                    </div>
                  </div>
 
-                 {/* Post Content Wrapper */}
-                 <div className="p-6 md:p-8">
-                    <div className="w-full h-48 overflow-y-auto mb-6 bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-inner text-sm text-slate-700 whitespace-pre-wrap font-serif leading-relaxed custom-scrollbar relative">
-                       <span className="sticky top-0 float-right material-symbols-outlined text-slate-300 pointer-events-none pb-2 pl-2 bg-slate-50">data_object</span>
-                       {sub.content}
+                 <div className="p-5 md:p-8 space-y-6">
+                    {/* The Q & A */}
+                    <div className="bg-white border-2 border-slate-100 rounded-2xl p-5 shadow-sm">
+                        <p className="text-xs font-black text-indigo-500 uppercase tracking-widest mb-2 flex items-center gap-1">
+                           <span className="material-symbols-outlined !text-[14px]">quiz</span> Pertanyaan Diskusi
+                        </p>
+                        <p className="font-bold text-slate-700 mb-4">{post.parsed.questionText}</p>
+                        
+                        <p className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-2 flex items-center gap-1 border-t border-slate-100 pt-4">
+                           <span className="material-symbols-outlined !text-[14px]">menu_book</span> Jawaban Publik
+                        </p>
+                        <div className="text-sm font-serif text-slate-700 leading-relaxed whitespace-pre-wrap pl-2 border-l-4 border-emerald-200">
+                           {post.parsed.answerText}
+                        </div>
                     </div>
 
-                    {/* Comments Section */}
-                    <div className="space-y-4">
+                    {/* Comments */}
+                    <div className="space-y-4 pt-2">
                       {postComments.length > 0 && (
-                        <div className="space-y-3 mb-6">
-                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Komentar Mahasiswa ({postComments.length})</h4>
-                          {postComments.map((c, cIdx) => (
-                            <div key={cIdx} className="bg-slate-50/80 border border-slate-200 p-4 rounded-3xl rounded-tl-sm flex gap-3 w-fit pr-10">
-                              <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-xs font-black shrink-0">
-                                {c.student_email.charAt(0).toUpperCase()}
-                              </div>
-                              <div>
-                                <p className="text-[10px] font-black text-slate-600 uppercase mb-0.5">{getNameFromEmail(c.student_email)}</p>
-                                <p className="text-sm text-slate-700 font-medium">{c.parsed.comment}</p>
-                              </div>
-                            </div>
-                          ))}
+                        <div className="space-y-3 mb-6 bg-slate-50 rounded-2xl p-4 md:p-6 border border-slate-100 shadow-inner">
+                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1 mb-4">
+                              <span className="material-symbols-outlined !text-[14px]">forum</span> Komentar Diskusi ({postComments.length})
+                          </h4>
+                          {postComments.map((c, cIdx) => {
+                            const cProfile = getStudentProfile(c.student_email);
+                            return (
+                             <div key={cIdx} className="bg-white border border-slate-200 p-4 rounded-3xl rounded-tl-sm flex gap-4 w-full md:max-w-3xl shadow-sm">
+                               <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-black shrink-0 border-2 border-white shadow-sm">
+                                 {cProfile.name.charAt(0)}
+                               </div>
+                               <div>
+                                 <div className="flex flex-wrap items-center gap-2 mb-1">
+                                     <p className="text-[11px] font-black text-slate-600 uppercase">{cProfile.name}</p>
+                                     <span className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[8px] font-black border border-slate-200">{cProfile.nim}</span>
+                                     <span className="text-[9px] text-slate-400 ml-auto whitespace-nowrap">{new Date(c.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</span>
+                                 </div>
+                                 <p className="text-sm text-slate-700 font-medium leading-relaxed">{c.parsed.comment}</p>
+                               </div>
+                             </div>
+                            );
+                          })}
                         </div>
                       )}
 
-                      {/* Comment Input */}
-                      <div className="flex gap-3 items-end">
-                        <textarea
-                          value={commentInputs[sub.id] || ''}
-                          onChange={(e) => setCommentInputs({...commentInputs, [sub.id]: e.target.value})}
-                          placeholder={`Balas jawaban LKM milik ${getNameFromEmail(sub.student_email)}...`}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all min-h-[60px] resize-y"
-                        ></textarea>
+                      {/* Input Comment */}
+                      <div className="flex gap-3 items-start">
+                        <div className="relative w-full">
+                           <textarea
+                             value={commentInputs[post.id] || ''}
+                             onChange={(e) => setCommentInputs({...commentInputs, [post.id]: e.target.value})}
+                             placeholder={`Balas jawaban LKM milik ${profile.name}...`}
+                             className="w-full bg-slate-50 border border-slate-200 rounded-3xl px-6 py-4 text-sm outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all min-h-[60px] resize-y placeholder:text-slate-400"
+                           ></textarea>
+                           {/* Quick identifier that they are commenting natively */}
+                           <div className="absolute right-3 bottom-3 flex items-center gap-1.5 opacity-40">
+                               <span className="bg-slate-200 text-[8px] font-black px-2 py-0.5 rounded text-slate-600">NIM: {getStudentProfile(user.email).nim}</span>
+                           </div>
+                        </div>
+                        
                         <button
-                          onClick={() => handleAddComment(sub.id)}
-                          disabled={!commentInputs[sub.id] || loadingComment}
-                          className="bg-[#1a2169] text-white p-4 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center shrink-0"
+                          onClick={() => handleAddComment(post.id)}
+                          disabled={!commentInputs[post.id] || loadingAction.type === 'comment'}
+                          className="bg-primary text-white w-14 h-14 rounded-full shadow-lg shadow-primary/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center shrink-0 mt-1"
                         >
-                          {loadingComment ? (
+                          {loadingAction.type === 'comment' && loadingAction.id === post.id ? (
                              <div className="w-5 h-5 border-2 border-white border-t-white/30 rounded-full animate-spin"></div>
                           ) : (
-                             <span className="material-symbols-outlined text-lg">forum</span>
+                             <span className="material-symbols-outlined text-xl">send</span>
                           )}
                         </button>
                       </div>
@@ -348,22 +483,15 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
                </div>
              );
           })}
-          {allLKMSubmissions.length === 0 && (
-             <div className="bg-slate-50 border border-slate-200 p-10 rounded-3xl text-center text-slate-500">
-               <span className="material-symbols-outlined text-4xl mb-2 text-slate-300">comments_disabled</span>
-               <p className="font-medium">Belum ada mahasiswa lain yang mengirim LKM.</p>
+          {allForumPosts.length === 0 && (
+             <div className="bg-slate-50 border border-slate-200 border-dashed p-12 rounded-[2.5rem] text-center text-slate-400">
+               <span className="material-symbols-outlined text-6xl mb-4 text-slate-300">chat_bubble_outline</span>
+               <p className="font-bold text-lg mb-1">Belum Ada Topik Diskusi</p>
+               <p className="text-sm max-w-sm mx-auto">Jadilah yang pertama untuk membagikan gagasan Anda dari tab LKM SAYA agar bisa mulai dikomentari!</p>
              </div>
           )}
         </div>
       )}
-      
-      {/* CSS For custom scrollbar inside the post box */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
-        .custom-scrollbar { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
-      `}} />
     </div>
   );
 }
