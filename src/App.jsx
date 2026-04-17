@@ -867,7 +867,6 @@ function SectionPage({ user }) {
     "Kuis",
     "Refleksi",
     "Rangkuman",
-    "Pertanyaan",
   ].some((p) => sectionName?.includes(p));
 
   useEffect(() => {
@@ -986,7 +985,7 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {!isInput || (["3", "4"].includes(id) && ["LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan"].includes(sectionName)) ? (
+      {!isInput || sectionName?.includes("Pertanyaan") || (["3", "4"].includes(id) && ["LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan"].includes(sectionName)) ? (
           renderStaticContent()
         ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
