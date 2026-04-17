@@ -159,23 +159,37 @@ export const DashboardTutor = ({
           {/* Sub-Menu Sidebar */}
           <div className="w-full md:w-64 space-y-2">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 mb-4">Kategori Penilaian</p>
-            {MENUS.map(menu => {
-              const hasSub = studentSubs.find(s => s.section_name === menu);
-              const hasFeedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${menu}`);
-              return (
-                <button
-                  key={menu}
-                  onClick={() => setActiveCorrectionTab(menu)}
-                  className={`w-full text-left px-4 py-3 rounded-2xl text-xs font-bold transition-all flex items-center justify-between group ${activeCorrectionTab === menu ? "bg-primary text-white shadow-lg shadow-primary shadow-opacity-20" : "bg-white text-slate-500 hover:bg-slate-100"}`}
-                >
-                  <span className="truncate">{menu}</span>
-                  <div className="flex items-center gap-1">
-                    {hasSub && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 group-hover:bg-white"></span>}
-                    {hasFeedback && <span className="material-symbols-outlined text-[14px] text-emerald-400 group-hover:text-white">verified</span>}
-                  </div>
-                </button>
-              );
-            })}
+            {(() => {
+              const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(selectedMeeting) === "2";
+              return MENUS.filter(m => {
+                if (isSesi2BK && m === "Peta Konsep") return false;
+                return true;
+              }).map(menu => {
+                const hasSub = studentSubs.find(s => s.section_name === menu);
+                const hasFeedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${menu}`);
+                
+                let displayLabel = menu;
+                if (isSesi2BK) {
+                  if (menu === "Informasi Modul") displayLabel = "RAT/SAT";
+                  if (menu === "Ayo Diskusi (LKPD)") displayLabel = "LKM (Lembar Kerja Mahasiswa)";
+                  if (menu === "Kuis dan Latihan") displayLabel = "Quiz";
+                }
+
+                return (
+                  <button
+                    key={menu}
+                    onClick={() => setActiveCorrectionTab(menu)}
+                    className={`w-full text-left px-4 py-3 rounded-2xl text-[10px] font-bold transition-all flex items-center justify-between group ${activeCorrectionTab === menu ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-white text-slate-500 hover:bg-slate-100"}`}
+                  >
+                    <span className="truncate">{displayLabel}</span>
+                    <div className="flex items-center gap-1">
+                      {hasSub && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 group-hover:bg-white"></span>}
+                      {hasFeedback && <span className="material-symbols-outlined text-[14px] text-emerald-400 group-hover:text-white">verified</span>}
+                    </div>
+                  </button>
+                );
+              });
+            })()}
           </div>
 
           {/* Correction Area */}
