@@ -6,38 +6,27 @@ export const Sesi2_BK = {
   courseName: "Bimbingan Konseling di SD",
   sections: [
     {
-      name: "RAT/SAT",
-      type: "RATSATV2",
-      content: {
-        title: "Karakteristik & Tugas Perkembangan",
-        capaian: [
-          "Mahasiswa mampu menguraikan konsep dasar komponen program layanan bimbingan dan konseling di SD.",
-          "Mahasiswa mampu menguraikan karakteristik peserta didik dan mampu menganalisis serta mengevaluasi tugas perkembangan peserta didik Sekolah Dasar (SD).",
-        ],
-        pokokBahasan: [
-          {
-            title: "Konsep Dasar Bimbingan dan Konseling di Sekolah Dasar",
-            subs: ["Jenis-jenis layanan Bimbingan dan Konseling"],
-          },
-          {
-            title: "Karakteristik dan Tugas Perkembangan Peserta Didik di SD",
-            subs: [
-              "Konsep Karakteristik dan Tugas",
-              "Perkembangan Sekolah Dasar",
-              "Perkembangan Fisik-Motorik dan Upaya Bimbingannya",
-            ],
-          },
-        ],
-        evaluationQuestion: "Dari pokok bahasan sesi 2 ini, mana yang menurutmu sulit untuk dipahami?",
-      },
-    },
-    {
       name: "Materi Pembelajaran",
       type: "MateriV2",
       content: {
         title: "Materi Bimbingan dan Konseling di SD",
         subtitle: "Konsep Dasar, Jenis Layanan, dan Karakteristik Peserta Didik",
         sections: [
+          {
+            letter: "0",
+            title: "Informasi Modul (RAT/SAT)",
+            description: "Target capaian pembelajaran untuk sesi 2 ini.",
+            points: [
+              {
+                label: "Capaian Pembelajaran",
+                text: "Memahami konsep bimbingan konseling dan karakteristik siswa SD.",
+                items: [
+                  "Mahasiswa mampu menguraikan konsep dasar BK di SD.",
+                  "Mahasiswa mampu menganalisis tugas perkembangan peserta didik SD."
+                ]
+              }
+            ]
+          },
           {
             letter: "A",
             title: "Konsep Dasar Bimbingan dan Konseling di SD",

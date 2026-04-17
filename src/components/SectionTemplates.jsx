@@ -256,23 +256,25 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
  * Template for Structured Learning Material
  */
 export const MateriTemplate = ({ config, content, setContent, handleAction, loading, status }) => {
+  if (!config?.content) return null;
+
   return (
     <div className="space-y-12 md:space-y-20 pb-20">
       <SectionHero 
-        title={config.content.title}
-        subtitle={config.content.subtitle}
+        title={config.content.title || "Materi Pembelajaran"}
+        subtitle={config.content.subtitle || ""}
         category="Materi Pembelajaran"
         icon="menu_book"
         gradient="from-slate-50 via-white to-blue-50"
       />
 
       <div className="max-w-5xl mx-auto space-y-16 md:space-y-24">
-        {config.content.sections.map((section, sidx) => (
-          <div key={sidx} className="relative group">
+        {(config.content.sections || []).map((section, sidx) => (
+          <div key={sidx} className="relative group px-4">
             {/* Section Header */}
             <div className="flex items-center gap-4 mb-8">
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.5rem] bg-slate-900 shadow-xl shadow-slate-900/20 flex items-center justify-center text-white font-black text-xl md:text-2xl ring-8 ring-slate-50 group-hover:scale-110 transition-transform">
-                {section.letter}
+                {section.letter || sidx + 1}
               </div>
               <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent"></div>
             </div>
@@ -294,7 +296,7 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {section.points && (
                 <div className="space-y-6">
-                  {section.points.map((pt, pidx) => (
+                  {(section.points || []).map((pt, pidx) => (
                     <div key={pidx} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
                       <h4 className="flex items-center gap-2 text-primary font-black text-sm md:text-base mb-3 uppercase tracking-tighter">
                         <span className="material-symbols-outlined text-[18px]">verified</span>
@@ -305,7 +307,7 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
                       </p>
                       {pt.items && (
                         <ul className="mt-4 space-y-2 pl-2">
-                          {pt.items.map((item, iidx) => (
+                          {(pt.items || []).map((item, iidx) => (
                             <li key={iidx} className="flex gap-2 items-start text-xs md:text-sm text-slate-500 font-medium">
                               <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-slate-300 shrink-0"></span>
                               {item}
@@ -320,7 +322,7 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
 
               {/* Examples Column */}
               {section.examples && (
-                <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden h-full shadow-2xl">
+                <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden h-full shadow-2xl min-h-[300px]">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-primary opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-8">
@@ -328,7 +330,7 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
                        <h4 className="font-black text-lg md:text-xl tracking-tight uppercase">Contoh di Lapangan</h4>
                     </div>
                     <div className="space-y-6">
-                      {section.examples.map((ex, eidx) => (
+                      {(section.examples || []).map((ex, eidx) => (
                         <div key={eidx} className="flex gap-4 items-start bg-white/5 border border-white/10 p-5 rounded-2xl hover:bg-white/10 transition-all">
                            <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-black text-[10px] shrink-0">{eidx+1}</span>
                            <p className="text-xs md:text-sm font-medium leading-relaxed opacity-90">{ex}</p>
@@ -344,7 +346,7 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
       </div>
 
       {/* Engagement Section */}
-      <div className="max-w-4xl mx-auto pt-20 border-t border-slate-100">
+      <div className="max-w-4xl mx-auto pt-20 border-t border-slate-100 px-4">
         <div className="bg-gradient-to-br from-primary to-[#1a2169] rounded-[3rem] p-10 md:p-16 text-white text-center shadow-2xl shadow-primary/20">
           <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur-md border border-white/20">
             <span className="material-symbols-outlined text-4xl text-yellow-400">psychology</span>
