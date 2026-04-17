@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { REFLECTION_QUESTIONS_DATA } from "../../data/interactiveData";
 
 export default function InteractiveReflection({
