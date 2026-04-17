@@ -677,25 +677,46 @@ const MENUS = [
 
 const PEMANTIK_GROUPS = [
   [
-    "Pernahkah Anda melihat siswa SD mengalami kesulitan belajar atau masalah perilaku? Menurut Anda, siapa yang seharusnya membantu mereka dan bagaimana caranya?",
-    "Mengapa siswa sekolah dasar tidak cukup hanya diajar materi pelajaran saja?",
-    "Apa yang mungkin terjadi jika kebutuhan emosional dan sosial siswa diabaikan di sekolah?",
-    "Menurut Anda, apakah semua siswa membutuhkan bantuan yang sama? Mengapa demikian?",
-    "Bagaimana peran guru dalam membantu perkembangan siswa selain mengajar di kelas?",
+    "Jika semua guru sudah mengajar dengan baik, mengapa layanan Bimbingan dan Konseling masih diperlukan di SD?",
+    "Apa yang akan terjadi pada perkembangan siswa jika sekolah tidak memiliki layanan BK?",
+    "Menurut Anda, apakah peran guru kelas di SD sudah mencakup fungsi konselor? Jelaskan dengan alasan!",
+    "Bagaimana membedakan antara “mengajar”, “mendidik”, dan “membimbing” dalam konteks SD?",
+    "Jika seorang siswa bermasalah secara emosional, siapa yang paling bertanggung jawab: guru, orang tua, atau konselor? Mengapa?",
   ],
   [
-    "Jika Anda membantu seorang siswa yang memiliki masalah, hal apa yang harus Anda perhatikan agar bantuan tersebut tidak merugikan siswa?",
-    "Apakah semua masalah siswa boleh diselesaikan dengan cara yang sama? Mengapa?",
-    "Bagaimana cara memperlakukan setiap siswa agar mereka merasa dihargai dan dipahami?",
-    "Mengapa penting menjaga kerahasiaan masalah siswa? Apa dampaknya jika tidak dijaga?",
-    "Dalam membantu siswa, apakah kita boleh memaksakan kehendak kita? Mengapa?",
+    "Mengapa layanan BK tidak cukup hanya dengan konseling individu saja?",
+    "Dalam kondisi apa layanan bimbingan kelompok lebih efektif dibandingkan konseling individu?",
+    "Bagaimana Anda menentukan layanan BK yang tepat untuk siswa yang sama tetapi memiliki masalah berbeda?",
+    "Apa dampak jika layanan BK diberikan tanpa memahami kebutuhan siswa?",
+    "Jika Anda menjadi guru, layanan apa yang paling sering Anda gunakan di SD dan mengapa?",
   ],
   [
-    "Apa yang harus dijaga agar siswa merasa aman dan percaya saat menceritakan masalahnya?",
-    "Mengapa hubungan antara guru dan siswa perlu dilandasi rasa percaya?",
-    "Bagaimana sikap seorang guru agar siswa mau terbuka tentang masalahnya?",
-    "Menurut Anda, apa yang membuat bantuan kepada siswa bisa berjalan efektif?",
-    "Jika seorang siswa tidak mau terbuka, apa yang sebaiknya dilakukan oleh guru?",
+    "Mengapa memahami karakteristik siswa SD menjadi kunci keberhasilan pembelajaran dan bimbingan?",
+    "Apa akibatnya jika guru memberikan tuntutan yang tidak sesuai dengan tahap perkembangan siswa?",
+    "Apakah semua siswa SD memiliki karakteristik yang sama? Jelaskan dengan contoh nyata!",
+    "Bagaimana cara guru menyesuaikan pendekatan pembelajaran dengan perbedaan karakteristik siswa?",
+    "Jika ada siswa yang “tidak sesuai” dengan tugas perkembangannya, apa yang harus dilakukan?",
+  ],
+  [
+    "Mengapa tugas perkembangan harus dicapai secara bertahap?",
+    "Apa hubungan antara kegagalan mencapai tugas perkembangan dengan masalah perilaku siswa?",
+    "Bagaimana Anda mengidentifikasi bahwa seorang anak sudah atau belum mencapai tugas perkembangannya?",
+    "Apakah tugas perkembangan bersifat mutlak untuk semua anak? Mengapa?",
+    "Jika seorang anak berkembang lebih cepat atau lebih lambat dari teman sebayanya, bagaimana seharusnya guru bersikap?",
+  ],
+  [
+    "Mengapa masa SD sering disebut sebagai “masa dasar” dalam kehidupan anak?",
+    "Apa dampak jangka panjang jika perkembangan di usia SD tidak optimal?",
+    "Bagaimana lingkungan sekolah mempengaruhi perkembangan sosial dan emosional siswa?",
+    "Menurut Anda, mana yang lebih berpengaruh: faktor keluarga atau sekolah? Jelaskan!",
+    "Jika Anda merancang sekolah ideal, aspek perkembangan apa yang paling Anda prioritaskan?",
+  ],
+  [
+    "Mengapa perkembangan fisik-motorik mempengaruhi kemampuan belajar siswa?",
+    "Bagaimana cara membedakan antara keterlambatan motorik dan sekadar perbedaan individu?",
+    "Apa peran guru dalam membantu siswa dengan perkembangan motorik yang kurang optimal?",
+    "Jika sekolah hanya fokus pada akademik, apa dampaknya terhadap perkembangan fisik siswa?",
+    "Bagaimana bentuk layanan BK yang bisa mendukung perkembangan fisik-motorik siswa?",
   ],
 ];
 
@@ -4019,7 +4040,7 @@ function SectionPage({ user }) {
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
   const [submissions, setSubmissions] = useState([]);
-  const [pemantikAnswers, setPemantikAnswers] = useState(["", "", ""]);
+  const [pemantikAnswers, setPemantikAnswers] = useState(Array((id === "1" || id === "2") ? 6 : 3).fill(""));
   const [tutorFeedback, setTutorFeedback] = useState(null);
 
   const isInput = [

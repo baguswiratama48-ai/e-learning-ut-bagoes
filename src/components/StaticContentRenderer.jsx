@@ -966,7 +966,7 @@ export const StaticContentRenderer = ({
   }
 
   if (sectionName === "Video Pembelajaran" && (id === "1" || id === "2")) {
-    const videoId = "GYlmNScMEl4";
+    const videoId = "lEWK8NMHtEs";
     const wordCount = content.trim()
       ? content
           .trim()
@@ -976,198 +976,114 @@ export const StaticContentRenderer = ({
     const isWordCountEnough = wordCount >= 100;
 
     return (
-      <div className="space-y-8">
-        <div className="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden">
-          <div className="aspect-video">
+      <div className="space-y-8 md:space-y-12">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden group">
+          <div className="aspect-video relative">
             <iframe
               className="w-full h-full"
               src={`https://www.youtube.com/embed/${videoId}`}
-              title="Video Pembelajaran"
+              title="Video Pembelajaran Sesi 2 - Perkembangan Peserta Didik"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
           </div>
-          <div className="p-6 bg-slate-50 border-t items-center flex justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
-                <span className="material-symbols-outlined text-red-600 text-[18px]">
-                  movie
-                </span>
+          <div className="p-4 md:p-6 bg-slate-50 border-t flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
+                <span className="material-symbols-outlined text-[20px]">play_circle</span>
               </div>
-              <p className="font-bold text-slate-800 text-sm">
-                Video Pembelajaran Kelas 8B & 8C
-              </p>
+              <div>
+                <p className="font-black text-slate-800 text-sm md:text-base leading-tight">
+                  Sesi 2: Perkembangan Peserta Didik di SD
+                </p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Materi Bimbingan Konseling</p>
+              </div>
             </div>
             <a
               href={`https://youtu.be/${videoId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] font-bold text-primary uppercase bg-white border px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
+              className="text-[10px] font-black text-slate-700 uppercase bg-white border border-slate-200 px-5 py-3 rounded-xl hover:bg-slate-100 hover:border-slate-300 transition-all shadow-sm flex items-center justify-center gap-2"
             >
+              <img src="/ut-logo.png" className="w-3 h-auto opacity-50" alt="" />
               Buka di YouTube
             </a>
           </div>
         </div>
 
-        <div className="bg-[#0f172a] text-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white border-opacity-5">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary bg-opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-yellow-400 bg-opacity-10 rounded-full -ml-24 -mb-24 blur-[80px]"></div>
-
-          <div className="relative z-10">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h4 className="font-headline font-bold text-xl md:text-2xl text-yellow-400 tracking-tight flex items-center gap-3">
-                  <span className="w-10 h-10 rounded-xl bg-yellow-400 bg-opacity-20 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-yellow-400">
-                      description
-                    </span>
-                  </span>
-                  Kesimpulan Video
-                </h4>
-                <p className="text-slate-400 text-sm mt-2 font-medium">
-                  Susunlah poin-poin penting dari video yang telah Anda
-                  tonton.
-                </p>
-              </div>
-              {!status && (
-                <div
-                  className={`px-4 py-2 rounded-full border text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${isWordCountEnough ? "bg-green-500 bg-opacity-10 border-green-500 border-opacity-30 text-green-400" : "bg-white bg-opacity-5 border-white border-opacity-10 text-slate-400"}`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full ${isWordCountEnough ? "bg-green-500 animate-pulse" : "bg-slate-500"}`}
-                  ></span>
-                  Syarat: 100 Kata
-                </div>
-              )}
+        <div className="bg-slate-900 border border-white/5 rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-14 text-white relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary opacity-10 rounded-full -mr-48 -mt-48 blur-[120px]"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500 opacity-10 rounded-full -ml-32 -mb-32 blur-[100px]"></div>
+          
+          <div className="relative z-10 max-w-2xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+              <span className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
+              Evaluasi Wajib
             </div>
+            <h3 className="text-2xl md:text-4xl font-black mb-4 tracking-tighter uppercase leading-tight">
+              Kesimpulan Video
+            </h3>
+            <p className="text-slate-400 text-sm md:text-base font-medium mb-10 leading-relaxed italic">
+              "Susunlah poin-poin penting dari video yang telah Anda tonton."
+            </p>
 
             {status ? (
-              <div className="space-y-4">
-                <div className="bg-white bg-opacity-5 backdrop-blur-sm p-6 md:p-8 rounded-[2rem] border border-white border-opacity-10 shadow-inner">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-[10px] text-yellow-400 text-opacity-70 border border-yellow-400 border-opacity-30 px-2 py-0.5 rounded-md uppercase font-black tracking-tighter">
-                      Laporan Mahasiswa
-                    </span>
-                  </div>
-                  <p className="text-sm md:text-base text-slate-200 leading-[1.8] text-justify italic font-serif">
-                    {status.content}
-                  </p>
-                  <div className="mt-8 flex items-center gap-3 py-3 px-5 bg-green-500 bg-opacity-10 rounded-2xl border border-green-500 border-opacity-20 w-fit">
-                    <span className="material-symbols-outlined text-green-400 text-xl font-bold">
-                      verified
-                    </span>
-                    <p className="text-xs text-green-400 font-bold uppercase tracking-widest">
-                      Terkirim & Terarsip
-                    </p>
-                  </div>
+              <div className="bg-white/5 backdrop-blur-md p-6 md:p-10 rounded-[2rem] border border-white/10 text-left">
+                <div className="flex items-center gap-2 mb-4">
+                   <span className="text-[9px] font-black text-indigo-400 uppercase tracking-widest bg-indigo-400/10 px-2 py-0.5 rounded">Laporan Tersimpan</span>
+                </div>
+                <p className="text-sm md:text-lg text-slate-100 leading-relaxed font-serif italic text-justify">
+                  "{status.content}"
+                </p>
+                <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
+                   <div className="flex items-center gap-2 text-emerald-400">
+                      <span className="material-symbols-outlined text-sm">verified</span>
+                      <span className="text-[10px] font-black uppercase">Terkirim ke Tutor</span>
+                   </div>
                 </div>
               </div>
             ) : (
               <div className="space-y-6">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 from-opacity-20 to-primary to-opacity-20 rounded-[2rem] blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
+                   <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.2rem] blur opacity-10 group-focus-within:opacity-30 transition duration-500"></div>
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Masukkan analisis dan kesimpulan Anda di sini (Minimal 100 kata)..."
-                    className="relative w-full bg-[#1e293b] bg-opacity-50 border border-white border-opacity-10 rounded-[2rem] p-6 md:p-8 text-sm md:text-base text-white placeholder:text-slate-500 focus:bg-[#1e293b] focus:border-yellow-400 focus:border-opacity-50 outline-none min-h-[300px] resize-none transition-all leading-relaxed text-justify"
+                    placeholder="Tuliskan poin-poin penting minimal 100 kata di sini..."
+                    className="relative w-full min-h-[300px] md:min-h-[400px] bg-white/5 border border-white/10 rounded-[2rem] p-8 md:p-10 text-sm md:text-base text-white placeholder:text-slate-600 focus:bg-white/10 focus:border-indigo-500 outline-none transition-all resize-none font-medium leading-relaxed text-justify"
                   ></textarea>
 
-                  <div className="absolute bottom-6 right-6 flex items-center gap-3">
-                    <p
-                      className={`text-xs font-black tracking-tighter transition-colors ${isWordCountEnough ? "text-green-400" : "text-slate-500"}`}
-                    >
-                      {wordCount.toLocaleString()}{" "}
-                      <span className="opacity-50">{" / "} 100 KATA</span>
+                  <div className="absolute bottom-8 right-8 flex items-center gap-4 bg-black/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/5">
+                    <p className={`text-xs font-black tracking-tighter ${isWordCountEnough ? "text-emerald-400" : "text-slate-500"}`}>
+                      {wordCount} / 100 KATA
                     </p>
-                    <div className="w-10 h-10 rounded-full bg-black bg-opacity-40 flex items-center justify-center border border-white border-opacity-5">
-                      {isWordCountEnough ? (
-                        <span className="material-symbols-outlined text-green-400 text-lg">
-                          check_circle
-                        </span>
-                      ) : (
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-600 animate-pulse"></div>
-                      )}
-                    </div>
+                    {isWordCountEnough ? (
+                      <span className="material-symbols-outlined text-emerald-500 text-lg">check_circle</span>
+                    ) : (
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-600 animate-pulse"></div>
+                    )}
                   </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 items-center justify-between pt-2">
-                  <p className="text-[11px] text-slate-500 font-medium italic order-2 md:order-1">
-                    * Kesimpulan yang dikirim tidak dapat diubah kembali.
-                    Mohon teliti.
-                  </p>
+                <div className="flex flex-col md:flex-row gap-6 items-center justify-between pt-2">
+                  <div className="flex items-center gap-2 text-slate-500 italic text-[11px] order-2 md:order-1">
+                     <span className="material-symbols-outlined text-sm">info</span>
+                     Jawaban tidak dapat diubah setelah dikirim.
+                  </div>
                   <button
                     onClick={() => handleAction(content)}
                     disabled={loading || !isWordCountEnough}
-                    className="w-full md:w-auto min-w-[240px] bg-yellow-400 text-slate-900 font-black py-4 px-8 rounded-2xl hover:bg-yellow-300 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:hover:scale-100 shadow-xl shadow-yellow-400 shadow-opacity-10 flex items-center justify-center gap-3 order-1 md:order-2"
+                    className="w-full md:w-auto min-w-[280px] bg-white text-slate-900 font-black py-5 px-10 rounded-2xl hover:bg-indigo-400 hover:text-white transition-all shadow-xl flex items-center justify-center gap-4 group active:scale-95 disabled:opacity-20 order-1 md:order-2 text-sm uppercase tracking-widest"
                   >
-                    {loading ? "MEMPROSES..." : "KIRIM KESIMPULAN VIDEO"}
-                    {!loading && isWordCountEnough && (
-                      <span className="material-symbols-outlined font-bold">
-                        send
-                      </span>
-                    )}
+                    {loading ? "MENGIRIM..." : "KIRIM KESIMPULAN"}
+                    {!loading && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>}
                   </button>
                 </div>
-
-                {!isWordCountEnough && content.trim().length > 0 && (
-                  <div className="bg-red-500 bg-opacity-10 border border-red-500 border-opacity-20 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
-                    <span className="material-symbols-outlined text-red-400">
-                      priority_high
-                    </span>
-                    <p className="text-xs text-red-300 font-bold uppercase tracking-wider">
-                      Kurang {100 - wordCount} kata lagi untuk membuka akses
-                      tombol kirim.
-                    </p>
-                  </div>
-                )}
               </div>
             )}
           </div>
         </div>
-
-        {status && tutorFeedback && (
-          <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <span className="material-symbols-outlined text-yellow-500 text-4xl">
-              stars
-            </span>
-            <div>
-              <p className="font-bold text-yellow-700 mb-1 text-lg">
-                Nilai Kesimpulan Anda
-              </p>
-              <p className="text-sm text-yellow-800 mb-3 italic">
-                "
-                {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                  "Tutor telah memberikan penilaian."}
-                "
-              </p>
-              <div className="flex gap-1 text-yellow-500">
-                {Array(parseInt(tutorFeedback.content))
-                  .fill(0)
-                  .map((_, i) => (
-                    <span
-                      key={i}
-                      className="material-symbols-outlined fill-1 text-2xl"
-                    >
-                      star
-                    </span>
-                  ))}
-                {Array(5 - parseInt(tutorFeedback.content))
-                  .fill(0)
-                  .map((_, i) => (
-                    <span
-                      key={i}
-                      className="material-symbols-outlined text-slate-300 text-2xl"
-                    >
-                      star
-                    </span>
-                  ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
@@ -1829,6 +1745,7 @@ export const StaticContentRenderer = ({
     (cls?.classId === "1" || cls?.classId === "2" || ["1", "2"].includes(id))
   ) {
     const questions = getPemantikForStudent(user.nim || "0");
+    const requiredCount = (id === "1" || id === "2") ? 6 : 3;
     const allAnswered = pemantikAnswers.every((a) => a.trim().length > 0);
     const combinedContent = questions
       .map(
@@ -1837,137 +1754,128 @@ export const StaticContentRenderer = ({
       .join("\n\n");
 
     return (
-      <div className="space-y-6">
-        <div className="bg-primary bg-opacity-5 p-5 rounded-2xl border border-primary border-opacity-10">
-          <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-2">
-            <span className="material-symbols-outlined text-sm">
-              tips_and_updates
-            </span>{" "}
-            Pertanyaan Pemantik
-          </p>
-          <p className="text-sm text-slate-600 font-medium">
-            Jawablah 3 pertanyaan di bawah ini sesuai dengan pemahaman Anda.
-            Pertanyaan bersifat pribadi dan berbeda untuk setiap mahasiswa.
-          </p>
+      <div className="space-y-6 md:space-y-10">
+        <div className="relative bg-gradient-to-br from-indigo-50 via-slate-50 to-blue-50 p-6 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-slate-200/60 shadow-sm overflow-hidden text-center md:text-left">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
+              <span className="material-symbols-outlined text-sm">tips_and_updates</span> Guided Reflection
+            </div>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tighter uppercase leading-tight">
+              Pertanyaan Pemantik
+            </h2>
+            <p className="text-sm md:text-lg text-slate-500 font-medium leading-relaxed max-w-2xl">
+              Jawablah {requiredCount} pertanyaan reflektif di bawah ini. Jawaban Anda bersifat pribadi dan bertujuan untuk memantik pemahaman mendalam tentang materi Sesi 2.
+            </p>
+          </div>
         </div>
 
         {status ? (
-          <div className="space-y-4">
-            <div className="bg-green-50 border border-green-200 p-4 rounded-2xl flex items-center gap-3">
-              <span className="material-symbols-outlined text-green-500 text-3xl">
-                check_circle
-              </span>
-              <div>
-                <p className="font-bold text-green-700">
-                  Jawaban Sudah Terkirim ke Tutor
-                </p>
-                <p className="text-xs text-green-600">
-                  Jawaban Anda telah disimpan dan tidak bisa diubah kecuali
-                  tutor membuka kembali.
-                </p>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            <div className="lg:col-span-2 bg-emerald-500 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] text-white shadow-xl shadow-emerald-500/20 flex flex-col md:flex-row items-center gap-6 md:gap-10">
+               <div className="w-20 h-20 md:w-24 md:h-24 bg-white/20 rounded-[2rem] flex items-center justify-center shadow-lg">
+                  <span className="material-symbols-outlined text-5xl font-bold">verified</span>
+               </div>
+               <div className="text-center md:text-left">
+                  <h4 className="text-xl md:text-3xl font-black uppercase tracking-tight mb-2">Terima Kasih, Mahasiswa!</h4>
+                  <p className="text-sm md:text-lg text-emerald-100 font-medium opacity-90 max-w-xl italic">
+                    Jawaban Anda telah kami simpan dengan aman. Tutor akan memberikan feedback melalui dashboard ini dalam waktu dekat.
+                  </p>
+               </div>
             </div>
 
-            {questions.map((q, i) => (
-              <div
-                key={i}
-                className="bg-white border rounded-2xl p-5 shadow-sm"
-              >
-                <p className="text-xs font-bold text-primary uppercase mb-2">
-                  Pertanyaan {i + 1}
-                </p>
-                <p className="text-sm font-medium text-slate-700 mb-3">{q}</p>
-                <div className="bg-slate-50 p-3 rounded-xl border-l-4 border-primary border-opacity-30">
-                  <p className="text-sm text-slate-600 italic whitespace-pre-wrap">
-                    "
-                    {pemantikAnswers[i] ||
-                      status.content
-                        .split(/\n\n(?=Pertanyaan \d+:)/)
-                        [i]?.split("\nJawaban: ")[1] ||
-                      "-"}
-                    "
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-5">
-            {questions.map((q, i) => (
-              <div
-                key={i}
-                className="bg-white border rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start gap-3 mb-4">
-                  <span className="bg-primary text-white text-xs font-bold px-2 py-1 rounded-lg shrink-0">
-                    {i + 1}
-                  </span>
-                  <p className="text-sm font-semibold text-slate-800 leading-relaxed">
+            {questions.map((q, i) => {
+              const answersArray = status.content.split(/\n\n(?=Pertanyaan \d+:)/);
+              const myAnswerBlock = answersArray.find(a => a.startsWith(`Pertanyaan ${i+1}:`)) || "";
+              const myAnswer = myAnswerBlock.split("\nJawaban: ")[1] || "-";
+
+              return (
+                <div key={i} className="bg-white border border-slate-100 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-sm hover:shadow-md transition-shadow flex flex-col h-full border-t-8 border-t-indigo-500/20">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-lg shadow-lg">
+                      {i + 1}
+                    </span>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Question {i+1}</span>
+                  </div>
+                  <p className="text-base md:text-xl font-black text-slate-800 mb-6 leading-snug tracking-tight">
                     {q}
                   </p>
+                  <div className="mt-auto bg-slate-50 p-6 md:p-8 rounded-2xl md:rounded-[2rem] border-l-8 border-indigo-500">
+                    <p className="text-sm md:text-base text-slate-600 italic leading-relaxed font-serif font-medium">
+                      "{myAnswer}"
+                    </p>
+                  </div>
                 </div>
-                <textarea
-                  value={pemantikAnswers[i]}
-                  onChange={(e) => {
-                    const updated = [...pemantikAnswers];
-                    updated[i] = e.target.value;
-                    setPemantikAnswers(updated);
-                  }}
-                  placeholder="Tulis jawaban Anda di sini..."
-                  className="w-full bg-slate-50 border rounded-xl p-4 text-sm focus:bg-white focus:border-primary outline-none transition-all min-h-[100px] resize-none"
-                />
-              </div>
-            ))}
-            <button
-              onClick={() => handleAction(combinedContent)}
-              disabled={loading || !allAnswered}
-              className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary shadow-opacity-20 hover:bg-[#1a2169] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {loading
-                ? "Mengirim..."
-                : !allAnswered
-                  ? "Lengkapi Semua Jawaban Terlebih Dahulu"
-                  : "Kirim Semua Jawaban"}
-            </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="space-y-8 md:space-y-12">
+            <div className="grid grid-cols-1 gap-8 md:gap-12">
+              {questions.map((q, i) => (
+                <div key={i} className="group bg-white border border-slate-200/60 p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-sm focus-within:ring-8 focus-within:ring-indigo-500/5 focus-within:border-indigo-500/30 transition-all">
+                  <div className="flex items-center gap-4 mb-8 md:mb-10">
+                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.8rem] bg-indigo-600 text-white flex items-center justify-center font-black text-2xl md:text-3xl shadow-xl shadow-indigo-600/20 group-focus-within:scale-110 transition-transform">
+                      {i + 1}
+                    </div>
+                    <div className="h-px bg-slate-100 flex-grow"></div>
+                    <span className="text-[10px] md:text-xs font-black text-slate-300 uppercase tracking-[0.4em] pr-4">Section {i+1}</span>
+                  </div>
+                  
+                  <h3 className="text-xl md:text-3xl font-black text-slate-900 mb-10 md:mb-12 leading-tight tracking-tighter">
+                    {q}
+                  </h3>
+                  
+                  <textarea
+                    value={pemantikAnswers[i] || ""}
+                    onChange={(e) => {
+                      const updated = [...pemantikAnswers];
+                      updated[i] = e.target.value;
+                      setPemantikAnswers(updated);
+                    }}
+                    placeholder="Tuliskan jawaban kritis dan mendalam Anda di sini..."
+                    className="w-full min-h-[160px] md:min-h-[200px] bg-slate-50 border border-slate-100 rounded-[1.5rem] md:rounded-[2.5rem] p-8 md:p-10 text-sm md:text-lg text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 outline-none transition-all resize-none font-medium leading-relaxed"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="p-8 md:p-14 bg-slate-900 rounded-[2.5rem] md:rounded-[4rem] text-white flex flex-col md:flex-row items-center justify-between gap-10 shadow-2xl relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500 opacity-20 rounded-full -mr-40 -mt-40 blur-[100px]"></div>
+               <div className="relative z-10 text-center md:text-left">
+                  <h4 className="text-2xl md:text-4xl font-black tracking-tighter uppercase mb-2">Siap Kirim?</h4>
+                  <p className="text-slate-400 text-sm md:text-base font-medium">Mohon pastikan semua {requiredCount} pertanyaan telah dijawab sebelum mengirim.</p>
+               </div>
+               
+               <button
+                  onClick={() => handleAction(combinedContent)}
+                  disabled={loading || !allAnswered}
+                  className="relative z-10 w-full md:w-auto min-w-[320px] bg-white text-slate-900 font-black py-6 md:py-8 px-12 rounded-[1.5rem] md:rounded-[2.5rem] hover:bg-indigo-500 hover:text-white transition-all shadow-xl flex items-center justify-center gap-4 group active:scale-95 disabled:opacity-20 text-sm md:text-lg tracking-[0.1em] uppercase"
+               >
+                  {loading ? "MEMPROSES..." : "KIRIM SEMUA JAWABAN"}
+                  {!loading && <span className="material-symbols-outlined group-hover:translate-x-3 transition-transform font-bold text-2xl">arrow_forward</span>}
+               </button>
+            </div>
           </div>
         )}
 
         {status && tutorFeedback && (
-          <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4 shadow-sm mt-8">
-            <span className="material-symbols-outlined text-yellow-500 text-4xl">
-              stars
-            </span>
-            <div>
-              <p className="font-bold text-yellow-700 mb-1 text-lg">
-                Nilai dari Tutor
+          <div className="bg-yellow-50 border border-yellow-200 p-10 md:p-16 rounded-[2.5rem] md:rounded-[4rem] flex flex-col md:flex-row items-center gap-10 shadow-sm mt-12 md:mt-20">
+            <div className="w-24 h-24 md:w-32 md:h-32 bg-yellow-400 rounded-[2rem] md:rounded-[3rem] flex items-center justify-center shadow-lg shadow-yellow-400/40">
+              <span className="material-symbols-outlined text-white text-5xl md:text-7xl">stars</span>
+            </div>
+            <div className="text-center md:text-left flex-grow">
+              <p className="font-black text-yellow-700 mb-2 text-2xl md:text-4xl uppercase tracking-tighter leading-tight">Apresiasi Tutor</p>
+              <p className="text-sm md:text-xl text-yellow-800 mb-8 italic font-medium max-w-2xl font-serif">
+                "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || "Tutor telah memberikan penilaian."}"
               </p>
-              <p className="text-sm text-yellow-800 mb-3 italic">
-                "
-                {FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] ||
-                  "Tutor telah memberikan penilaian."}
-                "
-              </p>
-              <div className="flex gap-1 text-yellow-500">
-                {Array(parseInt(tutorFeedback.content))
-                  .fill(0)
-                  .map((_, i) => (
-                    <span
-                      key={i}
-                      className="material-symbols-outlined fill-1 text-2xl"
-                    >
-                      star
-                    </span>
-                  ))}
-                {Array(5 - parseInt(tutorFeedback.content))
-                  .fill(0)
-                  .map((_, i) => (
-                    <span
-                      key={i}
-                      className="material-symbols-outlined text-slate-300 text-2xl"
-                    >
-                      star
-                    </span>
-                  ))}
+              <div className="flex justify-center md:justify-start gap-2 text-yellow-500">
+                {Array(parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                  <span key={i} className="material-symbols-outlined text-4xl md:text-5xl fill-1">star</span>
+                ))}
+                {Array(5 - parseInt(tutorFeedback.content)).fill(0).map((_, i) => (
+                  <span key={i} className="material-symbols-outlined text-4xl md:text-5xl text-slate-200">star</span>
+                ))}
               </div>
             </div>
           </div>
