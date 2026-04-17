@@ -8,9 +8,30 @@ export default function InteractiveReflection({
   submissions,
   onComplete,
 }) {
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const draftKey = `refleksi_draft_${user?.email}_${classId}_${meetingId}`;
+  
+  const [currentIdx, setCurrentIdx] = useState(() => {
+     const saved = localStorage.getItem(draftKey + '_idx');
+     return saved ? parseInt(saved, 10) : 0;
+  });
+  
+  const [answers, setAnswers] = useState(() => {
+     const saved = localStorage.getItem(draftKey + '_answers');
+     if (saved) {
+         try { return JSON.parse(saved); } catch (e) {}
+     }
+     return {};
+  });
+
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+      localStorage.setItem(draftKey + '_idx', currentIdx);
+  }, [currentIdx, draftKey]);
+
+  useEffect(() => {
+      localStorage.setItem(draftKey + '_answers', JSON.stringify(answers));
+  }, [answers, draftKey]);
 
   const questions = REFLECTION_QUESTIONS_DATA[classId] || REFLECTION_QUESTIONS_DATA.default;
 
@@ -50,6 +71,8 @@ export default function InteractiveReflection({
       (q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${answers[i] || "-"}`,
     ).join("\n\n");
     await onComplete(content);
+    localStorage.removeItem(draftKey + '_idx');
+    localStorage.removeItem(draftKey + '_answers');
     setLoading(false);
   };
 
@@ -75,43 +98,61 @@ export default function InteractiveReflection({
     );
   }
 
+  // Question Decorator to make it more "Friendly & Professional"
+  const getQuestionDecoration = (idx) => {
+    const q = questions[idx] || "";
+    if (q.includes("makanan")) return { icon: "restaurant", color: "text-orange-500", bg: "bg-orange-50" };
+    if (q.includes("film")) return { icon: "movie", color: "text-purple-500", bg: "bg-purple-50" };
+    if (q.includes("nyantol")) return { icon: "lightbulb", color: "text-yellow-500", bg: "bg-yellow-50" };
+    if (q.includes("Oh ternyata gitu")) return { icon: "auto_awesome", color: "text-blue-500", bg: "bg-blue-50" };
+    if (q.includes("guru")) return { icon: "school", color: "text-emerald-500", bg: "bg-emerald-50" };
+    if (q.includes("emoji")) return { icon: "mood", color: "text-pink-500", bg: "bg-pink-50" };
+    if (q.includes("Satu kata")) return { icon: "sell", color: "text-cyan-500", bg: "bg-cyan-50" };
+    if (q.includes("sederhana")) return { icon: "eco", color: "text-green-500", bg: "bg-green-50" };
+    if (q.includes("adik kelas")) return { icon: "group", color: "text-teal-500", bg: "bg-teal-50" };
+    if (q.includes("Bagus")) return { icon: "favorite", color: "text-rose-500", bg: "bg-rose-50" };
+    return { icon: "psychology", color: "text-indigo-500", bg: "bg-indigo-50" };
+  };
+
+  const decor = getQuestionDecoration(currentIdx);
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-10">
       {/* Progress Header */}
-      <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+      <div className="bg-white p-6 md:p-8 rounded-[2.5rem] shadow-sm border border-slate-200">
         <div className="flex justify-between items-end mb-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
-              Refleksi Pembelajaran
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">
+              Refleksi Sesi {meetingId}
             </p>
-            <h4 className="font-bold text-xl text-slate-800">
-              Pertanyaan {currentIdx + 1}{" "}
-              <span className="text-slate-400 font-medium text-base">
-                dari {questions.length}
-              </span>
+            <h4 className="font-black text-2xl text-slate-800">
+               Pesan & Kesan 
+               <span className="text-slate-300 ml-2 font-medium">
+                 ({currentIdx + 1}/{questions.length})
+               </span>
             </h4>
           </div>
-          <p className={`text-sm font-bold ${classId === "3" ? "text-fuchsia-600" : classId === "4" ? "text-teal-600" : "text-indigo-600"}`}>
+          <p className="text-lg font-black text-indigo-600">
             {Math.round(progress)}%
           </p>
         </div>
-        <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+        <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-500 ease-out ${classId === "3" ? "bg-fuchsia-600" : classId === "4" ? "bg-teal-600" : "bg-indigo-600"}`}
+            className="h-full rounded-full transition-all duration-700 ease-out bg-gradient-to-r from-indigo-500 to-purple-500"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
       </div>
 
       {myGroup && (
-        <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex items-center justify-between gap-4 animate-in slide-in-from-top duration-700 ${classId === "3" ? "border-fuchsia-100 ring-8 ring-fuchsia-500/5" : classId === "4" ? "border-teal-100 ring-8 ring-teal-500/5" : "border-indigo-100 ring-8 ring-indigo-500/5"}`}>
+        <div className="bg-white border border-indigo-100 ring-8 ring-indigo-500/5 rounded-[2.5rem] p-6 shadow-sm flex items-center justify-between gap-4 animate-in slide-in-from-top duration-700">
             <div className="flex items-center gap-4">
-               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 ${classId === "3" ? "bg-fuchsia-600" : classId === "4" ? "bg-teal-600" : "bg-indigo-600"}`}>
+               <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 bg-indigo-600 shadow-lg shadow-indigo-200">
                   <span className="material-symbols-outlined">diversity_3</span>
                </div>
                <div>
                   <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Kolaborasi Aktif</p>
-                  <p className="text-sm font-bold text-slate-700 truncate max-w-[150px] md:max-w-none">Kelompok {myGroup.group_num}</p>
+                  <p className="text-sm font-bold text-slate-700">Kelompok {myGroup.group_num}</p>
                </div>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 shrink-0">
@@ -124,19 +165,21 @@ export default function InteractiveReflection({
       )}
 
       {/* Question Card */}
-      <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 min-h-[450px] flex flex-col relative overflow-hidden">
+      <div className="bg-white p-8 md:p-14 rounded-[3rem] shadow-xl shadow-slate-200/50 border border-slate-100 min-h-[500px] flex flex-col relative overflow-hidden transition-all duration-500">
+        <div className={`absolute top-0 right-0 w-64 h-64 ${decor.bg} rounded-bl-full opacity-20 -mr-20 -mt-20 transition-all duration-700`}></div>
+        
         <div className="relative z-10 flex-1 flex flex-col">
-          <div className="flex items-center gap-3 mb-8">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${classId === "3" ? "bg-fuchsia-50 text-fuchsia-600" : classId === "4" ? "bg-teal-50 text-teal-600" : "bg-indigo-50 text-indigo-600"}`}>
-              <span className="material-symbols-outlined">psychology</span>
+          <div className="flex items-center gap-4 mb-10">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm ${decor.bg} ${decor.color} transition-all duration-500`}>
+              <span className="material-symbols-outlined text-3xl">{decor.icon}</span>
             </div>
-            <div className="h-px flex-1 bg-slate-100"></div>
+            <div className="h-px flex-1 bg-gradient-to-r from-slate-100 to-transparent"></div>
           </div>
 
-          <h3 className="text-xl md:text-2xl font-bold text-slate-800 leading-relaxed mb-6">
-            {classId === "3" && currentIdx === 4 ? (
+          <h3 className="text-2xl md:text-3xl font-black text-slate-800 leading-tight mb-8">
+            {currentIdx === 9 ? (
               <span>
-                Bagaimana kesan Anda terhadap bimbingan dan cara penyampaian materi oleh <span className="text-yellow-500 font-black">Bapak Bagus Panca Wiratama, S.Pd., M.Pd.</span> selama tutorial ini? Apa harapan atau saran Anda untuk beliau agar sesi berikutnya semakin luar biasa?
+                Apa yang ingin Anda sampaikan untuk <span className="text-indigo-600 underline decoration-yellow-400 decoration-4 underline-offset-8">Bapak Bagus Panca Wiratama, S.Pd., M.Pd?</span>
               </span>
             ) : (
               questions[currentIdx]
@@ -148,37 +191,37 @@ export default function InteractiveReflection({
             onChange={(e) =>
               setAnswers({ ...answers, [currentIdx]: e.target.value })
             }
-            placeholder={currentIdx === 4 && classId === "3" ? "Tuliskan kesan & pesan Anda untuk Pak Bagus..." : "Ketik refleksi Anda secara mendalam di sini..."}
-            className={`flex-1 min-h-[200px] p-6 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-4 outline-none transition-all resize-none text-slate-700 leading-relaxed font-medium ${classId === "3" ? "focus:border-fuchsia-500 focus:ring-fuchsia-500 focus:ring-opacity-10" : classId === "4" ? "focus:border-teal-500 focus:ring-teal-500 focus:ring-opacity-10" : "focus:border-indigo-500 focus:ring-indigo-500 focus:ring-opacity-10"}`}
+            placeholder="Tuangkan pikiranmu di sini secara santai dan jujur..."
+            className="flex-1 min-h-[220px] p-8 rounded-[2rem] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all resize-none text-slate-700 text-lg leading-relaxed font-medium placeholder:text-slate-300 shadow-inner"
           ></textarea>
 
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-slate-100">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mt-10 pt-8 border-t border-slate-50">
             <button
               onClick={handleBack}
               disabled={currentIdx === 0}
-              className="w-full md:w-auto px-6 py-3 rounded-xl font-bold text-slate-500 border border-transparent hover:bg-slate-50 hover:text-slate-700 disabled:opacity-0 transition-all flex items-center justify-center gap-2"
+              className="w-full md:w-auto px-8 py-4 rounded-2xl font-black text-slate-400 border border-transparent hover:bg-slate-50 hover:text-slate-600 disabled:opacity-0 transition-all flex items-center justify-center gap-2 tracking-widest text-xs"
             >
-              <span className="material-symbols-outlined text-sm font-bold">arrow_back</span>
-              SEBELUMNYA
+              <span className="material-symbols-outlined text-sm font-black">arrow_back_ios</span>
+              KEMBALI
             </button>
 
             {currentIdx === questions.length - 1 ? (
               <button
                 onClick={handleSubmit}
                 disabled={loading || !answers[currentIdx]?.trim()}
-                className={`w-full md:w-auto px-8 py-3 text-white rounded-xl font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50 ${classId === "3" ? "bg-fuchsia-600 hover:bg-fuchsia-700" : classId === "4" ? "bg-teal-600 hover:bg-teal-700" : "bg-indigo-600 hover:bg-indigo-700"}`}
+                className="w-full md:w-auto px-12 py-4 bg-gradient-to-br from-indigo-600 to-purple-700 text-white rounded-2xl font-black shadow-xl shadow-indigo-600/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 active:scale-95"
               >
-                {loading ? "MENGIRIM..." : "KIRIM REFLEKSI FINAL"}
-                <span className="material-symbols-outlined text-sm">send</span>
+                {loading ? "MENGIRIM..." : "SELESAI & KUMPUL"}
+                <span className="material-symbols-outlined text-xl">verified</span>
               </button>
             ) : (
               <button
                 onClick={handleNext}
                 disabled={!answers[currentIdx]?.trim()}
-                className="w-full md:w-auto px-8 py-3 bg-slate-800 text-white rounded-xl font-bold shadow-md hover:bg-black transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full md:w-auto px-12 py-4 bg-slate-900 text-white rounded-2xl font-black shadow-xl shadow-slate-900/10 hover:bg-black transition-all flex items-center justify-center gap-3 active:scale-95"
               >
-                SELANJUTNYA
-                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                LANJUTKAN
+                <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </button>
             )}
           </div>

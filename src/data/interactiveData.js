@@ -207,18 +207,28 @@ export const QUIZ_DATA = [
 
 export const REFLECTION_QUESTIONS_DATA = {
   1: [
-    "Apa hal terpenting yang Anda pelajari hari ini?",
-    "Bagaimana perasaan Anda mengikuti sesi tutorial pertama ini?",
-    "Materi mana yang menurut Anda paling menantang untuk dipahami?",
-    "Apa rencana Anda untuk memperdalam materi setelah sesi ini berakhir?",
-    "Berikan saran agar tutorial berikutnya menjadi lebih interaktif!",
+    "Jika pelajaran hari ini adalah makanan, itu jadi apa? Jelaskan kenapa.",
+    "Kalau materi hari ini jadi film, judulnya apa?",
+    "Seberapa “nyantol” materi hari ini di otakmu? (skala 1–10 + alasan)",
+    "Bagian mana yang bikin kamu bilang: “Oh ternyata gitu!”",
+    "Kalau kamu jadi guru, bagian mana yang akan kamu jelaskan ulang?",
+    "Pilih emoji yang menggambarkan perasaanmu hari ini 😊😵😴🔥, jelaskan!",
+    "Satu kata untuk menggambarkan pembelajaran hari ini?",
+    "Apa hal paling sederhana yang kamu dapat, tapi ternyata penting?",
+    "Kalau materi ini kamu ajarkan ke adik kelas, kamu mulai dari mana?",
+    "Apa yang ingin kamu sampaikan untuk pak Bagus Panca Wiratama, S.Pd., M.Pd."
   ],
   2: [
-    "Bagaimana menurut Anda peran guru SD dalam mendukung perkembangan fisik siswa?",
-    "Apa pentingnya memahami tugas-tugas perkembangan anak usia SD?",
-    "Setelah mempelajari karakteristik siswa SD, apakah ada perubahan dalam cara Anda memandang proses belajar-mengajar?",
-    "Strategi apa yang akan Anda gunakan jika menghadapi siswa yang memiliki hambatan dalam tugas perkembangannya?",
-    "Berikan masukan untuk Bapak Bagus agar materi perkembangan peserta didik ini lebih mudah dipahami!",
+    "Jika pelajaran hari ini adalah makanan, itu jadi apa? Jelaskan kenapa.",
+    "Kalau materi hari ini jadi film, judulnya apa?",
+    "Seberapa “nyantol” materi hari ini di otakmu? (skala 1–10 + alasan)",
+    "Bagian mana yang bikin kamu bilang: “Oh ternyata gitu!”",
+    "Kalau kamu jadi guru, bagian mana yang akan kamu jelaskan ulang?",
+    "Pilih emoji yang menggambarkan perasaanmu hari ini 😊😵😴🔥, jelaskan!",
+    "Satu kata untuk menggambarkan pembelajaran hari ini?",
+    "Apa hal paling sederhana yang kamu dapat, tapi ternyata penting?",
+    "Kalau materi ini kamu ajarkan ke adik kelas, kamu mulai dari mana?",
+    "Apa yang ingin kamu sampaikan untuk pak Bagus Panca Wiratama, S.Pd., M.Pd."
   ],
   3: [
     "Apa pemahaman baru yang Anda dapatkan tentang anak berkebutuhan khusus (ABK)?",
