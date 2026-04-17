@@ -12,7 +12,9 @@ import { supabase } from "./supabaseClient";
 
 // Components
 import { StaticContentRenderer } from "./components/StaticContentRenderer";
-import InteractiveQuiz from "./components/interactive/InteractiveQuiz";
+import QuizClass5A from "./components/QuizClass5A";
+import GamifiedLKPD6A from "./components/GamifiedLKPD6A";
+import InteractiveQuizClass8 from "./components/InteractiveQuizClass8";
 import InteractiveMindMap from "./components/interactive/InteractiveMindMap";
 import InteractiveReflection from "./components/interactive/InteractiveReflection";
 import InteractiveLKMClass8 from "./components/InteractiveLKMClass8";
@@ -1002,7 +1004,7 @@ function SectionPage({ user }) {
           renderStaticContent()
         ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
-          <InteractiveQuiz
+          <InteractiveQuizClass8
             user={user}
             classId={id}
             meetingId={meetingId}
