@@ -634,7 +634,7 @@ function Login({ onLogin }) {
     </div>
   );
 }
-function DashboardTutor({ user }) {
+function TutorDashboardPage({ user }) {
   const [submissions, setSubmissions] = useState([]);
   const [moduleContent, setModuleContent] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1206,7 +1206,7 @@ function Layout({ user, onLogin, onLogout }) {
           />
           <Route
             path="/tutor-dashboard"
-            element={<DashboardTutor user={userWithSetter} />}
+            element={<TutorDashboardPage user={user} />}
           />
           <Route path="/class/:id" element={<Login onLogin={onLogin} />} />
           <Route

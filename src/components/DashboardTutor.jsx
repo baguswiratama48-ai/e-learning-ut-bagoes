@@ -139,7 +139,7 @@ export const DashboardTutor = ({
 
   // --- RENDER HELPERS ---
   const renderCorrectionHub = (student) => {
-    const studentSubs = submissions.filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting));
+    const studentSubs = (submissions || []).filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting));
     
     return (
       <div className="bg-slate-50 border-t-2 border-slate-200 p-6 animate-in slide-in-from-top-2 duration-300">
@@ -373,8 +373,9 @@ export const DashboardTutor = ({
             </thead>
             <tbody className="divide-y divide-slate-50">
               {paginatedStudents.map((student, idx) => {
-                const subCount = submissions.filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting) && !s.section_name.startsWith('TUTOR_FEEDBACK_')).length;
-                const evaluatedCount = submissions.filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting) && s.section_name.startsWith('TUTOR_FEEDBACK_')).length;
+                const studentSubsAtMeeting = (submissions || []).filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting));
+                const subCount = studentSubsAtMeeting.filter(s => !s.section_name.startsWith('TUTOR_FEEDBACK_')).length;
+                const evaluatedCount = studentSubsAtMeeting.filter(s => s.section_name.startsWith('TUTOR_FEEDBACK_')).length;
                 const isExpanded = expandedStudent === student.email;
 
                 return (
