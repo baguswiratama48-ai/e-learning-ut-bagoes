@@ -147,6 +147,27 @@ export const DashboardTutor = ({
   }, [activeTab, searchTerm]);
 
   const paginatedStudents = studentList.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  // --- CALCULATORS ---
+  const calculateProgress = (studentEmail, meetingNum) => {
+    const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(meetingNum) === "2";
+    let requiredMenus = ["Pertanyaan Pemantik", "Ayo Diskusi (LKPD)", "Kuis dan Latihan", "Refleksi"];
+    
+    if (isSesi2BK) {
+      requiredMenus = ["Pertanyaan Pemantik", "Ayo Diskusi (LKPD)", "Kuis dan Latihan", "Rangkuman", "Refleksi"];
+    }
+
+    const studentSubs = (submissions || []).filter(s => 
+      s.student_email === studentEmail && 
+      String(s.meeting_num) === String(meetingNum)
+    );
+
+    const completedCount = requiredMenus.filter(menu => 
+      studentSubs.some(s => s.section_name === menu)
+    ).length;
+
+    return Math.round((completedCount / requiredMenus.length) * 100);
+  };
+
   const totalPages = Math.ceil(studentList.length / pageSize);
 
   // --- RENDER HELPERS ---
@@ -272,18 +293,34 @@ export const DashboardTutor = ({
                                 </div>
                               </div>
                             ) : activeCorrectionTab === "Pertanyaan Pemantik" || activeCorrectionTab === "Refleksi" ? (
-                              <div className="grid gap-6">
+                              <div className="grid gap-8">
                                 {sub.content.split(/\n\n(?=Pertanyaan \d+:)/).map((block, bidx) => {
                                   const parts = block.split('\nJawaban: ');
                                   const qPart = parts[0] || bidx + 1;
                                   const aPart = parts[1] || "-";
                                   return (
-                                    <div key={bidx} className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm transition-hover hover:shadow-md">
-                                      <p className="text-[10px] font-black text-primary/50 uppercase tracking-[0.2em] mb-3">Butir Respons {bidx + 1}</p>
-                                      <p className="font-black text-slate-800 mb-5 leading-tight text-base md:text-lg">{qPart.replace(/^Pertanyaan \d+: /, "")}</p>
-                                      <div className="p-6 bg-slate-50/50 rounded-2xl border-l-8 border-primary flex gap-4">
-                                         <span className="material-symbols-outlined text-primary opacity-30 text-3xl">format_quote</span>
-                                         <p className="text-slate-600 italic leading-relaxed text-sm md:text-base">"{aPart}"</p>
+                                    <div key={bidx} className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden transition-all hover:shadow-md">
+                                      {/* QUESTION SECTION */}
+                                      <div className="bg-slate-50 p-6 md:p-8 border-b border-slate-100">
+                                        <div className="flex items-center gap-2 mb-3">
+                                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                                           <p className="text-[9px] font-black text-primary/60 uppercase tracking-[0.2em]">Pertanyaan Tutor</p>
+                                        </div>
+                                        <p className="font-black text-slate-800 leading-snug text-sm md:text-base">{qPart.replace(/^Pertanyaan \d+: /, "")}</p>
+                                      </div>
+                                      
+                                      {/* ANSWER SECTION */}
+                                      <div className="p-6 md:p-8 bg-white relative">
+                                         <div className="flex items-center gap-2 mb-4">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                            <p className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Jawaban Mahasiswa</p>
+                                         </div>
+                                         <div className="text-slate-600 font-medium leading-[1.8] text-sm md:text-base text-left">
+                                            {aPart}
+                                         </div>
+                                         <div className="absolute bottom-4 right-6 opacity-[0.05]">
+                                            <span className="material-symbols-outlined text-[40px]">format_quote</span>
+                                         </div>
                                       </div>
                                     </div>
                                   );
@@ -304,8 +341,36 @@ export const DashboardTutor = ({
                                   {sub.content.replace(/\[RANGKUMAN MODUL PENGGANTI TEST\]\n/, "")}
                                 </div>
                               </div>
+                            ) : sub.content.includes("Jawaban:") ? (
+                              <div className="grid gap-8">
+                                {sub.content.split(/\n\n(?=Soal \d+:)/).map((block, bidx) => {
+                                  const parts = block.split(/\n\nJawaban:\n|\nJawaban:\n|\nJawaban: /);
+                                  const qPart = parts[0] || bidx + 1;
+                                  const aPart = parts[1] || "-";
+                                  return (
+                                    <div key={bidx} className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden transition-all hover:shadow-md">
+                                      <div className="bg-slate-50 p-6 md:p-8 border-b border-slate-100">
+                                        <div className="flex items-center gap-2 mb-3">
+                                           <span className="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                                           <p className="text-[9px] font-black text-primary/60 uppercase tracking-[0.2em]">Pertanyaan / Instruksi</p>
+                                        </div>
+                                        <p className="font-black text-slate-800 leading-snug text-sm md:text-base">{qPart.replace(/^Soal \d+: /, "")}</p>
+                                      </div>
+                                      <div className="p-6 md:p-8 bg-white relative">
+                                         <div className="flex items-center gap-2 mb-4">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                            <p className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Jawaban Mahasiswa</p>
+                                         </div>
+                                         <div className="text-slate-600 font-medium leading-[1.8] text-sm md:text-base text-left">
+                                            {aPart}
+                                         </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             ) : (
-                              <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-sm font-serif leading-[2] whitespace-pre-wrap text-slate-800 text-sm md:text-base">
+                              <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-sm font-medium leading-[2] whitespace-pre-wrap text-slate-800 text-sm md:text-base text-left">
                                 {sub.content}
                               </div>
                             )}
@@ -610,15 +675,21 @@ export const DashboardTutor = ({
                            </div>
                         </div>
                       </td>
-                      <td className="px-6 py-8 text-center border-y bg-white">
-                        <div className="flex items-center justify-center gap-3">
-                           <span className="px-4 py-1.5 bg-primary bg-opacity-5 text-primary rounded-xl text-[10px] font-black uppercase ring-1 ring-primary ring-opacity-10">
-                              {subCount} Dikirim
-                           </span>
-                           <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm ${evaluatedCount === subCount && subCount > 0 ? 'bg-emerald-500 text-white' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
-                              {evaluatedCount} / {subCount} Dinilai
-                           </span>
-                        </div>
+                      <td className="px-6 py-8 border-y bg-white">
+                        {(() => {
+                           const progress = calculateProgress(student.email, selectedMeeting);
+                           return (
+                             <div className="flex flex-col items-center gap-2 max-w-[120px] mx-auto">
+                               <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200">
+                                  <div 
+                                    className={`h-full transition-all duration-1000 ${progress === 100 ? 'bg-emerald-500' : progress > 50 ? 'bg-primary' : 'bg-amber-400'}`}
+                                    style={{ width: `${progress}%` }}
+                                  ></div>
+                               </div>
+                               <span className={`text-[11px] font-black ${progress === 100 ? 'text-emerald-600' : 'text-slate-500'}`}>{progress}% Selesai</span>
+                             </div>
+                           );
+                        })()}
                       </td>
                       <td className="px-6 py-8 text-center border-y border-r rounded-r-[1.5rem] bg-white">
                         <button
