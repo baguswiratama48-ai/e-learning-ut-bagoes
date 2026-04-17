@@ -161,7 +161,7 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
         subtitle={`Jawablah ${requiredCount} pertanyaan reflektif di bawah ini untuk memantapkan pemahaman Anda.`}
         category="Guided Reflection"
         icon="tips_and_updates"
-        gradient="from-indigo-50/50 via-slate-50 to-blue-50"
+        gradient="from-[#0f172a] via-[#1e1b4b] to-[#312e81]"
       />
 
       {status ? (
@@ -265,7 +265,7 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
         subtitle={config.content.subtitle || ""}
         category="Materi Pembelajaran"
         icon="menu_book"
-        gradient="from-slate-50 via-white to-blue-50"
+        gradient="from-[#1e293b] via-[#0f172a] to-[#312e81]"
       />
 
       <div className="max-w-5xl mx-auto space-y-16 md:space-y-24">
