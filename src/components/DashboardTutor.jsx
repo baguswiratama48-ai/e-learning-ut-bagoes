@@ -305,17 +305,71 @@ export const DashboardTutor = ({
          </div>
       </div>
 
-      {/* CLASS TABS */}
-      <div className="flex flex-wrap gap-3 mb-8">
-        {CLASSES.map(cls => (
-          <button
-            key={cls.id}
-            onClick={() => setActiveTab(cls.id)}
-            className={`px-6 py-3 rounded-2xl font-black text-sm transition-all border-2 ${activeTab === cls.id ? "bg-white border-primary text-primary shadow-md" : "bg-white border-white text-slate-400 hover:border-slate-200"}`}
-          >
-            {cls.title.split('|')[1]?.trim() || cls.title}
-          </button>
-        ))}
+      {/* CLASS SELECTION GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+        {CLASSES.map((cls) => {
+          const studentCount = STUDENTS.filter(
+            (s) => s.classId === cls.id && s.email !== "demo@ecampus.ut.ac.id"
+          ).length;
+          const isActive = activeTab === cls.id;
+
+          return (
+            <button
+              key={cls.id}
+              onClick={() => setActiveTab(cls.id)}
+              className={`group relative p-6 rounded-[2rem] border-2 transition-all duration-300 flex items-center justify-between overflow-hidden ${
+                isActive
+                  ? "bg-white border-primary shadow-xl shadow-primary/10"
+                  : "bg-white border-white hover:border-slate-200 text-slate-400"
+              }`}
+            >
+              <div className="flex items-center gap-4 text-left relative z-10">
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${
+                    isActive ? "bg-primary text-white" : "bg-slate-50 text-slate-400 group-hover:bg-slate-100"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[20px]">
+                    school
+                  </span>
+                </div>
+                <div>
+                  <p
+                    className={`text-[10px] font-black uppercase tracking-widest ${
+                      isActive ? "text-primary/60" : "text-slate-400"
+                    }`}
+                  >
+                    {cls.title.split("|")[0].trim()}
+                  </p>
+                  <h4
+                    className={`font-black text-sm md:text-base leading-tight ${
+                      isActive ? "text-slate-800" : "text-slate-500"
+                    }`}
+                  >
+                    {cls.title.split("|")[1]?.trim() || cls.title}
+                  </h4>
+                </div>
+              </div>
+
+              <div className="text-right relative z-10">
+                <p
+                  className={`text-xl font-black ${
+                    isActive ? "text-primary" : "text-slate-300"
+                  }`}
+                >
+                  {studentCount}
+                </p>
+                <p className="text-[8px] font-black uppercase tracking-tighter opacity-60">
+                  Mahasiswa
+                </p>
+              </div>
+
+              {isActive && (
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12"></div>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* GROUP GENERATOR CARD */}
