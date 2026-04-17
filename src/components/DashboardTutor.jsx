@@ -209,7 +209,21 @@ export const DashboardTutor = ({
                                   <p className="text-sm text-slate-500">{sub.content.split('\n')[1]}</p>
                                 </div>
                               </div>
-                            ) : sub.content}
+                            ) : activeCorrectionTab === "Pertanyaan Pemantik" ? (
+                              <div className="space-y-4">
+                                {sub.content.split(/\n\n(?=Pertanyaan \d+:)/).map((block, bidx) => (
+                                  <div key={bidx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Butir {bidx + 1}</p>
+                                    <p className="text-sm font-bold text-slate-800 mb-3 leading-snug">{block.split('\nJawaban: ')[0]}</p>
+                                    <div className="pl-4 border-l-4 border-primary">
+                                       <p className="text-sm text-slate-600 italic">"{block.split('\nJawaban: ')[1] || "-"}"</p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="whitespace-pre-wrap">{sub.content}</div>
+                            )}
                           </div>
                        </div>
 
@@ -334,6 +348,48 @@ export const DashboardTutor = ({
            </div>
         </div>
       )}
+      {/* GROUP VISUALIZATION CARD */}
+      {(() => {
+        const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(selectedMeeting));
+        const groups = groupRow ? JSON.parse(groupRow.content) : null;
+        if (!groups) return null;
+
+        return (
+          <div className="mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
+             <div className="flex items-center gap-3 mb-6 px-4">
+                <span className="material-symbols-outlined text-primary">diversity_3</span>
+                <h3 className="text-xl font-black text-slate-800 tracking-tight uppercase">Daftar Kelompok Aktif — Sesi {selectedMeeting}</h3>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {groups.map((group, gidx) => (
+                  <div key={gidx} className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col">
+                     <div className="flex items-center justify-between mb-6">
+                        <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-primary/20">
+                           {group.group_num}
+                        </div>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kelompok {group.group_num}</span>
+                     </div>
+                     <div className="space-y-3 flex-1">
+                        {group.members.map((member, midx) => (
+                          <div key={midx} className={`flex items-center justify-between p-3 rounded-xl border ${member.isLeader ? 'bg-amber-50 border-amber-200 ring-1 ring-amber-400/20' : 'bg-slate-50 border-slate-100'}`}>
+                             <div className="flex items-center gap-3 min-w-0">
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[8px] font-black ${member.isLeader ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                                   {member.name.charAt(0)}
+                                </div>
+                                <span className="text-[11px] font-bold text-slate-700 truncate">{member.name}</span>
+                             </div>
+                             {member.isLeader && (
+                               <span className="bg-amber-400 text-[8px] font-black text-white px-2 py-0.5 rounded-full shadow-sm animate-pulse">KETUA</span>
+                             )}
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+                ))}
+             </div>
+          </div>
+        );
+      })()}
 
       {/* MAIN MONITORING CARD */}
       <div className="bg-white rounded-[3.5rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">

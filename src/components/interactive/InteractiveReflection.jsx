@@ -15,8 +15,19 @@ export default function InteractiveReflection({
   const questions = REFLECTION_QUESTIONS_DATA[classId] || REFLECTION_QUESTIONS_DATA.default;
 
   // Periksa apakah refleksi sudah pernah dikerjakan sebelumnya
-  const statusRow = submissions.find(
+  const statusRow = (submissions || []).find(
     (s) => s.student_email === user.email && s.section_name === "Refleksi",
+  );
+
+  const groupRow = (submissions || []).find(
+    (s) =>
+      s.student_email === "SYSTEM_GROUP" &&
+      s.section_name === "GENERATED_GROUPS" &&
+      String(s.meeting_num) === String(meetingId),
+  );
+  const groups = groupRow ? JSON.parse(groupRow.content) : null;
+  const myGroup = groups?.find((g) =>
+    g.members.some((m) => m.email === user.email),
   );
 
   const progress = ((currentIdx + 1) / questions.length) * 100;
@@ -91,6 +102,26 @@ export default function InteractiveReflection({
           ></div>
         </div>
       </div>
+
+      {myGroup && (
+        <div className={`bg-white border rounded-[2.5rem] p-6 shadow-sm flex items-center justify-between gap-4 animate-in slide-in-from-top duration-700 ${classId === "3" ? "border-fuchsia-100 ring-8 ring-fuchsia-500/5" : classId === "4" ? "border-teal-100 ring-8 ring-teal-500/5" : "border-indigo-100 ring-8 ring-indigo-500/5"}`}>
+            <div className="flex items-center gap-4">
+               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 ${classId === "3" ? "bg-fuchsia-600" : classId === "4" ? "bg-teal-600" : "bg-indigo-600"}`}>
+                  <span className="material-symbols-outlined">diversity_3</span>
+               </div>
+               <div>
+                  <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Kolaborasi Aktif</p>
+                  <p className="text-sm font-bold text-slate-700 truncate max-w-[150px] md:max-w-none">Kelompok {myGroup.group_num}</p>
+               </div>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 shrink-0">
+               <span className="material-symbols-outlined text-amber-500 text-sm">stars</span>
+               <p className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">
+                  Ketua: <span className="text-slate-800">{myGroup.members.find(m => m.isLeader)?.name || "N/A"}</span>
+               </p>
+            </div>
+        </div>
+      )}
 
       {/* Question Card */}
       <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-200 min-h-[450px] flex flex-col relative overflow-hidden">

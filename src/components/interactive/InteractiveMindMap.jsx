@@ -144,14 +144,24 @@ export default function InteractiveMindMap({
                 ))}
               </div>
               {myGroup && (
-                <div className="bg-primary bg-opacity-5 border border-primary border-opacity-20 p-4 rounded-2xl flex items-center gap-3 mb-8">
-                  <span className="material-symbols-outlined text-primary">
-                    group
-                  </span>
-                  <p className="text-sm font-bold text-primary">
-                    Kelompok {myGroup.group_num} — {myGroup.members.length}{" "}
-                    anggota
-                  </p>
+                <div className="bg-primary/5 border border-primary/20 p-5 rounded-2xl mb-8 relative group cursor-default">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                      <span className="material-symbols-outlined">diversity_3</span>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase text-primary tracking-widest leading-none mb-1">Status Kelompok: {myGroup.group_num}</p>
+                      <p className="text-sm font-bold text-slate-700">
+                        {myGroup.members.length} Anggota Terdaftar
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-primary/10 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-amber-500 text-sm">stars</span>
+                    <p className="text-xs font-bold text-slate-600">
+                      Ketua: <span className="text-primary uppercase tracking-tighter">{myGroup.members.find(m => m.isLeader)?.name || "N/A"}</span>
+                    </p>
+                  </div>
                 </div>
               )}
               <div className="flex flex-col-reverse md:flex-row gap-3 mt-4">
