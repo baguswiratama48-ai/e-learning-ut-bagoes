@@ -186,12 +186,68 @@ export default function InteractiveReflection({
             )}
           </h3>
 
+          {/* Interactive Scale 1-10 for Question 3 (index 2) */}
+          {currentIdx === 2 && (
+            <div className="flex flex-wrap gap-2 mb-6 animate-in fade-in zoom-in duration-500">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => {
+                    const currentText = answers[currentIdx] || "";
+                    // Regex to check if it already starts with "SKALA: X -"
+                    const cleanText = currentText.replace(/^SKALA: \d+ - /, "");
+                    setAnswers({ ...answers, [currentIdx]: `SKALA: ${num} - ${cleanText}` });
+                  }}
+                  className={`w-10 h-10 md:w-12 md:h-12 rounded-xl font-black transition-all ${
+                    (answers[currentIdx] || "").startsWith(`SKALA: ${num} -`)
+                      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-110"
+                      : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Interactive Emojis for Question 6 (index 5) */}
+          {currentIdx === 5 && (
+            <div className="flex gap-4 mb-6 animate-in fade-in zoom-in duration-500">
+              {["😊", "😵", "😴", "🔥"].map((emoji) => (
+                <button
+                  key={emoji}
+                  onClick={() => {
+                    const currentText = answers[currentIdx] || "";
+                    const cleanText = currentText.replace(/^EMOJI: .*? - /, "");
+                    setAnswers({ ...answers, [currentIdx]: `EMOJI: ${emoji} - ${cleanText}` });
+                  }}
+                  className={`text-3xl md:text-4xl p-4 rounded-2xl transition-all ${
+                    (answers[currentIdx] || "").startsWith(`EMOJI: ${emoji} -`)
+                      ? "bg-pink-100 scale-110 shadow-md ring-2 ring-pink-400"
+                      : "bg-slate-50 hover:bg-slate-100 grayscale-[0.5] hover:grayscale-0"
+                  }`}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
+
           <textarea
-            value={answers[currentIdx] || ""}
-            onChange={(e) =>
-              setAnswers({ ...answers, [currentIdx]: e.target.value })
+            value={(answers[currentIdx] || "")
+              .replace(/^SKALA: \d+ - /, "")
+              .replace(/^EMOJI: .*? - /, "")}
+            onChange={(e) => {
+               const val = e.target.value;
+               const prefixMatch = (answers[currentIdx] || "").match(/^(SKALA: \d+ - |EMOJI: .*? - )/);
+               const prefix = prefixMatch ? prefixMatch[0] : "";
+               setAnswers({ ...answers, [currentIdx]: prefix + val });
+            }}
+            placeholder={
+              currentIdx === 2 ? "Berikan alasan kenapa kamu memilih angka tersebut..." :
+              currentIdx === 5 ? "Jelaskan kenapa perasaanmu seperti itu hari ini..." :
+              "Tuangkan pikiranmu di sini secara santai dan jujur..."
             }
-            placeholder="Tuangkan pikiranmu di sini secara santai dan jujur..."
             className="flex-1 min-h-[220px] p-8 rounded-[2rem] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all resize-none text-slate-700 text-lg leading-relaxed font-medium placeholder:text-slate-300 shadow-inner"
           ></textarea>
 
