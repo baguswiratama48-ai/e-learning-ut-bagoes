@@ -20,6 +20,7 @@ export const DashboardTutor = ({
   const [expandedStudent, setExpandedStudent] = useState(null);
   const [unlocking, setUnlocking] = useState(null);
   const [activeCorrectionTab, setActiveCorrectionTab] = useState(MENUS[0]);
+  const [showGroupPreview, setShowGroupPreview] = useState(false);
 
   // Reset pagination and search when class or meeting changes
   useEffect(() => {
@@ -336,20 +337,33 @@ export const DashboardTutor = ({
                     <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Target Kelompok</p>
                     <input type="number" value={groupCount} onChange={e => setGroupCount(parseInt(e.target.value))} className="bg-transparent text-xl font-black text-center w-12 outline-none" />
                  </div>
-                 <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <button onClick={handleGenerateGroups} disabled={generating} className="bg-yellow-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-sm hover:bg-yellow-300 transition-all shadow-xl shadow-yellow-400 shadow-opacity-20 disabled:opacity-50">
                        {generating ? 'ACAK...' : 'ACAK SEKARANG'}
                     </button>
+                    {(() => {
+                        const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(selectedMeeting));
+                        if (!groupRow) return null;
+                        return (
+                          <button 
+                            onClick={() => setShowGroupPreview(!showGroupPreview)}
+                            className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-black text-sm transition-all border-2 ${showGroupPreview ? "bg-white text-primary border-primary" : "bg-white/10 text-white border-white/10 hover:bg-white/20"}`}
+                          >
+                            <span className="material-symbols-outlined">{showGroupPreview ? 'visibility_off' : 'visibility'}</span>
+                            {showGroupPreview ? 'Sembunyikan Kelompok' : 'Lihat Kelompok'}
+                          </button>
+                        );
+                    })()}
                     <button onClick={handleResetGroups} className="w-14 h-14 bg-red-500 bg-opacity-20 text-red-400 border border-red-500 border-opacity-20 rounded-2xl flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
                        <span className="material-symbols-outlined">delete_sweep</span>
                     </button>
-                 </div>
+                  </div>
               </div>
            </div>
         </div>
       )}
       {/* GROUP VISUALIZATION CARD */}
-      {(() => {
+      {showGroupPreview && (() => {
         const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(selectedMeeting));
         const groups = groupRow ? JSON.parse(groupRow.content) : null;
         if (!groups) return null;
@@ -414,20 +428,18 @@ export const DashboardTutor = ({
                  {[10, 20, 50].map(s => <option key={s} value={s}>{s} Baris</option>)}
               </select>
            </div>
-        </div>
-
-        {/* Table Content */}
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        </div>        {/* Table Content */}
+        <div className="px-8 pb-12 overflow-x-auto">
+          <table className="w-full border-separate border-spacing-y-4">
             <thead>
-              <tr className="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b">
-                <th className="px-8 py-5 text-center w-20">No</th>
-                <th className="px-8 py-5 text-left">Informasi Mahasiswa</th>
-                <th className="px-8 py-5 text-center">Progress (Sesi {selectedMeeting})</th>
-                <th className="px-8 py-5 text-center">Aksi</th>
+              <tr className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                <th className="px-6 py-4 text-center w-20">No</th>
+                <th className="px-6 py-4 text-left">Informasi Mahasiswa</th>
+                <th className="px-6 py-4 text-center">Progress (Sesi {selectedMeeting})</th>
+                <th className="px-6 py-4 text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody>
               {paginatedStudents.map((student, idx) => {
                 const studentSubsAtMeeting = (submissions || []).filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting));
                 const subCount = studentSubsAtMeeting.filter(s => !s.section_name.startsWith('TUTOR_FEEDBACK_')).length;
@@ -436,44 +448,46 @@ export const DashboardTutor = ({
 
                 return (
                   <Fragment key={student.email}>
-                    <tr className={`group transition-all ${isExpanded ? 'bg-slate-50/50' : 'hover:bg-slate-50/30'}`}>
-                      <td className="px-8 py-6 text-center text-slate-400 font-bold text-sm">
+                    <tr className={`group transition-all bg-white border border-slate-200 rounded-3xl ${isExpanded ? 'ring-2 ring-primary ring-opacity-10 shadow-lg' : 'hover:shadow-md hover:border-slate-300 shadow-sm'}`}>
+                      <td className="px-6 py-8 text-center text-slate-400 font-black text-sm border-y border-l rounded-l-[1.5rem] bg-slate-50/30">
                         {(currentPage - 1) * pageSize + idx + 1}
                       </td>
-                      <td className="px-8 py-6">
+                      <td className="px-6 py-8 border-y bg-white">
                         <div className="flex items-center gap-4">
-                           <div className="w-10 h-10 rounded-full bg-primary bg-opacity-5 flex items-center justify-center text-primary font-black text-xs">
+                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm transition-colors ${isExpanded ? 'bg-primary text-white' : 'bg-slate-50 text-slate-400 group-hover:bg-primary group-hover:text-white'}`}>
                               {student.name.charAt(0)}
                            </div>
                            <div>
-                              <p className="font-black text-slate-800 uppercase text-sm leading-none mb-1">{student.name}</p>
-                              <p className="text-[10px] font-bold text-slate-400">{student.nim} • {student.email}</p>
+                              <p className="font-black text-slate-900 uppercase text-sm leading-none mb-1.5">{student.name}</p>
+                              <p className="text-[10px] font-black text-slate-400 tracking-tighter uppercase">{student.nim} — {student.email}</p>
                            </div>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                           <span className="px-3 py-1 bg-primary bg-opacity-5 text-primary rounded-full text-[10px] font-black uppercase">
-                             {subCount} Dikirim
+                      <td className="px-6 py-8 text-center border-y bg-white">
+                        <div className="flex items-center justify-center gap-3">
+                           <span className="px-4 py-1.5 bg-primary bg-opacity-5 text-primary rounded-xl text-[10px] font-black uppercase ring-1 ring-primary ring-opacity-10">
+                              {subCount} Dikirim
                            </span>
-                           <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${evaluatedCount === subCount && subCount > 0 ? 'bg-emerald-500 text-white' : 'bg-amber-100 text-amber-600'}`}>
-                             {evaluatedCount} / {subCount} Dinilai
+                           <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase shadow-sm ${evaluatedCount === subCount && subCount > 0 ? 'bg-emerald-500 text-white' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
+                              {evaluatedCount} / {subCount} Dinilai
                            </span>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-center">
+                      <td className="px-6 py-8 text-center border-y border-r rounded-r-[1.5rem] bg-white">
                         <button
                           onClick={() => setExpandedStudent(isExpanded ? null : student.email)}
-                          className={`px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${isExpanded ? "bg-slate-800 text-white" : "bg-primary text-white shadow-lg shadow-primary shadow-opacity-20 hover:scale-105 active:scale-95"}`}
+                          className={`px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${isExpanded ? "bg-slate-800 text-white" : "bg-primary text-white shadow-lg shadow-primary/20 hover:scale-105 active:scale-95"}`}
                         >
                           {isExpanded ? 'Tutup Panel' : 'Koreksi Jawaban'}
                         </button>
                       </td>
                     </tr>
                     {isExpanded && (
-                      <tr>
-                        <td colSpan={4} className="p-0">
-                          {renderCorrectionHub(student)}
+                      <tr className="animate-in slide-in-from-top-2 duration-300">
+                        <td colSpan={4} className="p-0 pt-2 pb-6">
+                          <div className="rounded-[2rem] overflow-hidden border-2 border-primary border-opacity-10 shadow-2xl">
+                             {renderCorrectionHub(student)}
+                          </div>
                         </td>
                       </tr>
                     )}
@@ -483,6 +497,7 @@ export const DashboardTutor = ({
             </tbody>
           </table>
         </div>
+      </div>
 
         {/* Pagination */}
         {totalPages > 1 && (
