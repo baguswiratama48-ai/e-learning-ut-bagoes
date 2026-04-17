@@ -75,7 +75,7 @@ export default function InteractiveRangkumanClass8({ user, classId, meetingId, s
              <h2 className="text-2xl font-black text-slate-800">Jurnal Sintesis Terpandu</h2>
          </div>
          <p className="text-slate-600 mb-6 font-medium leading-relaxed max-w-2xl">
-            Tulis ulang materi modul ke dalam bahasamu sendiri untuk mengukur sejauh mana kamu memahami konsep. **Sistem merekam ketikanmu seketika (Auto-Save)**.
+            Tulis ulang materi modul ke dalam bahasamu sendiri untuk mengukur sejauh mana kamu memahami konsep.
          </p>
          
          <div className="bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100/50">
