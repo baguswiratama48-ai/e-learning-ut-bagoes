@@ -958,7 +958,6 @@ function SectionPage({ user }) {
           getPemantikForStudent={getPemantikForStudent}
           cls={cls}
           courseCode={courseCode}
-          COURSE_DATA={COURSE_DATA}
           submissions={submissions}
         />
       );
