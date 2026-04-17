@@ -205,17 +205,17 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
         </div>
       ) : (
         <div className="space-y-10">
-          <div className="grid grid-cols-1 gap-10 md:gap-16">
+          <div className="grid grid-cols-1 gap-8 md:gap-16">
             {questions.map((q, i) => (
-              <div key={i} className="group bg-white border border-slate-200 p-8 md:p-14 rounded-[3rem] md:rounded-[4rem] shadow-sm hover:shadow-xl transition-all focus-within:ring-8 focus-within:ring-indigo-500/5">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1.5rem] bg-indigo-600 text-white flex items-center justify-center font-black text-2xl md:text-3xl shadow-xl shadow-indigo-600/20 group-focus-within:scale-110 transition-transform">
+              <div key={i} className="group bg-white border border-slate-200 p-7 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-sm hover:shadow-xl transition-all focus-within:ring-8 focus-within:ring-indigo-500/5">
+                <div className="flex items-center gap-4 mb-6 md:mb-8">
+                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.5rem] bg-indigo-600 text-white flex items-center justify-center font-black text-xl md:text-3xl shadow-xl shadow-indigo-600/20 group-focus-within:scale-110 transition-transform">
                     {i + 1}
                   </div>
                   <div className="h-px flex-grow bg-slate-100"></div>
                 </div>
                 
-                <h3 className="text-xl md:text-3xl font-black text-slate-900 mb-10 md:mb-12 leading-tight tracking-tighter">
+                <h3 className="text-lg md:text-3xl font-black text-slate-900 mb-8 md:mb-12 leading-snug md:leading-tight tracking-tight">
                   {q}
                 </h3>
                 
@@ -227,7 +227,7 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
                     setPemantikAnswers(newAns);
                   }}
                   placeholder="Ketik jawaban reflektif Anda disini..."
-                  className="w-full min-h-[150px] md:min-h-[200px] bg-slate-50 border border-slate-200 rounded-[2rem] p-8 md:p-10 text-slate-700 focus:bg-white focus:border-indigo-500 outline-none transition-all resize-none shadow-inner"
+                  className="w-full min-h-[140px] md:min-h-[200px] bg-slate-50 border border-slate-200 rounded-3xl md:rounded-[2rem] p-6 md:p-10 text-sm md:text-base text-slate-700 focus:bg-white focus:border-indigo-500 outline-none transition-all resize-none shadow-inner"
                 ></textarea>
               </div>
             ))}

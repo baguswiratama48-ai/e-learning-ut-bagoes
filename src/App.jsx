@@ -867,6 +867,7 @@ function SectionPage({ user }) {
     "Kuis",
     "Refleksi",
     "Rangkuman",
+    "Pertanyaan",
   ].some((p) => sectionName?.includes(p));
 
   useEffect(() => {
