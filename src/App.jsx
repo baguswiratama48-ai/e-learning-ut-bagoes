@@ -15,6 +15,7 @@ import { StaticContentRenderer } from "./components/StaticContentRenderer";
 import InteractiveQuiz from "./components/interactive/InteractiveQuiz";
 import InteractiveMindMap from "./components/interactive/InteractiveMindMap";
 import InteractiveReflection from "./components/interactive/InteractiveReflection";
+import InteractiveLKMClass8 from "./components/InteractiveLKMClass8";
 
 // Data & Hooks
 import { STUDENTS } from "./data/students";
@@ -1018,6 +1019,35 @@ function SectionPage({ user }) {
             </div>
           )}
         </div>
+      ) : (id === "1" || id === "2") && sectionName === "Ayo Diskusi (LKPD)" ? (
+        <InteractiveLKMClass8
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+          status={status}
+          loading={loading}
+          onComplete={async (finalContent) => {
+            setLoading(true);
+            try {
+              const payload = {
+                student_email: user.email,
+                class_id: id,
+                meeting_num: meetingId,
+                section_name: sectionName,
+                content: finalContent,
+              };
+              const { data, error } = await supabase.from("submissions").insert([payload]).select();
+              if (!error && data && data.length > 0) {
+                setStatus(data[0]);
+              }
+            } catch (err) {
+              console.log(err);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
       ) : (id === "1" || id === "2") && sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
         <div className="space-y-4">
           <InteractiveMindMap
