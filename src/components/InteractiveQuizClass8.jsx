@@ -738,15 +738,15 @@ export default function InteractiveQuizClass8({ user, classId, meetingId, submis
         <div className="w-20 h-20 bg-gradient-to-br from-[#1a2169] to-indigo-700 rounded-3xl flex items-center justify-center text-white mb-8 shadow-xl shadow-indigo-600/30 transform rotate-3">
           <span className="material-symbols-outlined text-4xl transform -rotate-3">auto_awesome</span>
         </div>
-        <h1 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">KUIS FORMATIF ACAK</h1>
+        <h1 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">KUIS EVALUASI MODUL</h1>
         <p className="text-slate-500 font-medium mb-10 leading-relaxed">
-          Sistem telah mengundi 25 soal khusus untuk Anda secara acak dari 5 jenis Tes Formatif. Anda tidak dapat menyontek atau bertukar jawaban dengan teman. 
+          Sistem telah menyiapkan 25 soal dari materi Tes Formatif. Kerjakan dengan teliti dan jujur, pastikan Anda telah mempelajari seluruh materi sebelum memulai.
         </p>
         
         <div className="grid grid-cols-2 gap-4 w-full mb-10">
           <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner">
             <p className="text-3xl font-black text-indigo-600 mb-1">25</p>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Soal Acak</p>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Soal</p>
           </div>
           <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner">
             <p className="text-3xl font-black text-indigo-600 mb-1">100</p>
