@@ -87,13 +87,24 @@ export const DashboardTutor = ({
       const classStudents = STUDENTS.filter(s => s.classId === activeTab && s.email !== "demo@ecampus.ut.ac.id");
       if (classStudents.length === 0) return;
 
-      const shuffled = [...classStudents].sort(() => Math.random() - 0.5);
-      const groups = Array.from({ length: groupCount }, (_, i) => ({ group_num: i + 1, members: [] }));
+      // Fisher-Yates Shuffle
+      const shuffled = [...classStudents];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      const groups = Array.from({ length: groupCount }, (_, i) => ({ 
+        group_num: i + 1, 
+        members: [] 
+      }));
 
       shuffled.forEach((student, index) => {
         const groupIndex = index % groupCount;
         groups[groupIndex].members.push({
-          nim: student.nim, name: student.name, email: student.email,
+          nim: student.nim, 
+          name: student.name, 
+          email: student.email,
           isLeader: groups[groupIndex].members.length === 0
         });
       });
@@ -441,8 +452,8 @@ export const DashboardTutor = ({
                         {group.members.map((member, midx) => (
                           <div key={midx} className={`flex items-center justify-between p-3 rounded-xl border ${member.isLeader ? 'bg-amber-50 border-amber-200 ring-1 ring-amber-400/20' : 'bg-slate-50 border-slate-100'}`}>
                              <div className="flex items-center gap-3 min-w-0">
-                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[8px] font-black ${member.isLeader ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-500'}`}>
-                                   {member.name.charAt(0)}
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${member.isLeader ? 'bg-amber-400 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                                   {midx + 1}
                                 </div>
                                 <span className="text-[11px] font-bold text-slate-700 truncate">{member.name}</span>
                              </div>

@@ -876,6 +876,7 @@ function SectionPage({ user }) {
     "video pembelajaran", 
     "pertanyaan pemantik",
     "rat/sat",
+    "pembagian kelompok",
   ].some(s => activeSectionLower.includes(s));
 
   useEffect(() => {
