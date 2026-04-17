@@ -161,10 +161,24 @@ export const DashboardTutor = ({
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 mb-4">Kategori Penilaian</p>
             {(() => {
               const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(selectedMeeting) === "2";
-              return MENUS.filter(m => {
-                if (isSesi2BK && m === "Peta Konsep") return false;
-                return true;
-              }).map(menu => {
+              
+              // Define the list of menus for this specific context
+              let dynamicMenus = [...MENUS];
+              if (isSesi2BK) {
+                // For Sesi 2 BK, we want a specific order and items
+                dynamicMenus = [
+                  "Informasi Modul",
+                  "Pertanyaan Pemantik",
+                  "Materi Pembelajaran",
+                  "Video Pembelajaran",
+                  "Ayo Diskusi (LKPD)",
+                  "Kuis dan Latihan",
+                  "Rangkuman",
+                  "Refleksi"
+                ];
+              }
+
+              return dynamicMenus.map(menu => {
                 const hasSub = studentSubs.find(s => s.section_name === menu);
                 const hasFeedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${menu}`);
                 
@@ -179,7 +193,7 @@ export const DashboardTutor = ({
                   <button
                     key={menu}
                     onClick={() => setActiveCorrectionTab(menu)}
-                    className={`w-full text-left px-4 py-3 rounded-2xl text-[10px] font-bold transition-all flex items-center justify-between group ${activeCorrectionTab === menu ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-white text-slate-500 hover:bg-slate-100"}`}
+                    className={`w-full text-left px-4 py-3 rounded-2xl text-[10px] font-black transition-all flex items-center justify-between group ${activeCorrectionTab === menu ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-white text-slate-500 hover:bg-slate-100"}`}
                   >
                     <span className="truncate">{displayLabel}</span>
                     <div className="flex items-center gap-1">
@@ -193,16 +207,34 @@ export const DashboardTutor = ({
           </div>
 
           {/* Correction Area */}
-          <div className="flex-1 bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm relative overflow-hidden">
-             <div className="absolute top-0 right-0 p-8 opacity-5">
-                <span className="material-symbols-outlined text-[120px]">{activeCorrectionTab === "Kuis dan Latihan" ? 'quiz' : 'edit_note'}</span>
+          <div className="flex-1 bg-white rounded-[3rem] p-8 md:p-14 border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden transition-all duration-500">
+             <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
+                <span className="material-symbols-outlined text-[150px] font-thin">
+                  {activeCorrectionTab.includes("Kuis") || activeCorrectionTab === "Quiz" ? 'quiz' : 
+                   activeCorrectionTab === "Rangkuman" ? 'history_edu' : 
+                   activeCorrectionTab === "Refleksi" ? 'psychology' : 'edit_note'}
+                </span>
              </div>
              
              <div className="relative z-10">
-                <h4 className="text-xl font-black text-slate-800 mb-6 flex items-center gap-3">
-                  <span className="w-2 h-8 bg-primary rounded-full"></span>
-                  {activeCorrectionTab}
-                </h4>
+                <div className="flex items-center justify-between mb-10 pb-6 border-b border-slate-50">
+                  <h4 className="text-2xl font-black text-slate-800 flex items-center gap-3">
+                    <span className="w-2 h-10 bg-primary rounded-full shadow-sm shadow-primary/40"></span>
+                    {(() => {
+                        const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(selectedMeeting) === "2";
+                        if (isSesi2BK) {
+                          if (activeCorrectionTab === "Informasi Modul") return "RAT/SAT";
+                          if (activeCorrectionTab === "Ayo Diskusi (LKPD)") return "LKM (Lembar Kerja Mahasiswa)";
+                          if (activeCorrectionTab === "Kuis dan Latihan") return "Quiz";
+                        }
+                        return activeCorrectionTab;
+                    })()}
+                  </h4>
+                  <div className="hidden md:flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
+                    <span className="material-symbols-outlined text-[16px] text-slate-400">person</span>
+                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">{student.name}</p>
+                  </div>
+                </div>
 
                 {(() => {
                   const sub = studentSubs.find(s => s.section_name === activeCorrectionTab);
@@ -210,84 +242,118 @@ export const DashboardTutor = ({
                   const curStars = feedback ? parseInt(feedback.content) : 0;
 
                   if (!sub) return (
-                    <div className="py-20 text-center">
-                      <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-dashed border-slate-200">
-                        <span className="material-symbols-outlined text-slate-300">history_edu</span>
+                    <div className="py-24 text-center animate-in fade-in zoom-in duration-500">
+                      <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-slate-200 shadow-inner">
+                        <span className="material-symbols-outlined text-slate-300 text-4xl">history_edu</span>
                       </div>
-                      <p className="text-slate-400 font-bold italic">Mahasiswa belum mengirimkan tugas untuk bagian ini.</p>
+                      <p className="text-slate-400 font-bold italic tracking-tight">Belum ada pengiriman dari mahasiswa.</p>
+                      <p className="text-[10px] text-slate-300 uppercase font-black mt-2 tracking-widest">Awaiting Submission</p>
                     </div>
                   );
 
                   return (
-                    <div className="space-y-8">
-                       {/* Content Display */}
-                       <div className="bg-slate-50 rounded-3xl p-6 md:p-10 border border-slate-100">
-                          <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-4">Jawaban Mahasiswa:</p>
-                          <div className="text-slate-700 leading-relaxed whitespace-pre-wrap font-medium text-sm">
-                            {activeCorrectionTab === "Kuis dan Latihan" ? (
-                              <div className="flex items-center gap-4 bg-white p-6 rounded-2xl border border-slate-200">
-                                <div className="w-20 h-20 bg-primary rounded-2xl flex flex-col items-center justify-center text-white">
-                                  <span className="text-2xl font-black">{sub.content.match(/SKOR AKHIR: (\d+)/)?.[1] || "0"}</span>
-                                  <span className="text-[10px] opacity-70">/ 100</span>
+                    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                       {/* Content Display Card */}
+                       <div className="bg-slate-50 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-inner relative">
+                          <div className="absolute top-6 right-8 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Submitted Content</div>
+                          
+                          <div className="text-slate-700 leading-[1.8] font-medium text-base md:text-lg">
+                            {(activeCorrectionTab === "Kuis dan Latihan" || activeCorrectionTab === "Quiz") ? (
+                              <div className="flex flex-col md:flex-row items-center gap-8 bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-primary/5 border border-slate-50">
+                                <div className="w-28 h-28 bg-gradient-to-br from-primary to-indigo-900 rounded-[2rem] flex flex-col items-center justify-center text-white shadow-xl shadow-primary/20">
+                                  <span className="text-4xl font-black">{sub.content.match(/SKOR AKHIR: (\d+)/)?.[1] || "0"}</span>
+                                  <span className="text-xs font-bold opacity-60">/ 100</span>
                                 </div>
-                                <div>
-                                  <p className="font-bold text-slate-800 mb-1">Hasil Kuis Otomatis</p>
-                                  <p className="text-sm text-slate-500">{sub.content.split('\n')[1]}</p>
+                                <div className="text-center md:text-left">
+                                  <p className="text-xl font-black text-slate-800 mb-2">Evaluasi Quiz Otomatis</p>
+                                  <p className="text-slate-500 leading-relaxed max-w-sm">
+                                    {sub.content.split('\n')[1] || "Mahasiswa telah menyelesaikan seluruh rangkaian soal dengan hasil di atas."}
+                                  </p>
                                 </div>
                               </div>
-                            ) : activeCorrectionTab === "Pertanyaan Pemantik" ? (
-                              <div className="space-y-4">
-                                {sub.content.split(/\n\n(?=Pertanyaan \d+:)/).map((block, bidx) => (
-                                  <div key={bidx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Butir {bidx + 1}</p>
-                                    <p className="text-sm font-bold text-slate-800 mb-3 leading-snug">{block.split('\nJawaban: ')[0]}</p>
-                                    <div className="pl-4 border-l-4 border-primary">
-                                       <p className="text-sm text-slate-600 italic">"{block.split('\nJawaban: ')[1] || "-"}"</p>
+                            ) : activeCorrectionTab === "Pertanyaan Pemantik" || activeCorrectionTab === "Refleksi" ? (
+                              <div className="grid gap-6">
+                                {sub.content.split(/\n\n(?=Pertanyaan \d+:)/).map((block, bidx) => {
+                                  const parts = block.split('\nJawaban: ');
+                                  const qPart = parts[0] || bidx + 1;
+                                  const aPart = parts[1] || "-";
+                                  return (
+                                    <div key={bidx} className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm transition-hover hover:shadow-md">
+                                      <p className="text-[10px] font-black text-primary/50 uppercase tracking-[0.2em] mb-3">Butir Respons {bidx + 1}</p>
+                                      <p className="font-black text-slate-800 mb-5 leading-tight text-base md:text-lg">{qPart.replace(/^Pertanyaan \d+: /, "")}</p>
+                                      <div className="p-6 bg-slate-50/50 rounded-2xl border-l-8 border-primary flex gap-4">
+                                         <span className="material-symbols-outlined text-primary opacity-30 text-3xl">format_quote</span>
+                                         <p className="text-slate-600 italic leading-relaxed text-sm md:text-base">"{aPart}"</p>
+                                      </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  );
+                                })}
+                              </div>
+                            ) : activeCorrectionTab === "Rangkuman" ? (
+                              <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-lg shadow-primary/5">
+                                <div className="flex items-center gap-4 mb-8">
+                                   <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm">
+                                      <span className="material-symbols-outlined">auto_stories</span>
+                                   </div>
+                                   <div>
+                                      <p className="text-xl font-black text-slate-800 leading-none mb-1">Jurnal Sintesis Terpandu</p>
+                                      <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{sub.content.match(/TOTAL KATA: (\d+)/)?.[0] || "Summary Report"}</p>
+                                   </div>
+                                </div>
+                                <div className="text-slate-700 leading-relaxed whitespace-pre-wrap font-medium font-serif border-l-4 border-emerald-100 pl-8 ml-2 text-sm md:text-base">
+                                  {sub.content.replace(/\[RANGKUMAN MODUL PENGGANTI TEST\]\n/, "")}
+                                </div>
                               </div>
                             ) : (
-                              <div className="whitespace-pre-wrap">{sub.content}</div>
+                              <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-sm font-serif leading-[2] whitespace-pre-wrap text-slate-800 text-sm md:text-base">
+                                {sub.content}
+                              </div>
                             )}
                           </div>
                        </div>
 
-                       {/* Grading Area */}
-                       <div className="border-t pt-8">
-                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div>
-                              <p className="font-black text-slate-800 mb-1">Beri Penilaian (Bintang)</p>
-                              <p className="text-xs text-slate-400 font-medium">Nilai akan langsung tersimpan dan terlihat oleh mahasiswa.</p>
+                       {/* Grading & Feedback Area */}
+                       <div className="pt-10 mt-10 border-t border-slate-100 bg-white sticky bottom-0 z-10 py-6">
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                            <div className="max-w-xs">
+                              <h5 className="font-black text-slate-900 text-lg mb-1 tracking-tight">Validasi & Penilaian</h5>
+                              <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest leading-none">Pilih Bintang & Berikan Apresiasi</p>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-3 bg-slate-50 p-3 rounded-[2rem] border border-slate-100 shadow-inner">
                               {[1, 2, 3, 4, 5].map(star => (
                                 <button
                                   key={star}
                                   onClick={() => handleStarFeedback(student.email, activeTab, selectedMeeting, activeCorrectionTab, star)}
-                                  className={`w-12 h-12 rounded-xl transition-all ${star <= curStars ? "bg-yellow-400 text-white shadow-lg shadow-yellow-400 shadow-opacity-30" : "bg-slate-100 text-slate-300 hover:bg-slate-200"}`}
+                                  className={`w-14 h-14 rounded-2xl transition-all duration-300 flex items-center justify-center ${star <= curStars ? "bg-gradient-to-br from-yellow-400 to-amber-500 text-white shadow-xl shadow-yellow-400/30 scale-105 active:scale-95" : "bg-white text-slate-200 hover:text-slate-300 hover:scale-105"}`}
                                 >
-                                  <span className="material-symbols-outlined fill-1">star</span>
+                                  <span className="material-symbols-outlined fill-1 text-[28px]">star</span>
                                 </button>
                               ))}
                             </div>
                           </div>
+                          
                           {curStars > 0 && (
-                            <div className="mt-6 bg-emerald-50 border border-emerald-100 p-4 rounded-2xl flex items-start gap-3">
-                              <span className="material-symbols-outlined text-emerald-500">info</span>
+                            <div className="mt-8 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-6 md:p-8 rounded-3xl flex items-center gap-6 animate-in slide-in-from-left-4 duration-500">
+                              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-emerald-200/50 shadow-lg text-emerald-500 shrink-0 border border-emerald-50">
+                                <span className="material-symbols-outlined text-4xl">verified</span>
+                              </div>
                               <div>
-                                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-none mb-1">Feedback Otomatis:</p>
-                                <p className="text-sm font-bold text-emerald-700 leading-tight">"{FEEDBACK_MESSAGES[curStars]}"</p>
+                                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2 leading-none">Apresiasi Tutor Otomatis:</p>
+                                <p className="text-lg font-black text-slate-800 font-italic tracking-tight leading-snug">"{FEEDBACK_MESSAGES[curStars]}"</p>
                               </div>
                             </div>
                           )}
                           
-                          <div className="mt-10 flex justify-end">
+                          <div className="mt-12 flex items-center justify-between border-t border-slate-50 pt-8">
+                             <div className="flex items-center gap-2 text-slate-300">
+                                <span className="material-symbols-outlined text-[16px]">lock</span>
+                                <span className="text-[9px] font-black tracking-widest uppercase">Safe & Encrypted</span>
+                             </div>
                              <button
                                onClick={() => handleUnlock(student.email, activeCorrectionTab)}
-                               className="text-[10px] font-black text-red-400 hover:text-red-500 uppercase tracking-widest flex items-center gap-1"
+                               className="text-[10px] font-black text-red-400 hover:text-white hover:bg-red-500 border border-transparent hover:border-red-500 px-4 py-2 rounded-xl uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-sm"
                              >
-                               <span className="material-symbols-outlined text-sm">lock_open</span> Buka Kunci (Reset Jawaban)
+                               <span className="material-symbols-outlined text-sm">lock_open</span> Reset Jawaban
                              </button>
                           </div>
                        </div>
