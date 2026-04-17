@@ -179,8 +179,8 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
             </div>
 
             {questions.map((q, i) => {
-              const answersArray = status.content.split(/\n\n(?=Pertanyaan \d+:)/);
-              const myBlock = answersArray.find(a => a.startsWith(`Pertanyaan ${i+1}:`)) || "";
+              const answersArray = (status?.content || "").split(/\n\n(?=Pertanyaan \d+:)/);
+              const myBlock = answersArray.find(a => a?.startsWith(`Pertanyaan ${i+1}:`)) || "";
               const myAns = myBlock.split("\nJawaban: ")[1] || "-";
 
               return (

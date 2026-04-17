@@ -27,7 +27,11 @@ export const StaticContentRenderer = ({
       throw new Error(`Session ${meetingId} exists but 'sections' is missing or not an array.`);
     }
 
-    const activeSection = sessionConfig?.sections?.find(s => s.name === sectionName);
+    const targetName = sectionName?.toLowerCase();
+    const activeSection = sessionConfig?.sections?.find(s => 
+      s.name.toLowerCase() === targetName || 
+      s.name === sectionName
+    );
   
     if (activeSection) {
       if (activeSection.type === "RATSATV2") {

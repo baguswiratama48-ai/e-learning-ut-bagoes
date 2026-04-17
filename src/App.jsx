@@ -762,6 +762,7 @@ function ClassMenu({ user }) {
           let visibleMenus = [...MENUS];
           const isSesi2BK = (id === "1" || id === "2") && meetingId === "2";
 
+          // Request: RAT/SAT, Pertanyaan Pemantik, Materi Pembelajaran, Video Pembelajaran, LKM, Quiz, Rangkuman, Refleksi
           if (isSesi2BK) {
             visibleMenus = [
               "Informasi Modul",
@@ -782,11 +783,11 @@ function ClassMenu({ user }) {
 
             if (isSesi2BK) {
               if (menu === "Informasi Modul") label = "RAT/SAT";
-              if (menu === "Ayo Diskusi (LKPD)") label = "LKM";
+              if (menu === "Ayo Diskusi (LKPD)") label = "LKM (Lembar Kerja Mahasiswa)";
               if (menu === "Kuis dan Latihan") label = "Quiz";
             }
 
-            // Hiding logic (already filtered in array for Sesi 2, but keep for global)
+            // Global mapping for Peta Konsep
             if (menu === "Peta Konsep" && isSesi2BK) return null;
 
             let iconName = "edit_document";
@@ -823,7 +824,7 @@ function ClassMenu({ user }) {
 
             return (
               <Link
-                key={i}
+                key={`${menu}-${i}`}
                 to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent(menu)}`}
                 className="group bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-primary border-opacity-30 hover:shadow-2xl hover:shadow-primary shadow-opacity-10 transition-all duration-300 text-center flex flex-col items-center relative overflow-hidden active:scale-95"
               >
@@ -939,27 +940,32 @@ function SectionPage({ user }) {
   if (!user || user.role !== "student") return <Navigate to={`/class/${id}`} />;
 
   function renderStaticContent() {
-    return (
-      <StaticContentRenderer
-        sectionName={sectionName}
-        id={id}
-        meetingId={meetingId}
-        user={user}
-        status={status}
-        tutorFeedback={tutorFeedback}
-        content={content}
-        setContent={setContent}
-        loading={loading}
-        handleAction={handleAction}
-        pemantikAnswers={pemantikAnswers}
-        setPemantikAnswers={setPemantikAnswers}
-        getPemantikForStudent={getPemantikForStudent}
-        cls={cls}
-        courseCode={courseCode}
-        COURSE_DATA={COURSE_DATA}
-        submissions={submissions}
-      />
-    );
+    try {
+      return (
+        <StaticContentRenderer
+          sectionName={sectionName}
+          id={String(id)}
+          meetingId={String(meetingId)}
+          user={user}
+          status={status}
+          tutorFeedback={tutorFeedback}
+          content={content}
+          setContent={setContent}
+          loading={loading}
+          handleAction={handleAction}
+          pemantikAnswers={pemantikAnswers}
+          setPemantikAnswers={setPemantikAnswers}
+          getPemantikForStudent={getPemantikForStudent}
+          cls={cls}
+          courseCode={courseCode}
+          COURSE_DATA={COURSE_DATA}
+          submissions={submissions}
+        />
+      );
+    } catch (err) {
+      console.error("Renderer Failure:", err);
+      return <div className="p-10 bg-red-50 text-red-500 rounded-3xl">Gagal memuat konten. Mohon refresh halaman.</div>;
+    }
   }
 
 
