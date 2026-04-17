@@ -17,6 +17,7 @@ import InteractiveQuizClass8 from "./components/InteractiveQuizClass8";
 import InteractiveMindMap from "./components/interactive/InteractiveMindMap";
 import InteractiveReflection from "./components/interactive/InteractiveReflection";
 import InteractiveLKMClass8 from "./components/InteractiveLKMClass8";
+import InteractiveRangkumanClass8 from "./components/InteractiveRangkumanClass8";
 
 // Data & Hooks
 import { STUDENTS } from "./data/students";
@@ -1030,6 +1031,34 @@ function SectionPage({ user }) {
           submissions={submissions}
           status={status}
           loading={loading}
+          onComplete={async (finalContent) => {
+            setLoading(true);
+            try {
+              const payload = {
+                student_email: user.email,
+                class_id: id,
+                meeting_num: meetingId,
+                section_name: sectionName,
+                content: finalContent,
+              };
+              const { data, error } = await supabase.from("submissions").insert([payload]).select();
+              if (!error && data && data.length > 0) {
+                setStatus(data[0]);
+              }
+            } catch (err) {
+              console.log(err);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+      ) : (id === "1" || id === "2") && sectionName === "Rangkuman" ? (
+        <InteractiveRangkumanClass8
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+          status={status}
           onComplete={async (finalContent) => {
             setLoading(true);
             try {
