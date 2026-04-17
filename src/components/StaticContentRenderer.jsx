@@ -1,9 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FEEDBACK_MESSAGES } from '../data/mockData';
-import { LkpdClass6A } from './LkpdClass6A';
-import { LkpdClass5A } from './LkpdClass5A';
-import QuizClass5A from './QuizClass5A';
 import { getSessionConfig } from '../data/sessions';
 import { RATSATTemplate, VideoEvalTemplate, PemantikTemplate } from './SectionTemplates';
 
@@ -13,7 +8,6 @@ export const StaticContentRenderer = ({
   meetingId, 
   user, 
   status, 
-  tutorFeedback, 
   content, 
   setContent, 
   loading, 
@@ -21,13 +15,9 @@ export const StaticContentRenderer = ({
   pemantikAnswers,
   setPemantikAnswers,
   getPemantikForStudent,
-  cls,
-  courseCode,
-  COURSE_DATA,
   submissions,
-  handleSubmit
 }) => {
-  // --- SESSION DISPATCHER (NUEVO) ---
+  // --- SESSION DISPATCHER ---
   const sessionConfig = getSessionConfig(id, meetingId);
   const activeSection = sessionConfig?.sections.find(s => s.name === sectionName);
 
@@ -72,20 +62,10 @@ export const StaticContentRenderer = ({
     }
   }
 
-  // --- DEKLARASI GLOBAL (LEGACY) ---
-  const systemGroupRow = submissions.find(
-    (s) =>
-      s.student_email === "SYSTEM_GROUP" &&
-      String(s.class_id) === String(id) &&
-      String(s.meeting_num) === String(meetingId),
-  );
-  const groups = systemGroupRow ? JSON.parse(systemGroupRow.content) : [];
-
-  // --- PRIORITAS KELAS 5A (SPGK4410) ---
+  // --- PRIORITAS KELAS 5A (SPGK4410) - Custom Info ---
   if (sectionName === "Informasi Modul" && id === "4") {
     return (
       <div className="space-y-10 md:space-y-16 pb-10">
-        {/* Hero Section */}
         <div className="relative bg-gradient-to-br from-teal-900 via-[#134e4a] to-[#0f3b39] rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
           <div className="absolute top-0 right-0 w-80 h-80 bg-teal-400 bg-opacity-10 rounded-full -mr-40 -mt-40 blur-[120px]"></div>
           <div className="relative z-10">
@@ -101,7 +81,6 @@ export const StaticContentRenderer = ({
     );
   }
 
-  // ... rest of the legacy code will follow or be cleaned up
   return (
     <div className="p-20 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed">
       <h3 className="text-xl font-black text-slate-400">Konten Belum Tersedia untuk Sesi Ini</h3>
