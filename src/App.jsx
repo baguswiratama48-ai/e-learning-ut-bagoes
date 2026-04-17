@@ -758,74 +758,86 @@ function ClassMenu({ user }) {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {MENUS.map((baseMenu, i) => {
-          let menu = baseMenu;
-          
-          // Emergency Fix: Rename Informasi Modul to RAT/SAT for Sesi 2 BK
-          if (menu === "Informasi Modul" && (id === "1" || id === "2") && meetingId === "2") {
-            menu = "RAT/SAT";
+        {(() => {
+          let visibleMenus = [...MENUS];
+          const isSesi2BK = (id === "1" || id === "2") && meetingId === "2";
+
+          if (isSesi2BK) {
+            visibleMenus = [
+              "Informasi Modul",
+              "Pertanyaan Pemantik",
+              "Materi Pembelajaran",
+              "Video Pembelajaran",
+              "Ayo Diskusi (LKPD)",
+              "Kuis dan Latihan",
+              "Rangkuman",
+              "Refleksi",
+              "Pembagian Kelompok"
+            ];
           }
 
-          // Emergency Fix: Hide Peta Konsep for Sesi 2 BK (as requested)
-          if (menu === "Peta Konsep" && (id === "1" || id === "2") && meetingId === "2") {
-            return null;
-          }
+          return visibleMenus.map((baseMenu, i) => {
+            let menu = baseMenu;
+            let label = baseMenu;
 
-          let icon = "edit_document";
-          let colorClass = "bg-blue-50 text-blue-600";
-          let iconName = "edit_document";
+            if (isSesi2BK) {
+              if (menu === "Informasi Modul") label = "RAT/SAT";
+              if (menu === "Ayo Diskusi (LKPD)") label = "LKM";
+              if (menu === "Kuis dan Latihan") label = "Quiz";
+            }
 
-          if (menu === "Informasi Modul" || menu === "RAT/SAT") {
-            iconName = "info";
-            colorClass = "bg-sky-50 text-sky-600";
-          } else if (menu === "Pertanyaan Pemantik") {
-            iconName = "tips_and_updates";
-            colorClass = "bg-amber-50 text-amber-600";
-          } else if (menu === "Materi Pembelajaran") {
-            iconName = "menu_book";
-            colorClass = "bg-emerald-50 text-emerald-600";
-          } else if (menu === "Video Pembelajaran") {
-            iconName = "play_circle";
-            colorClass = "bg-rose-50 text-rose-600";
-          } else if (menu === "LKPD (Lembar Kerja Peserta Didik)") {
-            iconName = "assignment";
-            colorClass = "bg-indigo-50 text-indigo-600";
-          } else if (menu === "Kuis dan Latihan") {
-            iconName = "extension";
-            colorClass = "bg-violet-50 text-violet-600";
-          } else if (menu === "Refleksi") {
-            iconName = "psychology";
-            colorClass = "bg-fuchsia-50 text-fuchsia-600";
-          } else if (menu === "Rangkuman") {
-            iconName = "summarize";
-            colorClass = "bg-slate-100 text-slate-600";
-          } else if (menu === "Pembagian Kelompok") {
-            iconName = "groups";
-            colorClass = "bg-teal-50 text-teal-600";
-          }
+            // Hiding logic (already filtered in array for Sesi 2, but keep for global)
+            if (menu === "Peta Konsep" && isSesi2BK) return null;
 
-          return (
-            <Link
-              key={i}
-              to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent(menu)}`}
-              className="group bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-primary border-opacity-30 hover:shadow-2xl hover:shadow-primary shadow-opacity-10 transition-all duration-300 text-center flex flex-col items-center relative overflow-hidden active:scale-95"
-            >
-              <div
-                className={`w-16 h-16 rounded-2xl ${colorClass} group-hover:scale-110 transition-transform duration-500 flex items-center justify-center mb-4 shadow-sm relative z-10`}
+            let iconName = "edit_document";
+            let colorClass = "bg-blue-50 text-blue-600";
+
+            if (menu === "Informasi Modul") {
+              iconName = "info";
+              colorClass = "bg-sky-50 text-sky-600";
+            } else if (menu === "Pertanyaan Pemantik") {
+              iconName = "tips_and_updates";
+              colorClass = "bg-amber-50 text-amber-600";
+            } else if (menu === "Materi Pembelajaran") {
+              iconName = "menu_book";
+              colorClass = "bg-emerald-50 text-emerald-600";
+            } else if (menu === "Video Pembelajaran") {
+              iconName = "play_circle";
+              colorClass = "bg-rose-50 text-rose-600";
+            } else if (menu === "Ayo Diskusi (LKPD)") {
+              iconName = "assignment";
+              colorClass = "bg-indigo-50 text-indigo-600";
+            } else if (menu === "Kuis dan Latihan") {
+              iconName = "extension";
+              colorClass = "bg-violet-50 text-violet-600";
+            } else if (menu === "Refleksi") {
+              iconName = "psychology";
+              colorClass = "bg-fuchsia-50 text-fuchsia-600";
+            } else if (menu === "Rangkuman") {
+              iconName = "summarize";
+              colorClass = "bg-slate-100 text-slate-600";
+            } else if (menu === "Pembagian Kelompok") {
+              iconName = "groups";
+              colorClass = "bg-teal-50 text-teal-600";
+            }
+
+            return (
+              <Link
+                key={i}
+                to={`/class/${id}/meeting/${meetingId}/section/${encodeURIComponent(menu)}`}
+                className="group bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-primary border-opacity-30 hover:shadow-2xl hover:shadow-primary shadow-opacity-10 transition-all duration-300 text-center flex flex-col items-center relative overflow-hidden active:scale-95"
               >
-                <span className="material-symbols-outlined text-[32px]">
-                  {iconName}
-                </span>
-              </div>
-              <p className="font-bold text-slate-700 group-hover:text-primary text-[13px] md:text-sm leading-tight transition-colors relative z-10">
-                {menu}
-              </p>
-
-              {/* Subtle background decoration on hover */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            </Link>
-          );
-        })}
+                <div className={`w-16 h-16 rounded-2xl ${colorClass} group-hover:scale-110 transition-transform duration-500 flex items-center justify-center mb-4 shadow-sm relative z-10`}>
+                  <span className="material-symbols-outlined text-[32px]">{iconName}</span>
+                </div>
+                <p className="font-bold text-slate-700 group-hover:text-primary text-[13px] md:text-sm leading-tight transition-colors relative z-10">
+                  {label}
+                </p>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary bg-opacity-5 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              </Link>
+            );
+          });
+        })()}
       </div>
     </div>
   );

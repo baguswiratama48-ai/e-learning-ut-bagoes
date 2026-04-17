@@ -18,60 +18,88 @@ export const StaticContentRenderer = ({
   submissions,
 }) => {
   // --- SESSION DISPATCHER ---
-  const sessionConfig = getSessionConfig(id, meetingId);
-  const activeSection = sessionConfig?.sections.find(s => s.name === sectionName);
+  try {
+    const sessionConfig = getSessionConfig(id, meetingId);
+    
+    // Safety check: sessions array must exist
+    if (sessionConfig && !Array.isArray(sessionConfig.sections)) {
+      console.error("Invalid session config structure:", sessionConfig);
+      throw new Error(`Session ${meetingId} exists but 'sections' is missing or not an array.`);
+    }
 
-  if (activeSection) {
-    if (activeSection.type === "RATSATV2") {
-      return (
-        <RATSATTemplate 
-          config={activeSection}
-          content={content}
-          setContent={setContent}
-          handleAction={handleAction}
-          loading={loading}
-          status={status}
-        />
-      );
+    const activeSection = sessionConfig?.sections?.find(s => s.name === sectionName);
+  
+    if (activeSection) {
+      if (activeSection.type === "RATSATV2") {
+        return (
+          <RATSATTemplate 
+            config={activeSection}
+            content={content}
+            setContent={setContent}
+            handleAction={handleAction}
+            loading={loading}
+            status={status}
+          />
+        );
+      }
+      if (activeSection.type === "VideoEvalV2") {
+        return (
+          <VideoEvalTemplate 
+            config={activeSection}
+            content={content}
+            setContent={setContent}
+            handleAction={handleAction}
+            loading={loading}
+            status={status}
+          />
+        );
+      }
+      if (activeSection.type === "PemantikV2") {
+        return (
+          <PemantikTemplate 
+            config={activeSection}
+            user={user}
+            status={status}
+            pemantikAnswers={pemantikAnswers}
+            setPemantikAnswers={setPemantikAnswers}
+            handleAction={handleAction}
+            loading={loading}
+            getPemantikForStudent={getPemantikForStudent}
+          />
+        );
+      }
+      if (activeSection.type === "MateriV2") {
+        return (
+          <MateriTemplate 
+            config={activeSection}
+            content={content}
+            setContent={setContent}
+            handleAction={handleAction}
+            loading={loading}
+            status={status}
+          />
+        );
+      }
+      
+      // If type exists but is not handled above
+      console.warn(`Section type '${activeSection.type}' encountered but not matched in dispatcher.`);
     }
-    if (activeSection.type === "VideoEvalV2") {
-      return (
-        <VideoEvalTemplate 
-          config={activeSection}
-          content={content}
-          setContent={setContent}
-          handleAction={handleAction}
-          loading={loading}
-          status={status}
-        />
-      );
-    }
-    if (activeSection.type === "PemantikV2") {
-      return (
-        <PemantikTemplate 
-          config={activeSection}
-          user={user}
-          status={status}
-          pemantikAnswers={pemantikAnswers}
-          setPemantikAnswers={setPemantikAnswers}
-          handleAction={handleAction}
-          loading={loading}
-          getPemantikForStudent={getPemantikForStudent}
-        />
-      );
-    }
-    if (activeSection.type === "MateriV2") {
-      return (
-        <MateriTemplate 
-          config={activeSection}
-          content={content}
-          setContent={setContent}
-          handleAction={handleAction}
-          loading={loading}
-          status={status}
-        />
-      );
-    }
+  } catch (err) {
+    console.error("CRITICAL RENDER ERROR:", err);
+    return (
+      <div className="p-10 md:p-20 bg-rose-50 border-2 border-rose-200 rounded-[3rem] text-center max-w-2xl mx-auto shadow-2xl">
+         <div className="w-20 h-20 bg-rose-500 text-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <span className="material-symbols-outlined text-4xl">warning</span>
+         </div>
+         <h3 className="text-xl md:text-2xl font-black text-rose-900 mb-4">Waduh! Terjadi Kesalahan Render 🛠️</h3>
+         <p className="text-sm md:text-base text-rose-700 font-medium leading-relaxed mb-6">
+           Ada sedikit kendala saat memuat materi ini. Tutor sudah diberitahu otomatis. Coba segarkan halaman (refresh) atau buka menu lainnya dulu ya!
+         </p>
+         <div className="bg-white/50 p-4 rounded-2xl text-[10px] text-rose-400 font-mono text-left break-all">
+           Error: {err.message}
+         </div>
+      </div>
+    );
   }
 
   // --- PRIORITAS KELAS 5A (SPGK4410) - Custom Info ---

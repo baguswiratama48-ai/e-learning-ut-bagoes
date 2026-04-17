@@ -6,7 +6,7 @@ export const Sesi2_BK = {
   courseName: "Bimbingan Konseling di SD",
   sections: [
     {
-      name: "RAT/SAT",
+      name: "Informasi Modul", // Card 1: RAT/SAT
       type: "RATSATV2",
       content: {
         title: "Bimbingan dan Konseling di SD",
@@ -85,7 +85,7 @@ export const Sesi2_BK = {
               },
               {
                 label: "Layanan Intervensi & Konsultasi",
-                text: "Pendalaman masalah dan mediasi.",
+                text: "Pendalaman masalah and mediasi.",
                 items: [
                   "Konseling Individual → Masalah pribadi siswa",
                   "Bimbingan Kelompok → Diskusi topik umum",
@@ -228,6 +228,17 @@ export const Sesi2_BK = {
             "Bagaimana bentuk layanan BK yang bisa mendukung perkembangan fisik-motorik siswa?",
           ],
         ],
+      },
+    },
+    {
+      name: "Video Pembelajaran",
+      type: "VideoEvalV2",
+      content: {
+        videoId: "lEWK8NMHtEs",
+        title: "Perkembangan Peserta Didik di SD",
+        category: "Materi Bimbingan Konseling",
+        evaluationText: "Susunlah poin-poin penting dari video yang telah Anda tonton.",
+        minWords: 100,
       },
     },
   ],
