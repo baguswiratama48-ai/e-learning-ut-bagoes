@@ -869,13 +869,14 @@ function SectionPage({ user }) {
     "Rangkuman",
   ].some((p) => sectionName?.includes(p));
 
+  const activeSectionLower = sectionName?.toLowerCase() || "";
   const isStatic = [
-    "Informasi Modul", 
-    "Materi Pembelajaran", 
-    "Video Pembelajaran", 
-    "Pertanyaan Pemantik",
-    "RAT/SAT",
-  ].includes(sectionName);
+    "informasi modul", 
+    "materi pembelajaran", 
+    "video pembelajaran", 
+    "pertanyaan pemantik",
+    "rat/sat",
+  ].some(s => activeSectionLower.includes(s));
 
   useEffect(() => {
     setStatus(null);
