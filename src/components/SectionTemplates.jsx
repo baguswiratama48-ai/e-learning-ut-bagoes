@@ -251,3 +251,121 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
     </div>
   );
 };
+
+/**
+ * Template for Structured Learning Material
+ */
+export const MateriTemplate = ({ config, content, setContent, handleAction, loading, status }) => {
+  return (
+    <div className="space-y-12 md:space-y-20 pb-20">
+      <SectionHero 
+        title={config.content.title}
+        subtitle={config.content.subtitle}
+        category="Materi Pembelajaran"
+        icon="menu_book"
+        gradient="from-slate-50 via-white to-blue-50"
+      />
+
+      <div className="max-w-5xl mx-auto space-y-16 md:space-y-24">
+        {config.content.sections.map((section, sidx) => (
+          <div key={sidx} className="relative group">
+            {/* Section Header */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.5rem] bg-slate-900 shadow-xl shadow-slate-900/20 flex items-center justify-center text-white font-black text-xl md:text-2xl ring-8 ring-slate-50 group-hover:scale-110 transition-transform">
+                {section.letter}
+              </div>
+              <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent"></div>
+            </div>
+
+            <h3 className="text-2xl md:text-4xl font-black text-slate-800 mb-8 tracking-tight leading-tight">
+              {section.title}
+            </h3>
+
+            {/* Section Description */}
+            {section.description && (
+              <div className="bg-slate-50 p-6 md:p-10 rounded-[2rem] border-l-8 border-slate-300 mb-10 shadow-sm">
+                <p className="text-sm md:text-lg text-slate-600 font-medium leading-relaxed italic">
+                   {section.description}
+                </p>
+              </div>
+            )}
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {section.points && (
+                <div className="space-y-6">
+                  {section.points.map((pt, pidx) => (
+                    <div key={pidx} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+                      <h4 className="flex items-center gap-2 text-primary font-black text-sm md:text-base mb-3 uppercase tracking-tighter">
+                        <span className="material-symbols-outlined text-[18px]">verified</span>
+                        {pt.label}
+                      </h4>
+                      <p className="text-slate-600 text-sm md:text-base leading-relaxed font-medium">
+                        {pt.text}
+                      </p>
+                      {pt.items && (
+                        <ul className="mt-4 space-y-2 pl-2">
+                          {pt.items.map((item, iidx) => (
+                            <li key={iidx} className="flex gap-2 items-start text-xs md:text-sm text-slate-500 font-medium">
+                              <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-slate-300 shrink-0"></span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Examples Column */}
+              {section.examples && (
+                <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden h-full shadow-2xl">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-primary opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-8">
+                       <span className="material-symbols-outlined text-yellow-400">lightbulb</span>
+                       <h4 className="font-black text-lg md:text-xl tracking-tight uppercase">Contoh di Lapangan</h4>
+                    </div>
+                    <div className="space-y-6">
+                      {section.examples.map((ex, eidx) => (
+                        <div key={eidx} className="flex gap-4 items-start bg-white/5 border border-white/10 p-5 rounded-2xl hover:bg-white/10 transition-all">
+                           <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-black text-[10px] shrink-0">{eidx+1}</span>
+                           <p className="text-xs md:text-sm font-medium leading-relaxed opacity-90">{ex}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Engagement Section */}
+      <div className="max-w-4xl mx-auto pt-20 border-t border-slate-100">
+        <div className="bg-gradient-to-br from-primary to-[#1a2169] rounded-[3rem] p-10 md:p-16 text-white text-center shadow-2xl shadow-primary/20">
+          <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur-md border border-white/20">
+            <span className="material-symbols-outlined text-4xl text-yellow-400">psychology</span>
+          </div>
+          <h3 className="text-2xl md:text-4xl font-black mb-6 tracking-tight">Evaluasi Pemahaman 💬</h3>
+          <p className="text-sm md:text-lg text-white/70 font-medium mb-12 max-w-2xl mx-auto italic">
+            "Setelah mempelajari seluruh poin di atas, apa kesimpulan atau pelajaran terpenting yang Anda dapatkan? Bagaimana Anda akan menerapkannya nanti?"
+          </p>
+          <div className="max-w-2xl mx-auto">
+             <InputArea 
+               value={content}
+               onChange={setContent}
+               onSave={handleAction}
+               loading={loading}
+               status={status}
+               placeholder="Ketik refleksi pemahaman Anda disini... (Minimal 20 kata)"
+               minWords={20}
+             />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

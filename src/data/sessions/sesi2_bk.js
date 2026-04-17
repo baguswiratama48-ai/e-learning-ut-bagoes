@@ -32,6 +32,137 @@ export const Sesi2_BK = {
       },
     },
     {
+      name: "Materi Pembelajaran",
+      type: "MateriV2",
+      content: {
+        title: "Materi Bimbingan dan Konseling di SD",
+        subtitle: "Konsep Dasar, Jenis Layanan, dan Karakteristik Peserta Didik",
+        sections: [
+          {
+            letter: "A",
+            title: "Konsep Dasar Bimbingan dan Konseling di SD",
+            description: "Bimbingan dan Konseling (BK) di SD adalah proses bantuan kepada peserta didik agar berkembang optimal (pribadi, sosial, belajar, dan karier) sesuai tahap perkembangannya.",
+            points: [
+              {
+                label: "Tujuan BK di SD",
+                text: "Membantu siswa mengenal diri, serta mengembangkan potensi yang dimiliki.",
+                items: ["Mengatasi masalah sederhana", "Membentuk karakter positif sejak dini"]
+              },
+              {
+                label: "Komponen Program",
+                text: "Struktur bantuan yang komprehensif bagi seluruh siswa.",
+                items: [
+                  "Layanan Dasar: Untuk semua siswa (Pembiasaan disiplin)",
+                  "Layanan Responsif: Masalah langsung (Siswa berkelahi)",
+                  "Perencanaan Individual: Masa depan siswa",
+                  "Dukungan Sistem: Kerja sama guru, ortu, & sekolah"
+                ]
+              }
+            ],
+            examples: [
+              "Guru memberi bimbingan cara berteman",
+              "Konselor membantu siswa yang sering menyendiri",
+              "Program pembiasaan disiplin pagi"
+            ]
+          },
+          {
+            letter: "B",
+            title: "Jenis-Jenis Layanan BK",
+            description: "Layanan yang dirancang untuk membantu perkembangan siswa dari berbagai aspek kehidupan.",
+            points: [
+              {
+                label: "Layanan Primer",
+                text: "Orientasi, Informasi, dan Pembelajaran efektif.",
+                items: [
+                   "Orientasi: Pengenalan lingkungan",
+                   "Informasi: Aturan & Kesehatan",
+                   "Pembelajaran: Cara belajar efektif"
+                ]
+              },
+              {
+                label: "Layanan Pendukung",
+                text: "Penempatan, Konseling, dan Mediasi.",
+                items: [
+                  "Konseling Individual/Kelompok: Masalah pribadi",
+                  "Konsultasi: Guru/Ortu minta saran",
+                  "Mediasi: Penyelesaian konflik antar siswa"
+                ]
+              }
+            ]
+          },
+          {
+            letter: "C",
+            title: "Karakteristik Peserta Didik SD",
+            description: "Ciri khas siswa usia 6–12 tahun dalam aspek fisik, kognitif, sosial, dan emosional.",
+            points: [
+              {
+                label: "Karakteristik Umum",
+                text: "Anak-anak pada usia ini sangat aktif dan membutuhkan pengakuan.",
+                items: [
+                  "Suka bermain dan bergerak",
+                  "Mulai berpikir logis sederhana",
+                  "Senang bekerja dalam kelompok",
+                  "Emosi belum stabil"
+                ]
+              }
+            ],
+            examples: [
+              "Siswa cepat bosan: Perlu metode variatif",
+              "Suka kompetisi: Cocok diberi reward",
+              "Mudah meniru: Perlu keteladanan guru"
+            ]
+          },
+          {
+            letter: "D",
+            title: "Konsep Tugas Perkembangan",
+            description: "Tugas yang harus dicapai anak sesuai usia agar berkembang secara normal.",
+            points: [
+              {
+                label: "Tugas Utama SD",
+                text: "Belajar 3M (Baca, Tulis, Hitung) dan bergaul.",
+                items: ["Mengembangkan sikap disiplin", "Mengenal peran diri", "Moral dan Nilai"]
+              },
+              {
+                label: "Aspek Perkembangan",
+                text: "Kognitif, Sosial, Emosional, dan Moral.",
+                items: [
+                  "Kognitif: Berpikir logis (Sebab-akibat)",
+                  "Social: Butuh teman & kelompok",
+                  "Emosional: Masih labil (Butuh bimbingan)",
+                  "Moral: Memahami benar-salah"
+                ]
+              }
+            ]
+          },
+          {
+            letter: "F",
+            title: "Perkembangan Fisik-Motorik",
+            description: "Perkembangan tubuh dan kemampuan gerak anak yang krusial bagi kemandirian.",
+            points: [
+              {
+                label: "Permasalahan Muncul",
+                text: "Kurang aktif, terlalu aktif, atau mudah lelah.",
+                items: ["Koordinasi motorik lemah", "Stamina terbatas"]
+              },
+              {
+                label: "Upaya Bimbingan",
+                text: "Fokus pada aktivitas fisik yang terukur dan terencana.",
+                items: [
+                  "Memberi kegiatan olahraga",
+                  "Mengatur waktu belajar dan bermain",
+                  "Aktivitas motorik (Senam, Permainan)"
+                ]
+              }
+            ],
+            examples: [
+              "Siswa hiperaktif: Diarahkan ke olahraga",
+              "Siswa lemah motorik: Latihan sederhana bertahap"
+            ]
+          }
+        ]
+      }
+    },
+    {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { getSessionConfig } from '../data/sessions';
-import { RATSATTemplate, VideoEvalTemplate, PemantikTemplate } from './SectionTemplates';
+import { RATSATTemplate, VideoEvalTemplate, PemantikTemplate, MateriTemplate } from './SectionTemplates';
 
 export const StaticContentRenderer = ({ 
   sectionName, 
@@ -57,6 +57,18 @@ export const StaticContentRenderer = ({
           handleAction={handleAction}
           loading={loading}
           getPemantikForStudent={getPemantikForStudent}
+        />
+      );
+    }
+    if (activeSection.type === "MateriV2") {
+      return (
+        <MateriTemplate 
+          config={activeSection}
+          content={content}
+          setContent={setContent}
+          handleAction={handleAction}
+          loading={loading}
+          status={status}
         />
       );
     }
