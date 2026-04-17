@@ -869,6 +869,14 @@ function SectionPage({ user }) {
     "Rangkuman",
   ].some((p) => sectionName?.includes(p));
 
+  const isStatic = [
+    "Informasi Modul", 
+    "Materi Pembelajaran", 
+    "Video Pembelajaran", 
+    "Pertanyaan Pemantik",
+    "RAT/SAT",
+  ].includes(sectionName);
+
   useEffect(() => {
     setStatus(null);
     setTutorFeedback(null);
@@ -985,7 +993,7 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {!isInput || sectionName?.includes("Pertanyaan") || (["3", "4"].includes(id) && ["LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan"].includes(sectionName)) ? (
+      {isStatic || (["3", "4"].includes(id) && ["LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan"].includes(sectionName)) ? (
           renderStaticContent()
         ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
