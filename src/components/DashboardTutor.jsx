@@ -509,7 +509,6 @@ export const DashboardTutor = ({
              </div>
           </div>
         )}
-      </div>
     </div>
   );
 };
