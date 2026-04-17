@@ -11,18 +11,24 @@ export const Sesi2_BK = {
       content: {
         title: "Bimbingan dan Konseling di SD",
         capaian: [
-          "Mahasiswa mampu menguraikan konsep dasar BK di SD.",
-          "Mahasiswa mampu menganalisis karakteristik dan tugas perkembangan peserta didik SD.",
-          "Mahasiswa mampu merumuskan upaya bimbingan untuk perkembangan fisik-motorik anak."
+          "Mahasiswa mampu menguraikan konsep dasar komponen program layanan bimbingan dan konseling di SD.",
+          "Mahasiswa mampu menguraikan karakteristik peserta didik dan mampu menganalisis serta mengevaluasi tugas perkembangan peserta didik Sekolah Dasar (SD)."
         ],
         pokokBahasan: [
           {
             title: "Hakikat Bimbingan dan Konseling",
-            subs: ["Konsep Dasar BK di SD", "Jenis-jenis Layanan BK di SD"]
+            subs: [
+              "Konsep Dasar Bimbingan dan Konseling di Sekolah Dasar", 
+              "Jenis-jenis layanan Bimbingan dan Konseling"
+            ]
           },
           {
-            title: "Karakteristik & Perkembangan Siswa",
-            subs: ["Karakteristik Umum Siswa SD", "Tugas-tugas Perkembangan", "Perkembangan Fisik-Motorik"]
+            title: "Karakteristik & Tugas Perkembangan Peserta Didik di SD",
+            subs: [
+              "Konsep Karakteristik dan Tugas", 
+              "Perkembangan Sekolah Dasar", 
+              "Perkembangan Fisik-Motorik dan Upaya Bimbingannya"
+            ]
           }
         ],
         evaluationQuestion: "Setelah mempelajari RAT/SAT ini, tuliskan satu harapan utama Anda untuk proses pembelajaran bimbingan konseling di kelas ini."
