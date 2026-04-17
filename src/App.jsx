@@ -769,11 +769,11 @@ function ClassMenu({ user }) {
               "Pertanyaan Pemantik",
               "Materi Pembelajaran",
               "Video Pembelajaran",
+              "Pembagian Kelompok",
               "Ayo Diskusi (LKPD)",
               "Kuis dan Latihan",
               "Rangkuman",
-              "Refleksi",
-              "Pembagian Kelompok"
+              "Refleksi"
             ];
           }
 
