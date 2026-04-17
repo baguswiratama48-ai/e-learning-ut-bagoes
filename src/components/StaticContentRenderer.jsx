@@ -182,8 +182,10 @@ export const StaticContentRenderer = ({
                               <span className={`text-sm font-bold truncate ${member.email === user.email ? 'text-primary' : 'text-slate-700'}`}>{member.name}</span>
                            </div>
                            <div className="flex gap-2 shrink-0">
-                             {member.isLeader && (
+                             {member.isLeader ? (
                                <span className="bg-amber-400 text-[9px] font-black text-white px-2.5 py-1 rounded-full shadow-sm">KETUA</span>
+                             ) : (
+                               <span className="bg-slate-200 text-[9px] font-black text-slate-500 px-2.5 py-1 rounded-full border border-slate-300 shadow-sm">ANGGOTA</span>
                              )}
                              {member.email === user.email && (
                                <span className="bg-primary text-[9px] font-black text-white px-2.5 py-1 rounded-full shadow-sm uppercase animate-pulse">Anda</span>

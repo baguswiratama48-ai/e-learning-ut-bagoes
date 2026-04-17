@@ -457,8 +457,10 @@ export const DashboardTutor = ({
                                 </div>
                                 <span className="text-[11px] font-bold text-slate-700 truncate">{member.name}</span>
                              </div>
-                             {member.isLeader && (
+                             {member.isLeader ? (
                                <span className="bg-amber-400 text-[8px] font-black text-white px-2 py-0.5 rounded-full shadow-sm animate-pulse">KETUA</span>
+                             ) : (
+                               <span className="bg-slate-200 text-[8px] font-black text-slate-500 px-2 py-0.5 rounded-full border border-slate-300">ANGGOTA</span>
                              )}
                           </div>
                         ))}
