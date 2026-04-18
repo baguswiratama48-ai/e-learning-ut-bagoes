@@ -42,7 +42,7 @@ export const Sesi2_ABK = {
         required: 1,
         groups: [
           [
-            "apa yang ada di pikiran mu untuk video diatas?",
+            "Apa yang terlintas di pikiran mu setelah melihat video diatas?",
             "Apa pemahaman Anda tentang perbedaan antara Autism dan ADHD?",
             "Bagaimana cara mengidentifikasi anak yang mengalami ODD di lingkungan sekolah?",
             "Apa peran guru dalam mendukung anak dengan gangguan perilaku di kelas inklusif?",
