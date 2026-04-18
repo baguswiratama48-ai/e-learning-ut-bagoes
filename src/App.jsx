@@ -885,6 +885,8 @@ function SectionPage({ user }) {
     "pembagian kelompok",
   ].some(s => activeSectionLower.includes(s));
 
+  const sessionConfig = getSessionConfig(id, meetingId);
+
   // If a sessionConfig exists (like Sesi 2), we should treat more sections as static
   const isStatic = isStaticSection || (sessionConfig && !["Refleksi", "Rangkuman"].includes(sectionName));
 
@@ -1007,8 +1009,8 @@ function SectionPage({ user }) {
       </div>
 
       {sessionConfig ? (
-          renderStaticContent()
-        ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
+        renderStaticContent()
+      ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
           <InteractiveQuizClass8
             user={user}
@@ -1086,7 +1088,6 @@ function SectionPage({ user }) {
             }
           }}
         />
-        </div>
       ) : id === "3" && sectionName === "Ayo Diskusi (LKPD)" ? (
         <LkpdClass6A
           user={user}
