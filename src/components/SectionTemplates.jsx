@@ -4,73 +4,136 @@ import { Card, SectionHero, InputArea } from './base/BaseComponents';
 /**
  * Template for RAT/SAT (Session Info)
  */
+/**
+ * Templat untuk RAT/SAT (Informasi Silabus/Modul)
+ * Diperbarui untuk mendukung tampilan profesional di mobile dan teks terstruktur.
+ */
 export const RATSATTemplate = ({ config, content, setContent, handleAction, loading, status }) => {
+  const { 
+    title, 
+    courseCode, 
+    courseName, 
+    sks, 
+    description, 
+    capaian, 
+    pokokBahasan, 
+    evaluationQuestion 
+  } = config.content;
+
   return (
-    <div className="space-y-10 md:space-y-16 pb-10">
+    <div className="space-y-8 md:space-y-12 pb-10 animate-in fade-in duration-700">
+      {/* Hero Utama - Judul Sesi */}
       <SectionHero 
-        title={`Informasi Sesi: ${config.content.title}`}
-        category={`Informasi Modul`}
+        title={title || "Informasi Modul"}
+        category="RAT / SAT"
         icon="auto_stories"
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-        <Card className="p-8 md:p-12 border-l-[12px] border-l-indigo-500">
-           <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
-              <span className="material-symbols-outlined text-indigo-500">task_alt</span>
+      {/* Kartu Informasi Mata Kuliah - Sangat penting untuk identitas modul */}
+      {(courseName || courseCode || sks) && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:border-primary transition-all">
+            <span className="material-symbols-outlined text-primary mb-2 opacity-50">book</span>
+            <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Mata Kuliah</span>
+            <p className="font-bold text-slate-800 leading-tight">{courseName || "-"}</p>
+          </div>
+          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:border-primary transition-all">
+            <span className="material-symbols-outlined text-primary mb-2 opacity-50">qr_code</span>
+            <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Kode MK</span>
+            <p className="font-bold text-slate-800 leading-tight">{courseCode || "-"}</p>
+          </div>
+          <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:border-primary transition-all">
+            <span className="material-symbols-outlined text-primary mb-2 opacity-50">database</span>
+            <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Bobot SKS</span>
+            <p className="font-bold text-slate-800 leading-tight">{sks || "-"}</p>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 md:gap-12">
+        {/* Deskripsi Singkat - Perataan rapi dan font profesional untuk mobile */}
+        {description && (
+          <Card className="p-8 md:p-14 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+              <span className="material-symbols-outlined text-indigo-500">description</span>
+              Deskripsi Singkat
+            </h3>
+            <div className="text-slate-600 text-sm md:text-base leading-relaxed font-medium text-justify whitespace-pre-line">
+               {description}
+            </div>
+          </Card>
+        )}
+
+        {/* Capaian Pembelajaran */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+          <Card className="p-8 md:p-12 border-l-[12px] border-l-indigo-500 hover:shadow-2xl transition-shadow">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+              <span className="material-symbols-outlined text-indigo-500">emoji_events</span>
               Capaian Pembelajaran
             </h3>
-            <ul className="space-y-4 text-slate-700 text-sm md:text-base font-medium">
-              {(config.content.capaian || []).map((item, i) => (
-                <li key={i} className="flex gap-3 items-start">
-                  <span className="material-symbols-outlined text-indigo-500 shrink-0">check_circle</span>
-                  {item}
+            <ul className="space-y-5 text-slate-700 text-sm md:text-base font-semibold">
+              {(capaian || []).map((item, i) => (
+                <li key={i} className="flex gap-4 items-start group">
+                  <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                    <span className="material-symbols-outlined text-[14px]">check</span>
+                  </div>
+                  <span className="leading-tight">{item}</span>
                 </li>
               ))}
             </ul>
-        </Card>
+          </Card>
 
-        <div className="bg-slate-50 p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-slate-200 border-opacity-50">
-          <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
-            <span className="material-symbols-outlined text-indigo-600">format_list_bulleted</span>
-            Pokok Bahasan
-          </h3>
-          <div className="space-y-6">
-            {(config.content.pokokBahasan || []).map((pb, i) => (
-              <div key={i} className={i > 0 ? "pt-4 border-t border-slate-200" : ""}>
-                 <h4 className="font-bold text-slate-800 text-lg mb-2">{pb.title}</h4>
-                 <ul className="space-y-2 text-slate-600 text-sm font-medium">
-                    {(pb.subs || []).map((sub, si) => (
-                      <li key={si} className="flex gap-2 items-start">
-                        <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-indigo-400 shrink-0"></span> {sub}
-                      </li>
-                    ))}
-                 </ul>
-              </div>
-            ))}
+          {/* Sub Pokok Bahasan */}
+          <div className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-slate-200 border-opacity-50 hover:bg-white transition-colors">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+              <span className="material-symbols-outlined text-indigo-600">account_tree</span>
+              Sub Pokok Bahasan
+            </h3>
+            <div className="space-y-6">
+              {(pokokBahasan || []).map((pb, i) => (
+                <div key={i} className={i > 0 ? "pt-6 border-t border-slate-200" : ""}>
+                   <h4 className="font-black text-slate-800 text-lg mb-3 flex items-center gap-2">
+                     <span className="w-2 h-6 bg-indigo-600 rounded-full"></span>
+                     {pb.title}
+                   </h4>
+                   <ul className="space-y-3 text-slate-600 text-sm md:text-base font-medium pl-4">
+                      {(pb.subs || []).map((sub, si) => (
+                        <li key={si} className="flex gap-3 items-center">
+                          <span className="w-2 h-2 rounded-sm bg-indigo-200 shrink-0 rotate-45"></span> {sub}
+                        </li>
+                      ))}
+                   </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-10 pt-10 border-t border-slate-100">
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <h3 className="text-xl md:text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter">
-            Evaluasi Pemahaman 💬
-          </h3>
-          <p className="text-slate-500 text-sm md:text-base font-medium italic">
-            "{config.content.evaluationQuestion}"
-          </p>
+      {/* Bagian Evaluasi - Jika ada pertanyaan pemantik khusus di RAT/SAT */}
+      {evaluationQuestion && (
+        <div className="mt-10 pt-10 border-t border-slate-100">
+          <div className="max-w-3xl mx-auto text-center mb-10">
+            <h3 className="text-xl md:text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter">
+              Ayo Berdiskusi 💬
+            </h3>
+            <p className="text-slate-500 text-sm md:text-lg font-medium italic leading-relaxed px-4">
+              "{evaluationQuestion}"
+            </p>
+          </div>
+          <div className="max-w-2xl mx-auto px-4">
+            <InputArea 
+              value={content}
+              onChange={setContent}
+              onSave={handleAction}
+              loading={loading}
+              status={status}
+              placeholder="Tuliskan pemikiran atau jawaban Anda di sini..."
+            />
+          </div>
         </div>
-        <div className="max-w-2xl mx-auto">
-          <InputArea 
-            value={content}
-            onChange={setContent}
-            onSave={handleAction}
-            loading={loading}
-            status={status}
-            placeholder="Ketik jawaban evaluasi Anda disini..."
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -3,3 +3,13 @@
 3. tampilan ui/ux mobileresponsif dan profesional
 4. pastikan jawaban siswa tidak hilang ketika sudah menjawab 
 2. urutanya harusnya : RAT/SAT, pertyaan Pemantik, Materi Pembelajaran Video Pembelajaran, LKP ganti LKM (Lembar Kerja Mahasiswa), Quiz, Rangkuman, Refleksi
+
+
+RAT/SAT 
+Pertanya Pemantik 
+Materi Pembelajaran
+Video Pembelajaran
+LKM
+Quiz 
+Refleksi
+Rangkuman
