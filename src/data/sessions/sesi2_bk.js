@@ -189,7 +189,7 @@ export const Sesi2_BK = {
     {
       name: "Pertanyaan Pemantik",
       required: true,
-      type: "Interactive",
+      type: "PemantikV2",
       content: {
         required: 6,
         groups: [

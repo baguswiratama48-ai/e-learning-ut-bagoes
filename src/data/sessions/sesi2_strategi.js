@@ -56,7 +56,7 @@ export const Sesi2_Strategi = {
     {
       name: "Pertanyaan Pemantik",
       required: true,
-      type: "Interactive",
+      type: "PemantikV2",
       content: {
         required: 6,
         groups: [
