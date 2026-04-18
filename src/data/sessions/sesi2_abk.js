@@ -38,14 +38,15 @@ export const Sesi2_ABK = {
       required: true,
       type: "PemantikV2",
       content: {
-        required: 6,
+        videoId: "JbWFzFxTxX4",
+        required: 1,
         groups: [
           [
+            "apa yang ada di pikiran mu untuk video diatas?",
             "Apa pemahaman Anda tentang perbedaan antara Autism dan ADHD?",
             "Bagaimana cara mengidentifikasi anak yang mengalami ODD di lingkungan sekolah?",
             "Apa peran guru dalam mendukung anak dengan gangguan perilaku di kelas inklusif?",
             "Mengapa kolaborasi dengan orang tua sangat penting dalam penanganan anak ABK?",
-            "Bagaimana strategi Anda dalam menghadapi anak yang menunjukkan perilaku agresif?",
             "Apa yang dimaksud dengan spektrum dalam Autistic Spectrum Disorder (ASD)?"
           ]
         ]

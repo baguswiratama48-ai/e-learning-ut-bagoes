@@ -228,6 +228,7 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
   const questions = getPemantikForStudent(user.nim || "0", config.content.groups);
   const requiredCount = config.content.required;
   const allAnswered = pemantikAnswers.every(a => a?.trim().length > 0);
+  const videoId = config.content.videoId;
   
   const onSubmit = () => {
     const combined = questions.map((q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${pemantikAnswers[i]}`).join("\n\n");
@@ -236,6 +237,25 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
 
   return (
     <div className="space-y-8 md:space-y-12">
+      {videoId && (
+        <Card className="overflow-hidden border-none shadow-2xl animate-in zoom-in duration-500">
+          <div className="aspect-video relative">
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${videoId}`}
+              title="Pemantik Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+          <div className="p-4 bg-slate-900 text-white flex items-center gap-3">
+             <span className="material-symbols-outlined text-yellow-400 animate-pulse">movie</span>
+             <span className="text-[10px] font-black uppercase tracking-widest">Simak video singkat di atas sebelum menjawab</span>
+          </div>
+        </Card>
+      )}
+
       <SectionHero 
         title="Pertanyaan Pemantik"
         subtitle={`Jawablah ${requiredCount} pertanyaan reflektif di bawah ini untuk memantapkan pemahaman Anda.`}
