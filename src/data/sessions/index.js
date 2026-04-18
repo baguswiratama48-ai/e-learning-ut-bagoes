@@ -1,7 +1,11 @@
 import { Sesi2_BK } from "./sesi2_bk";
+import { Sesi2_ABK } from "./sesi2_abk";
+import { Sesi2_Strategi } from "./sesi2_strategi";
 
 const ALL_SESSIONS = [
   Sesi2_BK,
+  Sesi2_ABK,
+  Sesi2_Strategi,
   // Sesi lainnya akan ditambahkan di sini
 ];
 

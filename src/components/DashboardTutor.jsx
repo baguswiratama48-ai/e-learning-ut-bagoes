@@ -158,7 +158,7 @@ export const DashboardTutor = ({
   const paginatedStudents = studentList.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   // --- CALCULATORS ---
   const calculateProgress = (studentEmail, meetingNum) => {
-    const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(meetingNum) === "2";
+    const isSesi2BK = (activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && String(meetingNum) === "2";
     let requiredMenus = ["Pertanyaan Pemantik", "Ayo Diskusi (LKPD)", "Kuis dan Latihan", "Refleksi"];
     
     if (isSesi2BK) {
@@ -190,7 +190,7 @@ export const DashboardTutor = ({
           <div className="w-full md:w-64 space-y-2">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 mb-4">Kategori Penilaian</p>
             {(() => {
-              const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(selectedMeeting) === "2";
+              const isSesi2BK = (activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && String(selectedMeeting) === "2";
               
               // Define the list of menus for this specific context
               let dynamicMenus = [...MENUS];
@@ -251,8 +251,8 @@ export const DashboardTutor = ({
                   <h4 className="text-2xl font-black text-slate-800 flex items-center gap-3">
                     <span className="w-2 h-10 bg-primary rounded-full shadow-sm shadow-primary/40"></span>
                     {(() => {
-                        const isSesi2BK = (activeTab === "1" || activeTab === "2") && String(selectedMeeting) === "2";
-                        if (isSesi2BK) {
+                        const isSpecialSesi2 = (activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && String(selectedMeeting) === "2";
+                        if (isSpecialSesi2) {
                           if (activeCorrectionTab === "Informasi Modul") return "RAT/SAT";
                           if (activeCorrectionTab === "Ayo Diskusi (LKPD)") return "LKM (Lembar Kerja Mahasiswa)";
                           if (activeCorrectionTab === "Kuis dan Latihan") return "Quiz";

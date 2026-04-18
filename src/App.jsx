@@ -763,10 +763,10 @@ function ClassMenu({ user }) {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {(() => {
           let visibleMenus = [...MENUS];
-          const isSesi2BK = (id === "1" || id === "2") && meetingId === "2";
+          const isSpecialSesi2 = (id === "1" || id === "2" || id === "3" || id === "4") && meetingId === "2";
 
           // Request: RAT/SAT, Pertanyaan Pemantik, Materi Pembelajaran, Video Pembelajaran, LKM, Quiz, Rangkuman, Refleksi
-          if (isSesi2BK) {
+          if (isSpecialSesi2) {
             visibleMenus = [
               "Informasi Modul",
               "Pertanyaan Pemantik",
@@ -784,14 +784,14 @@ function ClassMenu({ user }) {
             let menu = baseMenu;
             let label = baseMenu;
 
-            if (isSesi2BK) {
+            if (isSpecialSesi2) {
               if (menu === "Informasi Modul") label = "RAT/SAT";
               if (menu === "Ayo Diskusi (LKPD)") label = "LKM (Lembar Kerja Mahasiswa)";
               if (menu === "Kuis dan Latihan") label = "Quiz";
             }
 
             // Global mapping for Peta Konsep
-            if (menu === "Peta Konsep" && isSesi2BK) return null;
+            if (menu === "Peta Konsep" && isSpecialSesi2) return null;
 
             let iconName = "edit_document";
             let colorClass = "bg-blue-50 text-blue-600";
@@ -859,7 +859,7 @@ function SectionPage({ user }) {
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
   const [submissions, setSubmissions] = useState([]);
-  const [pemantikAnswers, setPemantikAnswers] = useState(Array((id === "1" || id === "2") ? 6 : 3).fill(""));
+  const [pemantikAnswers, setPemantikAnswers] = useState(Array((id === "1" || id === "2" || id === "3" || id === "4") ? 6 : 3).fill(""));
   const [tutorFeedback, setTutorFeedback] = useState(null);
 
   const isInput = [
