@@ -16,9 +16,9 @@ export const Sesi2_ABK = {
         sks: "4 SKS",
         // Deskripsi Singkat Mata Kuliah - Diketik persis tanpa perubahan
         description: `Mata kuliah Penanganan Anak Berkebutuhan Khusus (PAUD4208) membahas mengenai ragam permasalahan dan hambatan perkembangan yang terjadi pada anak usia dini, seperti : gangguan fisik, gangguan panca indera, gangguan autism, gangguan perilaku, gangguan belajar, gangguan bahasa, permasalahan perkembangan dengan rutinitas harian, gangguan attachment, anak yang mengalamai maltreatment, serta bentuk kerjasama untuk menangani anak nonnnormatif. Mata kuliah ini bermanfaat dalam mengidentifikasi serta mengambil tindakan yang tepat dalam penanganan anak berkebutuhan khusus sesuai dengan kapasitasnya sebagai pendidik dan tenaga kependidikan PAUD. Materi akan dibahas melalui penjelasan materi, pemberian contoh, dan pemecahan masalah. Penilaian terhadap pencapaian kompetensi dilakukan dengan memberikan tugas berupa latihan mengerjakan soal-soal atau kasus mengenai penanganan anak berkebutuhan khusus. Mata kuliah ini sangat erat dengan mata kuliah Psikologi Perkembangan Anak.`,
-        // Capaian Pembelajaran Mata Kuliah (CPMK) & Capaian Pembelajaran Khusus (CPK)
-        capaian: [
-          "Melalui mata kuliah Penanganan Anak Berkebutuhan Khusus (PAUD4208) mahasiswa diharapkan mampu menangani anak berkebutuhan khusus dengan perkembangan nonnormatif sesuai dengan kapasitasnya sebagai pendidik dan tenaga kependidikan PAUD.",
+        // Capaian Pembelajaran - Dipisahkan Umum dan Khusus sesuai permintaan
+        capaianUmum: "Melalui mata kuliah Penanganan Anak Berkebutuhan Khusus (PAUD4208) mahasiswa diharapkan mampu menangani anak berkebutuhan khusus dengan perkembangan nonnormatif sesuai dengan kapasitasnya sebagai pendidik dan tenaga kependidikan PAUD.",
+        capaianKhusus: [
           "1. Mahasiswa mampu menjelaskan cara menangani anak dengan autism",
           "2. Mahasiswa mampu menjelaskan cara menangani anak dengan ADD/ADHD*",
           "3. Mahasiswa mampu menjelaskan cara menangani anak dengan gangguan inteligensi (ringan, sedang, berat) dan gangguan Down Syndrome"

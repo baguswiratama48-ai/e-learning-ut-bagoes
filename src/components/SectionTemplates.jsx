@@ -65,23 +65,40 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
           </Card>
         )}
 
-        {/* Capaian Pembelajaran */}
+        {/* Capaian Pembelajaran - Dipisahkan antara Umum dan Khusus */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           <Card className="p-8 md:p-12 border-l-[12px] border-l-indigo-500 hover:shadow-2xl transition-shadow">
-            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-8 flex items-center gap-3">
               <span className="material-symbols-outlined text-indigo-500">emoji_events</span>
               Capaian Pembelajaran
             </h3>
-            <ul className="space-y-5 text-slate-700 text-sm md:text-base font-semibold">
-              {(capaian || []).map((item, i) => (
-                <li key={i} className="flex gap-4 items-start group">
-                  <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined text-[14px]">check</span>
-                  </div>
-                  <span className="leading-tight">{item}</span>
-                </li>
-              ))}
-            </ul>
+            
+            <div className="space-y-8">
+              {/* Capaian Umum - Jika tersedia */}
+              {config.content.capaianUmum && (
+                <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100">
+                  <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-3">Capaian Umum</h4>
+                  <p className="text-slate-700 text-sm md:text-base font-bold leading-relaxed italic">
+                    {config.content.capaianUmum}
+                  </p>
+                </div>
+              )}
+
+              {/* Capaian Khusus */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Capaian Khusus</h4>
+                <ul className="space-y-4 text-slate-700 text-sm md:text-base font-semibold">
+                  {(config.content.capaianKhusus || config.content.capaian || []).map((item, i) => (
+                    <li key={i} className="flex gap-4 items-start group">
+                      <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-indigo-500 group-hover:text-white transition-colors">
+                        <span className="material-symbols-outlined text-[14px]">check</span>
+                      </div>
+                      <span className="leading-tight">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </Card>
 
           {/* Sub Pokok Bahasan */}
