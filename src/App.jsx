@@ -765,36 +765,27 @@ function ClassMenu({ user }) {
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {(() => {
-          let visibleMenus = [...MENUS];
+          const sessionConfig = getSessionConfig(id, meetingId);
+          let visibleMenus = sessionConfig ? sessionConfig.sections.map(s => s.name) : [...MENUS];
           const isSpecialSesi2 = (id === "1" || id === "2" || id === "3" || id === "4") && meetingId === "2";
-
-          // Request: RAT/SAT, Pertanyaan Pemantik, Materi Pembelajaran, Video Pembelajaran, LKM, Quiz, Rangkuman, Refleksi
-          if (isSpecialSesi2) {
-            visibleMenus = [
-              "Informasi Modul",
-              "Pertanyaan Pemantik",
-              "Materi Pembelajaran",
-              "Video Pembelajaran",
-              "Pembagian Kelompok",
-              "Ayo Diskusi (LKPD)",
-              "Kuis dan Latihan",
-              "Rangkuman",
-              "Refleksi"
-            ];
-          }
 
           return visibleMenus.map((baseMenu, i) => {
             let menu = baseMenu;
             let label = baseMenu;
 
-            if (isSpecialSesi2) {
+            // Handle labels from config or legacy overrides
+            if (sessionConfig) {
+              const sect = sessionConfig.sections.find(s => s.name === menu);
+              if (sect?.label) label = sect.label;
+              else if (sect?.tutorLabel && (menu === "Ayo Diskusi" || menu === "Kuis dan Latihan")) label = sect.tutorLabel;
+            } else if (isSpecialSesi2) {
               if (menu === "Informasi Modul") label = "RAT/SAT";
               if (menu === "Ayo Diskusi (LKPD)") label = "LKM (Lembar Kerja Mahasiswa)";
               if (menu === "Kuis dan Latihan") label = "Quiz";
             }
 
-            // Global mapping for Peta Konsep
-            if (menu === "Peta Konsep" && isSpecialSesi2) return null;
+            // Global exclusion for Peta Konsep in Sesi 2+
+            if (menu === "Peta Konsep" && meetingId !== "1") return null;
 
             let iconName = "edit_document";
             let colorClass = "bg-blue-50 text-blue-600";
@@ -811,7 +802,7 @@ function ClassMenu({ user }) {
             } else if (menu === "Video Pembelajaran") {
               iconName = "play_circle";
               colorClass = "bg-rose-50 text-rose-600";
-            } else if (menu === "Ayo Diskusi (LKPD)") {
+            } else if (menu === "Ayo Diskusi (LKPD)" || menu === "Ayo Diskusi") {
               iconName = "assignment";
               colorClass = "bg-indigo-50 text-indigo-600";
             } else if (menu === "Kuis dan Latihan") {
