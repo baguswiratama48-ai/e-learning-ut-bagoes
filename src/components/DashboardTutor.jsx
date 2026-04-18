@@ -10,8 +10,8 @@ export const DashboardTutor = ({
   loading 
 }) => {
   // --- INTERNAL STATE ---
-  const [activeTab, setActiveTab] = useState("1"); // Default to Kelas 8B
-  const [selectedMeeting, setSelectedMeeting] = useState("1");
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem("tutor_active_tab") || "1");
+  const [selectedMeeting, setSelectedMeeting] = useState(() => localStorage.getItem("tutor_selected_meeting") || "1");
   const [groupCount, setGroupCount] = useState(5);
   const [generating, setGenerating] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,6 +21,15 @@ export const DashboardTutor = ({
   const [unlocking, setUnlocking] = useState(null);
   const [activeCorrectionTab, setActiveCorrectionTab] = useState(MENUS[0]);
   const [showGroupPreview, setShowGroupPreview] = useState(false);
+
+  // --- PERSISTENCE ---
+  useEffect(() => {
+    localStorage.setItem("tutor_active_tab", activeTab);
+  }, [activeTab]);
+
+  useEffect(() => {
+    localStorage.setItem("tutor_selected_meeting", selectedMeeting);
+  }, [selectedMeeting]);
 
   // Reset pagination and search when class or meeting changes
   useEffect(() => {
