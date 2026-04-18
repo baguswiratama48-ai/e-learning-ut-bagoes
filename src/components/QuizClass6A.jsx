@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 // 10 Soal Pool - setiap mahasiswa dapat 5 soal acak berdasarkan NIM/email
 const QUESTION_POOL = [
@@ -37,15 +37,33 @@ function seededShuffle(arr, seed) {
 }
 
 export default function QuizClass6A({ user, meetingId, submissions, onComplete }) {
-  // Pilih 5 soal acak berdasarkan email mahasiswa
+  // Pilih 5 soal acak berdasarkan email mahasiswa (konsisten, tidak berubah setiap render)
   const myQuestions = useMemo(() => {
     const seed = hashString((user?.email || "default") + String(meetingId));
     const shuffled = seededShuffle(QUESTION_POOL, seed);
     return shuffled.slice(0, 5);
   }, [user?.email, meetingId]);
 
-  const [answers, setAnswers] = useState(Array(5).fill(""));
+  // Kunci draft unik per mahasiswa dan per sesi
+  const draftKey = `quiz_6a_draft_${user?.email}_${meetingId}`;
+
+  // Inisialisasi jawaban dari localStorage jika ada (draft sebelumnya)
+  const [answers, setAnswers] = useState(() => {
+    try {
+      const saved = localStorage.getItem(draftKey);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return Array(5).fill("");
+  });
+
   const [loading, setLoading] = useState(false);
+
+  // Auto-save ke localStorage setiap kali jawaban berubah
+  useEffect(() => {
+    try {
+      localStorage.setItem(draftKey, JSON.stringify(answers));
+    } catch (e) {}
+  }, [answers, draftKey]);
 
   // Cek apakah sudah pernah submit
   const existingStatus = (submissions || []).find(
@@ -151,9 +169,14 @@ export default function QuizClass6A({ user, meetingId, submissions, onComplete }
                 spellCheck={false}
               />
               {isFilled && (
-                <div className="mt-2 flex items-center gap-2 text-emerald-600">
-                  <span className="material-symbols-outlined !text-[14px]">check_circle</span>
-                  <span className="text-[10px] font-black uppercase">Terjawab</span>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-emerald-600">
+                    <span className="material-symbols-outlined !text-[14px]">check_circle</span>
+                    <span className="text-[10px] font-black uppercase">Terjawab</span>
+                  </div>
+                  <span className="flex items-center gap-1 text-[9px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
+                    <span className="material-symbols-outlined !text-[11px]">save</span> Draft aman di perangkat Anda
+                  </span>
                 </div>
               )}
             </div>
