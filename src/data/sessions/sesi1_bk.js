@@ -1,7 +1,7 @@
 export const sesi1_bk = {
   id: "sesi1_bk",
   meetingId: "1",
-  classId: ["1", "2"], // 8B and 8C
+  classIds: ["1", "2"], // 8B and 8C
   sections: [
     {
       name: "Informasi Modul",
