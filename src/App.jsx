@@ -1042,7 +1042,15 @@ function SectionPage({ user }) {
           (id === "4" && sectionName === "Ayo Diskusi (LKPD)") ? (
         <div className="space-y-4">
           {id === "3" ? (
-             <LkpdClass6A user={user} classId={id} meetingId={meetingId} submissions={submissions} />
+             <LkpdClass6A 
+                user={user} 
+                classId={id} 
+                meetingId={meetingId} 
+                submissions={submissions} 
+                status={status}
+                loading={loading}
+                onComplete={(content) => handleAction(content)}
+             />
           ) : id === "4" ? (
              <LkpdClass5A user={user} meetingId={meetingId} submissions={submissions} onComplete={(content) => handleAction(content)} />
           ) : (

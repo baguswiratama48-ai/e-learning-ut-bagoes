@@ -1,455 +1,484 @@
-import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient'; // Ensure this path is correct
+import React, { useState, useEffect, useMemo } from 'react';
+import { supabase } from '../supabaseClient';
+import { STUDENTS } from '../data/students';
 
-const MODUL_1_QUESTIONS = [
-  "Pengertian Hakikat Perkembangan Anak yang Bersifat Nonnormatif",
-  "Penjelasan Kelainan/Abnormal: Model Medis (Medical Model)",
-  "Penjelasan Kelainan/Abnormal: Penyimpangan dari Rata-rata",
-  "Penjelasan Kelainan/Abnormal: Penyimpangan dari Ideal",
-  "Ciri-ciri Anak dengan Perkembangan Nonnormatif",
-  "Faktor yang Memengaruhi: Cetak Biru Biologis",
-  "Faktor yang Memengaruhi: Genetik atau Lingkungan",
-  "Faktor yang Memengaruhi: Konteks Sosial",
-  "Cara Identifikasi dan Penanganan: Wawancara",
-  "Cara Identifikasi dan Penanganan: Kuesioner",
-  "Cara Identifikasi dan Penanganan: Observasi"
-];
+const TASKS = {
+  1: {
+    title: "Anak Dengan Gangguan Autism",
+    questions: [
+      "Pengertian Autism",
+      "Sejarah autism",
+      "Penyebab Autism",
+      "Karakter utama anak dengan ganguan autism",
+      "karakter tambahan anak dengan ganguan autism",
+      "Strategi Anak dengan ganguan autism",
+      "Pihak yang terlibat dalam penangan anak dengan ganguan autisme",
+      "Penangan anak dengan ganguan autism oleh guru"
+    ]
+  },
+  2: {
+    title: "Anak Penyandang ADD/ADHD",
+    questions: [
+      "Pengertian ADD/ADHD",
+      "Karakteristik anak dengan ADD/ADHD",
+      "Penyebab ADD /ADHD",
+      "Penangan Ganguan Prilaku ADD/ADHD",
+      "Pihak Yang terlibat dalam penanganan anak penyandang ADD/ADHD"
+    ]
+  },
+  3: {
+    title: "Anak Penyandang ODD",
+    questions: [
+      "Pengertian gangguan Perilaku ODD",
+      "Karakteristik anak dengan ganguan Prilaku ODD",
+      "Penyebab gangguan Prilaku ODD",
+      "Penanganan Ganguan Prilaku ODD",
+      "Pihak yang berkaitan dengan penanganan anak penyandang ODD"
+    ]
+  },
+  4: {
+    title: "Anak Penyandang Intellectual Disability (ID)",
+    questions: [
+      "Pengertian Intellectual Disability",
+      "Klasifikasi Intellectual Disability",
+      "Karatkertistik anak dengan Intellectual Disability",
+      "Penyebab ganguan Intellectual Disability",
+      "Strategi penanganan anak dengan Intellectual Disability",
+      "Pihak yang berperan dalam penanganan anak dengan Intellectual Disability"
+    ]
+  },
+  5: {
+    title: "Anak Dengan Down Syndrom (DS)",
+    questions: [
+      "Pengertian Down Syndrom",
+      "Penyebab Down Syndrom",
+      "Karateristik anak dengan Down Syndrom",
+      "Strategi penanganan anak dengan Down Syndrom",
+      "Pihak yang berperan dalam penanganan anak dengan Down Syndrom"
+    ]
+  }
+};
 
-const MODUL_2_QUESTIONS = [
-  "Batasan Cerebral Palsy",
-  "Tipe-tipe Cerebral Palsy",
-  "Karakteristik Anak dengan Cerebral Palsy",
-  "Strategi Penanganan Anak dengan Cerebral Palsy",
-  "Pengertian Anak yang Rentan Sakit",
-  "Penyakit yang Umum Diderita Anak: Karakteristik Anak dan Penanganannya"
-];
+export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete, status, loading }) => {
+  // Parsing group
+  const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(meetingId));
+  const groupsData = groupRow ? JSON.parse(groupRow.content) : null;
 
-const MODUL_3_QUESTIONS = [
-  "Batasan dan Penggolongan Gangguan Pendengaran",
-  "Identifikasi Anak dengan Gangguan Pendengaran",
-  "Karakteristik Anak dengan Gangguan Pendengaran",
-  "Strategi Penanganan Anak dengan Gangguan Pendengaran",
-  "Batasan Gangguan Penglihatan",
-  "Identifikasi Anak dengan Gangguan Penglihatan",
-  "Karakteristik Anak dengan Gangguan Penglihatan",
-  "Strategi Penanganan Anak dengan Gangguan Penglihatan"
-];
+  const myGroupInfo = useMemo(() => {
+    if (!groupsData) return null;
+    return groupsData.find(g => g.members.some(m => m.email === user.email));
+  }, [groupsData, user.email]);
 
-export const LkpdClass6A = ({
-  user,
-  meetingId,
-  submissions: initialSubmissions,
-  classId
-}) => {
-  const [liveData, setLiveData] = useState([]);
-  const [formData, setFormData] = useState({});
-  const [loadingItems, setLoadingItems] = useState({});
-  const [syncStatus, setSyncStatus] = useState({}); // 'draft', 'syncing', 'saved', 'error'
+  const groupNumber = myGroupInfo ? myGroupInfo.group_num : 1;
+  // Rotasi 5 tugas
+  const taskKey = ((groupNumber - 1) % 5) + 1; 
+  const currentTask = TASKS[taskKey];
+
+  // Local Storage Draft ID
+  const draftKey = `lkm_draft_6a_${user?.email}_${classId}_${meetingId}`;
+
+  const [activeTab, setActiveTab] = useState("MY_LKM");
+  const [answers, setAnswers] = useState(() => {
+     const saved = localStorage.getItem(draftKey);
+     if (saved) {
+         try { return JSON.parse(saved); } catch(e) {}
+     }
+     return Array(currentTask.questions.length).fill("");
+  });
+
   const [commentInputs, setCommentInputs] = useState({});
+  const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
 
-  const STORAGE_KEY = `lkpd_draft_${user.email}_${meetingId}`;
-
-  // 1. Load Draft from LocalStorage on mount
+  // Save to local storage automatically
   useEffect(() => {
-    const savedDraft = localStorage.getItem(STORAGE_KEY);
-    if (savedDraft) {
-      try {
-        setFormData(JSON.parse(savedDraft));
-      } catch (e) {
-        console.error("Failed to parse draft", e);
-      }
-    }
-  }, [meetingId]);
+     localStorage.setItem(draftKey, JSON.stringify(answers));
+  }, [answers, draftKey]);
 
-  // Save to LocalStorage whenever formData changes
-  useEffect(() => {
-    if (Object.keys(formData).length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-    }
-  }, [formData]);
+  // Validations: Minimal 5 soal untuk bisa submit (mengantisipasi tugas yang pendek)
+  const answeredCount = answers.filter(a => a.trim().length >= 10).length;
+  const isFormComplete = answeredCount >= Math.min(currentTask.questions.length, 5);
+  const remainingRequired = Math.max(0, Math.min(currentTask.questions.length, 5) - answeredCount);
 
-  // 1. Dapatkan Grup & Ketua
-  const groupRow = initialSubmissions.find(
-    (s) => s.student_email === "SYSTEM_GROUP" && String(s.meeting_num) === String(meetingId) && String(s.class_id) === String(classId || '3')
-  );
-  const allGroups = groupRow ? JSON.parse(groupRow.content) : [];
-  const myGroup = allGroups.find(g => g.members.some(m => m.email === user.email));
-  const activeGroupNum = myGroup ? myGroup.group_num : 1;
-  const isLeader = myGroup 
-    ? !!myGroup.members.find(m => m.email === user.email)?.isLeader 
-    : user.email === "demo@ecampus.ut.ac.id"; // demo is leader of group 1
+  // Data fetching from props (submissions)
+  const allForumPosts = useMemo(() => {
+    return (submissions || [])
+      .filter(s => s.section_name === "LKM_6A_FORUM_POST")
+      .map(p => {
+         try { return { ...p, parsed: JSON.parse(p.content) }; } catch(e) { return {...p, parsed: {}};}
+      })
+      .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [submissions]);
 
-  const currentQuestions = activeGroupNum === 1 ? MODUL_1_QUESTIONS : activeGroupNum === 2 ? MODUL_2_QUESTIONS : MODUL_3_QUESTIONS;
+  const allComments = useMemo(() => {
+    return (submissions || [])
+      .filter(s => s.section_name === "LKM_6A_COMMENT")
+      .map(c => {
+         try { return { ...c, parsed: JSON.parse(c.content) }; } catch(e) { return {...c, parsed: {targetId: null, comment: ""}};}
+      })
+      .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+  }, [submissions]);
 
-  // 2. Local fetcher for Discussion
-  const fetchLiveDiscussions = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('submissions')
-        .select('*')
-        .eq('class_id', classId || '3')
-        .eq('meeting_num', meetingId)
-        .in('section_name', ['LKPD_6A_DISCUSSION']);
-      if (data) setLiveData(data);
-    } catch(err) {
-      console.error(err);
-    }
+  const getStudentProfile = (email) => {
+    const student = STUDENTS.find(s => s.email === email);
+    if (student) return { name: student.name, nim: student.nim };
+    const parts = email.split('@')[0].split('.');
+    return { name: parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' '), nim: "N/A" };
   };
 
-  useEffect(() => {
-    fetchLiveDiscussions();
-    const interval = setInterval(fetchLiveDiscussions, 10000); // auto refresh every 10s
-    return () => clearInterval(interval);
-  }, [meetingId, classId]);
+  const getStudentGroup = (email) => {
+    if (!groupsData) return null;
+    const g = groupsData.find(grp => grp.members.some(m => m.email === email));
+    return g ? g.group_num : null;
+  };
 
-  if (!groupRow || allGroups.length === 0) {
+  const handleShareToForum = async (idx) => {
+     const answerText = answers[idx];
+     if(!answerText || answerText.trim().length < 10) return;
+     
+     setLoadingAction({ type: 'share', id: idx });
+     try {
+         const payload = {
+            student_email: user.email,
+            class_id: classId,
+            meeting_num: meetingId,
+            section_name: "LKM_6A_FORUM_POST",
+            content: JSON.stringify({ 
+                questionIndex: idx, 
+                questionText: currentTask.questions[idx], 
+                answerText: answerText,
+                groupNum: groupNumber
+            })
+         };
+         await supabase.from("submissions").insert([payload]);
+         alert('Berhasil dibagikan ke forum diskusi!');
+         window.location.reload();
+     } catch (err) {
+         console.error(err);
+         alert('Gagal membagikan.');
+     }
+     setLoadingAction({ type: null, id: null });
+  };
+
+  const handleAddComment = async (targetId) => {
+     const commentInput = commentInputs[targetId];
+     if(!commentInput || commentInput.trim().length === 0) return;
+     
+     setLoadingAction({ type: 'comment', id: targetId });
+     try {
+         const payload = {
+            student_email: user.email,
+            class_id: classId,
+            meeting_num: meetingId,
+            section_name: "LKM_6A_COMMENT",
+            content: JSON.stringify({ targetId, comment: commentInput })
+         };
+         await supabase.from("submissions").insert([payload]);
+         setCommentInputs({...commentInputs, [targetId]: ""});
+         window.location.reload();
+     } catch (err) {
+         console.error(err);
+         alert("Gagal mengirim komentar.");
+     }
+     setLoadingAction({ type: null, id: null });
+  };
+
+  const handleFinalSubmit = async () => {
+    if (!isFormComplete) return;
+    
+    let docContent = `LEMBAR KERJA MAHASISWA (LKM) ABK\nTopik Pokok: ${currentTask.title}\nKelompok: ${groupNumber}\n\n`;
+    currentTask.questions.forEach((q, idx) => {
+      docContent += `Soal ${idx + 1}:\n${q}\n\nJawaban:\n${answers[idx] || "-"}\n\n`;
+    });
+
+    await onComplete(docContent);
+  };
+
+  if (!groupsData) {
     return (
-      <div className="bg-white border-2 border-dashed border-slate-200 p-10 rounded-[2.5rem] text-center mt-10">
-         <span className="material-symbols-outlined text-5xl text-slate-300 mb-4 animate-bounce">group_add</span>
-         <h3 className="font-black text-xl text-slate-800 mb-2">Tutor Belum Membagi Kelompok</h3>
-         <p className="text-slate-500 font-medium text-sm">Harap tunggu sampai Tutor Anda mengacak kelompok untuk sesi pertemuan ini sebelum dapat memulai Misi Pencarian Materi LKPD Anda.</p>
+      <div className="bg-rose-50 border border-rose-200 p-10 rounded-[3rem] text-center flex flex-col items-center mt-10">
+        <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center text-rose-500 mb-6">
+          <span className="material-symbols-outlined text-5xl">group_off</span>
+        </div>
+        <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Kelompok Belum Dibentuk</h3>
+        <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
+          Tutor belum melakukan pengacakan kelompok untuk Sesi 2 ini. Anda belum bisa mengerjakan LKM.
+        </p>
       </div>
     );
   }
 
-  // --- Handlers ---
-  const handlePostAnswer = async (questionText, qIdx) => {
-    const val = formData[questionText];
-    if (!val || val.trim().length === 0) return;
-    
-    setSyncStatus(prev => ({...prev, [questionText]: 'syncing'}));
-    
-    const payload = {
-      student_email: user.email,
-      class_id: String(classId || '3'),
-      meeting_num: String(meetingId),
-      section_name: 'LKPD_6A_DISCUSSION',
-      content: JSON.stringify({
-        type: 'answer',
-        groupNum: activeGroupNum,
-        questionId: questionText,
-        text: val,
-        authorName: user.name || user.email.split('@')[0],
-        authorNim: user.nim || "N/A",
-        timestamp: new Date().toISOString()
-      })
-    };
-
-    try {
-      // Robust Check: Find ONLY this specific student's previous answer for this question
-      // This prevents teammates in the same group from overwriting each other.
-      const existing = liveData.find(d => {
-         try {
-            const p = JSON.parse(d.content);
-            return d.student_email === user.email && 
-                   p.type === 'answer' && 
-                   p.questionId === questionText &&
-                   String(d.class_id) === String(classId || '3') &&
-                   String(d.meeting_num) === String(meetingId);
-         } catch(e){return false;}
-      });
-
-      let res;
-      if (existing) {
-         res = await supabase.from('submissions').update({content: payload.content}).eq('id', existing.id);
-      } else {
-         res = await supabase.from('submissions').insert([payload]);
-      }
-      
-      if (res.error) throw res.error;
-
-      setSyncStatus(prev => ({...prev, [questionText]: 'saved'}));
-      await fetchLiveDiscussions();
-    } catch(err) {
-      console.error("CRITICAL_SAVE_ERROR:", err);
-      setSyncStatus(prev => ({...prev, [questionText]: 'error'}));
-      alert(`Gagal menyimpan ke server: ${err.message || "Koneksi terputus"}. \n\nTenang Pak/Bu, jawaban Anda aman di browser ini. Silakan klik SIMPAN lagi.`);
-    } finally {
-      setLoadingItems(prev => ({...prev, [questionText]: false}));
-    }
-  };
-
-  const handlePostComment = async (targetGroupNum, questionId) => {
-    const key = `${targetGroupNum}_${questionId}`;
-    const txt = commentInputs[key];
-    if (!txt || txt.trim().length === 0) return;
-
-    const payload = {
-      student_email: user.email,
-      class_id: classId || '3',
-      meeting_num: meetingId,
-      section_name: 'LKPD_6A_DISCUSSION',
-      content: JSON.stringify({
-        type: 'comment',
-        targetGroupNum: targetGroupNum,
-        questionId: questionId,
-        text: txt,
-        authorName: user.name || user.email.split('@')[0],
-        authorNim: user.nim || "N/A",
-        authorGroup: activeGroupNum || 0,
-        timestamp: new Date().toISOString()
-      })
-    };
-
-    try {
-      await supabase.from('submissions').insert([payload]);
-      setCommentInputs({...commentInputs, [key]: ''});
-      await fetchLiveDiscussions();
-    } catch (e) {
-      alert("Gagal mengirim komentar.");
-    }
-  };
-
-  // --- Rendering Helpers ---
-  // Get all parsed data
-  const parsedData = liveData.map(d => {
-    try { return { ...d, _p: JSON.parse(d.content) } } 
-    catch(e) { return null }
-  }).filter(Boolean);
-
-  const getMyAnswerText = (groupNum, questionId) => {
-     const ansRow = parsedData.find(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId && d.student_email === user.email);
-     return ansRow ? ansRow._p.text : null;
-  };
-
-  const getGroupAnswers = (groupNum, questionId) => {
-    return parsedData.filter(d => d._p.type === 'answer' && d._p.groupNum === groupNum && d._p.questionId === questionId)
-                     .sort((a,b) => new Date(b._p.timestamp) - new Date(a._p.timestamp)); // Newest first
-  };
-
-  const getComments = (groupNum, questionId) => {
-     return parsedData.filter(d => d._p.type === 'comment' && d._p.targetGroupNum === groupNum && d._p.questionId === questionId)
-                      .sort((a,b) => new Date(a._p.timestamp) - new Date(b._p.timestamp));
-  };
-
+  if (!myGroupInfo) {
+    return (
+      <div className="bg-amber-50 border border-amber-200 p-10 rounded-[3rem] text-center flex flex-col items-center mt-10">
+        <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-amber-500 mb-6">
+          <span className="material-symbols-outlined text-5xl">person_off</span>
+        </div>
+        <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Tidak Ada Kelompok</h3>
+        <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
+          Akun Anda tidak terdaftar dalam kelompok sesi ini. Harap hubungi Tutor Bapak Bagus.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 md:space-y-12 pb-10">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500 pb-20">
       
-      {/* HEADER INFO */}
-      <div className="bg-slate-900 text-white rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden border-b-8 border-b-yellow-400 mt-8">
-         <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
-         <div className="relative z-10 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
-            <div>
-              <h1 className="font-headline font-black text-2xl md:text-4xl mb-3 tracking-tight leading-tight">Misi Kelompok {activeGroupNum} (Modul {activeGroupNum})</h1>
-              <p className="text-slate-400 text-xs md:text-sm font-medium max-w-2xl leading-relaxed mb-6">
-                Ini adalah ruang diskusi kolaboratif. Begitu Anda atau anggota kelompok Anda klik <span className="text-white font-bold">SIMPAN KE SERVER</span>, jawaban tersebut akan <span className="text-yellow-400 font-black">OTOMATIS TAYANG</span> di Pusat Diskusi untuk dikomentari oleh kelompok lain.
+      {/* HEADER TUGAS */}
+      <div className="bg-gradient-to-br from-[#1e293b] to-slate-900 border border-slate-700 p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl text-white mt-10">
+        <div className="absolute -right-10 -top-10 opacity-10 pointer-events-none text-yellow-400">
+          <span className="material-symbols-outlined text-[200px]">psychology</span>
+        </div>
+        <div className="relative z-10">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+             <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
+               <span className="material-symbols-outlined text-[14px]">groups</span>
+               LKM ABK Kelompok {groupNumber}
+             </div>
+             
+             {/* Tabs Toggle */}
+             <div className="flex bg-slate-800 rounded-2xl p-1.5 backdrop-blur-md">
+               <button
+                  onClick={() => setActiveTab("MY_LKM")}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "MY_LKM" ? "bg-white text-slate-900 shadow-md scale-100" : "text-slate-400 hover:text-white"}`}
+               >
+                  LKM SAYA (DRAFT)
+               </button>
+               <button
+                  onClick={() => setActiveTab("FORUM")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "FORUM" ? "bg-white text-slate-900 shadow-md scale-100" : "text-slate-400 hover:text-white"}`}
+               >
+                  FORUM DISKUSI <span className="bg-indigo-500 text-white px-1.5 py-0.5 rounded-md text-[9px] font-black">{allForumPosts.length}</span>
+               </button>
+             </div>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 leading-tight">
+            {currentTask.title}
+          </h2>
+          <p className="text-slate-400 text-sm font-medium">
+             {activeTab === "MY_LKM" ? "Analisis topik ABK kelompok Anda dan simpan jawaban per soal." : "Tanggapi hasil analisis dari kelompok ABK lainnya."}
+          </p>
+        </div>
+      </div>
+
+      {activeTab === "MY_LKM" && (
+        <div className="space-y-6">
+          {status ? (
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-200 p-8 md:p-12 rounded-[3rem] text-center flex flex-col items-center shadow-xl shadow-indigo-100/50">
+              <div className="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mb-6 shadow-inner text-indigo-500">
+                <span className="material-symbols-outlined text-6xl">verified</span>
+              </div>
+              <h4 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">Tugas LKM ABK Terkirim!</h4>
+              <p className="text-slate-600 mb-8 max-w-md mx-auto">
+                Anda telah menyelesaikan tugas pencarian materi ABK. Silakan pantau Tab <b>Forum Diskusi</b> untuk melihat tanggapan teman sejawat.
               </p>
-              <div className="inline-flex flex-wrap items-center gap-3 bg-white bg-opacity-10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white border-opacity-10">
-                <span className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-black text-slate-900 shrink-0 text-xl">
-                    {activeGroupNum}
-                </span>
-                <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-300 mb-0.5">Role / Jabatan Anda</p>
-                    <p className="font-bold text-xs flex items-center gap-1">
-                      {isLeader ? <><span className="material-symbols-outlined text-sm text-yellow-400">workspace_premium</span> Ketua Kelompok {activeGroupNum}</> : `Anggota Kelompok ${activeGroupNum}`}
-                    </p>
-                </div>
+              <div className="bg-white p-6 md:p-8 rounded-3xl w-full text-left shadow-sm border border-indigo-100 max-w-3xl">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Ringkasan Pengiriman Akhir:</p>
+                <div className="text-sm text-slate-700 leading-relaxed font-medium font-serif whitespace-pre-wrap">{status.content}</div>
               </div>
             </div>
-            {!isLeader && (
-              <div className="bg-emerald-800 bg-opacity-40 border border-emerald-700 px-5 py-4 rounded-2xl w-full md:w-auto">
-                 <p className="text-emerald-300 font-bold mb-1 text-sm"><span className="material-symbols-outlined text-sm inline-block translate-y-0.5">public</span> Publikasi Otomatis Aktif</p>
-                 <p className="text-xs text-emerald-100/70 leading-relaxed max-w-[200px]">Setiap modul yang Anda simpan akan langsung rilis ke tayangan publik kelompok lain.</p>
+          ) : (
+            <div className="bg-white rounded-[2.5rem] p-6 md:p-8 text-slate-800 shadow-xl shadow-slate-200/50 border border-slate-100 space-y-8">
+              
+              <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl flex items-start md:items-center gap-3">
+                 <span className="material-symbols-outlined text-indigo-500 mt-1 md:mt-0 !text-[20px]">info</span>
+                 <p className="text-xs text-indigo-700 font-bold leading-relaxed">
+                   Setiap jawaban otomatis tersimpan di browser. Anda harus mengisi minimal 5 soal untuk dapat mengirim tugas akhir ke Tutor.
+                 </p>
               </div>
-            )}
-         </div>
-      </div>
 
-      {/* TUGAS UTAMA (Hanya Ketua yang bisa isi) */}
-      <div className="bg-white rounded-3xl shadow-xl shadow-slate-200 shadow-opacity-40 p-5 md:p-8 border border-slate-100 relative">
-        <div className={`absolute top-0 left-0 w-2 h-full rounded-l-3xl ${activeGroupNum === 1 ? 'bg-indigo-500' : activeGroupNum === 2 ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-        <div className="mb-6 flex justify-between items-center">
-            <h3 className="font-black text-xl text-slate-800">Draft Pengerjaan Topik Modul {activeGroupNum}</h3>
-               <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full animate-pulse flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">public</span> Jawaban Langsung Tayang ke Publik</span>
-        </div>
-        
-        <div className="space-y-6">
-            {currentQuestions.map((questionText, idx) => {
-               const savedAnswer = getMyAnswerText(activeGroupNum, questionText);
-               const status = syncStatus[questionText] || (savedAnswer ? 'saved' : 'none');
+              {currentTask.questions.map((question, idx) => {
+                const isShared = allForumPosts.some(p => p.student_email === user.email && p.parsed.questionIndex === idx);
+                const answerMissing = (answers[idx] || "").trim().length < 10;
 
-               return (
-                <div key={idx} className="bg-slate-50 p-4 md:p-6 rounded-2xl border border-slate-100 relative group transition-all hover:shadow-md">
-                  <label className="block text-xs md:text-sm font-bold text-slate-800 mb-3 leading-snug flex items-center gap-2">
-                    <span className="inline-block bg-white text-slate-500 px-2.5 py-1 rounded-lg text-[10px] font-black border border-slate-200">{idx+1}</span>
-                    {questionText}
-                  </label>
-
-                  <div className="relative">
-                    <textarea
-                      value={formData[questionText] || savedAnswer || ""}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [questionText]: e.target.value });
-                        setSyncStatus({ ...syncStatus, [questionText]: 'draft' });
-                      }}
-                      placeholder="Tuliskan hasil temuan materi Anda di sini..."
-                      className={`w-full min-h-[160px] p-5 rounded-2xl border transition-all resize-none text-slate-700 text-sm md:text-base leading-relaxed font-medium outline-none ${
-                        status === 'error' ? 'border-rose-300 bg-rose-50' : 
-                        status === 'saved' ? 'border-emerald-100 bg-white' : 
-                        'border-slate-200 bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10'
-                      }`}
-                    ></textarea>
-                    
-                    {/* Status Indicators overlay */}
-                    <div className="absolute top-3 right-3 flex items-center gap-2">
-                       {status === 'draft' && (
-                         <span className="flex items-center gap-1 text-[9px] font-black text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200 animate-pulse">
-                            <span className="material-symbols-outlined text-[12px]">edit_note</span> DRAFT DI BROWSER
-                         </span>
-                       )}
-                       {status === 'syncing' && (
-                         <span className="flex items-center gap-1 text-[9px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md border border-indigo-100">
-                            <span className="material-symbols-outlined text-[12px] animate-spin">sync</span> SEDANG MENGIRIM...
-                         </span>
-                       )}
-                       {status === 'saved' && (
-                         <span className="flex items-center gap-1 text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
-                            <span className="material-symbols-outlined text-[12px]">check_circle</span> TERSEDIA DI SERVER
-                         </span>
-                       )}
-                       {status === 'error' && (
-                         <span className="flex items-center gap-1 text-[9px] font-black text-rose-600 bg-rose-50 px-2 py-1 rounded-md border border-rose-100 shadow-sm">
-                            <span className="material-symbols-outlined text-[12px]">error</span> GAGAL SIMPAN
-                         </span>
-                       )}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex justify-end items-center gap-4">
-                    {status === 'error' && (
-                       <p className="text-[10px] font-bold text-rose-500 animate-bounce">Tulisannya aman (ada di browser), silakan klik SIMPAN lagi ↑</p>
-                    )}
-                    <button
-                      onClick={() => handlePostAnswer(questionText, idx)}
-                      disabled={loadingItems[questionText] || status === 'syncing'}
-                      className={`px-8 py-2.5 rounded-xl font-black text-[10px] tracking-widest flex items-center gap-2 transform active:scale-95 transition-all shadow-md group-hover:shadow-lg ${
-                        status === 'saved' 
-                        ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200' 
-                        : status === 'error'
-                        ? 'bg-rose-600 text-white hover:bg-rose-700'
-                        : 'bg-slate-900 text-white hover:bg-black'
-                      }`}
-                    >
-                      {status === 'syncing' ? "SEDANG MENGIRIM..." : status === 'saved' ? "PERBARUI JAWABAN" : "SIMPAN KE SERVER"}
-                      <span className="material-symbols-outlined text-sm font-black">
-                        {status === 'saved' ? 'verified' : 'cloud_upload'}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-            )})}
-        </div>
-      </div>
-
-      {/* GALLERY OF DISCUSSIONS (INTERACTIVE THREAD) */}
-      <div className="bg-indigo-50 bg-opacity-50 border border-indigo-100 rounded-[2.5rem] p-5 md:p-10 mt-16 shadow-inner">
-         <div className="text-center mb-10 md:mb-12">
-            <h2 className="font-headline font-black text-2xl md:text-3xl text-indigo-900 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-3 mb-3">
-               <span className="material-symbols-outlined text-4xl text-indigo-500 mb-2 md:mb-0">forum</span>
-               Pusat Diskusi LKPD
-            </h2>
-            <p className="text-indigo-700 text-xs md:text-sm font-medium px-4">Ruang debat dan tanya jawab silang antar Modul 1, 2, dan 3.</p>
-         </div>
-
-         <div className="space-y-16">
-            {[1, 2, 3].map(gNum => {
-               const questionsArray = gNum === 1 ? MODUL_1_QUESTIONS : gNum === 2 ? MODUL_2_QUESTIONS : MODUL_3_QUESTIONS;
-               const answersByThisGroup = parsedData.filter(d => d._p.type === 'answer' && d._p.groupNum === gNum);
-               
-               if (answersByThisGroup.length === 0) {
-                  return (
-                    <div key={gNum} className="text-center bg-white p-8 rounded-3xl border border-indigo-100 shadow-sm opacity-60">
-                       <h4 className="font-black text-indigo-800 text-lg mb-2">Modul {gNum} (Kelompok {gNum})</h4>
-                       <p className="text-sm text-slate-400 font-medium ita">Kelompok ini belum mem-posting topik apapun ke panel diskusi.</p>
-                    </div>
-                  );
-               }
-
-               return (
-                 <div key={gNum} className="space-y-6">
-                    <div className="flex items-center gap-4 mb-2">
-                       <span className="w-12 h-12 bg-white flex items-center justify-center rounded-2xl font-black text-xl text-indigo-600 shadow-sm border border-indigo-100">M{gNum}</span>
-                       <div>
-                         <h3 className="font-black text-2xl text-slate-800">Materi Modul {gNum}</h3>
-                         <p className="text-sm font-medium text-slate-500">Dipresentasikan oleh Kelompok {gNum}</p>
+                return (
+                 <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl p-6 transition-colors focus-within:bg-white focus-within:border-indigo-400 relative">
+                   {isShared && (
+                       <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl rounded-tr-3xl flex items-center gap-1 shadow-md">
+                           <span className="material-symbols-outlined !text-[12px]">public</span> Tayang di Forum
                        </div>
-                    </div>
-                    
-                    {questionsArray.map((qText, qIdx) => {
-                       const groupAnswers = getGroupAnswers(gNum, qText);
-                       if (groupAnswers.length === 0) return null;
+                   )}
+                   <div className="flex gap-4 mb-4 items-start pr-12">
+                     <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-white font-black text-sm shrink-0 shadow-md">
+                       {idx + 1}
+                     </div>
+                     <p className="font-bold text-slate-700 leading-relaxed mt-1 text-sm md:text-base">{question}</p>
+                   </div>
+                   
+                   <div className="relative mb-4">
+                       <textarea
+                         value={answers[idx] || ""}
+                         onChange={(e) => {
+                           const newAnswers = [...answers];
+                           newAnswers[idx] = e.target.value;
+                           setAnswers(newAnswers);
+                         }}
+                         className="w-full min-h-[140px] bg-white border border-slate-200 rounded-2xl p-5 text-sm md:text-base outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-y placeholder:text-slate-300"
+                         placeholder="Uraikan jawaban Anda di sini..."
+                         autoComplete="off"
+                         spellCheck={false}
+                       ></textarea>
+                   </div>
 
-                       const comments = getComments(gNum, qText);
-
-                       return (
-                         <div key={qIdx} className="bg-white rounded-3xl border border-indigo-100 shadow-sm overflow-hidden flex flex-col md:flex-row">
-                            {/* LEFT SIDE: POSTS (Possibly multiple) */}
-                            <div className="w-full md:w-1/2 p-6 md:p-8 bg-white md:border-r border-indigo-50 border-b md:border-b-0 space-y-8">
-                               {groupAnswers.map((ans, ai) => (
-                                 <div key={ai} className={ai > 0 ? "pt-8 border-t border-slate-100" : ""}>
-                                   <div className="flex items-center gap-2 mb-4">
-                                      <span className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center"><span className="material-symbols-outlined text-[14px] text-indigo-600">person</span></span>
-                                      <div>
-                                         <p className="font-bold text-xs text-slate-800">
-                                           {ans._p.authorName} <span className="text-[10px] text-slate-400 font-normal">({ans._p.authorNim || "N/A"})</span>
-                                           <span className="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider ml-1">Kontributor Kel. {gNum}</span>
-                                         </p>
-                                         <p className="text-[10px] text-slate-400 font-medium">{new Date(ans._p.timestamp).toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' })} • Topik Utama</p>
-                                      </div>
-                                   </div>
-                                   <h4 className="font-black text-sm text-indigo-900 mb-3 leading-snug break-words">{qText}</h4>
-                                   <p className="text-sm text-slate-600 font-serif leading-relaxed text-justify whitespace-pre-line bg-slate-50/50 p-4 rounded-2xl">{ans._p.text}</p>
-                                 </div>
-                               ))}
-                            </div>
-
-                            {/* RIGHT SIDE: THREAD */}
-                            <div className="w-full md:w-1/2 bg-slate-50 p-6 flex flex-col">
-                               <p className="text-xs font-black uppercase text-slate-400 mb-4 tracking-widest flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">forum</span> Komentar & Diskusi ({comments.length})</p>
-                               
-                               <div className="flex-1 overflow-y-auto mb-4 space-y-4 max-h-[300px] custom-scrollbar pr-2">
-                                  {comments.map((c, ci) => (
-                                     <div key={ci} className={`p-4 rounded-2xl ${c._p.authorGroup === gNum ? 'bg-indigo-100 bg-opacity-50 ml-6 border border-indigo-200' : 'bg-white border border-slate-200 mr-6 shadow-sm'}`}>
-                                        <div className="flex items-center gap-1.5 mb-1.5">
-                                           <span className="material-symbols-outlined text-[14px] text-slate-400">person</span>
-                                           <p className="text-[10px] font-bold text-slate-700">
-                                             {c._p.authorName} <span className="text-[9px] text-slate-400 font-normal">({c._p.authorNim || "N/A"})</span>
-                                             <span className="font-medium opacity-60 ml-1">(Kelompok {c._p.authorGroup})</span>
-                                           </p>
-                                        </div>
-                                        <p className="text-xs text-slate-600 leading-relaxed font-serif break-words">{c._p.text}</p>
-                                     </div>
-                                  ))}
-                                  {comments.length === 0 && <p className="text-[10px] font-bold italic text-slate-400 text-center py-6">Jadilah yang pertama mengkritisi presentasi ini...</p>}
-                               </div>
-
-                               <div className="flex gap-2">
-                                  <input 
-                                     type="text" 
-                                     placeholder={`Tanggapi tulisan / tanya ke ketua kelompok ${gNum}...`}
-                                     className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs focus:border-indigo-500 focus:ring-1 outline-none"
-                                     value={commentInputs[`${gNum}_${qText}`] || ""}
-                                     onChange={e => setCommentInputs({...commentInputs, [`${gNum}_${qText}`]: e.target.value})}
-                                     onKeyDown={e => e.key === 'Enter' && handlePostComment(gNum, qText)}
-                                  />
-                                  <button 
-                                     onClick={() => handlePostComment(gNum, qText)}
-                                     className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-xl flex items-center justify-center transition-colors shadow-sm"
-                                  >
-                                     <span className="material-symbols-outlined text-[16px]">send</span>
-                                  </button>
-                               </div>
-                            </div>
-                         </div>
-                       );
-                    })}
+                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                       <div className="flex items-center gap-2 self-start md:self-center">
+                           {answerMissing ? (
+                              <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-lg text-xs font-bold">Harap isi &gt; 10 karakter</span>
+                           ) : (
+                              <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                                 <span className="material-symbols-outlined !text-[14px]">save</span>Draft Tersimpan
+                              </span>
+                           )}
+                       </div>
+                       
+                       <button 
+                           onClick={() => handleShareToForum(idx)}
+                           disabled={isShared || answerMissing || loadingAction.type === 'share'}
+                           className={`w-full md:w-auto px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${isShared ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 cursor-not-allowed' : 'bg-indigo-600 text-white hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100'}`}
+                       >
+                           {loadingAction.type === 'share' && loadingAction.id === idx ? (
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                           ) : isShared ? (
+                                <><span className="material-symbols-outlined !text-[18px]">check_circle</span> Sudah di Forum</>
+                           ) : (
+                                <><span className="material-symbols-outlined !text-[18px]">share</span> Bagikan Ke Forum</>
+                           )}
+                       </button>
+                   </div>
                  </div>
-               );
-            })}
-         </div>
-      </div>
+                );
+              })}
 
+              {/* GLOBAL SUBMIT SECTION */}
+              <div className="pt-8 mt-4 border-t-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-4 text-center">
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 ${isFormComplete ? 'bg-emerald-100 text-emerald-600 shadow-inner' : 'bg-rose-100 text-rose-500 shadow-inner'}`}>
+                    <span className="material-symbols-outlined text-3xl">{isFormComplete ? 'task_alt' : 'priority_high'}</span>
+                </div>
+                <div>
+                   <h3 className="text-xl font-black text-slate-800 mb-1">Kirim Jawaban Final</h3>
+                   <p className="text-sm text-slate-500 font-medium max-w-md mx-auto">
+                     Jika minimal 5 nomor sudah diisi, Anda bisa mengumpulkan LKM ini secara resmi kepada Tutor.
+                   </p>
+                </div>
+                {remainingRequired > 0 && (
+                     <p className="text-sm font-bold text-rose-500 animate-pulse mt-2">
+                        Kurang {remainingRequired} jawaban lagi untuk dapat mengirim tugas.
+                     </p>
+                )}
+                <button
+                    onClick={handleFinalSubmit}
+                    disabled={!isFormComplete || loading}
+                    className="w-full max-w-sm bg-gradient-to-r from-slate-800 to-black text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs mt-4 shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-3"
+                >
+                  {loading ? "MENGIRIM..." : "KIRIM TUGAS AKHIR KE TUTOR"}
+                  {!loading && <span className="material-symbols-outlined font-black">send</span>}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === "FORUM" && (
+        <div className="space-y-6">
+          <div className="bg-indigo-900 text-white p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -mr-10 -mt-10 blur-2xl"></div>
+             <h3 className="text-xl font-black mb-2 flex items-center gap-2">
+                <span className="material-symbols-outlined text-yellow-400">forum</span> Ruang Kolaborasi Materi ABK
+             </h3>
+             <p className="text-indigo-200 text-xs font-medium max-w-xl">
+               Lihat cuplikan jawaban dari kelompok lain. Berikan tanggapan atau pertanyaan untuk mendalami setiap kategori ABK.
+             </p>
+          </div>
+
+          {allForumPosts.map((post) => {
+             const postGroupNum = post.parsed.groupNum || getStudentGroup(post.student_email) || '?';
+             const profile = getStudentProfile(post.student_email);
+             const postComments = allComments.filter(c => c.parsed.targetId === post.id);
+
+             return (
+               <div key={post.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all">
+                 <div className="bg-slate-50 border-b border-slate-200 p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                   <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 bg-slate-800 text-white rounded-xl flex items-center justify-center font-black text-lg">
+                       {profile.name.charAt(0)}
+                     </div>
+                     <div>
+                       <div className="flex items-center gap-2 mb-0.5">
+                           <p className="font-black text-slate-800 uppercase tracking-tight text-sm leading-none">{profile.name}</p>
+                           <span className="bg-slate-200 text-slate-500 px-2 py-0.5 rounded text-[8px] font-black">{profile.nim}</span>
+                       </div>
+                       <p className="text-[10px] text-slate-400 font-medium">
+                          {new Date(post.created_at).toLocaleString('id-ID', {dateStyle: 'medium', timeStyle: 'short'})}
+                       </p>
+                     </div>
+                   </div>
+                   <div className="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-[9px] font-black shrink-0 self-start md:self-center">
+                     TOPIK KELOMPOK {postGroupNum}
+                   </div>
+                 </div>
+
+                 <div className="p-5 md:p-8 space-y-6">
+                    <div className="bg-white border border-slate-100 rounded-2xl p-5">
+                        <p className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-2">Soal Diskusi:</p>
+                        <p className="font-bold text-slate-700 mb-4 text-sm">{post.parsed.questionText}</p>
+                        
+                        <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-2 border-t border-slate-50 pt-4">Jawaban Publik:</p>
+                        <div className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap pl-3 border-l-2 border-indigo-200">
+                           {post.parsed.answerText}
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      {postComments.length > 0 && (
+                        <div className="space-y-3 mb-6">
+                          <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                              <span className="material-symbols-outlined !text-[12px]">chat</span> Komentar ({postComments.length})
+                          </h4>
+                          {postComments.map((c, cIdx) => {
+                            const cProfile = getStudentProfile(c.student_email);
+                            return (
+                             <div key={cIdx} className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex gap-3">
+                               <div className="w-8 h-8 rounded-lg bg-white text-slate-400 flex items-center justify-center text-xs font-black shrink-0 border border-slate-200 uppercase">
+                                 {cProfile.name.charAt(0)}
+                               </div>
+                               <div>
+                                 <p className="text-[10px] font-black text-slate-600 mb-1">{cProfile.name} • <span className="font-medium text-slate-400">{cProfile.nim}</span></p>
+                                 <p className="text-xs text-slate-700 font-medium leading-relaxed">{c.parsed.comment}</p>
+                               </div>
+                             </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      <div className="flex gap-3 items-start pt-2">
+                        <textarea
+                          value={commentInputs[post.id] || ''}
+                          onChange={(e) => setCommentInputs({...commentInputs, [post.id]: e.target.value})}
+                          placeholder="Berikan tanggapan..."
+                          className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-3 text-xs outline-none focus:bg-white focus:border-indigo-400 transition-all min-h-[50px] resize-y"
+                        ></textarea>
+                        
+                        <button
+                          onClick={() => handleAddComment(post.id)}
+                          disabled={!commentInputs[post.id] || loadingAction.type === 'comment'}
+                          className="bg-indigo-600 text-white w-12 h-12 rounded-2xl shadow-md hover:bg-slate-900 transition-all flex items-center justify-center shrink-0"
+                        >
+                          {loadingAction.type === 'comment' && loadingAction.id === post.id ? (
+                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                             <span className="material-symbols-outlined text-[18px]">send</span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                 </div>
+               </div>
+             );
+          })}
+        </div>
+      )}
     </div>
   );
 };

@@ -166,7 +166,7 @@ export const Sesi2_ABK = {
       required: true,
       type: "Interactive",
       tutorLabel: "LKM",
-      content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Topik", text: "Diskusikan penanganan ABK di sekolah inklusi." }] }] }
+      content: null
     },
     {
       name: "Kuis dan Latihan",
