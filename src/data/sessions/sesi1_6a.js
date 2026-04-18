@@ -1,4 +1,4 @@
-export const sesi1_6a = {
+export const Sesi1_6A = {
   id: "sesi1_6a",
   meetingId: "1",
   classIds: ["3"], // Class 6A Sesi 1

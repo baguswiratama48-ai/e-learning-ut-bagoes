@@ -1,6 +1,6 @@
-import { sesi1_6a } from "./sesi1_6a";
-import { sesi1_bk } from "./sesi1_bk";
-import { sesi1_5a } from "./sesi1_5a";
+import { Sesi1_6A } from "./sesi1_6a";
+import { Sesi1_BK } from "./sesi1_bk";
+import { Sesi1_5A } from "./sesi1_5a";
 
 // Sesi 2
 import { Sesi2_ABK } from "./sesi2_abk";
@@ -44,9 +44,9 @@ import { Sesi8_8B } from "./sesi8_8b";
 import { Sesi8_8C } from "./sesi8_8c";
 
 const ALL_SESSIONS = [
-  sesi1_6a,
-  sesi1_bk,
-  sesi1_5a,
+  Sesi1_6A,
+  Sesi1_BK,
+  Sesi1_5A,
   Sesi2_ABK,
   Sesi2_BK,
   Sesi2_Strategi,
@@ -77,9 +77,15 @@ const ALL_SESSIONS = [
 ];
 
 export const getSessionConfig = (classId, meetingId) => {
-  return ALL_SESSIONS.find(
-    (s) => s.classIds.includes(String(classId)) && s.meetingId === String(meetingId)
-  );
+  if (!classId || !meetingId) return null;
+  try {
+    return ALL_SESSIONS.find(
+      (s) => s && s.classIds && s.classIds.includes(String(classId)) && String(s.meetingId) === String(meetingId)
+    ) || null;
+  } catch (err) {
+    console.error("Error in getSessionConfig:", err);
+    return null;
+  }
 };
 
 export const getAllAvailableSessions = () => ALL_SESSIONS;
