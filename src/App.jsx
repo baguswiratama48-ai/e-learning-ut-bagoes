@@ -778,7 +778,9 @@ function ClassMenu({ user }) {
               const sect = sessionConfig.sections.find(s => s.name === menu);
               if (sect?.label) label = sect.label;
               else if (menu === "Informasi Modul" && meetingId !== "1") label = "RAT/SAT";
-              else if (sect?.tutorLabel && (menu === "Ayo Diskusi" || menu === "Kuis dan Latihan")) label = sect.tutorLabel;
+              else if (sect?.tutorLabel && (menu === "Ayo Diskusi" || menu === "Ayo Diskusi (LKPD)" || menu === "Kuis dan Latihan")) {
+                 label = sect.tutorLabel === "Diskusi" || sect.tutorLabel === "LKM" ? "LKM (Lembar Kerja Mahasiswa)" : sect.tutorLabel;
+              }
             } else if (isSpecialSesi2) {
               if (menu === "Informasi Modul") label = "RAT/SAT";
               if (menu === "Ayo Diskusi (LKPD)") label = "LKM (Lembar Kerja Mahasiswa)";
@@ -904,7 +906,11 @@ function SectionPage({ user }) {
         .eq("meeting_num", meetingId)
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD", "LKPD_6A_DISCUSSION"]);
         
-      if (!((id === "3" || id === "4") && (sectionName === "LKPD (Lembar Kerja Peserta Didik)" || sectionName === "Ayo Diskusi (LKPD)"))) {
+      // Logika Filter: Jika seksi bukan Forum Diskusi (LKPD/LKM), maka hanya ambil data milik user sendiri
+      const isForumSection = sectionName === "Ayo Diskusi (LKPD)" || sectionName === "Ayo Diskusi" || sectionName === "LKPD (Lembar Kerja Peserta Didik)";
+      
+      // Jika seksi bukan forum DAN yg login adalah mahasiswa, filter hanya miliknya (plus data sistem)
+      if (!isForumSection && user?.role === "student") {
         query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
       }
 
