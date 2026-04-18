@@ -1,16 +1,16 @@
 export const Sesi1_5A = {
-  id: "sesi1_5a",
+  id: "5A_S1",
   meetingId: "1",
   classIds: ["4"],
   sections: [
     {
       name: "Informasi Modul",
-      tutorLabel: "Orientasi",
+      tutorLabel: "RAT/SAT",
       required: false,
       type: "RATSATV2",
       content: {
-        title: "Orientasi Sesi 1",
-        description: "Selamat datang di Sesi 1. Mohon perhatikan materi yang akan dipelajari.",
+        title: "Strategi Pembelajaran Kontemporer di SD",
+        description: "Selamat datang di Sesi 1! Mari kita pelajari Strategi Pembelajaran di Sekolah Dasar.",
         documentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
       }
     },
@@ -20,8 +20,12 @@ export const Sesi1_5A = {
       required: true,
       type: "PemantikV2",
       content: {
-        title: "Pertanyaan Pemantik",
-        questions: ["Apa yang Anda ketahui tentang topik sesi ini?"]
+        title: "Diskusi Pemantik Strategi Pembelajaran",
+        questions: [
+          "Menurut Anda, apa tantangan terbesar guru dalam menerapkan strategi pembelajaran kontemporer?",
+          "Bagaimana membedakan antara strategi, metode, dan teknik pembelajaran?",
+          "Strategi apa yang paling sering Anda gunakan saat mengajar di kelas?"
+        ]
       }
     },
     {
@@ -30,8 +34,10 @@ export const Sesi1_5A = {
       required: false,
       type: "MateriV2",
       content: {
-        title: "Materi Sesi 1",
-        htmlContent: "<div>Materi pembelajaran sesi ini.</div>"
+        title: "Modul 1: Hakikat Strategi Pembelajaran",
+        htmlContent: `<div class="space-y-4 text-slate-700 leading-relaxed text-justify">
+          <p>Dalam sesi ini, kita membahas mengenai konsep dasar strategi pembelajaran, klasifikasi strategi pembelajaran, serta kriteria pemilihan strategi yang tepat untuk siswa SD.</p>
+        </div>`
       }
     },
     {
@@ -40,8 +46,8 @@ export const Sesi1_5A = {
       required: false,
       type: "VideoEvalV2",
       content: {
-        title: "Video Pembelajaran",
-        description: "Simak video ini.",
+        title: "Inovasi Strategi Pembelajaran",
+        description: "Simak video ini untuk mendapatkan inspirasi strategi mengajar yang menyenangkan.",
         youtubeId: "J8_T6lH2n7U" 
       }
     },
