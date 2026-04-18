@@ -171,7 +171,11 @@ export const DashboardTutor = ({
     );
 
     const completedCount = requiredMenus.filter(menu => 
-      studentSubs.some(s => s.section_name === menu)
+      studentSubs.some(s => {
+        if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
+        if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+        return s.section_name === menu;
+      })
     ).length;
 
     return Math.round((completedCount / requiredMenus.length) * 100);
@@ -267,7 +271,11 @@ export const DashboardTutor = ({
                 </div>
 
                 {(() => {
-                  const sub = studentSubs.find(s => s.section_name === activeCorrectionTab);
+                  const sub = studentSubs.find(s => {
+                    if (activeTab === "3" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
+                    if (activeTab === "4" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+                    return s.section_name === activeCorrectionTab;
+                  });
                   const feedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${activeCorrectionTab}`);
                   const curStars = feedback ? parseInt(feedback.content) : 0;
 
@@ -334,6 +342,42 @@ export const DashboardTutor = ({
                                     </div>
                                   );
                                 })}
+                              </div>
+                            ) : sub.section_name === "LKPD_6A_DISCUSSION" || sub.section_name.startsWith("LKPD_5A_STAGE_") ? (
+                              <div className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                                {(() => {
+                                  try {
+                                    const data = JSON.parse(sub.content);
+                                    if (sub.section_name === "LKPD_6A_DISCUSSION") {
+                                      return (
+                                        <div className="space-y-4">
+                                          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Pertanyaan</p>
+                                            <p className="font-bold text-slate-800">{data.questionId}</p>
+                                          </div>
+                                          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                                            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-2">Jawaban Mahasiswa</p>
+                                            <p className="text-slate-600 whitespace-pre-wrap">{data.text}</p>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                    if (sub.section_name.startsWith("LKPD_5A_STAGE_")) {
+                                      return (
+                                        <div className="space-y-4">
+                                          <p className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Stage {sub.section_name.split("_").pop()}</p>
+                                          {Object.entries(data.answers || {}).map(([qId, val], i) => (
+                                            <div key={i} className="bg-white p-4 rounded-2xl border border-slate-100">
+                                              <p className="text-xs font-bold text-slate-800">{qId}: <span className="text-primary">{val}</span></p>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      );
+                                    }
+                                  } catch (e) {
+                                    return <p className="text-slate-500 italic">Gagal memproses data interaktif: {sub.content}</p>;
+                                  }
+                                })()}
                               </div>
                             ) : activeCorrectionTab === "Rangkuman" ? (
                               <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-lg shadow-primary/5">

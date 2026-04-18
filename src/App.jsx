@@ -23,6 +23,9 @@ import InteractiveRangkumanClass8 from "./components/InteractiveRangkumanClass8"
 import { STUDENTS } from "./data/students";
 import { CLASSES, MENUS, FEEDBACK_MESSAGES } from "./data/constants";
 import { getSessionConfig, getAllAvailableSessions } from "./data/sessions";
+import { LkpdClass6A } from "./components/LkpdClass6A";
+import { LkpdClass5A } from "./components/LkpdClass5A";
+import QuizClass5A from "./components/QuizClass5A";
 import { useDraft } from "./hooks/useDraft";
 import { getPemantikForStudent } from "./utils/helpers";
 import { DashboardTutor as DashboardUI } from "./components/DashboardTutor";
@@ -873,7 +876,7 @@ function SectionPage({ user }) {
   ].some((p) => sectionName?.includes(p));
 
   const activeSectionLower = sectionName?.toLowerCase() || "";
-  const isStatic = [
+  const isStaticSection = [
     "informasi modul", 
     "materi pembelajaran", 
     "video pembelajaran", 
@@ -881,6 +884,9 @@ function SectionPage({ user }) {
     "rat/sat",
     "pembagian kelompok",
   ].some(s => activeSectionLower.includes(s));
+
+  // If a sessionConfig exists (like Sesi 2), we should treat more sections as static
+  const isStatic = isStaticSection || (sessionConfig && !["Refleksi", "Rangkuman"].includes(sectionName));
 
   useEffect(() => {
     setStatus(null);
@@ -1000,7 +1006,7 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {isStatic || (["3", "4"].includes(id) && ["LKPD (Lembar Kerja Peserta Didik)", "Kuis dan Latihan"].includes(sectionName)) ? (
+      {sessionConfig ? (
           renderStaticContent()
         ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
@@ -1079,6 +1085,28 @@ function SectionPage({ user }) {
               setLoading(false);
             }
           }}
+        />
+        </div>
+      ) : id === "3" && sectionName === "Ayo Diskusi (LKPD)" ? (
+        <LkpdClass6A
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+        />
+      ) : id === "4" && sectionName === "Ayo Diskusi (LKPD)" ? (
+        <LkpdClass5A
+          user={user}
+          meetingId={meetingId}
+          submissions={submissions}
+          onComplete={(content) => handleAction(content)}
+        />
+      ) : id === "4" && sectionName === "Kuis dan Latihan" ? (
+        <QuizClass5A
+          user={user}
+          meetingId={meetingId}
+          submissions={submissions}
+          onComplete={(content) => handleAction(content)}
         />
       ) : (id === "1" || id === "2") && sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
         <div className="space-y-4">
