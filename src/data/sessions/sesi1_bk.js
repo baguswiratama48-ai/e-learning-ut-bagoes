@@ -5,13 +5,37 @@ export const Sesi1_BK = {
   sections: [
     {
       name: "Informasi Modul",
-      tutorLabel: "RAT/SAT",
+      tutorLabel: "Informasi",
       required: false,
       type: "RATSATV2",
       content: {
         title: "Bimbingan Konseling di SD",
         description: "Selamat datang di Sesi 1! Mari kita pelajari Hakikat, Fungsi, dan Prinsip Bimbingan Konseling di SD.",
         documentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+      }
+    },
+    {
+      name: "Peta Konsep",
+      tutorLabel: "Peta",
+      required: false,
+      type: "MateriV2",
+      content: {
+        title: "Peta Konsep Modul 1",
+        htmlContent: `<div class="p-8 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-center">
+          <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">Peta Konsep Modul 1 Sedang Diproses</p>
+        </div>`
+      }
+    },
+    {
+      name: "Materi Pembelajaran",
+      tutorLabel: "Materi",
+      required: false,
+      type: "MateriV2",
+      content: {
+        title: "Modul 1: Hakikat BK di Sekolah Dasar",
+        htmlContent: `<div class="space-y-4 text-slate-700 leading-relaxed text-justify">
+          <p>Sesi ini menjelaskan mengenai hakikat bimbingan konseling, peran guru dalam bimbingan, serta berbagai fungsi dan prinsip yang mendasari layanan BK di SD.</p>
+        </div>`
       }
     },
     {
@@ -26,18 +50,6 @@ export const Sesi1_BK = {
           "Mengapa guru SD perlu memahami prinsip-prinsip BK dalam mengelola kelas?",
           "Sebutkan salah satu fungsi BK yang paling relevan dengan kondisi siswa di sekolah Anda."
         ]
-      }
-    },
-    {
-      name: "Materi Pembelajaran",
-      tutorLabel: "Materi",
-      required: false,
-      type: "MateriV2",
-      content: {
-        title: "Modul 1: Hakikat BK di Sekolah Dasar",
-        htmlContent: `<div class="space-y-4 text-slate-700 leading-relaxed text-justify">
-          <p>Sesi ini menjelaskan mengenai hakikat bimbingan konseling, peran guru dalam bimbingan, serta berbagai fungsi dan prinsip yang mendasari layanan BK di SD.</p>
-        </div>`
       }
     },
     {
@@ -60,7 +72,7 @@ export const Sesi1_BK = {
     },
     {
       name: "Kuis dan Latihan",
-      tutorLabel: "Quiz",
+      tutorLabel: "Latihan",
       required: true,
       type: "Interactive",
       content: null
