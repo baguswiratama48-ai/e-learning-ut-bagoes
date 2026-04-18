@@ -150,10 +150,10 @@ export const Sesi2_ABK = {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: {
-        videoId: "kUqjWvY5XpY",
-        title: "Pendidikan Inklusif dan Penanganan ABK",
+        videoId: "gAnjTN9iXh0",
+        title: "Live Streaming: Penanganan Anak Berkebutuhan Khusus",
         category: "Materi ABK",
-        evaluationText: "Tuliskan resume singkat mengenai poin-poin utama dari video pendidikan inklusif tersebut.",
+        evaluationText: "Setelah menyimak video live streaming di atas, buatlah resume mengenai poin-poin kunci dalam penanganan anak berkebutuhan khusus yang dijelaskan.",
         minWords: 100,
       },
     },
