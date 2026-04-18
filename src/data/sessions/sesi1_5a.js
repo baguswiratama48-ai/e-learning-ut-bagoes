@@ -5,12 +5,29 @@ export const Sesi1_5A = {
   sections: [
     {
       name: "Informasi Modul",
+      label: "Informasi Modul",
       tutorLabel: "Informasi",
       required: false,
       type: "RATSATV2",
       content: {
-        title: "Informasi Modul 1: Strategi Pembelajaran Kontemporer",
+        title: "Strategi Pembelajaran Kontemporer di SD",
         description: "Selamat datang di Sesi 1! Mari kita pelajari Strategi Pembelajaran di Sekolah Dasar.",
+        capaian: [
+          "Menjelaskan konsep dasar strategi pembelajaran",
+          "Memahami klasifikasi strategi pembelajaran",
+          "Memilih kriteri strategi pembelajaran yang tepat untuk SD"
+        ],
+        pokokBahasan: [
+          {
+            title: "Hakikat Strategi Pembelajaran",
+            subs: ["Konsep Dasar", "Prinsip Umum", "Prosedur Pembelajaran"]
+          },
+          {
+            title: "Klasifikasi Strategi",
+            subs: ["Strategi Berpusat pada Guru", "Strategi Berpusat pada Siswa"]
+          }
+        ],
+        evaluationQuestion: "Dari pengalaman Anda, mengapa banyak guru masih kesulitan menerapkan strategi pembelajaran kontemporer?",
         documentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
       }
     },
@@ -34,7 +51,7 @@ export const Sesi1_5A = {
       content: {
         title: "Modul 1: Hakikat Strategi Pembelajaran",
         htmlContent: `<div class="space-y-4 text-slate-700 leading-relaxed text-justify">
-          <p>Dalam sesi ini, kita akan membahas mengenai konsep dasar strategi pembelajaran, klasifikasi strategi pembelajaran, serta kriteria pemilihan strategi.</p>
+          <p>Dalam sesi ini, kita akan membahas mengenai konsep dasar strategi pembelajaran, klasifikasi strategi pembelajaran, serta kriteria pemilihan strategi pembelajaran.</p>
         </div>`
       }
     },
@@ -49,7 +66,8 @@ export const Sesi1_5A = {
           "Menurut Anda, apa perbedaan mendasar antara strategi, metode, dan teknik pembelajaran?",
           "Mengapa seorang guru perlu merencanakan strategi pembelajaran sebelum masuk kelas?",
           "Ceritakan pengalaman Anda saat menemui strategi pembelajaran yang sangat berkesan."
-        ]
+        ],
+        groups:null
       }
     },
     {
@@ -58,9 +76,9 @@ export const Sesi1_5A = {
       required: false,
       type: "VideoEvalV2",
       content: {
-        title: "Video Inovasi Pembelajaran",
-        description: "Simak video ini untuk melihat contoh penerapan strategi pembelajaran yang kreatif.",
-        youtubeId: "J8_T6lH2n7U" 
+        title: "Inovasi Pembelajaran di SD",
+        evaluationText: "Tuliskan ringkasan inovasi yang Anda temukan dalam video ini.",
+        videoId: "J8_T6lH2n7U" 
       }
     },
     {

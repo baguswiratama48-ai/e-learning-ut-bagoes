@@ -5,12 +5,29 @@ export const Sesi1_BK = {
   sections: [
     {
       name: "Informasi Modul",
+      label: "Informasi Modul",
       tutorLabel: "Informasi",
       required: false,
       type: "RATSATV2",
       content: {
         title: "Bimbingan Konseling di SD",
         description: "Selamat datang di Sesi 1! Mari kita pelajari Hakikat, Fungsi, dan Prinsip Bimbingan Konseling di SD.",
+        capaian: [
+          "Menjelaskan hakikat bimbingan dan konseling",
+          "Memahami peran guru dalam layanan BK di SD",
+          "Mengidentifikasi fungsi dan prinsip dasar BK"
+        ],
+        pokokBahasan: [
+          {
+            title: "Konsep Dasar BK",
+            subs: ["Pengertian Bimbingan", "Pengertian Konseling", "Tujuan BK di SD"]
+          },
+          {
+            title: "Landasan BK",
+            subs: ["Fungsi-fungsi Layanan", "Prinsip-prinsip BK"]
+          }
+        ],
+        evaluationQuestion: "Mengapa layanan BK di tingkat SD sangat krusial dibandingkan jenjang lainnya?",
         documentUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
       }
     },
@@ -49,7 +66,8 @@ export const Sesi1_BK = {
           "Menurut pemahaman Anda, apa perbedaan mendasar bimbingan dan konseling?",
           "Mengapa guru SD perlu memahami prinsip-prinsip BK dalam mengelola kelas?",
           "Sebutkan salah satu fungsi BK yang paling relevan dengan kondisi siswa di sekolah Anda."
-        ]
+        ],
+        groups:null
       }
     },
     {
@@ -58,9 +76,9 @@ export const Sesi1_BK = {
       required: false,
       type: "VideoEvalV2",
       content: {
-        title: "Video Pengenalan BK di SD",
-        description: "Simak video ini untuk memahami bagaimana layanan BK dapat membantu perkembangan siswa.",
-        youtubeId: "J8_T6lH2n7U" 
+        title: "Video Layanan BK di SD",
+        evaluationText: "Simpulkan peran guru yang anda lihat dalam video tersebut.",
+        videoId: "J8_T6lH2n7U" 
       }
     },
     {

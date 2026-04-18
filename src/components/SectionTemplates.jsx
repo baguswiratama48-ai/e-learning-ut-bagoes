@@ -20,7 +20,7 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
               Capaian Pembelajaran
             </h3>
             <ul className="space-y-4 text-slate-700 text-sm md:text-base font-medium">
-              {config.content.capaian.map((item, i) => (
+              {(config.content.capaian || []).map((item, i) => (
                 <li key={i} className="flex gap-3 items-start">
                   <span className="material-symbols-outlined text-indigo-500 shrink-0">check_circle</span>
                   {item}
@@ -35,11 +35,11 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
             Pokok Bahasan
           </h3>
           <div className="space-y-6">
-            {config.content.pokokBahasan.map((pb, i) => (
+            {(config.content.pokokBahasan || []).map((pb, i) => (
               <div key={i} className={i > 0 ? "pt-4 border-t border-slate-200" : ""}>
                  <h4 className="font-bold text-slate-800 text-lg mb-2">{pb.title}</h4>
                  <ul className="space-y-2 text-slate-600 text-sm font-medium">
-                    {pb.subs.map((sub, si) => (
+                    {(pb.subs || []).map((sub, si) => (
                       <li key={si} className="flex gap-2 items-start">
                         <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-indigo-400 shrink-0"></span> {sub}
                       </li>

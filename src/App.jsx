@@ -777,7 +777,7 @@ function ClassMenu({ user }) {
             if (sessionConfig) {
               const sect = sessionConfig.sections.find(s => s.name === menu);
               if (sect?.label) label = sect.label;
-              else if (menu === "Informasi Modul") label = "RAT/SAT";
+              else if (menu === "Informasi Modul" && meetingId !== "1") label = "RAT/SAT";
               else if (sect?.tutorLabel && (menu === "Ayo Diskusi" || menu === "Kuis dan Latihan")) label = sect.tutorLabel;
             } else if (isSpecialSesi2) {
               if (menu === "Informasi Modul") label = "RAT/SAT";
