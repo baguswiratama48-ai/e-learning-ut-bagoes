@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { supabase } from "../supabaseClient";
 import { STUDENTS } from "../data/students";
 import { CLASSES, MENUS, FEEDBACK_MESSAGES } from "../data/constants";
+import { getSessionConfig } from "../data/sessions";
 
 export const DashboardTutor = ({ 
   submissions, 
@@ -158,11 +159,13 @@ export const DashboardTutor = ({
   const paginatedStudents = studentList.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   // --- CALCULATORS ---
   const calculateProgress = (studentEmail, meetingNum) => {
-    const isSesi2BK = (activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && String(meetingNum) === "2";
+    const sessionConfig = getSessionConfig(activeTab, meetingNum);
+    
+    // Default fallback if no config
     let requiredMenus = ["Pertanyaan Pemantik", "Ayo Diskusi (LKPD)", "Kuis dan Latihan", "Refleksi"];
     
-    if (isSesi2BK) {
-      requiredMenus = ["Pertanyaan Pemantik", "Ayo Diskusi (LKPD)", "Kuis dan Latihan", "Rangkuman", "Refleksi"];
+    if (sessionConfig) {
+      requiredMenus = sessionConfig.sections.map(s => s.name);
     }
 
     const studentSubs = (submissions || []).filter(s => 
@@ -172,8 +175,11 @@ export const DashboardTutor = ({
 
     const completedCount = requiredMenus.filter(menu => 
       studentSubs.some(s => {
-        if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
-        if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+        // Handle custom section mapping (fallback for Sesi 1)
+        if (!sessionConfig) {
+          if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
+          if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+        }
         return s.section_name === menu;
       })
     ).length;
@@ -194,33 +200,33 @@ export const DashboardTutor = ({
           <div className="w-full md:w-64 space-y-2">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 mb-4">Kategori Penilaian</p>
             {(() => {
-              const isSesi2BK = (activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && String(selectedMeeting) === "2";
+              const sessionConfig = getSessionConfig(activeTab, selectedMeeting);
               
               // Define the list of menus for this specific context
-              let dynamicMenus = [...MENUS];
-              if (isSesi2BK) {
-                // For Sesi 2 BK, we want a specific order and items
-                dynamicMenus = [
-                  "Informasi Modul",
-                  "Pertanyaan Pemantik",
-                  "Materi Pembelajaran",
-                  "Video Pembelajaran",
-                  "Ayo Diskusi (LKPD)",
-                  "Kuis dan Latihan",
-                  "Rangkuman",
-                  "Refleksi"
-                ];
-              }
+              let dynamicMenus = sessionConfig ? sessionConfig.sections.map(s => s.name) : [...MENUS];
 
               return dynamicMenus.map(menu => {
-                const hasSub = studentSubs.find(s => s.section_name === menu);
+                const hasSub = studentSubs.find(s => {
+                  // Fallback for special Sesi 1 logic if needed
+                  if (!sessionConfig) {
+                    if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
+                    if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+                  }
+                  return s.section_name === menu;
+                });
+                
                 const hasFeedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${menu}`);
                 
+                // Get display label from config or use menu name
                 let displayLabel = menu;
-                if (isSesi2BK) {
-                  if (menu === "Informasi Modul") displayLabel = "RAT/SAT";
-                  if (menu === "Ayo Diskusi (LKPD)") displayLabel = "LKM (Lembar Kerja Mahasiswa)";
-                  if (menu === "Kuis dan Latihan") displayLabel = "Quiz";
+                if (sessionConfig) {
+                  const sect = sessionConfig.sections.find(s => s.name === menu);
+                  if (sect?.tutorLabel) displayLabel = sect.tutorLabel;
+                } else {
+                   // Compatibility check for Sesi 1 BK Labels
+                  if (activeTab === "1" || activeTab === "2") {
+                    if (menu === "Ayo Diskusi (LKPD)") displayLabel = "LKM";
+                  }
                 }
 
                 return (
