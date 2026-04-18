@@ -87,8 +87,9 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
   }, [answers, draftKey]);
 
   // Validations
-  const isFormComplete = answers.every(a => a.trim().length >= 10);
-  const remainingQuestions = answers.filter(a => a.trim().length < 10).length;
+  const answeredCount = answers.filter(a => a.trim().length >= 10).length;
+  const isFormComplete = answeredCount >= Math.min(currentTask.questions.length, 6);
+  const remainingRequired = Math.max(0, Math.min(currentTask.questions.length, 6) - answeredCount);
 
   // Data fetching from props (submissions)
   const allForumPosts = useMemo(() => {
@@ -349,12 +350,12 @@ export default function InteractiveLKMClass8({ user, classId, meetingId, submiss
                 <div>
                    <h3 className="text-xl font-black text-slate-800 mb-1">Pengiriman Final LKM</h3>
                    <p className="text-sm text-slate-500 font-medium max-w-md mx-auto">
-                     Jika seluruh {currentTask.questions.length} nomor sudah diisi dengan baik, tekan tombol ini untuk mengumpulkan dan mengirim seluruh jawaban utuh kepada Tutor.
+                     Jika minimal 6 nomor (atau semua pertanyaan kelompok) sudah diisi dengan baik, tekan tombol ini untuk mengumpulkan kepada Tutor.
                    </p>
                 </div>
-                {remainingQuestions > 0 && (
+                {remainingRequired > 0 && (
                      <p className="text-sm font-bold text-rose-500 animate-pulse mt-2">
-                        Masih ada {remainingQuestions} pertanyaan yang belum lengkap!
+                        Masih ada {remainingRequired} pertanyaan wajib yang belum lengkap!
                      </p>
                 )}
                 <button
