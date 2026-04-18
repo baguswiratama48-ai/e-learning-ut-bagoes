@@ -238,8 +238,7 @@ export const Sesi2_BK = {
         ],
       },
     },
-      },
-    },
+
     {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
