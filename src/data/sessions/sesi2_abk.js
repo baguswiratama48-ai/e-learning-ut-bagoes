@@ -178,8 +178,15 @@ export const Sesi2_ABK = {
     {
       name: "Refleksi",
       required: true,
-      type: "Interactive",
-      content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa yang Anda pelajari hari ini?" }] }] }
+      type: "Pemantik",
+      content: {
+        required: 1,
+        groups: [
+          [
+            "Satu kata untuk pembelajaran hari ini!"
+          ]
+        ]
+      }
     },
     {
       name: "Rangkuman",
