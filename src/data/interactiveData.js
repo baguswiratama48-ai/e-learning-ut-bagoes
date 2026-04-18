@@ -231,11 +231,7 @@ export const REFLECTION_QUESTIONS_DATA = {
     "Apa yang ingin kamu sampaikan untuk pak Bagus Panca Wiratama, S.Pd., M.Pd."
   ],
   3: [
-    "Apa pemahaman baru yang Anda dapatkan tentang anak berkebutuhan khusus (ABK)?",
-    "Bagaimana perasaan Anda jika nantinya harus mengajar di kelas inklusi?",
-    "Mengapa sikap empati guru sangat krusial dalam menangani ABK?",
-    "Apa tantangan terbesar yang mungkin Anda hadapi saat mengidentifikasi jenis kebutuhan khusus siswa?",
-    "Bagaimana kesan Anda terhadap bimbingan dan cara penyampaian materi oleh Bapak Bagus Panca Wiratama, S.Pd., M.Pd. selama tutorial ini? Apa harapan atau saran Anda untuk beliau agar sesi berikutnya semakin luar biasa?",
+    "Satu kata untuk pembelajaran hari ini!",
   ],
   default: [
     "Apa manfaat materi hari ini untuk profesi keguruan Anda?",
