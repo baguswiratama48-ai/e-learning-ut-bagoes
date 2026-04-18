@@ -26,6 +26,7 @@ import { getSessionConfig, getAllAvailableSessions } from "./data/sessions";
 import { LkpdClass6A } from "./components/LkpdClass6A";
 import { LkpdClass5A } from "./components/LkpdClass5A";
 import QuizClass5A from "./components/QuizClass5A";
+import QuizClass6A from "./components/QuizClass6A";
 import { useDraft } from "./hooks/useDraft";
 import { getPemantikForStudent } from "./utils/helpers";
 import { DashboardTutor as DashboardUI } from "./components/DashboardTutor";
@@ -1006,25 +1007,15 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {((id === "1" || id === "2") && sectionName === "Kuis dan Latihan") || 
-       (id === "4" && sectionName === "Kuis dan Latihan") ? (
+      {((id === "1" || id === "2") && sectionName === "Kuis dan Latihan") ? (
         <div className="space-y-6">
-          {id === "4" ? (
-            <QuizClass5A 
-              user={user} 
-              meetingId={meetingId} 
-              submissions={submissions}
-              onComplete={(content) => handleAction(content)}
-            />
-          ) : (
-            <InteractiveQuizClass8
-              user={user}
-              classId={id}
-              meetingId={meetingId}
-              submissions={submissions}
-              onComplete={(content) => handleAction(content)}
-            />
-          )}
+          <InteractiveQuizClass8
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
           {tutorFeedback && (
             <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
               <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
@@ -1036,6 +1027,36 @@ function SectionPage({ user }) {
               </div>
             </div>
           )}
+        </div>
+      ) : id === "3" && sectionName === "Kuis dan Latihan" ? (
+        <div className="space-y-6">
+          {/* Menampilkan QuizClass6A untuk kelas id 3 */}
+          <QuizClass6A
+            user={user}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
+          {tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : id === "4" && sectionName === "Kuis dan Latihan" ? (
+        <div className="space-y-6">
+          <QuizClass5A 
+            user={user} 
+            meetingId={meetingId} 
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
         </div>
       ) : ((id === "1" || id === "2") && sectionName === "Ayo Diskusi (LKPD)") ||
           (id === "3" && sectionName === "Ayo Diskusi (LKPD)") ||
