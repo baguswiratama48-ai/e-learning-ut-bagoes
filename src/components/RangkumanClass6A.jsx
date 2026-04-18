@@ -27,8 +27,9 @@ export default function RangkumanClass6A({ user, classId, meetingId, submissions
   const w5 = countWords(cards.card5);
   const totalWords = w1 + w2 + w3 + w4 + w5;
 
-  // Semua bagian harus diisi dan total minimal 200 kata
-  const isLocked = totalWords < 200 || w1 === 0 || w2 === 0 || w3 === 0 || w4 === 0 || w5 === 0;
+  // Setiap bagian wajib minimal 200 kata
+  const MIN_WORDS = 200;
+  const isLocked = w1 < MIN_WORDS || w2 < MIN_WORDS || w3 < MIN_WORDS || w4 < MIN_WORDS || w5 < MIN_WORDS;
 
   // Jika sudah dikumpulkan
   if (status) {
@@ -112,14 +113,14 @@ export default function RangkumanClass6A({ user, classId, meetingId, submissions
           <div className="flex-1">
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs font-black uppercase tracking-widest text-slate-400">Total Kata:</span>
-              <span className={`text-lg font-black ${totalWords >= 200 ? 'text-emerald-400' : 'text-amber-400'}`}>
-                {totalWords} <span className="text-xs text-slate-500">/ 200 Kata</span>
+              <span className={`text-lg font-black ${!isLocked ? 'text-emerald-400' : 'text-amber-400'}`}>
+                {totalWords} <span className="text-xs text-slate-500">/ 1.000 Kata (min. 200/bagian)</span>
               </span>
             </div>
             <div className="h-1.5 w-full md:w-64 bg-slate-800 rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-300 ${totalWords >= 200 ? 'bg-emerald-400' : 'bg-amber-400'}`}
-                style={{ width: `${Math.min((totalWords / 200) * 100, 100)}%` }}
+                className={`h-full transition-all duration-300 ${!isLocked ? 'bg-emerald-400' : 'bg-amber-400'}`}
+                style={{ width: `${Math.min((totalWords / 1000) * 100, 100)}%` }}
               ></div>
             </div>
           </div>
@@ -149,7 +150,12 @@ export default function RangkumanClass6A({ user, classId, meetingId, submissions
             }`}
           >
             {tab.label.split(" ")[0]}
-            {tab.w > 0 && <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>}
+            {/* Dot hijau kalau sudah ≥ 200 kata, kuning kalau ada tapi kurang */}
+            {tab.w >= MIN_WORDS ? (
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+            ) : tab.w > 0 ? (
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+            ) : null}
           </button>
         ))}
       </div>
@@ -161,8 +167,15 @@ export default function RangkumanClass6A({ user, classId, meetingId, submissions
             <h3 className={`font-black text-lg ${activeTabData.color}`}>
               Bagian {tabs.indexOf(activeTabData) + 1}: {activeTabData.label}
             </h3>
-            <span className="text-xs font-black text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
-              {activeTabData.w} kata
+            {/* Counter kata per bagian */}
+            <span className={`text-xs font-black px-3 py-1 rounded-full ${
+              activeTabData.w >= MIN_WORDS
+                ? 'text-emerald-700 bg-emerald-100'
+                : activeTabData.w > 0
+                ? 'text-amber-700 bg-amber-100'
+                : 'text-slate-400 bg-slate-100'
+            }`}>
+              {activeTabData.w} / {MIN_WORDS} kata
             </span>
           </div>
           <p className="text-sm font-medium text-slate-500 mb-6">{activeTabData.hint}</p>
