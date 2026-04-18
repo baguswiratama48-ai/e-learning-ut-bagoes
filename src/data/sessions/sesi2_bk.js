@@ -36,6 +36,58 @@ export const Sesi2_BK = {
       }
     },
     {
+      name: "Pertanyaan Pemantik",
+      required: true,
+      type: "PemantikV2",
+      content: {
+        required: 6,
+        groups: [
+          [
+            "Jika semua guru sudah mengajar dengan baik, mengapa layanan Bimbingan dan Konseling masih diperlukan di SD?",
+            "Apa yang akan terjadi pada perkembangan siswa jika sekolah tidak memiliki layanan BK?",
+            "Menurut Anda, apakah peran guru kelas di SD sudah mencakup fungsi konselor? Jelaskan dengan alasan!",
+            "Bagaimana membedakan antara “mengajar”, “mendidik”, dan “membimbing” dalam konteks SD?",
+            "Jika seorang siswa bermasalah secara emosional, siapa yang paling bertanggung jawab: guru, orang tua, atau konselor? Mengapa?",
+          ],
+          [
+            "Mengapa layanan BK tidak cukup hanya dengan konseling individu saja?",
+            "Dalam kondisi apa layanan bimbingan kelompok lebih efektif dibandingkan konseling individu?",
+            "Bagaimana Anda menentukan layanan BK yang tepat untuk siswa yang sama tetapi memiliki masalah berbeda?",
+            "Apa dampak jika layanan BK diberikan tanpa memahami kebutuhan siswa?",
+            "Jika Anda menjadi guru, layanan apa yang paling sering Anda gunakan di SD dan mengapa?",
+          ],
+          [
+            "Mengapa memahami karakteristik siswa SD menjadi kunci keberhasilan pembelajaran dan bimbingan?",
+            "Apa akibatnya jika guru memberikan tuntutan yang tidak sesuai dengan tahap perkembangan siswa?",
+            "Apakah semua siswa SD memiliki karakteristik yang sama? Jelaskan dengan contoh nyata!",
+            "Bagaimana cara guru menyesuaikan pendekatan pembelajaran dengan perbedaan karakteristik siswa?",
+            "Jika ada siswa yang “tidak sesuai” dengan tugas perkembangannya, apa yang harus dilakukan?",
+          ],
+          [
+            "Mengapa tugas perkembangan harus dicapai secara bertahap?",
+            "Apa hubungan antara kegagalan mencapai tugas perkembangan dengan masalah perilaku siswa?",
+            "Bagaimana Anda mengidentifikasi bahwa seorang anak sudah atau belum mencapai tugas perkembangannya?",
+            "Apakah tugas perkembangan bersifat mutlak untuk semua anak? Mengapa?",
+            "Jika seorang anak berkembang lebih cepat atau lebih lambat dari teman sebayanya, bagaimana seharusnya guru bersikap?",
+          ],
+          [
+            "Mengapa masa SD sering disebut sebagai “masa dasar” dalam kehidupan anak?",
+            "Apa dampak jangka panjang jika perkembangan di usia SD tidak optimal?",
+            "Bagaimana lingkungan sekolah mempengaruhi perkembangan sosial dan emosional siswa?",
+            "Menurut Anda, mana yang lebih berpengaruh: faktor keluarga atau sekolah? Jelaskan!",
+            "Jika Anda merancang sekolah ideal, aspek perkembangan apa yang paling Anda prioritaskan?",
+          ],
+          [
+            "Mengapa perkembangan fisik-motorik mempengaruhi kemampuan belajar siswa?",
+            "Bagaimana cara membedakan antara keterlambatan motorik dan sekadar perbedaan individu?",
+            "Apa peran guru dalam membantu siswa dengan perkembangan motorik yang kurang optimal?",
+            "Jika sekolah hanya fokus pada akademik, apa dampaknya terhadap perkembangan fisik siswa?",
+            "Bagaimana bentuk layanan BK yang bisa mendukung perkembangan fisik-motorik siswa?",
+          ],
+        ],
+      },
+    },
+    {
       name: "Materi Pembelajaran",
       type: "MateriV2",
       content: {
@@ -187,59 +239,6 @@ export const Sesi2_BK = {
       }
     },
     {
-      name: "Pertanyaan Pemantik",
-      required: true,
-      type: "PemantikV2",
-      content: {
-        required: 6,
-        groups: [
-          [
-            "Jika semua guru sudah mengajar dengan baik, mengapa layanan Bimbingan dan Konseling masih diperlukan di SD?",
-            "Apa yang akan terjadi pada perkembangan siswa jika sekolah tidak memiliki layanan BK?",
-            "Menurut Anda, apakah peran guru kelas di SD sudah mencakup fungsi konselor? Jelaskan dengan alasan!",
-            "Bagaimana membedakan antara “mengajar”, “mendidik”, dan “membimbing” dalam konteks SD?",
-            "Jika seorang siswa bermasalah secara emosional, siapa yang paling bertanggung jawab: guru, orang tua, atau konselor? Mengapa?",
-          ],
-          [
-            "Mengapa layanan BK tidak cukup hanya dengan konseling individu saja?",
-            "Dalam kondisi apa layanan bimbingan kelompok lebih efektif dibandingkan konseling individu?",
-            "Bagaimana Anda menentukan layanan BK yang tepat untuk siswa yang sama tetapi memiliki masalah berbeda?",
-            "Apa dampak jika layanan BK diberikan tanpa memahami kebutuhan siswa?",
-            "Jika Anda menjadi guru, layanan apa yang paling sering Anda gunakan di SD dan mengapa?",
-          ],
-          [
-            "Mengapa memahami karakteristik siswa SD menjadi kunci keberhasilan pembelajaran dan bimbingan?",
-            "Apa akibatnya jika guru memberikan tuntutan yang tidak sesuai dengan tahap perkembangan siswa?",
-            "Apakah semua siswa SD memiliki karakteristik yang sama? Jelaskan dengan contoh nyata!",
-            "Bagaimana cara guru menyesuaikan pendekatan pembelajaran dengan perbedaan karakteristik siswa?",
-            "Jika ada siswa yang “tidak sesuai” dengan tugas perkembangannya, apa yang harus dilakukan?",
-          ],
-          [
-            "Mengapa tugas perkembangan harus dicapai secara bertahap?",
-            "Apa hubungan antara kegagalan mencapai tugas perkembangan dengan masalah perilaku siswa?",
-            "Bagaimana Anda mengidentifikasi bahwa seorang anak sudah atau belum mencapai tugas perkembangannya?",
-            "Apakah tugas perkembangan bersifat mutlak untuk semua anak? Mengapa?",
-            "Jika seorang anak berkembang lebih cepat atau lebih lambat dari teman sebayanya, bagaimana seharusnya guru bersikap?",
-          ],
-          [
-            "Mengapa masa SD sering disebut sebagai “masa dasar” dalam kehidupan anak?",
-            "Apa dampak jangka panjang jika perkembangan di usia SD tidak optimal?",
-            "Bagaimana lingkungan sekolah mempengaruhi perkembangan sosial dan emosional siswa?",
-            "Menurut Anda, mana yang lebih berpengaruh: faktor keluarga atau sekolah? Jelaskan!",
-            "Jika Anda merancang sekolah ideal, aspek perkembangan apa yang paling Anda prioritaskan?",
-          ],
-          [
-            "Mengapa perkembangan fisik-motorik mempengaruhi kemampuan belajar siswa?",
-            "Bagaimana cara membedakan antara keterlambatan motorik dan sekadar perbedaan individu?",
-            "Apa peran guru dalam membantu siswa dengan perkembangan motorik yang kurang optimal?",
-            "Jika sekolah hanya fokus pada akademik, apa dampaknya terhadap perkembangan fisik siswa?",
-            "Bagaimana bentuk layanan BK yang bisa mendukung perkembangan fisik-motorik siswa?",
-          ],
-        ],
-      },
-    },
-
-    {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: {
@@ -269,16 +268,19 @@ export const Sesi2_BK = {
       content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
     },
     {
-      name: "Rangkuman",
-      required: true,
-      type: "Interactive",
-      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Penting", text: "Isi rangkuman BK Sesi 2." }] }] }
-    },
-    {
       name: "Refleksi",
       required: true,
       type: "Interactive",
       content: { title: "Refleksi Sesi 2", sections: [{ title: "Ulasan Diri", points: [{ label: "Refleksi", text: "Apa kesan Anda pada sesi ini?" }] }] }
+    },
+    {
+      name: "Rangkuman",
+      required: true,
+      type: "Interactive",
+      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Penting", text: "Isi rangkuman BK Sesi 2." }] }] }
+    }
+  ],
+", text: "Apa kesan Anda pada sesi ini?" }] }] }
     }
   ],
 };

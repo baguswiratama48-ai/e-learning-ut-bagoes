@@ -10,20 +10,17 @@ export const Sesi2_ABK = {
       label: "RAT/SAT",
       type: "RATSATV2",
       content: {
-        title: "Tutorial Ke : 2", // Sesuai permintaan pengguna
+        title: "Tutorial Ke : 2",
         courseName: "Penanganan Anak Berkebutuhan Khusus",
         courseCode: "PAUD4208",
         sks: "4 SKS",
-        // Deskripsi Singkat Mata Kuliah - Diketik persis tanpa perubahan
         description: `Mata kuliah Penanganan Anak Berkebutuhan Khusus (PAUD4208) membahas mengenai ragam permasalahan dan hambatan perkembangan yang terjadi pada anak usia dini, seperti : gangguan fisik, gangguan panca indera, gangguan autism, gangguan perilaku, gangguan belajar, gangguan bahasa, permasalahan perkembangan dengan rutinitas harian, gangguan attachment, anak yang mengalamai maltreatment, serta bentuk kerjasama untuk menangani anak nonnnormatif. Mata kuliah ini bermanfaat dalam mengidentifikasi serta mengambil tindakan yang tepat dalam penanganan anak berkebutuhan khusus sesuai dengan kapasitasnya sebagai pendidik dan tenaga kependidikan PAUD. Materi akan dibahas melalui penjelasan materi, pemberian contoh, dan pemecahan masalah. Penilaian terhadap pencapaian kompetensi dilakukan dengan memberikan tugas berupa latihan mengerjakan soal-soal atau kasus mengenai penanganan anak berkebutuhan khusus. Mata kuliah ini sangat erat dengan mata kuliah Psikologi Perkembangan Anak.`,
-        // Capaian Pembelajaran - Dipisahkan Umum dan Khusus sesuai permintaan
         capaianUmum: "Melalui mata kuliah Penanganan Anak Berkebutuhan Khusus (PAUD4208) mahasiswa diharapkan mampu menangani anak berkebutuhan khusus dengan perkembangan nonnormatif sesuai dengan kapasitasnya sebagai pendidik dan tenaga kependidikan PAUD.",
         capaianKhusus: [
           "1. Mahasiswa mampu menjelaskan cara menangani anak dengan autism",
           "2. Mahasiswa mampu menjelaskan cara menangani anak dengan ADD/ADHD*",
           "3. Mahasiswa mampu menjelaskan cara menangani anak dengan gangguan inteligensi (ringan, sedang, berat) dan gangguan Down Syndrome"
         ],
-        // Sub Pokok Bahasan - Diketik persis
         pokokBahasan: [
           {
             title: "Sub Pokok Bahasan",
@@ -37,18 +34,36 @@ export const Sesi2_ABK = {
       }
     },
     {
+      name: "Pertanyaan Pemantik",
+      required: true,
+      type: "PemantikV2",
+      content: {
+        required: 6,
+        groups: [
+          [
+            "Apa pemahaman Anda tentang perbedaan antara Autism dan ADHD?",
+            "Bagaimana cara mengidentifikasi anak yang mengalami ODD di lingkungan sekolah?",
+            "Apa peran guru dalam mendukung anak dengan gangguan perilaku di kelas inklusif?",
+            "Mengapa kolaborasi dengan orang tua sangat penting dalam penanganan anak ABK?",
+            "Bagaimana strategi Anda dalam menghadapi anak yang menunjukkan perilaku agresif?",
+            "Apa yang dimaksud dengan spektrum dalam Autistic Spectrum Disorder (ASD)?"
+          ]
+        ]
+      }
+    },
+    {
       name: "Materi Pembelajaran",
       type: "MateriV2",
       content: {
         title: "Anak Dengan Gangguan Perilaku",
         subtitle: "Autism, ADD/ADHD, dan ODD",
         evaluationQuestion: "Apa saja jenis Anak Dengan Gangguan Perilaku yang anda ketahui dari materi tadi?",
-        minWords: 15, // Disesuaikan agar tetap ringkas di HP
+        minWords: 15,
         sections: [
           {
             letter: "A",
             title: "Anak dengan Gangguan Autism",
-            description: "Memahami hakikat dan spektrum gangguan autisme pada anak.",
+            description: "Memahami hakikat and spektrum gangguan autisme pada anak.",
             points: [
               {
                 label: "Pengertian Autism",
@@ -64,7 +79,7 @@ export const Sesi2_ABK = {
           {
             letter: "B",
             title: "Anak Penyandang ADD/ADHD",
-            description: "Gangguan pemusatan perhatian dan hiperaktivitas.",
+            description: "Gangguan pemusatan perhatian and hiperaktivitas.",
             points: [
               {
                 label: "Pengertian & Diagnosis",
@@ -76,7 +91,7 @@ export const Sesi2_ABK = {
               },
               {
                 label: "Karakteristik Utama",
-                text: "Gejala yang sering muncul pada anak ADD/ADHD mencakup masalah perilaku dan interaksi.",
+                text: "Gejala yang sering muncul pada anak ADD/ADHD mencakup masalah perilaku and interaksi.",
                 items: [
                   "Inattention: Ceroboh, sulit fokus, mudah lupa.",
                   "Hiperaktif: Tidak bisa diam, banyak bicara.",
@@ -136,37 +151,19 @@ export const Sesi2_ABK = {
       }
     },
     {
-      name: "Pertanyaan Pemantik",
-      required: true,
-      type: "PemantikV2",
-      content: {
-        required: 6,
-        groups: [
-          [
-            "Apa pemahaman Anda tentang perbedaan antara Autism dan ADHD?",
-            "Bagaimana cara mengidentifikasi anak yang mengalami ODD di lingkungan sekolah?",
-            "Apa peran guru dalam mendukung anak dengan gangguan perilaku di kelas inklusif?",
-            "Mengapa kolaborasi dengan orang tua sangat penting dalam penanganan anak ABK?",
-            "Bagaimana strategi Anda dalam menghadapi anak yang menunjukkan perilaku agresif?",
-            "Apa yang dimaksud dengan spektrum dalam Autistic Spectrum Disorder (ASD)?"
-          ]
-        ]
-      }
-    },
-    {
-      name: "Pembagian Kelompok",
-      type: "GroupsV2"
-    },
-    {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: {
-        videoId: "kUqjWvY5XpY", // Contoh ID video ABK
+        videoId: "kUqjWvY5XpY",
         title: "Pendidikan Inklusif dan Penanganan ABK",
         category: "Materi ABK",
         evaluationText: "Tuliskan resume singkat mengenai poin-poin utama dari video pendidikan inklusif tersebut.",
         minWords: 100,
       },
+    },
+    {
+      name: "Pembagian Kelompok",
+      type: "GroupsV2"
     },
     {
       name: "Ayo Diskusi (LKPD)",
@@ -183,16 +180,16 @@ export const Sesi2_ABK = {
       content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan kuis Anda." }
     },
     {
-      name: "Rangkuman",
-      required: true,
-      type: "Interactive",
-      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Utama", text: "Rangkuman materi ABK." }] }] }
-    },
-    {
       name: "Refleksi",
       required: true,
       type: "Interactive",
       content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa yang Anda pelajari hari ini?" }] }] }
+    },
+    {
+      name: "Rangkuman",
+      required: true,
+      type: "Interactive",
+      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Poin Utama", points: [{ label: "Kesimpulan", text: "Rangkuman materi ABK." }] }] }
     }
   ],
 };

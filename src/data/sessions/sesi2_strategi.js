@@ -28,6 +28,24 @@ export const Sesi2_Strategi = {
       }
     },
     {
+      name: "Pertanyaan Pemantik",
+      required: true,
+      type: "PemantikV2",
+      content: {
+        required: 6,
+        groups: [
+          [
+            "Mengapa kreativitas guru menjadi kunci dalam strategi pembelajaran kontemporer?",
+            "Bagaimana cara mengintegrasikan teknologi dalam pembelajaran secara efektif?",
+            "Apa tantangan terbesar dalam menerapkan model pembelajaran berpusat pada siswa?",
+            "Bagaimana strategi Anda dalam menghadapi keberagaman gaya belajar di kelas?",
+            "Apa peran umpan balik dalam meningkatkan hasil belajar siswa secara berkelanjutan?",
+            "Bagaimana Anda merancang evaluasi yang otentik dalam konteks SD?"
+          ]
+        ]
+      }
+    },
+    {
       name: "Materi Pembelajaran",
       type: "MateriV2",
       content: {
@@ -54,37 +72,19 @@ export const Sesi2_Strategi = {
       }
     },
     {
-      name: "Pertanyaan Pemantik",
-      required: true,
-      type: "PemantikV2",
-      content: {
-        required: 6,
-        groups: [
-          [
-            "Mengapa kreativitas guru menjadi kunci dalam strategi pembelajaran kontemporer?",
-            "Bagaimana cara mengintegrasikan teknologi dalam pembelajaran secara efektif?",
-            "Apa tantangan terbesar dalam menerapkan model pembelajaran berpusat pada siswa?",
-            "Bagaimana strategi Anda dalam menghadapi keberagaman gaya belajar di kelas?",
-            "Apa peran umpan balik dalam meningkatkan hasil belajar siswa secara berkelanjutan?",
-            "Bagaimana Anda merancang evaluasi yang otentik dalam konteks SD?"
-          ]
-        ]
-      }
-    },
-    {
-      name: "Pembagian Kelompok",
-      type: "GroupsV2"
-    },
-    {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: {
-        videoId: "6V-1C9Cj6X0", // Contoh ID video Strategi
+        videoId: "6V-1C9Cj6X0",
         title: "Inovasi Strategi Pembelajaran di Era Digital",
         category: "Materi Strategi",
         evaluationText: "Tuliskan pendapat Anda mengenai salah satu strategi inovatif yang dipaparkan dalam video tersebut.",
         minWords: 100,
       },
+    },
+    {
+      name: "Pembagian Kelompok",
+      type: "GroupsV2"
     },
     {
       name: "Ayo Diskusi (LKPD)",
@@ -101,16 +101,16 @@ export const Sesi2_Strategi = {
       content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
     },
     {
-      name: "Rangkuman",
-      required: true,
-      type: "Interactive",
-      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Point Utama", points: [{ label: "Kesimpulan", text: "Rangkuman materi strategi kontemporer." }] }] }
-    },
-    {
       name: "Refleksi",
       required: true,
       type: "Interactive",
       content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa pelajaran paling berharga dari sesi ini?" }] }] }
+    },
+    {
+      name: "Rangkuman",
+      required: true,
+      type: "Interactive",
+      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Point Utama", points: [{ label: "Kesimpulan", text: "Rangkuman materi strategi kontemporer." }] }] }
     }
   ],
 };

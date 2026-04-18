@@ -20,7 +20,7 @@ export const Sesi7_5A = {
     {
       name: "Pertanyaan Pemantik",
       required: true,
-      type: "Interactive",
+      type: "PemantikV2",
       content: { required: 6, groups: [["Placeholder Pertanyaan 1", "Placeholder Pertanyaan 2", "Placeholder Pertanyaan 3", "Placeholder Pertanyaan 4", "Placeholder Pertanyaan 5"]] }
     },
     {
@@ -32,6 +32,10 @@ export const Sesi7_5A = {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: { videoId: "", title: "Video Pembelajaran Sesi 7", evaluationText: "Berikan ulasan video di sini." }
+    },
+        {
+      name: "Pembagian Kelompok",
+      type: "GroupsV2",
     },
     {
       name: "Ayo Diskusi (LKPD)",
@@ -48,16 +52,16 @@ export const Sesi7_5A = {
       content: { videoId: "", title: "Quiz / Latihan Sesi 7", evaluationText: "Tuliskan hasil refleksi kuis Anda." }
     },
     {
-      name: "Rangkuman",
-      required: true,
-      type: "Interactive",
-      content: { title: "Rangkuman Sesi 7", sections: [{ title: "Poin Utama", points: [{ label: "Kesimpulan", text: "Rangkuman belum diisi." }] }] }
-    },
-    {
       name: "Refleksi",
       required: true,
       type: "Interactive",
       content: { title: "Refleksi Sesi 7", sections: [{ title: "Refleksi Diri", points: [{ label: "Umpan Balik", text: "Refleksi belum diisi." }] }] }
+    },
+    {
+      name: "Rangkuman",
+      required: true,
+      type: "Interactive",
+      content: { title: "Rangkuman Sesi 7", sections: [{ title: "Poin Utama", points: [{ label: "Kesimpulan", text: "Rangkuman belum diisi." }] }] }
     }
   ]
 };
