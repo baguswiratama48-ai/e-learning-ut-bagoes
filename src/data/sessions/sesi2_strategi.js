@@ -60,14 +60,20 @@ export const Sesi2_Strategi = {
       content: {
         required: 6,
         groups: [
-          ["Mengapa metode ceramah saja tidak lagi cukup di era sekarang?", "Apa yang membedakan strategi tradisional dengan strategi kontemporer?", "Bagaimana teknologi mengubah peran guru di dalam kelas?", "Apakah semua sekolah di Indonesia siap menerapkan strategi kontemporer?", "Apa risiko jika guru menolak berinovasi dalam mengajar?"],
-          ["Bagaimana cara membangkitkan rasa ingin tahu siswa melalui pertanyaan?", "Apa itu Project Based Learning (PjBL)?", "Bagaimana cara menangani keterbatasan fasilitas saat ingin berinovasi?", "Mengapa kerja sama tim lebih ditekankan daripada kompetisi individu?", "Bagaimana mengukur keberhasilan strategi pembelajaran yang inovatif?"],
-          ["Apa peran media sosial dalam pembelajaran kontemporer?", "Bagaimana gamifikasi bisa meningkatkan motivasi belajar?", "Apa itu Flipped Classroom dan bagaimana menerapkannya di SD?", "Mengapa umpan balik harus diberikan secara cepat dan konstruktif?", "Bagaimana cara mengatasi gangguan distraksi digital pada siswa?"],
-          ["Bagaimana cara mendesain kelas yang fleksibel dan interaktif?", "Apa pentingnya pembelajaran berdiferensiasi?", "Bagaimana cara mengakomodasi gaya belajar yang berbeda dalam satu kelas?", "Apa itu Blended Learning?", "Bagaimana cara menyeimbangkan penggunaan gadget dengan aktivitas fisik?"],
-          ["Bagaimana cara melatih berpikir kritis pada anak SD?", "Apa pentingnya literasi digital bagi guru dan siswa?", "Bagaimana cara mengintegrasikan nilai karakter dalam strategi kontemporer?", "Apa tantangan mengajar generasi Alpha?", "Bagaimana cara mempertahankan antusiasme belajar siswa dalam jangka panjang?"],
-          ["Apa visi Anda sebagai guru SD kontemporer?", "Bagaimana cara membagikan inovasi Anda kepada rekan sejawat?", "Apa langkah pertama yang Anda ambil untuk merubah cara mengajar?", "Bagaimana evaluasi diri membantu peningkatan kualitas pengajaran?", "Apa pesan Anda untuk para calon guru masa depan?"],
-        ],
-      },
+          [
+            "Mengapa kreativitas guru menjadi kunci dalam strategi pembelajaran kontemporer?",
+            "Bagaimana cara mengintegrasikan teknologi dalam pembelajaran secara efektif?",
+            "Apa tantangan terbesar dalam menerapkan model pembelajaran berpusat pada siswa?",
+            "Bagaimana strategi Anda dalam menghadapi keberagaman gaya belajar di kelas?",
+            "Apa peran umpan balik dalam meningkatkan hasil belajar siswa secara berkelanjutan?",
+            "Bagaimana Anda merancang evaluasi yang otentik dalam konteks SD?"
+          ]
+        ]
+      }
+    },
+    {
+      name: "Pembagian Kelompok",
+      type: "GroupsV2"
     },
     {
       name: "Video Pembelajaran",

@@ -142,14 +142,20 @@ export const Sesi2_ABK = {
       content: {
         required: 6,
         groups: [
-          ["Apa tantangan terbesar guru saat menghadapi ABK di kelas umum?", "Mengapa label negatif harus dihindari saat identifikasi ABK?", "Bagaimana cara melibatkan orang tua dalam penanganan ABK?", "Apakah inklusi selalu menjadi solusi terbaik?", "Apa yang Anda lakukan jika ada siswa yang diduga lamban belajar?"],
-          ["Bagaimana modifikasi kurikulum dilakukan untuk ABK?", "Apa perbedaan antara integrasi dan inklusi?", "Mengapa aksesibilitas fisik penting di sekolah?", "Bagaimana cara membangun empati siswa lain terhadap ABK?", "Siapa saja tim ahli yang terlibat dalam penanganan ABK?"],
-          ["Apa saja ciri umum anak dengan hambatan penglihatan?", "Bagaimana cara berkomunikasi dengan anak hambatan pendengaran?", "Apa itu ADHD dan bagaimana penanganannya di kelas?", "Mengapa deteksi dini sangat krusial?", "Bagaimana peran lingkungan dalam perkembangan ABK?"],
-          ["Apa itu IEP (Individualized Education Program)?", "Bagaimana cara menilai hasil belajar ABK?", "Apa saja media pembelajaran adaptif?", "Mengapa fleksibilitas guru sangat diperlukan?", "Bagaimana menangani perilaku tantrum di kelas?"],
-          ["Bagaimana menciptakan iklim kelas yang ramah ABK?", "Apa pentingnya kolaborasi antar guru?", "Bagaimana cara memberikan penguatan positif pada ABK?", "Apa dampak sosial bagi ABK yang tidak tertangani?", "Bagaimana prospek masa depan ABK di era inklusif?"],
-          ["Apa kesimpulan Anda tentang hak pendidikan bagi ABK?", "Bagaimana cara mengatasi stigma masyarakat terhadap ABK?", "Apa harapan Anda untuk sistem pendidikan inklusif di Indonesia?", "Bagaimana teknologi membantu pembelajaran ABK?", "Apa langkah kecil yang bisa Anda lakukan mulai besok?"],
-        ],
-      },
+          [
+            "Apa pemahaman Anda tentang perbedaan antara Autism dan ADHD?",
+            "Bagaimana cara mengidentifikasi anak yang mengalami ODD di lingkungan sekolah?",
+            "Apa peran guru dalam mendukung anak dengan gangguan perilaku di kelas inklusif?",
+            "Mengapa kolaborasi dengan orang tua sangat penting dalam penanganan anak ABK?",
+            "Bagaimana strategi Anda dalam menghadapi anak yang menunjukkan perilaku agresif?",
+            "Apa yang dimaksud dengan spektrum dalam Autistic Spectrum Disorder (ASD)?"
+          ]
+        ]
+      }
+    },
+    {
+      name: "Pembagian Kelompok",
+      type: "GroupsV2"
     },
     {
       name: "Video Pembelajaran",

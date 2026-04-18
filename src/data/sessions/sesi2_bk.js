@@ -238,6 +238,8 @@ export const Sesi2_BK = {
         ],
       },
     },
+      },
+    },
     {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
@@ -248,6 +250,10 @@ export const Sesi2_BK = {
         evaluationText: "Susunlah poin-poin penting dari video yang telah Anda tonton.",
         minWords: 100,
       },
+    },
+    {
+      name: "Pembagian Kelompok",
+      type: "GroupsV2",
     },
     {
       name: "Ayo Diskusi (LKPD)",
