@@ -27,6 +27,7 @@ import { LkpdClass6A } from "./components/LkpdClass6A";
 import { LkpdClass5A } from "./components/LkpdClass5A";
 import QuizClass5A from "./components/QuizClass5A";
 import QuizClass6A from "./components/QuizClass6A";
+import RangkumanClass6A from "./components/RangkumanClass6A";
 import { useDraft } from "./hooks/useDraft";
 import { getPemantikForStudent } from "./utils/helpers";
 import { DashboardTutor as DashboardUI } from "./components/DashboardTutor";
@@ -1106,6 +1107,16 @@ function SectionPage({ user }) {
             />
           )}
         </div>
+      ) : (id === "3" && sectionName === "Rangkuman") ? (
+        // Rangkuman khusus Kelas 6A ABK
+        <RangkumanClass6A
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+          status={status}
+          onComplete={(content) => handleAction(content)}
+        />
       ) : ((id === "1" || id === "2") && sectionName === "Rangkuman") ? (
         <InteractiveRangkumanClass8
           user={user}
