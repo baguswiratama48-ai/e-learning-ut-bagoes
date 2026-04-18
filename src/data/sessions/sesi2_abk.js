@@ -40,21 +40,94 @@ export const Sesi2_ABK = {
       name: "Materi Pembelajaran",
       type: "MateriV2",
       content: {
-        title: "Materi Penanganan ABK",
-        subtitle: "Konsep Dasar dan Identifikasi",
+        title: "Anak Dengan Gangguan Perilaku",
+        subtitle: "Autism, ADD/ADHD, dan ODD",
+        evaluationQuestion: "Apa saja jenis Anak Dengan Gangguan Perilaku yang anda ketahui dari materi tadi?",
+        minWords: 15, // Disesuaikan agar tetap ringkas di HP
         sections: [
           {
             letter: "A",
-            title: "Identifikasi ABK di Kelas Inklusif",
-            description: "Proses awal menemukenali hambatan belajar pada siswa.",
+            title: "Anak dengan Gangguan Autism",
+            description: "Memahami hakikat dan spektrum gangguan autisme pada anak.",
             points: [
               {
-                label: "Tujuan Identifikasi",
-                text: "Memberikan layanan yang sesuai kebutuhan siswa.",
+                label: "Pengertian Autism",
+                text: "Autism adalah suatu gangguan perkembangan yang berat sehingga dimasukkan ke dalam kelompok Pervasive Development Disorder (PDD). Ditandai dengan adanya kelainan pada fungsi sosial, bahasa, komunikasi, dan perilaku yang tidak biasa.",
                 items: [
-                  "Menemukan hambatan belajar",
-                  "Menentukan jenis bantuan",
-                  "Rujukan ke tenaga ahli jika diperlukan"
+                  "Autistic Spectrum Disorder (ASD): Variasi bentuk dan tingkat keparahan (ringan sampai berat).",
+                  "Kelainan fungsi sosial & komunikasi.",
+                  "Minat yang tidak biasa (Mash & Wolfe, 2005)."
+                ]
+              }
+            ]
+          },
+          {
+            letter: "B",
+            title: "Anak Penyandang ADD/ADHD",
+            description: "Gangguan pemusatan perhatian dan hiperaktivitas.",
+            points: [
+              {
+                label: "Pengertian & Diagnosis",
+                text: "ADD/ADHD merupakan akronim dari Attention Deficit (Hyperactivity) Disorder. Di Indonesia dikenal sebagai GPPH (Gangguan Pemusatan Perhatian dan Hiperaktivitas).",
+                items: [
+                  "Diagnosis: Riwayat medis, wawancara klinis, kuesioner, dan observasi.",
+                  "Komponen Utama: Inattention, Hiperaktif, dan Impulsif."
+                ]
+              },
+              {
+                label: "Karakteristik Utama",
+                text: "Gejala yang sering muncul pada anak ADD/ADHD mencakup masalah perilaku dan interaksi.",
+                items: [
+                  "Inattention: Ceroboh, sulit fokus, mudah lupa.",
+                  "Hiperaktif: Tidak bisa diam, banyak bicara.",
+                  "Impulsif: Menjawab sebelum selesai, sulit menunggu giliran."
+                ]
+              },
+              {
+                label: "Penyebab & Penanganan",
+                text: "Meliputi faktor biologis, neurologis, dan lingkungan.",
+                items: [
+                  "Penanganan: Medikasi (obat) dan Manajemen Perilaku.",
+                  "Tim: Psikolog, Neurolog, Terapis, Orang Tua, dan Guru."
+                ]
+              }
+            ]
+          },
+          {
+            letter: "C",
+            title: "Anak Penyandang ODD",
+            description: "Oppositional Defiant Disorder (Gangguan perilaku menentang).",
+            points: [
+              {
+                label: "Pengertian ODD",
+                text: "ODD adalah gangguan perilaku mengganggu (disruptive behavior) yang ditandai dengan ketidakpatuhan dan menentang otoritas.",
+                items: [
+                  "Ciri utama: Perilaku bermusuhan, negatif, dan menentang orang dewasa.",
+                  "Diagnosis jika terjadi minimal 6 bulan."
+                ]
+              },
+              {
+                label: "Karakteristik & Penanganan",
+                text: "Gejala meliputi mudah marah, suka berdebat, dan menolak aturan.",
+                items: [
+                  "Penyebab: Biologis, Psikososial (pola asuh), dan Sosial.",
+                  "Penanganan: Training keterampilan kognitif dan manajemen perilaku orang tua."
+                ]
+              }
+            ]
+          },
+          {
+            letter: "D",
+            title: "Rangkuman",
+            description: "Poin-poin inti penanganan gangguan perilaku.",
+            points: [
+              {
+                label: "Kesimpulan Inti",
+                text: "Gangguan perilaku (Autism, ADHD, ODD) memerlukan identifikasi yang tepat dan kerja sama antara guru dan orang tua.",
+                items: [
+                  "ODD = Ketidakpatuhan & Sikap Bermusuhan.",
+                  "ADD/ADHD = Masalah Perhatian & Hiperaktivitas.",
+                  "Penanganan: Medikasi, Terapi, dan Pelatihan Orang Tua."
                 ]
               }
             ]

@@ -432,8 +432,8 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
             <span className="material-symbols-outlined text-4xl text-yellow-400">psychology</span>
           </div>
           <h3 className="text-2xl md:text-4xl font-black mb-6 tracking-tight">Evaluasi Pemahaman 💬</h3>
-          <p className="text-sm md:text-lg text-white/70 font-medium mb-12 max-w-2xl mx-auto italic">
-            "Setelah mempelajari seluruh poin di atas, apa kesimpulan atau pelajaran terpenting yang Anda dapatkan? Bagaimana Anda akan menerapkannya nanti?"
+          <p className="text-sm md:text-lg text-white/70 font-medium mb-12 max-w-2xl mx-auto italic leading-relaxed">
+            "{config.content.evaluationQuestion || "Setelah mempelajari seluruh poin di atas, apa kesimpulan atau pelajaran terpenting yang Anda dapatkan?"}"
           </p>
           <div className="max-w-2xl mx-auto">
              <InputArea 
@@ -442,8 +442,8 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
                onSave={handleAction}
                loading={loading}
                status={status}
-               placeholder="Ketik refleksi pemahaman Anda disini... (Minimal 20 kata)"
-               minWords={20}
+               placeholder={config.content.inputPlaceholder || "Ketik refleksi pemahaman Anda disini..."}
+               minWords={config.content.minWords || 20}
              />
           </div>
         </div>
