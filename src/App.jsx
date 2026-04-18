@@ -1000,9 +1000,130 @@ function SectionPage({ user }) {
         </div>
       </div>
 
-      {sessionConfig ? (
+      {((id === "1" || id === "2") && sectionName === "Kuis dan Latihan") || 
+       (id === "4" && sectionName === "Kuis dan Latihan") ? (
+        <div className="space-y-6">
+          {id === "4" ? (
+            <QuizClass5A 
+              user={user} 
+              meetingId={meetingId} 
+              submissions={submissions}
+              onComplete={(content) => handleAction(content)}
+            />
+          ) : (
+            <InteractiveQuizClass8
+              user={user}
+              classId={id}
+              meetingId={meetingId}
+              submissions={submissions}
+              onComplete={(content) => handleAction(content)}
+            />
+          )}
+          {tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : ((id === "1" || id === "2") && sectionName === "Ayo Diskusi (LKPD)") ||
+          (id === "3" && sectionName === "Ayo Diskusi (LKPD)") ||
+          (id === "4" && sectionName === "Ayo Diskusi (LKPD)") ? (
+        <div className="space-y-4">
+          {id === "3" ? (
+             <LkpdClass6A user={user} classId={id} meetingId={meetingId} submissions={submissions} />
+          ) : id === "4" ? (
+             <LkpdClass5A user={user} meetingId={meetingId} submissions={submissions} onComplete={(content) => handleAction(content)} />
+          ) : (
+            <InteractiveLKMClass8
+              user={user}
+              classId={id}
+              meetingId={meetingId}
+              submissions={submissions}
+              status={status}
+              loading={loading}
+              onComplete={async (finalContent) => {
+                setLoading(true);
+                try {
+                  const payload = {
+                    student_email: user.email,
+                    class_id: id,
+                    meeting_num: meetingId,
+                    section_name: sectionName,
+                    content: finalContent,
+                  };
+                  const { data, error } = await supabase.from("submissions").insert([payload]).select();
+                  if (!error && data && data.length > 0) {
+                    setStatus(data[0]);
+                    setSubmissions(prev => [...prev, data[0]]);
+                  }
+                } catch (err) {
+                  console.log(err);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            />
+          )}
+        </div>
+      ) : ((id === "1" || id === "2") && sectionName === "Rangkuman") ? (
+        <InteractiveRangkumanClass8
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+          status={status}
+          onComplete={async (finalContent) => {
+            setLoading(true);
+            try {
+              const payload = {
+                student_email: user.email,
+                class_id: id,
+                meeting_num: meetingId,
+                section_name: sectionName,
+                content: finalContent,
+              };
+              const { data, error } = await supabase.from("submissions").insert([payload]).select();
+              if (!error && data && data.length > 0) {
+                setStatus(data[0]);
+                setSubmissions(prev => [...prev, data[0]]);
+              }
+            } catch (err) {
+              console.log(err);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+      ) : sectionName === "Refleksi" ? (
+        <div className="space-y-6">
+          <InteractiveReflection
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
+          {tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : sessionConfig ? (
         renderStaticContent()
-      ) : (id === "1" || id === "2") && sectionName === "Kuis dan Latihan" ? (
+      ) : (
         <div className="space-y-6">
           <InteractiveQuizClass8
             user={user}

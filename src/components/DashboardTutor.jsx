@@ -161,11 +161,19 @@ export const DashboardTutor = ({
   const calculateProgress = (studentEmail, meetingNum) => {
     const sessionConfig = getSessionConfig(activeTab, meetingNum);
     
-    // Default fallback if no config
+    // Default fallback if no config (Sesi 1/Old Logic)
     let requiredMenus = ["Pertanyaan Pemantik", "Ayo Diskusi (LKPD)", "Kuis dan Latihan", "Refleksi"];
     
     if (sessionConfig) {
-      requiredMenus = sessionConfig.sections.map(s => s.name);
+      // Only count menus marked as required in the config
+      requiredMenus = sessionConfig.sections
+        .filter(s => s.required)
+        .map(s => s.name);
+      
+      // Safety: if nothing is marked required, fallback to all sections
+      if (requiredMenus.length === 0) {
+        requiredMenus = sessionConfig.sections.map(s => s.name);
+      }
     }
 
     const studentSubs = (submissions || []).filter(s => 
@@ -175,8 +183,8 @@ export const DashboardTutor = ({
 
     const completedCount = requiredMenus.filter(menu => 
       studentSubs.some(s => {
-        // Handle custom section mapping (fallback for Sesi 1)
-        if (!sessionConfig) {
+        // Handle custom section mapping (fallback for older sessions)
+        if (!sessionConfig || String(meetingNum) === "1") {
           if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
           if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
         }

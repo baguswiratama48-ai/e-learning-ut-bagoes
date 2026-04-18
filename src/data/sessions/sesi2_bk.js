@@ -188,6 +188,7 @@ export const Sesi2_BK = {
     },
     {
       name: "Pertanyaan Pemantik",
+      required: true,
       type: "PemantikV2",
       content: {
         required: 6,
@@ -249,24 +250,27 @@ export const Sesi2_BK = {
       },
     },
     {
-      name: "Ayo Diskusi",
+      name: "Ayo Diskusi (LKPD)",
       type: "MateriV2",
       tutorLabel: "LKM",
       content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Topik", text: "Diskusikan perkembangan fisik motorik anak SD." }] }] }
     },
     {
       name: "Kuis dan Latihan",
+      required: true,
       type: "VideoEvalV2",
       tutorLabel: "Quiz",
       content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
     },
     {
       name: "Rangkuman",
+      required: true,
       type: "MateriV2",
       content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Penting", text: "Isi rangkuman BK Sesi 2." }] }] }
     },
     {
       name: "Refleksi",
+      required: true,
       type: "MateriV2",
       content: { title: "Refleksi Sesi 2", sections: [{ title: "Ulasan Diri", points: [{ label: "Refleksi", text: "Apa kesan Anda pada sesi ini?" }] }] }
     }

@@ -55,6 +55,7 @@ export const Sesi2_Strategi = {
     },
     {
       name: "Pertanyaan Pemantik",
+      required: true,
       type: "PemantikV2",
       content: {
         required: 6,
@@ -80,24 +81,27 @@ export const Sesi2_Strategi = {
       },
     },
     {
-      name: "Ayo Diskusi",
+      name: "Ayo Diskusi (LKPD)",
       type: "MateriV2",
       tutorLabel: "LKM",
       content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Target", text: "Diskusikan penerapan strategi pembelajaran kontemporer." }] }] }
     },
     {
       name: "Kuis dan Latihan",
+      required: true,
       type: "VideoEvalV2",
       tutorLabel: "Quiz",
       content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
     },
     {
       name: "Rangkuman",
+      required: true,
       type: "MateriV2",
       content: { title: "Rangkuman Sesi 2", sections: [{ title: "Point Utama", points: [{ label: "Kesimpulan", text: "Rangkuman materi strategi kontemporer." }] }] }
     },
     {
       name: "Refleksi",
+      required: true,
       type: "MateriV2",
       content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa pelajaran paling berharga dari sesi ini?" }] }] }
     }

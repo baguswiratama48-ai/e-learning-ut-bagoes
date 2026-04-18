@@ -7,6 +7,7 @@ export const Sesi6_8C = {
   sections: [
     {
       name: "Informasi Modul",
+      label: "RAT/SAT",
       type: "RATSATV2",
       tutorLabel: "RAT/SAT",
       content: {
@@ -18,6 +19,7 @@ export const Sesi6_8C = {
     },
     {
       name: "Pertanyaan Pemantik",
+      required: true,
       type: "PemantikV2",
       content: { required: 6, groups: [["Placeholder Pertanyaan 1", "Placeholder Pertanyaan 2", "Placeholder Pertanyaan 3", "Placeholder Pertanyaan 4", "Placeholder Pertanyaan 5"]] }
     },
@@ -32,24 +34,27 @@ export const Sesi6_8C = {
       content: { videoId: "", title: "Video Pembelajaran Sesi 6", evaluationText: "Berikan ulasan video di sini." }
     },
     {
-      name: "Ayo Diskusi",
+      name: "Ayo Diskusi (LKPD)",
       type: "MateriV2",
       tutorLabel: "LKM",
       content: { title: "Forum Diskusi / LKM Sesi 6", sections: [{ title: "Instruksi LKM", points: [{ label: "Tugas", text: "Panduan diskusi belum diisi." }] }] }
     },
     {
       name: "Kuis dan Latihan",
+      required: true,
       type: "VideoEvalV2",
       tutorLabel: "Quiz",
       content: { videoId: "", title: "Quiz / Latihan Sesi 6", evaluationText: "Tuliskan hasil refleksi kuis Anda." }
     },
     {
       name: "Rangkuman",
+      required: true,
       type: "MateriV2",
       content: { title: "Rangkuman Sesi 6", sections: [{ title: "Poin Utama", points: [{ label: "Kesimpulan", text: "Rangkuman belum diisi." }] }] }
     },
     {
       name: "Refleksi",
+      required: true,
       type: "MateriV2",
       content: { title: "Refleksi Sesi 6", sections: [{ title: "Refleksi Diri", points: [{ label: "Umpan Balik", text: "Refleksi belum diisi." }] }] }
     }
