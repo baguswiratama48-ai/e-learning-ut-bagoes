@@ -2,4 +2,4 @@
 2. setelah selesai coding langsung gitpush 
 3. tampilan ui/ux mobileresponsif dan profesional
 4. pastikan jawaban siswa tidak hilang ketika sudah menjawab 
-2. ututanya harusnya : RAT/SAT, pertyaan Pemantik, Materi Pembelajaran Video Pembelajaran, LKP ganti LKM (Lembar Kerja Mahasiswa), Quiz, Rangkuman, Refleksi
+2. urutanya harusnya : RAT/SAT, pertyaan Pemantik, Materi Pembelajaran Video Pembelajaran, LKP ganti LKM (Lembar Kerja Mahasiswa), Quiz, Rangkuman, Refleksi

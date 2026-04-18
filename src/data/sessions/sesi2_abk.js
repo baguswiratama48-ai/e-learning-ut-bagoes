@@ -7,6 +7,7 @@ export const Sesi2_ABK = {
   sections: [
     {
       name: "Informasi Modul",
+      label: "RAT/SAT",
       type: "RATSATV2",
       content: {
         title: "Penanganan Anak Berkebutuhan Khusus",
@@ -78,5 +79,27 @@ export const Sesi2_ABK = {
         minWords: 100,
       },
     },
+    {
+      name: "Ayo Diskusi",
+      type: "MateriV2",
+      tutorLabel: "LKM",
+      content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Topik", text: "Diskusikan penanganan ABK di sekolah inklusi." }] }] }
+    },
+    {
+      name: "Kuis dan Latihan",
+      type: "VideoEvalV2",
+      tutorLabel: "Quiz",
+      content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan kuis Anda." }
+    },
+    {
+      name: "Rangkuman",
+      type: "MateriV2",
+      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Utama", text: "Rangkuman materi ABK." }] }] }
+    },
+    {
+      name: "Refleksi",
+      type: "MateriV2",
+      content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa yang Anda pelajari hari ini?" }] }] }
+    }
   ],
 };

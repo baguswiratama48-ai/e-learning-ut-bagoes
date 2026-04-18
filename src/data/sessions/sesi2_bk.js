@@ -6,7 +6,8 @@ export const Sesi2_BK = {
   courseName: "Bimbingan Konseling di SD",
   sections: [
     {
-      name: "Informasi Modul", // Card 1: RAT/SAT
+      name: "Informasi Modul",
+      label: "RAT/SAT",
       type: "RATSATV2",
       content: {
         title: "Bimbingan dan Konseling di SD",
@@ -247,5 +248,27 @@ export const Sesi2_BK = {
         minWords: 100,
       },
     },
+    {
+      name: "Ayo Diskusi",
+      type: "MateriV2",
+      tutorLabel: "LKM",
+      content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Topik", text: "Diskusikan perkembangan fisik motorik anak SD." }] }] }
+    },
+    {
+      name: "Kuis dan Latihan",
+      type: "VideoEvalV2",
+      tutorLabel: "Quiz",
+      content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
+    },
+    {
+      name: "Rangkuman",
+      type: "MateriV2",
+      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Penting", text: "Isi rangkuman BK Sesi 2." }] }] }
+    },
+    {
+      name: "Refleksi",
+      type: "MateriV2",
+      content: { title: "Refleksi Sesi 2", sections: [{ title: "Ulasan Diri", points: [{ label: "Refleksi", text: "Apa kesan Anda pada sesi ini?" }] }] }
+    }
   ],
 };

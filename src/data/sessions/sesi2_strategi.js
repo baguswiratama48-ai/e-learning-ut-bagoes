@@ -7,6 +7,7 @@ export const Sesi2_Strategi = {
   sections: [
     {
       name: "Informasi Modul",
+      label: "RAT/SAT",
       type: "RATSATV2",
       content: {
         title: "Strategi Pembelajaran Kontemporer",
@@ -78,5 +79,27 @@ export const Sesi2_Strategi = {
         minWords: 100,
       },
     },
+    {
+      name: "Ayo Diskusi",
+      type: "MateriV2",
+      tutorLabel: "LKM",
+      content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Target", text: "Diskusikan penerapan strategi pembelajaran kontemporer." }] }] }
+    },
+    {
+      name: "Kuis dan Latihan",
+      type: "VideoEvalV2",
+      tutorLabel: "Quiz",
+      content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
+    },
+    {
+      name: "Rangkuman",
+      type: "MateriV2",
+      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Point Utama", points: [{ label: "Kesimpulan", text: "Rangkuman materi strategi kontemporer." }] }] }
+    },
+    {
+      name: "Refleksi",
+      type: "MateriV2",
+      content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa pelajaran paling berharga dari sesi ini?" }] }] }
+    }
   ],
 };
