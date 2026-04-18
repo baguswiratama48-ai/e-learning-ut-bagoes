@@ -1,3 +1,8 @@
+import { sesi1_6a } from "./sesi1_6a";
+import { sesi1_bk } from "./sesi1_bk";
+import { sesi1_5a } from "./sesi1_5a";
+
+// Sesi 2
 import { Sesi2_ABK } from "./sesi2_abk";
 import { Sesi2_BK } from "./sesi2_bk";
 import { Sesi2_Strategi } from "./sesi2_strategi";
@@ -39,6 +44,9 @@ import { Sesi8_8B } from "./sesi8_8b";
 import { Sesi8_8C } from "./sesi8_8c";
 
 const ALL_SESSIONS = [
+  sesi1_6a,
+  sesi1_bk,
+  sesi1_5a,
   Sesi2_ABK,
   Sesi2_BK,
   Sesi2_Strategi,

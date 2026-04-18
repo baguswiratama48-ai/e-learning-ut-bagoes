@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, useMemo, lazy, Suspense } from "react";
+﻿import { useState, useEffect, Fragment, useMemo, lazy, Suspense } from "react";
 import {
   Routes,
   Route,
@@ -52,10 +52,10 @@ function Home({ navigate, onLoginTutor }) {
           </p>
           <p className="leading-relaxed">
             Aplikasi pembelajaran mandiri yang lebih mudah, terarah, dan lebih{" "}
-            <span className="italic font-bold text-primary">“Bagoes”</span>.
+            <span className="italic font-bold text-primary">ΓÇ£BagoesΓÇ¥</span>.
           </p>
           <p className="text-primary font-extrabold italic text-sm mt-3">
-            “Dengan E-Learning Bagoes Kuliah Jadi Lebih Bagoes”
+            ΓÇ£Dengan E-Learning Bagoes Kuliah Jadi Lebih BagoesΓÇ¥
           </p>
         </div>
 
@@ -902,9 +902,9 @@ function SectionPage({ user }) {
         .select("*")
         .eq("class_id", id)
         .eq("meeting_num", meetingId)
-        .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD", "LKPD_6A_DISCUSSION"]);
+        .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD"]);
         
-      if (!((id === "3" || id === "4") && (sectionName === "LKPD (Lembar Kerja Peserta Didik)" || sectionName === "Ayo Diskusi (LKPD)"))) {
+      if (!((id === "3" || id === "4") && sectionName === "LKPD (Lembar Kerja Peserta Didik)") && sectionName !== "Ayo Diskusi (LKPD)") {
         query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
       }
 
@@ -995,7 +995,7 @@ function SectionPage({ user }) {
         <div>
           <h2 className="font-headline font-black text-2xl text-slate-800 leading-tight">{sectionName}</h2>
           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-            Pertemuan {meetingId} • {courseCode}
+            Pertemuan {meetingId} ΓÇó {courseCode}
           </p>
         </div>
       </div>
@@ -1121,7 +1121,108 @@ function SectionPage({ user }) {
             </div>
           )}
         </div>
-      ) : (id === "1" || id === "2") && (sectionName === "LKPD (Lembar Kerja Peserta Didik)" || sectionName === "Ayo Diskusi (LKPD)") ? (
+      ) : sessionConfig ? (
+        renderStaticContent()
+      ) : (
+        <div className="space-y-6">
+          <InteractiveQuizClass8
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
+          {tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (id === "1" || id === "2") && sectionName === "Ayo Diskusi (LKPD)" ? (
+        <InteractiveLKMClass8
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+          status={status}
+          loading={loading}
+          onComplete={async (finalContent) => {
+            setLoading(true);
+            try {
+              const payload = {
+                student_email: user.email,
+                class_id: id,
+                meeting_num: meetingId,
+                section_name: sectionName,
+                content: finalContent,
+              };
+              const { data, error } = await supabase.from("submissions").insert([payload]).select();
+              if (!error && data && data.length > 0) {
+                setStatus(data[0]);
+              }
+            } catch (err) {
+              console.log(err);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+      ) : (id === "1" || id === "2") && sectionName === "Rangkuman" ? (
+        <InteractiveRangkumanClass8
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+          status={status}
+          onComplete={async (finalContent) => {
+            setLoading(true);
+            try {
+              const payload = {
+                student_email: user.email,
+                class_id: id,
+                meeting_num: meetingId,
+                section_name: sectionName,
+                content: finalContent,
+              };
+              const { data, error } = await supabase.from("submissions").insert([payload]).select();
+              if (!error && data && data.length > 0) {
+                setStatus(data[0]);
+              }
+            } catch (err) {
+              console.log(err);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+      ) : id === "3" && sectionName === "Ayo Diskusi (LKPD)" ? (
+        <LkpdClass6A
+          user={user}
+          classId={id}
+          meetingId={meetingId}
+          submissions={submissions}
+        />
+      ) : id === "4" && sectionName === "Ayo Diskusi (LKPD)" ? (
+        <LkpdClass5A
+          user={user}
+          meetingId={meetingId}
+          submissions={submissions}
+          onComplete={(content) => handleAction(content)}
+        />
+      ) : id === "4" && sectionName === "Kuis dan Latihan" ? (
+        <QuizClass5A
+          user={user}
+          meetingId={meetingId}
+          submissions={submissions}
+          onComplete={(content) => handleAction(content)}
+        />
+      ) : (id === "1" || id === "2") && sectionName === "LKPD (Lembar Kerja Peserta Didik)" ? (
         <div className="space-y-4">
           <InteractiveMindMap
             user={user}
@@ -1149,16 +1250,133 @@ function SectionPage({ user }) {
             }}
           />
         </div>
-      ) : sessionConfig ? (
-        renderStaticContent()
+      ) : sectionName === "Refleksi" ? (
+        <div className="space-y-6">
+          <InteractiveReflection
+            user={user}
+            classId={id}
+            meetingId={meetingId}
+            submissions={submissions}
+            onComplete={(content) => handleAction(content)}
+          />
+          {tutorFeedback && (
+            <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-3xl flex items-center gap-4">
+              <span className="material-symbols-outlined text-yellow-500 text-4xl">stars</span>
+              <div>
+                <p className="font-bold text-yellow-700 mb-1 text-lg">Nilai dari Tutor</p>
+                <p className="text-sm text-yellow-800 mb-1 italic">
+                  "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (id === "1" || id === "2") && sectionName === "Rangkuman" ? (
+        <div className="space-y-8">
+          <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-10 text-white relative overflow-hidden shadow-2xl">
+            <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+                <span className="material-symbols-outlined text-sm">assignment</span> Tugas Rangkuman
+              </div>
+              <h3 className="text-2xl md:text-3xl font-black mb-4">Buatlah Rangkuman Modul 1</h3>
+              <div className="bg-rose-500 bg-opacity-10 border border-rose-500 border-opacity-30 p-4 rounded-2xl flex items-center gap-3 mb-8">
+                <span className="material-symbols-outlined text-rose-500 animate-pulse">block</span>
+                <p className="text-sm font-black text-rose-400 uppercase tracking-tighter">Jangan Menggunakan AI!!</p>
+              </div>
+            </div>
+          </div>
+          {status ? (
+            <div className="bg-green-50 border border-green-200 p-8 rounded-[3rem] text-center flex flex-col items-center">
+              <span className="material-symbols-outlined text-5xl text-green-500 mb-4">verified</span>
+              <h4 className="text-xl font-black text-slate-800 mb-2">Rangkuman Berhasil Dikirim</h4>
+              <div className="bg-white p-8 rounded-3xl w-full text-left shadow-sm border border-green-100 max-w-2xl mt-6">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Isi Rangkuman Anda:</p>
+                <p className="text-sm text-slate-700 leading-relaxed italic text-justify whitespace-pre-wrap">"{status.content}"</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="relative">
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Ketik rangkuman Anda di sini... (Harap ketik manual, jangan copy-paste hasil AI)"
+                  className="w-full min-h-[400px] bg-slate-50 border border-slate-200 rounded-[2.5rem] p-8 md:p-10 text-slate-700 placeholder:text-slate-400 focus:bg-white focus:border-primary outline-none transition-all leading-relaxed text-justify shadow-inner"
+                ></textarea>
+                <div className="absolute bottom-6 right-8 flex items-center gap-2 bg-white bg-opacity-80 backdrop-blur-md px-4 py-2 rounded-2xl border shadow-sm">
+                  <p className={`text-xs font-black tracking-tighter transition-colors ${content.trim().split(/\s+/).filter(w => w.length > 0).length >= 200 ? "text-green-600" : "text-slate-400"}`}>
+                    {content.trim().split(/\s+/).filter(w => w.length > 0).length} / 200 KATA
+                  </p>
+                  {content.trim().split(/\s+/).filter(w => w.length > 0).length >= 200
+                    ? <span className="material-symbols-outlined text-green-500 text-lg">check_circle</span>
+                    : <div className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-pulse"></div>
+                  }
+                </div>
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+                <p className="text-[11px] text-slate-400 font-medium italic order-2 md:order-1 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">info</span>
+                  Rangkuman yang sudah dikirim tidak dapat diubah kembali.
+                </p>
+                <button
+                  onClick={() => handleAction(content)}
+                  disabled={loading || content.trim().split(/\s+/).filter(w => w.length > 0).length < 200}
+                  className="w-full md:w-auto min-w-[280px] bg-primary text-white font-black py-5 px-10 rounded-2xl hover:bg-[#1a2169] hover:scale-105 active:scale-95 transition-all disabled:opacity-30 shadow-xl flex items-center justify-center gap-3 order-1 md:order-2"
+                >
+                  {loading ? "MENGIRIM..." : "KIRIM RANGKUMAN"}
+                  <span className="material-symbols-outlined font-black">send</span>
+                </button>
+              </div>
+              {content.trim().length > 0 && content.trim().split(/\s+/).filter(w => w.length > 0).length < 200 && (
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center gap-3 animate-pulse">
+                  <span className="material-symbols-outlined text-amber-500">priority_high</span>
+                  <p className="text-xs text-amber-700 font-bold uppercase tracking-wider">
+                    Kurang {200 - content.trim().split(/\s+/).filter(w => w.length > 0).length} kata lagi untuk mengaktifkan tombol kirim.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      ) : status ? (
+        <div className="bg-green-50 text-green-700 p-6 md:p-10 rounded-3xl text-center flex flex-col items-center border border-green-200">
+          <span className="material-symbols-outlined text-5xl mb-4 text-green-500">check_circle</span>
+          <p className="font-bold text-xl mb-2">Jawaban Anda Sudah Terkirim!</p>
+          <p className="text-sm font-medium opacity-70">Jawaban sedang ditinjau oleh Tutor.</p>
+        </div>
       ) : (
-        <div className="p-20 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed">
-          <h3 className="text-xl font-black text-slate-400">Konten Belum Tersedia untuk Sesi {meetingId}</h3>
-          <p className="text-sm text-slate-400 mt-2">Silakan hubungi Tutor untuk informasi lebih lanjut.</p>
+        <div className="space-y-6">
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Tulis jawaban Anda..."
+            className="w-full min-h-[300px] p-6 rounded-2xl border bg-slate-50 focus:bg-white focus:border-primary outline-none transition-all resize-none"
+          ></textarea>
+          <button
+            onClick={() => handleAction(content)}
+            disabled={loading || !content.trim()}
+            className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary shadow-opacity-20 hover:bg-[#1a2169] transition-all"
+          >
+            {loading ? "Sedang Mengirim..." : "Kirim Jawaban"}
+          </button>
         </div>
       )}
 
-      {/* Action Navigation */}
+      {/* Universal Tutor Feedback Display */}
+      {tutorFeedback && (
+        <div className="mt-8 bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 p-6 md:p-8 rounded-3xl flex items-center gap-5 shadow-sm animate-in fade-in duration-500">
+          <div className="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+            <span className="material-symbols-outlined text-yellow-500 text-3xl">stars</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-black text-yellow-700 mb-1 text-lg uppercase tracking-tight">Nilai dari Tutor</p>
+            <p className="text-sm text-yellow-800 font-semibold italic leading-relaxed">
+              "{FEEDBACK_MESSAGES[parseInt(tutorFeedback.content)] || tutorFeedback.content}"
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="mt-10 pt-6 border-t border-slate-100">
         <Link
           to={`/class/${id}/meeting/${meetingId}`}

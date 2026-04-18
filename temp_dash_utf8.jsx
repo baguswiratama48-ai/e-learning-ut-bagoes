@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useMemo } from "react";
+﻿import React, { useState, useEffect, Fragment, useMemo } from "react";
 import { supabase } from "../supabaseClient";
 import { STUDENTS } from "../data/students";
 import { CLASSES, MENUS, FEEDBACK_MESSAGES } from "../data/constants";
@@ -184,10 +184,9 @@ export const DashboardTutor = ({
     const completedCount = requiredMenus.filter(menu => 
       studentSubs.some(s => {
         // Handle custom section mapping (fallback for older sessions)
-        if (String(meetingNum) === "1") {
+        if (!sessionConfig || String(meetingNum) === "1") {
           if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
           if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
-          if ((activeTab === "1" || activeTab === "2") && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
         }
         return s.section_name === menu;
       })
@@ -217,10 +216,9 @@ export const DashboardTutor = ({
               return dynamicMenus.map(menu => {
                 const hasSub = studentSubs.find(s => {
                   // Fallback for special Sesi 1 logic if needed
-                  if (String(selectedMeeting) === "1") {
+                  if (!sessionConfig) {
                     if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
                     if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
-                    if ((activeTab === "1" || activeTab === "2") && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
                   }
                   return s.section_name === menu;
                 });
@@ -288,11 +286,8 @@ export const DashboardTutor = ({
 
                 {(() => {
                   const sub = studentSubs.find(s => {
-                    if (String(selectedMeeting) === "1") {
-                      if (activeTab === "3" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
-                      if (activeTab === "4" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
-                      if ((activeTab === "1" || activeTab === "2") && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
-                    }
+                    if (activeTab === "3" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
+                    if (activeTab === "4" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
                     return s.section_name === activeCorrectionTab;
                   });
                   const feedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${activeCorrectionTab}`);
@@ -654,7 +649,7 @@ export const DashboardTutor = ({
           <div className="mb-10 animate-in fade-in slide-in-from-top-4 duration-500">
              <div className="flex items-center gap-3 mb-6 px-4">
                 <span className="material-symbols-outlined text-primary">diversity_3</span>
-                <h3 className="text-xl font-black text-slate-800 tracking-tight uppercase">Daftar Kelompok Aktif — Sesi {selectedMeeting}</h3>
+                <h3 className="text-xl font-black text-slate-800 tracking-tight uppercase">Daftar Kelompok Aktif ΓÇö Sesi {selectedMeeting}</h3>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {groups.map((group, gidx) => (
@@ -743,7 +738,7 @@ export const DashboardTutor = ({
                            </div>
                            <div>
                               <p className="font-black text-slate-900 uppercase text-sm leading-none mb-1.5">{student.name}</p>
-                              <p className="text-[10px] font-black text-slate-400 tracking-tighter uppercase">{student.nim} — {student.email}</p>
+                              <p className="text-[10px] font-black text-slate-400 tracking-tighter uppercase">{student.nim} ΓÇö {student.email}</p>
                            </div>
                         </div>
                       </td>
