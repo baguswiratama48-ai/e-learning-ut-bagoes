@@ -56,7 +56,7 @@ export const Sesi2_ABK = {
     {
       name: "Pertanyaan Pemantik",
       required: true,
-      type: "PemantikV2",
+      type: "Interactive",
       content: {
         required: 6,
         groups: [
@@ -82,27 +82,28 @@ export const Sesi2_ABK = {
     },
     {
       name: "Ayo Diskusi (LKPD)",
-      type: "MateriV2",
+      required: true,
+      type: "Interactive",
       tutorLabel: "LKM",
       content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Topik", text: "Diskusikan penanganan ABK di sekolah inklusi." }] }] }
     },
     {
       name: "Kuis dan Latihan",
       required: true,
-      type: "VideoEvalV2",
+      type: "Interactive",
       tutorLabel: "Quiz",
       content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan kuis Anda." }
     },
     {
       name: "Rangkuman",
       required: true,
-      type: "MateriV2",
+      type: "Interactive",
       content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Utama", text: "Rangkuman materi ABK." }] }] }
     },
     {
       name: "Refleksi",
       required: true,
-      type: "MateriV2",
+      type: "Interactive",
       content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa yang Anda pelajari hari ini?" }] }] }
     }
   ],
