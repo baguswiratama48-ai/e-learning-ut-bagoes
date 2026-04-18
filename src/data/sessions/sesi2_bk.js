@@ -280,7 +280,4 @@ export const Sesi2_BK = {
       content: { title: "Rangkuman Sesi 2", sections: [{ title: "Kesimpulan", points: [{ label: "Poin Penting", text: "Isi rangkuman BK Sesi 2." }] }] }
     }
   ],
-", text: "Apa kesan Anda pada sesi ini?" }] }] }
-    }
-  ],
 };
