@@ -42,12 +42,7 @@ export const Sesi2_ABK = {
         required: 1,
         groups: [
           [
-            "Apa yang terlintas di pikiran mu setelah melihat video diatas?",
-            "Apa pemahaman Anda tentang perbedaan antara Autism dan ADHD?",
-            "Bagaimana cara mengidentifikasi anak yang mengalami ODD di lingkungan sekolah?",
-            "Apa peran guru dalam mendukung anak dengan gangguan perilaku di kelas inklusif?",
-            "Mengapa kolaborasi dengan orang tua sangat penting dalam penanganan anak ABK?",
-            "Apa yang dimaksud dengan spektrum dalam Autistic Spectrum Disorder (ASD)?"
+            "Apa yang terlintas di pikiran mu setelah melihat video diatas?"
           ]
         ]
       }
