@@ -202,7 +202,7 @@ export const VideoEvalTemplate = ({ config, content, setContent, handleAction, l
               <span className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
               Tugas Ringkasan
             </div>
-            <h3 className="text-2xl md:text-4xl font-black mb-4 tracking-tighter uppercase leading-tight">
+            <h3 className="text-lg md:text-2xl font-black mb-6 tracking-tight leading-tight">
               {config.content.evaluationText}
             </h3>
             
