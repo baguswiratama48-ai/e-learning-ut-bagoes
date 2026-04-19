@@ -566,18 +566,22 @@ function shuffleArray(array, randFunc) {
 }
 
 export default function InteractiveQuizClass8({ user, classId, meetingId, submissions, onComplete }) {
-  // Generate the 25 specific questions for this user
+  // Generate the questions for this user
   const finalQuestions = useMemo(() => {
     if (!user?.email) return [];
     
     // Seed using user's email + class details so it's consistent
     const randFunc = getSeededRandom(`${user.email}_${classId}_${meetingId}`);
     
+    // Determine how many questions per formatif (10 total for Class 8B, 25 for others)
+    const questionsPerFormatif = classId === "1" ? 2 : 5;
+    
     let selected = [];
     QUIZ_DATA.forEach(formatif => {
        const shuffledFormatif = shuffleArray(formatif.questions, randFunc);
-       const fiveSelected = shuffledFormatif.slice(0, 5).map(q => ({...q, source: formatif.topic}));
-       selected.push(...fiveSelected);
+       const countToSelect = Math.min(shuffledFormatif.length, questionsPerFormatif);
+       const sliced = shuffledFormatif.slice(0, countToSelect).map(q => ({...q, source: formatif.topic}));
+       selected.push(...sliced);
     });
     
     // Final master shuffle
@@ -618,18 +622,20 @@ export default function InteractiveQuizClass8({ user, classId, meetingId, submis
   };
 
   const calculateScore = () => {
+    if (finalQuestions.length === 0) return 0;
+    const pointsPerQuestion = 100 / finalQuestions.length;
     let score = 0;
     finalQuestions.forEach((q, idx) => {
-      if (answers[idx] === q.answer) score += 4; // 25 soal * 4 = 100
+      if (answers[idx] === q.answer) score += pointsPerQuestion;
     });
-    return score;
+    return Math.round(score);
   };
 
   const handleSubmit = () => {
     const finalScore = calculateScore();
     setGameState("FINISHED");
 
-    const reportText = `[SKOR AKHIR: ${finalScore}/100]\n(Hasil Kuis Tes Formatif 1-5 diselesaikan secara otomatis)\nTerisi: ${Object.keys(answers).length} dari 25 soal.\n\nDetail Pilihan:\n` + JSON.stringify(answers);
+    const reportText = `[SKOR AKHIR: ${finalScore}/100]\n(Hasil Kuis Tes Formatif 1-5 diselesaikan secara otomatis)\nTerisi: ${Object.keys(answers).length} dari ${finalQuestions.length} soal.\n\nDetail Pilihan:\n` + JSON.stringify(answers);
 
     onComplete(reportText);
     localStorage.removeItem(draftKey);
@@ -740,12 +746,12 @@ export default function InteractiveQuizClass8({ user, classId, meetingId, submis
         </div>
         <h1 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">KUIS EVALUASI MODUL</h1>
         <p className="text-slate-500 font-medium mb-10 leading-relaxed">
-          Sistem telah menyiapkan 25 soal dari materi Tes Formatif. Kerjakan dengan teliti dan jujur, pastikan Anda telah mempelajari seluruh materi sebelum memulai.
+          Sistem telah menyiapkan {finalQuestions.length} soal dari materi Tes Formatif. Kerjakan dengan teliti dan jujur, pastikan Anda telah mempelajari seluruh materi sebelum memulai.
         </p>
         
         <div className="grid grid-cols-2 gap-4 w-full mb-10">
           <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner">
-            <p className="text-3xl font-black text-indigo-600 mb-1">25</p>
+            <p className="text-3xl font-black text-indigo-600 mb-1">{finalQuestions.length}</p>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Soal</p>
           </div>
           <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner">
