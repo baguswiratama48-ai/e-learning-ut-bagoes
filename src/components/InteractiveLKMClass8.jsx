@@ -78,20 +78,25 @@ export default function InteractiveLKMClass8({
   const [activeTab, setActiveTab] = useState("MY_LKM");
   const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
 
-  // 4. Determine Active Missions
+  // REAKTIVITAS: State lokal untuk update instan tanpa reload
+  const [localNewPosts, setLocalNewPosts] = useState([]);
+  const [localNewComments, setLocalNewComments] = useState([]);
+  const [successMsg, setSuccessMsg] = useState(null);
+
+  const showSuccess = (msg) => {
+    setSuccessMsg(msg);
+    setTimeout(() => setSuccessMsg(null), 3000);
+  };
+
+  // Determine Active Missions
   const activeMissionsList = useMemo(() => {
-    // If we have prop missions and it's a group-based discussion
     if (propMissions && lkmConfig?.type === "GROUP_DISCUSSION") {
-      // Find the mission for THIS specific group
       const groupMission = propMissions[String(groupNumber)];
       if (groupMission) {
-        // Formulate a mission object consistent with LKM rendering
-        // Use group-specific questions if available, or the mission title/questions
         return [{ ...groupMission, id: 1 }];
       }
       return [];
     }
-    // Fallback or legacy support (though we are moving to dynamic)
     return propMissions ? Object.values(propMissions) : [];
   }, [propMissions, groupNumber, lkmConfig]);
 
@@ -107,36 +112,56 @@ export default function InteractiveLKMClass8({
 
   const [commentInputs, setCommentInputs] = useState({});
 
-  // Save to local storage automatically
+  // Auto-save logic
   useEffect(() => {
     localStorage.setItem(draftKey, JSON.stringify(answers));
   }, [answers, draftKey]);
 
-  // Validations
-  const answeredCount = answers.filter(a => a.trim().length >= 10).length;
-  const isFormComplete = answeredCount >= Math.min(currentTask.questions.length, 6);
-  const remainingRequired = Math.max(0, Math.min(currentTask.questions.length, 6) - answeredCount);
-
-  // Data fetching from props (submissions)
+  // Data merging (Server + Local)
   const allForumPosts = useMemo(() => {
-    return (submissions || [])
+    const fromServer = (submissions || [])
       .filter(s => s.section_name === "LKM_FORUM_POST")
       .map(p => {
         try { return { ...p, parsed: JSON.parse(p.content) }; } catch (e) { return { ...p, parsed: {} }; }
-      })
+      });
+    const combined = [...localNewPosts, ...fromServer];
+    const seen = new Set();
+    return combined.filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; })
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [submissions]);
+  }, [submissions, localNewPosts]);
 
   const allComments = useMemo(() => {
-    return (submissions || [])
+    const fromServer = (submissions || [])
       .filter(s => s.section_name === "LKM_COMMENT")
       .map(c => {
         try { return { ...c, parsed: JSON.parse(c.content) }; } catch (e) { return { ...c, parsed: { targetId: null, comment: "" } }; }
-      })
+      });
+    const combined = [...fromServer, ...localNewComments];
+    const seen = new Set();
+    return combined.filter(c => { if (seen.has(c.id)) return false; seen.add(c.id); return true; })
       .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-  }, [submissions]);
+  }, [submissions, localNewComments]);
 
-  // Helper funcs
+  // Statistik Keaktifan
+  const myStats = useMemo(() => {
+    const myPosts = allForumPosts.filter(p => p.student_email === user.email).length;
+    const myComments = allComments.filter(c => c.student_email === user.email).length;
+    const total = myPosts + myComments;
+
+    let badge, badgeColor, badgeDesc;
+    if (myPosts >= 1 && myComments >= 10) {
+      badge = "Sangat Aktif"; badgeColor = "bg-emerald-500 text-white"; badgeDesc = "Luar biasa! Kontribusimu sangat tinggi di forum ini.";
+    } else if (myPosts >= 1 && myComments >= 5) {
+      badge = "Aktif"; badgeColor = "bg-blue-600 text-white"; badgeDesc = "Bagus! Kamu memenuhi standar keaktifan diskusi.";
+    } else if (total >= 1) {
+      badge = "Cukup Aktif"; badgeColor = "bg-amber-400 text-slate-900"; badgeDesc = "Sedikit lagi untuk mencapai target keaktifan.";
+    } else {
+      badge = "Pasif"; badgeColor = "bg-rose-100 text-rose-600"; badgeDesc = "Yuk bagikan jawaban and beri komentar ke kelompok lain!";
+    }
+
+    return { myPosts, myComments, total, badge, badgeColor, badgeDesc };
+  }, [allForumPosts, allComments, user.email]);
+
   const getStudentProfile = (email) => {
     const student = STUDENTS.find(s => s.email === email);
     if (student) return { name: student.name, nim: student.nim };
@@ -156,21 +181,30 @@ export default function InteractiveLKMClass8({
 
     setLoadingAction({ type: 'share', id: idx });
     try {
+      const parsedContent = {
+        questionIndex: idx,
+        questionText: currentTask.questions[idx],
+        answerText: answerText,
+        groupNum: groupNumber
+      };
       const payload = {
         student_email: user.email,
         class_id: classId,
         meeting_num: meetingId,
         section_name: "LKM_FORUM_POST",
-        content: JSON.stringify({
-          questionIndex: idx,
-          questionText: currentTask.questions[idx],
-          answerText: answerText,
-          groupNum: groupNumber
-        })
+        content: JSON.stringify(parsedContent)
       };
-      await supabase.from("submissions").insert([payload]);
-      alert('Berhasil dibagikan ke forum diskusi!');
-      window.location.reload(); // Quick refresh to pull new data via App.jsx
+      const { data } = await supabase.from("submissions").insert([payload]).select();
+
+      const newPost = data?.[0] ?? {
+        id: `local_${Date.now()}`,
+        student_email: user.email,
+        created_at: new Date().toISOString(),
+      };
+      setLocalNewPosts(prev => [{ ...newPost, parsed: parsedContent }, ...prev]);
+      
+      showSuccess("✅ Jawaban berhasil dibagikan ke Forum!");
+      setActiveTab("FORUM");
     } catch (err) {
       console.error(err);
       alert('Gagal membagikan.');
@@ -184,16 +218,24 @@ export default function InteractiveLKMClass8({
 
     setLoadingAction({ type: 'comment', id: targetId });
     try {
+      const parsedContent = { targetId, comment: commentInput };
       const payload = {
         student_email: user.email,
         class_id: classId,
         meeting_num: meetingId,
         section_name: "LKM_COMMENT",
-        content: JSON.stringify({ targetId, comment: commentInput })
+        content: JSON.stringify(parsedContent)
       };
-      await supabase.from("submissions").insert([payload]);
+      const { data } = await supabase.from("submissions").insert([payload]).select();
+
+      const newComment = data?.[0] ?? {
+        id: `local_${Date.now()}`,
+        student_email: user.email,
+        created_at: new Date().toISOString(),
+      };
+      setLocalNewComments(prev => [...prev, { ...newComment, parsed: parsedContent }]);
       setCommentInputs({ ...commentInputs, [targetId]: "" });
-      window.location.reload();
+      showSuccess("💬 Komentar berhasil dikirim!");
     } catch (err) {
       console.error(err);
       alert("Gagal mengirim komentar.");
@@ -202,11 +244,13 @@ export default function InteractiveLKMClass8({
   };
 
   const handleFinalSubmit = async () => {
+    const answeredCount = answers.filter(a => a.trim().length >= 10).length;
+    const isFormComplete = answeredCount >= Math.min(currentTask.questions.length, 6);
     if (!isFormComplete) return;
 
     let docContent = `LEMBAR KERJA MAHASISWA (LKM)\nTopik Pokok: ${currentTask.title}\nKelompok: ${groupNumber}\n\n`;
     (currentTask.questions || []).forEach((q, idx) => {
-      docContent += `Soal ${idx + 1}:\n${q}\n\nJawaban:\n${answers[idx]}\n\n`;
+      docContent += `Soal ${idx + 1}:\n${q}\n\nJawaban:\n${answers[idx] || "-"}\n\n`;
     });
 
     await onComplete(docContent);
@@ -214,37 +258,44 @@ export default function InteractiveLKMClass8({
 
   if (!groupsData) {
     return (
-      <div className="bg-rose-50 border border-rose-200 p-10 rounded-[3rem] text-center flex flex-col items-center">
+      <div className="bg-rose-50 border border-rose-200 p-10 rounded-[3rem] text-center flex flex-col items-center mt-10">
         <div className="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center text-rose-500 mb-6">
           <span className="material-symbols-outlined text-5xl">group_off</span>
         </div>
         <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Kelompok Belum Dibentuk</h3>
-        <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
-          Tutor belum melakukan pengacakan kelompok. Anda belum bisa mengerjakan LKM.
-        </p>
+        <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">Tutor belum melakukan pengacakan kelompok. Anda belum bisa mengerjakan LKM.</p>
       </div>
     );
   }
 
   if (!myGroupInfo) {
     return (
-      <div className="bg-amber-50 border border-amber-200 p-10 rounded-[3rem] text-center flex flex-col items-center">
+      <div className="bg-amber-50 border border-amber-200 p-10 rounded-[3rem] text-center flex flex-col items-center mt-10">
         <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center text-amber-500 mb-6">
           <span className="material-symbols-outlined text-5xl">person_off</span>
         </div>
         <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Tidak Ada Kelompok</h3>
-        <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">
-          Akun Anda tidak terdaftar dalam kelompok sesi ini. Harap hubungi Tutor.
-        </p>
+        <p className="text-slate-600 max-w-lg mb-6 leading-relaxed">Akun Anda tidak terdaftar dalam kelompok sesi ini. Harap hubungi Tutor.</p>
       </div>
     );
   }
 
+  const answeredCountGlobal = answers.filter(a => a.trim().length >= 10).length;
+  const isFormCompleteGlobal = answeredCountGlobal >= Math.min(currentTask.questions.length, 6);
+  const remainingRequiredGlobal = Math.max(0, Math.min(currentTask.questions.length, 6) - answeredCountGlobal);
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500 relative pb-20">
+      
+      {/* Toast Notifikasi */}
+      {successMsg && (
+        <div className="fixed top-6 right-6 z-[100] bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3 animate-in fade-in slide-in-from-right-4">
+          <p className="font-bold text-sm tracking-tight">{successMsg}</p>
+        </div>
+      )}
 
       {/* HEADER TUGAS */}
-      <div className="bg-gradient-to-br from-[#1a2169] to-indigo-900 border border-indigo-500/30 p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl shadow-indigo-900/20 text-white">
+      <div className="bg-gradient-to-br from-[#1a2169] to-indigo-950 border border-indigo-400/30 p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl text-white mt-10">
         <div className="absolute -right-10 -top-10 opacity-10 pointer-events-none">
           <span className="material-symbols-outlined text-[200px]">assignment</span>
         </div>
@@ -255,143 +306,67 @@ export default function InteractiveLKMClass8({
               LKM Kelompok {groupNumber}
             </div>
 
-            {/* Tabs Toggle */}
-            <div className="flex bg-indigo-950/50 rounded-2xl p-1.5 backdrop-blur-md">
-              <button
-                onClick={() => setActiveTab("MY_LKM")}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "MY_LKM" ? "bg-white text-[#1a2169] shadow-md scale-100" : "text-indigo-200 hover:text-white"}`}
-              >
-                LKM SAYA (DRAFT)
-              </button>
-              <button
-                onClick={() => setActiveTab("FORUM")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "FORUM" ? "bg-white text-[#1a2169] shadow-md scale-100" : "text-indigo-200 hover:text-white"}`}
-              >
-                FORUM DISKUSI <span className="bg-rose-500 text-white px-1.5 py-0.5 rounded-md text-[9px] font-black">{allForumPosts.length}</span>
-              </button>
+            <div className="flex bg-indigo-950/50 rounded-2xl p-1.5 backdrop-blur-md border border-white/5">
+              <button onClick={() => setActiveTab("MY_LKM")} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "MY_LKM" ? "bg-white text-indigo-900 shadow-md" : "text-indigo-200 hover:text-white"}`}>TUGAS SAYA</button>
+              <button onClick={() => setActiveTab("FORUM")} className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "FORUM" ? "bg-white text-indigo-900 shadow-md" : "text-indigo-200 hover:text-white"}`}>FORUM DISKUSI <span className="bg-rose-500 text-white px-1.5 py-0.5 rounded-md text-[9px] font-black">{allForumPosts.length}</span></button>
+              <button onClick={() => setActiveTab("GRAFIK")} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "GRAFIK" ? "bg-white text-indigo-900 shadow-md" : "text-indigo-200 hover:text-white"}`}>📊 GRAFIK</button>
             </div>
           </div>
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 leading-tight">
-            {currentTask.title}
-          </h2>
-          <p className="text-indigo-200 text-sm font-medium">
-            {activeTab === "MY_LKM" ? "Isi dan simpan jawaban per soal. Anda dapat membagikan hasil diskusi tertentu ke forum." : "Beri tanggapan/komentar yang membangun pada jawaban spesifik teman Anda."}
-          </p>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 leading-tight">{currentTask.title}</h2>
+          <p className="text-indigo-200 text-sm font-medium">{activeTab === "MY_LKM" ? "Isi jawaban and bagikan ke forum untuk dinilai Tutor." : activeTab === "FORUM" ? "Beri komentar pada jawaban kelompok lain untuk meningkatkan poin keaktifan." : "Pantau tingkat keaktifan diskusi Anda."}</p>
         </div>
       </div>
 
       {activeTab === "MY_LKM" && (
         <div className="space-y-6">
           {status ? (
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 p-8 md:p-12 rounded-[3rem] text-center flex flex-col items-center shadow-xl shadow-green-100/50">
-              <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-inner text-green-500">
-                <span className="material-symbols-outlined text-6xl">verified</span>
+            <div className="bg-white border border-emerald-100 p-8 md:p-12 rounded-[3rem] text-center flex flex-col items-center">
+              <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-5xl">verified</span>
               </div>
-              <h4 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">Seluruh Jawaban Berhasil Dikirim Ke Tutor</h4>
-              <p className="text-slate-600 mb-8 max-w-md mx-auto">
-                LKM final Anda telah diserahkan. Anda masih bisa melihat dan berdiskusi di Tab <b>Forum Diskusi</b>.
-              </p>
-              <div className="bg-white p-6 md:p-8 rounded-3xl w-full text-left shadow-sm border border-green-100 max-w-3xl">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Arsip Pengiriman Akhir:</p>
-                <div className="text-sm text-slate-700 leading-relaxed font-medium font-serif whitespace-pre-wrap">{status.content}</div>
-              </div>
+              <h4 className="text-2xl font-black text-slate-800 mb-2">LKM Berhasil Dikirim!</h4>
+              <p className="text-slate-500 text-sm mb-8">Terima kasih atas partisipasi aktif Anda. Anda masih bisa berdiskusi di forum.</p>
+              <div className="w-full max-w-2xl bg-slate-50 p-6 rounded-2xl text-left border border-slate-100 italic text-slate-600 text-sm font-serif whitespace-pre-wrap">{status.content}</div>
             </div>
           ) : (
-            <div className="bg-white rounded-[2.5rem] p-6 md:p-8 text-slate-800 shadow-xl shadow-slate-200/50 border border-slate-100 space-y-8">
-
-              <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-start md:items-center gap-3">
-                <span className="material-symbols-outlined text-amber-500 mt-1 md:mt-0 !text-[20px]">lightbulb</span>
-                <p className="text-xs text-amber-700 font-bold leading-relaxed">
-                  Setiap huruf yang Anda ketik <b>otomatis tersimpan di perangkat (Draft)</b>. Anda dapat membagikan jawaban suatu nomor secara spesifik ke <b>Forum Diskusi</b> dengan menekan tombol bagikan di bawah masing-masing kotak.
-                </p>
+            <div className="bg-white rounded-[2.5rem] p-6 md:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 space-y-8">
+              <div className="bg-[#fff9eb] border border-[#ffe0a3] p-4 rounded-2xl flex items-center gap-3">
+                <span className="material-symbols-outlined text-amber-500">save</span>
+                <p className="text-xs text-amber-800 font-bold">Semua ketikan Anda tersimpan otomatis sebagai draft lokal.</p>
               </div>
 
-              {(currentTask.questions || []).map((question, idx) => {
+              {currentTask.questions.map((question, idx) => {
                 const isShared = allForumPosts.some(p => p.student_email === user.email && p.parsed.questionIndex === idx);
                 const answerMissing = (answers[idx] || "").trim().length < 10;
-
                 return (
-                  <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl p-6 transition-colors focus-within:bg-indigo-50/30 focus-within:border-indigo-200 relative">
-                    {isShared && (
-                      <div className="absolute top-0 right-0 bg-green-500 text-white text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl rounded-tr-3xl flex items-center gap-1 shadow-md">
-                        <span className="material-symbols-outlined !text-[12px]">public</span> Dibagikan
-                      </div>
-                    )}
-                    <div className="flex gap-4 mb-4 items-start pr-12">
-                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-black text-sm shrink-0 shadow-md">
-                        {idx + 1}
-                      </div>
-                      <p className="font-bold text-slate-700 leading-relaxed mt-1 text-sm md:text-base">{question}</p>
+                  <div key={idx} className="bg-slate-50 border border-slate-200 rounded-3xl p-6 transition-all focus-within:bg-indigo-50/20 focus-within:border-indigo-200 relative">
+                    {isShared && <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl rounded-tr-3xl">SUDAH DI FORUM</div>}
+                    <div className="flex gap-4 mb-4 items-start pr-20">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-900 text-white flex items-center justify-center font-black text-sm shrink-0">{idx + 1}</div>
+                      <p className="font-bold text-slate-700 leading-relaxed text-sm md:text-base">{question}</p>
                     </div>
-
-                    <div className="relative mb-4">
-                      <textarea
-                        value={answers[idx]}
-                        onChange={(e) => {
-                          const newAnswers = [...answers];
-                          newAnswers[idx] = e.target.value;
-                          setAnswers(newAnswers);
-                        }}
-                        className="w-full min-h-[140px] bg-white border border-slate-200 rounded-2xl p-5 text-sm md:text-base outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all resize-y placeholder:text-slate-300"
-                        placeholder="Uraikan jawaban Anda di sini..."
-                        autoComplete="off"
-                        spellCheck={false}
-                      ></textarea>
-                    </div>
-
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                      <div className="flex items-center gap-2 self-start md:self-center">
-                        {answerMissing ? (
-                          <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded-lg text-xs font-bold">Harap isi &gt; 10 karakter</span>
-                        ) : (
-                          <span className="bg-slate-200 text-slate-600 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
-                            <span className="material-symbols-outlined !text-[14px]">save</span> Tersimpan Lokal
-                          </span>
-                        )}
-                      </div>
-
-                      <button
-                        onClick={() => handleShareToForum(idx)}
-                        disabled={isShared || answerMissing || loadingAction.type === 'share'}
-                        className={`w-full md:w-auto px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${isShared ? 'bg-green-50 text-green-600 border border-green-200 cursor-not-allowed' : 'bg-[#1a2169] text-white hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100'}`}
-                      >
-                        {loadingAction.type === 'share' && loadingAction.id === idx ? (
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                        ) : isShared ? (
-                          <><span className="material-symbols-outlined !text-[18px]">check_circle</span> Sudah di Forum</>
-                        ) : (
-                          <><span className="material-symbols-outlined !text-[18px]">share</span> Bagikan ke Forum</>
-                        )}
-                      </button>
+                    <textarea
+                      value={answers[idx] || ""}
+                      onChange={(e) => { const n = [...answers]; n[idx] = e.target.value; setAnswers(n); }}
+                      className="w-full min-h-[140px] bg-white border border-slate-200 rounded-2xl p-5 text-sm md:text-base outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all resize-y"
+                      placeholder="Ketik jawaban di sini..."
+                    ></textarea>
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-4">
+                      <span className={`text-[10px] font-black px-3 py-1 rounded-lg ${answerMissing ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-600'}`}>{answerMissing ? "Min 10 karakter" : "Draft Tersimpan"}</span>
+                      <button onClick={() => handleShareToForum(idx)} disabled={isShared || answerMissing || loadingAction.type === 'share'} className={`w-full md:w-auto px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${isShared ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-indigo-900 text-white hover:bg-black shadow-lg disabled:opacity-30'}`}>{isShared ? "✅ Tayang di Forum" : "🚀 Bagikan Ke Forum"}</button>
                     </div>
                   </div>
                 );
               })}
 
-              {/* GLOBAL SUBMIT SECTION */}
-              <div className="pt-8 mt-4 border-t-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-4 text-center">
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 ${isFormComplete ? 'bg-green-100 text-green-600 shadow-inner' : 'bg-rose-100 text-rose-500 shadow-inner'}`}>
-                  <span className="material-symbols-outlined text-3xl">{isFormComplete ? 'task_alt' : 'priority_high'}</span>
+              <div className="pt-8 border-t border-slate-100 text-center space-y-4">
+                <div className="flex flex-col items-center">
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-2 ${isFormCompleteGlobal ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}><span className="material-symbols-outlined text-3xl">{isFormCompleteGlobal ? 'task_alt' : 'lock'}</span></div>
+                  <h3 className="text-xl font-black text-slate-800">Kumpul Tugas Akhir</h3>
+                  <p className="text-xs text-slate-400 font-medium">Kirim seluruh jawaban kepada Tutor.</p>
                 </div>
-                <div>
-                  <h3 className="text-xl font-black text-slate-800 mb-1">Pengiriman Final LKM</h3>
-                  <p className="text-sm text-slate-500 font-medium max-w-md mx-auto">
-                    Jika minimal 6 nomor (atau semua pertanyaan kelompok) sudah diisi dengan baik, tekan tombol ini untuk mengumpulkan kepada Tutor.
-                  </p>
-                </div>
-                {remainingRequired > 0 && (
-                  <p className="text-sm font-bold text-rose-500 animate-pulse mt-2">
-                    Masih ada {remainingRequired} pertanyaan wajib yang belum lengkap!
-                  </p>
-                )}
-                <button
-                  onClick={handleFinalSubmit}
-                  disabled={!isFormComplete || loading}
-                  className="w-full max-w-sm bg-gradient-to-r from-primary to-[#2a349c] text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-sm mt-4 shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale flex items-center justify-center gap-3"
-                >
-                  {loading ? "MEMPROSES..." : "KIRIM SEMUA KE TUTOR"}
-                  {!loading && <span className="material-symbols-outlined font-black">send</span>}
-                </button>
+                {remainingRequiredGlobal > 0 && <p className="text-xs font-black text-rose-500">Kurang {remainingRequiredGlobal} jawaban lagi!</p>}
+                <button onClick={handleFinalSubmit} disabled={!isFormCompleteGlobal || loading} className="w-full max-w-sm bg-black text-white px-8 py-5 rounded-2xl font-black tracking-[0.2em] text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-20 flex items-center justify-center gap-3">{loading ? "MENGIRIM..." : "KIRIM KE TUTOR"}<span className="material-symbols-outlined font-black">send</span></button>
               </div>
             </div>
           )}
@@ -400,123 +375,98 @@ export default function InteractiveLKMClass8({
 
       {activeTab === "FORUM" && (
         <div className="space-y-6">
-          <div className="bg-white border text-center border-slate-200 p-8 rounded-[2.5rem] shadow-sm">
-            <span className="material-symbols-outlined text-5xl text-indigo-300 mb-3 block">forum</span>
-            <h3 className="text-xl font-black text-slate-800">Ruang Diskusi Panel LKM</h3>
-            <p className="text-sm text-slate-500 mt-2 max-w-xl mx-auto">Tanggapi cuplikan jawaban yang dibagikan oleh kelompok lain. Setiap komentar terekam secara akademik atas nama NIM dari mahasiswa pengirim.</p>
+          <div className="bg-white border border-slate-200 p-10 rounded-[2.5rem] shadow-sm text-center">
+            <span className="material-symbols-outlined text-6xl text-indigo-200 mb-4 block">groups</span>
+            <h3 className="text-xl font-black text-slate-800">Panel Kolaborasi Mahasiswa</h3>
+            <p className="text-xs text-slate-400 mt-1">Berikan komentar pada jawaban terpilih dari kelompok lain.</p>
           </div>
-
-          {allForumPosts.map((post) => {
-            const postGroupNum = post.parsed.groupNum || getStudentGroup(post.student_email) || '?';
+          {allForumPosts.map(post => {
             const profile = getStudentProfile(post.student_email);
-            const postComments = allComments.filter(c => c.parsed.targetId === post.id);
-
+            const comments = allComments.filter(c => c.parsed.targetId === post.id);
             return (
-              <div key={post.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-lg shadow-slate-200/40 transform transition-all duration-300 hover:shadow-xl">
-                <div className="bg-slate-50 border-b border-slate-200 p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div key={post.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow shadow-sm">
+                <div className="bg-slate-50 border-b border-slate-100 p-6 flex justify-between items-center">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full flex items-center justify-center font-black text-xl shadow-md border-2 border-white">
-                      {profile.name.charAt(0)}
-                    </div>
+                    <div className="w-10 h-10 bg-indigo-900 text-white rounded-xl flex items-center justify-center font-black">{profile.name.charAt(0)}</div>
                     <div>
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <p className="font-black text-slate-800 uppercase tracking-tight text-base md:text-lg leading-none">{profile.name}</p>
-                        <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-[9px] font-black tracking-widest">{profile.nim}</span>
-                      </div>
-                      <p className="text-xs text-slate-500 font-medium flex items-center gap-1">
-                        <span className="material-symbols-outlined !text-[12px]">schedule</span>
-                        {new Date(post.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}
-                      </p>
+                      <p className="text-sm font-black text-slate-800 uppercase leading-none mb-1">{profile.name}</p>
+                      <p className="text-[10px] text-slate-400 font-bold">NIM: {profile.nim} • {new Date(post.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</p>
                     </div>
                   </div>
-                  <div className="bg-indigo-100 border border-indigo-200 text-indigo-700 px-4 py-2 rounded-xl text-xs font-black shrink-0 self-start md:self-center shadow-sm">
-                    KELOMPOK {postGroupNum}
-                  </div>
+                  <div className="bg-white px-3 py-1 rounded-lg border border-slate-200 text-[9px] font-black text-indigo-500 uppercase tracking-widest">KELOMPOK {post.parsed.groupNum}</div>
                 </div>
-
-                <div className="p-5 md:p-8 space-y-6">
-                  {/* The Q & A */}
-                  <div className="bg-white border-2 border-slate-100 rounded-2xl p-5 shadow-sm">
-                    <p className="text-xs font-black text-indigo-500 uppercase tracking-widest mb-2 flex items-center gap-1">
-                      <span className="material-symbols-outlined !text-[14px]">quiz</span> Pertanyaan Diskusi
-                    </p>
-                    <p className="font-bold text-slate-700 mb-4">{post.parsed.questionText}</p>
-
-                    <p className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-2 flex items-center gap-1 border-t border-slate-100 pt-4">
-                      <span className="material-symbols-outlined !text-[14px]">menu_book</span> Jawaban Publik
-                    </p>
-                    <div className="text-sm font-serif text-slate-700 leading-relaxed whitespace-pre-wrap pl-2 border-l-4 border-emerald-200">
-                      {post.parsed.answerText}
-                    </div>
+                <div className="p-6 md:p-8 space-y-6">
+                  <div className="bg-slate-50/50 p-5 rounded-2xl border border-slate-100">
+                    <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-2">Soal:</p>
+                    <p className="font-bold text-slate-700 text-sm mb-4">{post.parsed.questionText}</p>
+                    <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-2 border-t pt-4">Jawaban:</p>
+                    <p className="text-sm text-slate-600 leading-relaxed font-serif whitespace-pre-wrap">{post.parsed.answerText}</p>
                   </div>
-
-                  {/* Comments */}
-                  <div className="space-y-4 pt-2">
-                    {postComments.length > 0 && (
-                      <div className="space-y-3 mb-6 bg-slate-50 rounded-2xl p-4 md:p-6 border border-slate-100 shadow-inner">
-                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1 mb-4">
-                          <span className="material-symbols-outlined !text-[14px]">forum</span> Komentar Diskusi ({postComments.length})
-                        </h4>
-                        {postComments.map((c, cIdx) => {
-                          const cProfile = getStudentProfile(c.student_email);
-                          return (
-                            <div key={cIdx} className="bg-white border border-slate-200 p-4 rounded-3xl rounded-tl-sm flex gap-4 w-full md:max-w-3xl shadow-sm">
-                              <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-sm font-black shrink-0 border-2 border-white shadow-sm">
-                                {cProfile.name.charAt(0)}
-                              </div>
-                              <div>
-                                <div className="flex flex-wrap items-center gap-2 mb-1">
-                                  <p className="text-[11px] font-black text-slate-600 uppercase">{cProfile.name}</p>
-                                  <span className="bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded text-[8px] font-black border border-slate-200">{cProfile.nim}</span>
-                                  <span className="text-[9px] text-slate-400 ml-auto whitespace-nowrap">{new Date(c.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
-                                </div>
-                                <p className="text-sm text-slate-700 font-medium leading-relaxed">{c.parsed.comment}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    {/* Input Comment */}
-                    <div className="flex gap-3 items-start">
-                      <div className="relative w-full">
-                        <textarea
-                          value={commentInputs[post.id] || ''}
-                          onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
-                          placeholder={`Balas jawaban LKM milik ${profile.name}...`}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-3xl px-6 py-4 text-sm outline-none focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition-all min-h-[60px] resize-y placeholder:text-slate-400"
-                        ></textarea>
-                        {/* Quick identifier that they are commenting natively */}
-                        <div className="absolute right-3 bottom-3 flex items-center gap-1.5 opacity-40">
-                          <span className="bg-slate-200 text-[8px] font-black px-2 py-0.5 rounded text-slate-600">NIM: {getStudentProfile(user.email).nim}</span>
+                  <div className="space-y-4">
+                    {comments.map((c, i) => {
+                      const cp = getStudentProfile(c.student_email);
+                      return (
+                        <div key={i} className="flex gap-3 items-start bg-indigo-50/30 p-4 rounded-2xl border border-indigo-100/50">
+                          <div className="w-8 h-8 rounded-full bg-white text-slate-400 border flex items-center justify-center text-[10px] font-black">{cp.name.charAt(0)}</div>
+                          <div>
+                            <p className="text-[10px] font-black text-slate-600 mb-0.5">{cp.name} <span className="font-medium text-slate-400 ml-1">({cp.nim})</span></p>
+                            <p className="text-xs text-slate-700 leading-relaxed">{c.parsed.comment}</p>
+                          </div>
                         </div>
-                      </div>
-
-                      <button
-                        onClick={() => handleAddComment(post.id)}
-                        disabled={!commentInputs[post.id] || loadingAction.type === 'comment'}
-                        className="bg-primary text-white w-14 h-14 rounded-full shadow-lg shadow-primary/30 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center shrink-0 mt-1"
-                      >
-                        {loadingAction.type === 'comment' && loadingAction.id === post.id ? (
-                          <div className="w-5 h-5 border-2 border-white border-t-white/30 rounded-full animate-spin"></div>
-                        ) : (
-                          <span className="material-symbols-outlined text-xl">send</span>
-                        )}
-                      </button>
+                      );
+                    })}
+                    <div className="flex gap-3 pt-2">
+                      <input value={commentInputs[post.id] || ""} onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })} placeholder="Berikan komentar bimbingan..." className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs outline-none focus:bg-white focus:border-indigo-400" />
+                      <button onClick={() => handleAddComment(post.id)} disabled={!commentInputs[post.id] || loadingAction.type === 'comment'} className="bg-indigo-600 text-white w-12 h-11 rounded-xl shadow-lg flex items-center justify-center hover:bg-black transition-all shrink-0">{loadingAction.type === 'comment' && loadingAction.id === post.id ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <span className="material-symbols-outlined text-[18px]">send</span>}</button>
                     </div>
                   </div>
                 </div>
               </div>
             );
           })}
-          {allForumPosts.length === 0 && (
-            <div className="bg-slate-50 border border-slate-200 border-dashed p-12 rounded-[2.5rem] text-center text-slate-400">
-              <span className="material-symbols-outlined text-6xl mb-4 text-slate-300">chat_bubble_outline</span>
-              <p className="font-bold text-lg mb-1">Belum Ada Topik Diskusi</p>
-              <p className="text-sm max-w-sm mx-auto">Jadilah yang pertama untuk membagikan gagasan Anda dari tab LKM SAYA agar bisa mulai dikomentari!</p>
+        </div>
+      )}
+
+      {activeTab === "GRAFIK" && (
+        <div className="space-y-8 animate-in zoom-in-95 duration-500">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4"><span className="material-symbols-outlined text-2xl">public</span></div>
+              <p className="text-4xl font-black text-slate-800 tracking-tighter">{myStats.myPosts}</p>
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Postingan Saya</p>
             </div>
-          )}
+            <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col items-center text-center">
+              <div className="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mb-4"><span className="material-symbols-outlined text-2xl">chat</span></div>
+              <p className="text-4xl font-black text-slate-800 tracking-tighter">{myStats.myComments}</p>
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">Komentar Saya</p>
+            </div>
+            <div className={`p-8 rounded-[2.5rem] shadow-xl text-center flex flex-col items-center justify-center relative overflow-hidden ${myStats.badgeColor}`}>
+               <div className="absolute -right-4 -bottom-4 opacity-10 rotate-12"><span className="material-symbols-outlined text-8xl">military_tech</span></div>
+               <div className="relative z-10">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-1">Status Keaktifan</p>
+                  <p className="text-2xl font-black tracking-tight mb-2 underline decoration-white/30 underline-offset-4">{myStats.badge}</p>
+                  <p className="text-[10px] font-bold opacity-80 leading-tight max-w-[150px] mx-auto">{myStats.badgeDesc}</p>
+               </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-8 md:p-12 rounded-[3.5rem] border border-slate-100 shadow-sm text-left">
+            <h3 className="text-xl font-black text-slate-800 mb-8 flex items-center gap-3"><span className="w-1.5 h-6 bg-indigo-600 rounded-full"></span> Progress Target Diskusi Aktif</h3>
+            <div className="space-y-10">
+              <div className="space-y-4">
+                <div className="flex justify-between items-end"><div className="text-left"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">Posting LKM ke Forum (Min 1)</p><p className="text-lg font-black text-slate-800 leading-none">{myStats.myPosts} <span className="text-slate-200">/ 1</span></p></div><span className={`text-[9px] font-black px-3 py-1 rounded-full ${myStats.myPosts >= 1 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>{myStats.myPosts >= 1 ? '✓ TERPENUHI' : 'BELUM'}</span></div>
+                <div className="h-2.5 bg-slate-50 rounded-full overflow-hidden border border-slate-100"><div className="h-full bg-indigo-600 transition-all duration-1000" style={{ width: `${Math.min(100, (myStats.myPosts / 1) * 100)}%` }}></div></div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-end"><div className="text-left"><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1.5">Beri Komentar (Min 5)</p><p className="text-lg font-black text-slate-800 leading-none">{myStats.myComments} <span className="text-slate-200">/ 5</span></p></div><span className={`text-[9px] font-black px-3 py-1 rounded-full ${myStats.myComments >= 5 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>{myStats.myComments >= 5 ? '✓ TERPENUHI' : 'BELUM'}</span></div>
+                <div className="h-2.5 bg-slate-50 rounded-full overflow-hidden border border-slate-100"><div className="h-full bg-rose-500 transition-all duration-1000" style={{ width: `${Math.min(100, (myStats.myComments / 5) * 100)}%` }}></div></div>
+              </div>
+            </div>
+            <div className="mt-12 bg-slate-50 p-6 rounded-3xl border border-slate-100 flex items-start gap-4">
+              <span className="material-symbols-outlined text-indigo-400">speed</span>
+              <p className="text-[11px] font-medium text-slate-400 leading-relaxed">Statistik ini dihitung secara otomatis berdasarkan aktivitas Anda di Tab Forum Diskusi. Anda harus memenuhi target minimal agar dianggap "AKTIF" oleh Tutor.</p>
+            </div>
+          </div>
         </div>
       )}
     </div>
