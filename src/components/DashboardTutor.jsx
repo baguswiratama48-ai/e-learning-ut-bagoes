@@ -507,6 +507,29 @@ export const DashboardTutor = ({
                                    {(sub?.content || "").replace(/\[RANGKUMAN MODUL PENGGANTI TEST\]\n/, "")}
                                  </div>
                               </div>
+                            ) : (activeCorrectionTab === "Informasi Modul" || activeCorrectionTab === "RAT/SAT") ? (
+                               <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-lg shadow-primary/5">
+                                 {(() => {
+                                   const cfg = getSessionConfig(activeTab, selectedMeeting);
+                                   const ratsat = cfg?.sections?.find(s => s.type === "RATSATV2");
+                                   return (
+                                     <div className="space-y-8">
+                                       <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Pertanyaan Evaluasi RAT/SAT</p>
+                                         <p className="text-sm font-black text-slate-800 italic leading-relaxed">
+                                           "{ratsat?.content?.evaluationQuestion || "Apa pendapat Anda mengenai modul ini?"}"
+                                         </p>
+                                       </div>
+                                       <div className="space-y-3">
+                                          <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Jawaban Mahasiswa</p>
+                                          <div className="text-slate-700 leading-relaxed whitespace-pre-wrap font-medium font-serif border-l-4 border-emerald-100 pl-8 ml-2 text-sm md:text-base text-justify">
+                                            {sub?.content || "Tidak ada konten."}
+                                          </div>
+                                       </div>
+                                     </div>
+                                   );
+                                 })()}
+                               </div>
                             ) : sub?.content?.includes("Jawaban:") ? (
                               <div className="grid gap-8">
                                 {sub.content.split(/\n\n(?=Soal \d+:)/).map((block, bidx) => {

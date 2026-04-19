@@ -25,8 +25,8 @@ export const Sesi2_Strategi = {
             ]
           }
         ],
-        evaluationQuestion: "Belajar menurut anda itu apa? (Gunakan minimal 20 kata untuk menjelaskan pandangan Anda)",
-        minWords: 20
+        evaluationQuestion: "Belajar menurut anda itu apa? (Gunakan minimal 10 kata untuk menjelaskan pandangan Anda)",
+        minWords: 10
       }
     },
     {

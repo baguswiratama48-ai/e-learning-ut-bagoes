@@ -106,24 +106,6 @@ export const StaticContentRenderer = ({
     );
   }
 
-  // --- PRIORITAS KELAS 5A (SPGK4410) - Custom Info ---
-  if (sectionName === "Informasi Modul" && id === "4") {
-    return (
-      <div className="space-y-10 md:space-y-16 pb-10">
-        <div className="relative bg-gradient-to-br from-teal-900 via-[#134e4a] to-[#0f3b39] rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-14 overflow-hidden shadow-2xl border border-white border-opacity-10">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-teal-400 bg-opacity-10 rounded-full -mr-40 -mt-40 blur-[120px]"></div>
-          <div className="relative z-10">
-            <span className="inline-flex items-center gap-2 bg-teal-400 text-[#042f2e] px-3 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-widest mb-6 shadow-lg shadow-teal-400 shadow-opacity-20">
-              <span className="material-symbols-outlined text-sm md:text-base">auto_stories</span> Informasi Mata Kuliah
-            </span>
-            <h1 className="text-3xl md:text-6xl font-headline font-black text-white mb-4 leading-tight">
-              Strategi Pembelajaran <br className="hidden md:block" /> Kontemporer di SD
-            </h1>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (sectionName === "Pembagian Kelompok") {
     const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS");
