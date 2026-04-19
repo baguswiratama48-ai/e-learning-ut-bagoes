@@ -73,6 +73,7 @@ export default function InteractiveLKMClass8({
   }, [groupsData, user.email]);
 
   const groupNumber = myGroupInfo ? myGroupInfo.group_num : 1;
+  const draftKey = `lkm_draft_8_${user?.email}_${classId}_${meetingId}`;
 
   const [activeTab, setActiveTab] = useState("MY_LKM");
   const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
