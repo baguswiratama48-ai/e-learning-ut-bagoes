@@ -1097,14 +1097,18 @@ function SectionPage({ user }) {
               onComplete={(content) => handleAction(content)}
             />
           ) : id === "4" ? (
-            <LkpdClass5A
-              user={user}
-              meetingId={meetingId}
-              submissions={submissions}
-              onComplete={(content) => handleAction(content)}
-              missions={sessionData?.sections?.find(s => s.name === "LKM" || s.name === "Ayo Diskusi (LKPD)")?.content?.missions}
-              config={sessionData?.sections?.find(s => s.name === "LKM" || s.name === "Ayo Diskusi (LKPD)")?.content}
-            />
+            <div className="p-10 text-center font-bold text-slate-800 bg-white rounded-3xl shadow-xl">
+               <h1>HALAMAN LKM 5A BERHASIL DIMUAT!</h1>
+               <p>Jika Anda melihat pesan ini, berarti crash bukan dari struktur utama App.jsx.</p>
+               <LkpdClass5A
+                 user={user}
+                 meetingId={meetingId}
+                 submissions={submissions}
+                 onComplete={(content) => handleAction(content)}
+                 missions={sessionData?.sections?.find(s => s.name === "LKM" || s.name === "Ayo Diskusi (LKPD)")?.content?.missions}
+                 config={sessionData?.sections?.find(s => s.name === "LKM" || s.name === "Ayo Diskusi (LKPD)")?.content}
+               />
+            </div>
           ) : (
             <InteractiveLKMClass8
               user={user}
