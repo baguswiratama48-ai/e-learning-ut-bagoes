@@ -168,6 +168,11 @@ export const Sesi2_Strategi = {
       content: null
     },
     {
+      name: "LKM",
+      type: "Interactive",
+      content: null
+    },
+    {
       name: "Kuis dan Latihan",
       type: "Interactive",
       content: null

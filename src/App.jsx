@@ -1084,7 +1084,7 @@ function SectionPage({ user }) {
         </div>
       ) : ((id === "1" || id === "2") && sectionName === "Ayo Diskusi (LKPD)") ||
           (id === "3" && sectionName === "Ayo Diskusi (LKPD)") ||
-          (id === "4" && sectionName === "Ayo Diskusi (LKPD)") ? (
+          (id === "4" && (sectionName === "Ayo Diskusi (LKPD)" || sectionName === "LKM")) ? (
         <div className="space-y-4">
           {id === "3" ? (
              <LkpdClass6A 
