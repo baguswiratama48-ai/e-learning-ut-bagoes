@@ -266,8 +266,8 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
               ))}
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
       <div className="max-w-xl mx-auto px-4 mt-20 bg-indigo-600 p-8 rounded-[2.5rem] text-white text-center">
         <h3 className="text-xl font-black mb-4 italic">Refleksi Materi</h3>
         <p className="text-xs opacity-70 mb-8 italic">"{config.content.evaluationQuestion}"</p>
