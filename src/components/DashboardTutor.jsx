@@ -256,7 +256,17 @@ export const DashboardTutor = ({
       studentSubs.some(s => {
         if (String(meetingNum) === "1") {
           if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
-          if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+          if (activeTab === "4") {
+            if (menu === "Ayo Diskusi (LKPD)") {
+              return s.section_name.startsWith("LKPD_5A_STAGE_") || 
+                     s.section_name === "Ayo Diskusi (LKPD)" || 
+                     s.section_name === "Ayo Diskusi" || 
+                     s.section_name === "LKM (Lembar Kerja Peserta Didik)";
+            }
+            if (menu === "Pertanyaan Pemantik") return s.section_name === "Pertanyaan Pemantik" || s.section_name === "Pemantik";
+            if (menu === "Kuis dan Latihan") return s.section_name === "Kuis dan Latihan" || s.section_name === "Quiz" || s.section_name === "Kuis";
+            if (menu === "Refleksi") return s.section_name === "Refleksi" || s.section_name === "Refleksi Materi";
+          }
           if ((activeTab === "1" || activeTab === "2") && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
         }
         return s.section_name === menu;
@@ -358,7 +368,17 @@ export const DashboardTutor = ({
                   const sub = studentSubs.find(s => {
                     if (String(selectedMeeting) === "1") {
                       if (activeTab === "3" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
-                      if (activeTab === "4" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
+                      if (activeTab === "4") {
+                        if (activeCorrectionTab === "Ayo Diskusi (LKPD)") {
+                          return s.section_name.startsWith("LKPD_5A_STAGE_") || 
+                                 s.section_name === "Ayo Diskusi (LKPD)" || 
+                                 s.section_name === "Ayo Diskusi" || 
+                                 s.section_name === "LKM (Lembar Kerja Peserta Didik)";
+                        }
+                        if (activeCorrectionTab === "Pertanyaan Pemantik") return s.section_name === "Pertanyaan Pemantik" || s.section_name === "Pemantik";
+                        if (activeCorrectionTab === "Kuis dan Latihan") return s.section_name === "Kuis dan Latihan" || s.section_name === "Quiz" || s.section_name === "Kuis";
+                        if (activeCorrectionTab === "Refleksi") return s.section_name === "Refleksi" || s.section_name === "Refleksi Materi";
+                      }
                       if ((activeTab === "1" || activeTab === "2") && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
                     }
                     return s.section_name === activeCorrectionTab;
