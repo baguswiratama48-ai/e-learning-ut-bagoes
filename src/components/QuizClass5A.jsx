@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const QUIZ_QUESTIONS = [
+const QUIZ_SESI_1 = [
   {
     n: 1,
     q: 'Belajar adalah proses perubahan perilaku yang relatif permanen. Apa pemicu utama perubahan tersebut?',
@@ -102,100 +102,100 @@ const QUIZ_QUESTIONS = [
   },
   {
     n: 10,
-    q: 'Siswa akan lebih bersemangat jika segera mengetahui hasil pekerjaannya benar atau salah. Hal ini menerapkan prinsip...',
+    q: 'Salah satu implikasi prinsip pembedaan individual bagi guru adalah...',
     opts: [
-      { id: "A", t: "Balikan dan Penguatan" },
-      { id: "B", t: "Diferensiasi" },
-      { id: "C", t: "Keaktifan Jasmani" },
-      { id: "D", t: "Orientasi Tujuan" }
+      { id: "A", t: "Memberikan perlakuan yang seragam untuk semua siswa" },
+      { id: "B", t: "Memisahkan siswa pintar dan kurang pintar ke kelas berbeda" },
+      { id: "C", t: "Mengenali karakteristik unik setiap siswa dan menyesuaikan metode" },
+      { id: "D", t: "Menuntut target hasil tes yang sama rata" }
     ],
-    ans: "A"
+    ans: "C"
   },
   {
     n: 11,
-    q: 'Sudut pandang terhadap proses pembelajaran yang masih bersifat sangat umum disebut...',
+    q: 'Karakteristik perkembangan siswa kelas 1-3 SD menurut pandangan kognitif Piaget masuk dalam fase...',
     opts: [
-      { id: "A", t: "Teknik" },
-      { id: "B", t: "Metode" },
-      { id: "C", t: "Pendekatan" },
-      { id: "D", t: "Strategi" }
+      { id: "A", t: "Sensorimotorik" },
+      { id: "B", t: "Pra-operasional" },
+      { id: "C", t: "Operasional Konkret" },
+      { id: "D", t: "Operasional Formal" }
     ],
     ans: "C"
   },
   {
     n: 12,
-    q: 'Rencana terstruktur (plan) yang mencakup sasaran, metode, dan sumber daya disebut...',
+    q: 'Perkembangan sosial siswa kelas 4-6 SD (kelas tinggi) ditandai dengan kecenderungan untuk...',
     opts: [
-      { id: "A", t: "Gaya Mengajar" },
-      { id: "B", t: "Strategi Pembelajaran" },
-      { id: "C", t: "Alat Peraga" },
-      { id: "D", t: "Rencana Evaluasi" }
+      { id: "A", t: "Sangant bergantung pada orang tua" },
+      { id: "B", t: "Mulai membentuk geng atau kelompok teman sebaya" },
+      { id: "C", t: "Tidak mempedulikan teman-temannya sama sekali" },
+      { id: "D", t: "Menyukai kegiatan yang serba mandiri dan mengisolasi diri" }
     ],
     ans: "B"
   },
   {
     n: 13,
-    q: 'Manakah pernyataan yang benar mengenai hubungan Strategi dan Metode?',
+    q: 'Seorang anak sering memperhatikan gambar, diagram, dan warna saat guru mengajar. Ini menunjukkan gaya belajar dominan...',
     opts: [
-      { id: "A", t: "Strategi lebih spesifik daripada metode" },
-      { id: "B", t: "Metode adalah 'plan', Strategi adalah 'action'" },
-      { id: "C", t: "Strategi adalah 'plan of operation', Metode adalah 'a way in achieving'" },
-      { id: "D", t: "Tidak ada perbedaan antara strategi dan metode" }
+      { id: "A", t: "Auditori" },
+      { id: "B", t: "Kinestetik" },
+      { id: "C", t: "Visual" },
+      { id: "D", t: "Linguistik" }
     ],
     ans: "C"
   },
   {
     n: 14,
-    q: 'Strategi di mana guru menyajikan materi secara utuh dan siswa tinggal menghafalnya disebut strategi...',
+    q: 'Anak dengan dominasi gaya belajar kinestetik akan lebih mudah menyerap materi melalui...',
     opts: [
-      { id: "A", t: "Heuristik" },
-      { id: "B", t: "Ekspositori" },
-      { id: "C", t: "Inkuiri" },
-      { id: "D", t: "PBL" }
+      { id: "A", t: "Membaca teks secara diam" },
+      { id: "B", t: "Mendengarkan ceramah guru" },
+      { id: "C", t: "Aktivitas fisik, bergerak, dan menyentuh manipulatif" },
+      { id: "D", t: "Mengerjakan soal uraian panjang" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 15,
+    q: 'Karakteristik penting dalam pembelajaran di kelas rendah (SD 1-3) adalah...',
+    opts: [
+      { id: "A", t: "Mengutamakan teori konseptual dan hitungan abstrak" },
+      { id: "B", t: "Pendekatan tematik yang konkret, holistik, dan bermakna" },
+      { id: "C", t: "Tugas-tugas kelompok skala besar (10-15 orang)" },
+      { id: "D", t: "Debat terbuka mengenai isu sosial dunia" }
     ],
     ans: "B"
   },
   {
-    n: 15,
-    q: 'Strategi yang menuntut siswa menemukan sendiri konsep tanpa diberitahu sebelumnya oleh guru disebut...',
-    opts: [
-      { id: "A", t: "Discovery Learning" },
-      { id: "B", t: "Direct Instruction" },
-      { id: "C", t: "Lecturing" },
-      { id: "D", t: "Demonstration" }
-    ],
-    ans: "A"
-  },
-  {
     n: 16,
-    q: 'Faktor Guru sangat menentukan pemilihan strategi karena berkaitan dengan...',
+    q: 'Pendekatan yang memandang bahwa siswa secara aktif mengorganisasikan informasi yang diterimanya, merupakan pendekatan pembelajaran...',
     opts: [
-      { id: "A", t: "Gaji yang diterima guru" },
-      { id: "B", t: "Latar belakang pendidikan dan kemampuan mengajar guru" },
-      { id: "C", t: "Usia pensiun guru" },
-      { id: "D", t: "Jumlah jam mengajar guru per minggu" }
+      { id: "A", t: "Behavioristik" },
+      { id: "B", t: "Kognitifistik/Konstruktivistik" },
+      { id: "C", t: "Humanistik" },
+      { id: "D", t: "Tradisional" }
     ],
     ans: "B"
   },
   {
     n: 17,
-    q: 'Kurikulum atau Bahan Pelajaran memengaruhi strategi karena...',
+    q: '"Metode" pembelajaran didefinisikan sebagai...',
     opts: [
-      { id: "A", t: "Bahan yang sulit butuh strategi yang lebih mendalam" },
-      { id: "B", t: "Setiap buku paket harus habis dibaca" },
-      { id: "C", t: "Hanya materi matematika yang butuh strategi" },
-      { id: "D", t: "Guru tidak boleh menambah materi sendiri" }
+      { id: "A", t: "Sudut pandang guru terhadap suatu proses pembelajaran" },
+      { id: "B", t: "Taktik guru yang bersifat sangat spesifik dan individual" },
+      { id: "C", t: "Cara teratur dan logis untuk mengimplementasikan rencana/strategi" },
+      { id: "D", t: "Hasil akhir (output) dari sebuah pembelajaran" }
     ],
-    ans: "A"
+    ans: "C"
   },
   {
     n: 18,
-    q: 'Cara spesifik atau operasional yang digunakan guru dalam mengajar pada saat itu disebut...',
+    q: 'Jika seorang guru membagi kelas menjadi kelompok-kelompok, memberikan tugas, dan menilai hasil kerjanya, berarti secara umum guru tersebut tengah menerapkan sebuah...',
     opts: [
-      { id: "A", t: "Visi Misi" },
-      { id: "B", t: "Model" },
-      { id: "C", t: "Teknik Pembelajaran" },
-      { id: "D", t: "Kurikulum" }
+      { id: "A", t: "Teknik Pembelajaran" },
+      { id: "B", t: "Pendekatan Pembelajaran" },
+      { id: "C", t: "Strategi Pembelajaran" },
+      { id: "D", t: "Media Pembelajaran" }
     ],
     ans: "C"
   },
@@ -223,6 +223,229 @@ const QUIZ_QUESTIONS = [
   }
 ];
 
+const QUIZ_SESI_2 = [
+  {
+    n: 1,
+    q: 'Belajar kolaboratif merupakan ....',
+    opts: [
+      { id: "A", t: "belajar kelompok dengan tugas yang sama" },
+      { id: "B", t: "belajar individual dengan tugas yang sama" },
+      { id: "C", t: "belajar kerja sama untuk mencapai tujuan yang sama" },
+      { id: "D", t: "belajar bersama dengan tujuan yang tidak sama" }
+    ],
+    ans: "A"
+  },
+  {
+    n: 2,
+    q: 'Dalam belajar kolaboratif, pebelajar ....',
+    opts: [
+      { id: "A", t: "bekerja sendiri-sendiri dengan tujuan yang sama" },
+      { id: "B", t: "saling tergantung mencapai tujuan yang sama" },
+      { id: "C", t: "berbagi tugas dalam belajar" },
+      { id: "D", t: "bekerja secara kelompok" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 3,
+    q: 'Manfaat belajar kolaboratif adalah, kecuali ....',
+    opts: [
+      { id: "A", t: "meningkatkan pengetahuan anggota kelompok" },
+      { id: "B", t: "memupuk rasa kebersamaan" },
+      { id: "C", t: "belajar memecahkan masalah bersama" },
+      { id: "D", t: "menanamkan sifat individualistis" }
+    ],
+    ans: "D"
+  },
+  {
+    n: 4,
+    q: 'Belajar kooperatif merupakan cara belajar ....',
+    opts: [
+      { id: "A", t: "individual dalam kelompok" },
+      { id: "B", t: "dengan berbagi tugas" },
+      { id: "C", t: "dengan kerja sama sesuai kebutuhan pebelajar" },
+      { id: "D", t: "dengan berkompetisi" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 5,
+    q: 'Dalam belajar kooperatif, pebelajar ....',
+    opts: [
+      { id: "A", t: "bekerja sama untuk memaksimalkan kegiatan sendiri" },
+      { id: "B", t: "bekerja dalam suatu kelompok" },
+      { id: "C", t: "bertanggung jawab kepada anggota kelompok" },
+      { id: "D", t: "belajar bersama-sama dengan teman yang lain" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 6,
+    q: 'Belajar kuantum adalah ....',
+    opts: [
+      { id: "A", t: "belajar fisika" },
+      { id: "B", t: "belajar sesuai kecepatan cahaya" },
+      { id: "C", t: "belajar gerakan partikel" },
+      { id: "D", t: "belajar yang berkualitas" }
+    ],
+    ans: "D"
+  },
+  {
+    n: 7,
+    q: 'Strategi yang dilakukan guru dalam melakukan pembelajaran kuantum adalah ....',
+    opts: [
+      { id: "A", t: "membagi kelas ke dalam kelompok kecil" },
+      { id: "B", t: "memberi informasi kepada pebelajar" },
+      { id: "C", t: "menerapkan diskusi kelompok" },
+      { id: "D", t: "mengubah segala sesuatu di lingkungan kelas" }
+    ],
+    ans: "D"
+  },
+  {
+    n: 8,
+    q: 'Prinsip utama belajar kuantum adalah, kecuali ....',
+    opts: [
+      { id: "A", t: "mengedepankan unsur kebebasan" },
+      { id: "B", t: "belajar dengan suasana santai" },
+      { id: "C", t: "suasana kelas menyenangkan" },
+      { id: "D", t: "belajar dengan segala aturan" }
+    ],
+    ans: "A"
+  },
+  {
+    n: 9,
+    q: 'Prinsip utama belajar tematik adalah, kecuali ....',
+    opts: [
+      { id: "A", t: "menggunakan tema sebagai pusat pembelajaran" },
+      { id: "B", t: "memanfaatkan beberapa bidang studi berpusat pada tema" },
+      { id: "C", t: "tidak mengintegrasikan bidang studi" },
+      { id: "D", t: "belajar dengan mata pelajaran yang terpisah-pisah" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 10,
+    q: 'Manfaat belajar tematik adalah, kecuali ....',
+    opts: [
+      { id: "A", t: "memadukan pengetahuan dan keterampilan" },
+      { id: "B", t: "belajar sesuai urutan kurikulum" },
+      { id: "C", t: "meningkatkan hasil belajar" },
+      { id: "D", t: "melatih pebelajar untuk berpikir" }
+    ],
+    ans: "B"
+  },
+  {
+    n: 11,
+    q: 'Model mengajar sosial memandang pembelajaran sebagai ....',
+    opts: [
+      { id: "A", t: "suatu kegiatan yang dirancang" },
+      { id: "B", t: "suatu kegiatan yang terjadi secara alami" },
+      { id: "C", t: "tujuan yang akan dicapai" },
+      { id: "D", t: "sasaran belajar" }
+    ],
+    ans: "A"
+  },
+  {
+    n: 12,
+    q: 'Model investigasi kelompok adalah ....',
+    opts: [
+      { id: "A", t: "kelompok berdiskusi memecahkan suatu masalah" },
+      { id: "B", t: "kelompok dibentuk untuk mengatasi suatu masalah" },
+      { id: "C", t: "model belajar kelompok" },
+      { id: "D", t: "model belajar kolaboratif" }
+    ],
+    ans: "B"
+  },
+  {
+    n: 13,
+    q: 'Kedudukan siswa dalam model mengajar personal adalah ....',
+    opts: [
+      { id: "A", t: "subjek belajar" },
+      { id: "B", t: "pemberi dan penerima informasi" },
+      { id: "C", t: "penerima informasi" },
+      { id: "D", t: "peserta kegiatan pembelajaran" }
+    ],
+    ans: "B"
+  },
+  {
+    n: 14,
+    q: 'Model belajar yang dapat membantu siswa mengumpulkan dan mengorganisasikan informasi tentang isu-isu sosial, mengembangkan empati terhadap orang lain, dan berusaha untuk meningkatkan keterampilan sosial adalah model belajar ....',
+    opts: [
+      { id: "A", t: "bermain peran" },
+      { id: "B", t: "latihan inkuiri" },
+      { id: "C", t: "pembelajaran langsung" },
+      { id: "D", t: "berpikir induktif" }
+    ],
+    ans: "A"
+  },
+  {
+    n: 15,
+    q: 'Mengajar dengan tujuan memberikan struktur kognitif, model yang paling tepat digunakan adalah ....',
+    opts: [
+      { id: "A", t: "sinektik" },
+      { id: "B", t: "mnemonic" },
+      { id: "C", t: "advance organizer" },
+      { id: "D", t: "investigasi kelompok" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 16,
+    q: 'Guru menggali prinsip-prinsip guna membimbing kerja sama dengan siswa dan memberikan gambaran tentang diri siswa sebaik mungkin, guru ini menerapkan model mengajar ....',
+    opts: [
+      { id: "A", t: "advance organizer" },
+      { id: "B", t: "pengajaran nondirektif" },
+      { id: "C", t: "bermain peran" },
+      { id: "D", t: "peningkatan harga diri" }
+    ],
+    ans: "D"
+  },
+  {
+    n: 17,
+    q: 'Urutan-urutan kegiatan dalam belajar tuntas adalah ....',
+    opts: [
+      { id: "A", t: "menyajikan materi - materi dipecah menjadi unit-unit - memberi tugas - memberi tes - remedial" },
+      { id: "B", t: "menyajikan materi - memberi tugas - memberi tes - remedial" },
+      { id: "C", t: "materi dipecah menjadi unit-unit - materi disajikan secara individual - siswa mengerjakan tugas secara bertahap - siswa diberi tes - remedial" },
+      { id: "D", t: "memberi tes - menyajikan materi sesuai kebutuhan siswa - memberi tugas - remedial" }
+    ],
+    ans: "C"
+  },
+  {
+    n: 18,
+    q: 'Suatu paradigma pembelajaran disusun berdasarkan kegiatan berikut (1) menyampaikan tujuan pembelajaran secara langsung kepada siswa, (2) melaksanakan serangkaian kegiatan yang mengacu pada tujuan, (3) memonitor kemajuan-kemajuan belajar, (4) memberi balikan tentang hasil belajar, (5) menilai hasil belajar, adalah model mengajar ....',
+    opts: [
+      { id: "A", t: "pencapaian konsep" },
+      { id: "B", t: "belajar tuntas" },
+      { id: "C", t: "belajar simulasi" },
+      { id: "D", t: "pembelajaran langsung" }
+    ],
+    ans: "D"
+  },
+  {
+    n: 19,
+    q: 'Model yang dirancang untuk belajar berpikir tentang kebijakan-kebijakan sosial, isu-isu sosial di masyarakat suatu negara, nasional, dan internasional merupakan model ....',
+    opts: [
+      { id: "A", t: "investigasi kelompok" },
+      { id: "B", t: "inkuiri yurisprudensi" },
+      { id: "C", t: "bermain peran" },
+      { id: "D", t: "kepribadian" }
+    ],
+    ans: "B"
+  },
+  {
+    n: 20,
+    q: 'Cara yang digunakan ketika pebelajar merencanakan proyek belajar mandiri maupun kooperatif termasuk dalam rumpun model ....',
+    opts: [
+      { id: "A", t: "sosial" },
+      { id: "B", t: "pemrosesan informasi" },
+      { id: "C", t: "personel" },
+      { id: "D", t: "sistem perilaku" }
+    ],
+    ans: "C"
+  }
+];
+
 export default function QuizClass5A({ user, meetingId, onComplete, submissions }) {
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -243,11 +466,14 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
 
   useEffect(() => {
     if (gameState === "INTRO") {
-      // Acak soal saat mulai
-      const shuffled = [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5);
+      // Pilih soal berdasarkan Sesi
+      const baseQuestions = meetingId === "2" ? QUIZ_SESI_2 : QUIZ_SESI_1;
+      
+      // Acak soal setiap kali dimuat
+      const shuffled = [...baseQuestions].sort(() => Math.random() - 0.5);
       setShuffledQuestions(shuffled);
     }
-  }, [gameState]);
+  }, [gameState, meetingId]);
 
   const handleStart = () => {
     setGameState("PLAYING");
