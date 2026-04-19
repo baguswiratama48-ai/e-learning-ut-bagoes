@@ -25,7 +25,7 @@ export const Sesi2_Strategi = {
             ]
           }
         ],
-        evaluationQuestion: "Setelah Anda mempelajari materi mengenai karakteristik dan tahapan perkembangan siswa SD, jelaskan bagaimana pemahaman tersebut akan membantu Anda dalam merancang serta mengelola strategi pembelajaran yang efektif dan tepat sasaran di kelas masing-masing? (Berikan penjelasan minimal 20 kata)",
+        evaluationQuestion: "Belajar menurut anda itu apa? (Gunakan minimal 20 kata untuk menjelaskan pandangan Anda)",
         minWords: 20
       }
     },
