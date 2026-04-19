@@ -6,7 +6,10 @@ import { Card, SectionHero, InputArea } from './base/BaseComponents';
  */
 export const RATSATTemplate = ({ config, content, setContent, handleAction, loading, status }) => {
   if (!config?.content) return null;
-  const { title, courseCode, courseName, sks, description, capaianUmum, capaianKhusus, pokokBahasan, evaluationQuestion } = config.content;
+  const { title, courseCode, courseName, sks, description, capaianUmum, capaianKhusus, capaian, pokokBahasan, evaluationQuestion } = config.content;
+  
+  // Support for legacy "capaian" field used in Sesi 1
+  const displayCapaian = capaianKhusus || capaian || [];
 
   return (
     <div className="space-y-6 md:space-y-12 pb-10 animate-in fade-in duration-500">
@@ -47,7 +50,7 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
             </div>
           )}
           <ul className="space-y-3">
-            {(capaianKhusus || []).map((item, i) => (
+            {displayCapaian.map((item, i) => (
               <li key={i} className="flex gap-3 text-xs md:text-sm font-semibold text-slate-600">
                 <span className="material-symbols-outlined text-indigo-500 text-sm">check_circle</span>
                 {item}
@@ -109,7 +112,10 @@ export const VideoEvalTemplate = ({ config, content, setContent, handleAction, l
  * Template for Pertanyaan Pemantik (Mobile Optimized)
  */
 export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPemantikAnswers, handleAction, loading, getPemantikForStudent, meetingId, id }) => {
-  const questions = getPemantikForStudent(user.nim || "0", config.content.groups);
+  // Support for legacy "questions" array if "groups" is missing (used in Sesi 1)
+  const questions = config.content.groups 
+    ? getPemantikForStudent(user.nim || "0", config.content.groups)
+    : (config.content.questions || []);
   
   const SLIDE_KEY = `pemantik_idx_${user.email}_${id}_${meetingId}`;
   const [activeIdx, setActiveIdx] = React.useState(() => {
@@ -226,8 +232,20 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
   return (
     <div className="space-y-10 pb-20">
       <SectionHero title={config.content.title || "Materi"} icon="menu_book" />
-      <div className="max-w-4xl mx-auto space-y-10">
-        {(config.content.sections || []).map((section, sidx) => (
+      
+      {/* Support for legacy "htmlContent" used in Sesi 1 */}
+      {config.content.htmlContent && !config.content.sections && (
+        <Card className="p-6 md:p-12">
+          <div 
+            className="prose prose-slate max-w-none text-slate-600 text-sm md:text-lg leading-relaxed text-justify"
+            dangerouslySetInnerHTML={{ __html: config.content.htmlContent }}
+          />
+        </Card>
+      )}
+
+      {config.content.sections && (
+        <div className="max-w-4xl mx-auto space-y-10">
+          {config.content.sections.map((section, sidx) => (
           <div key={sidx} className="px-4">
             <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6">{section.title}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -235,6 +253,15 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
                 <Card key={pidx} className="p-5">
                    <h4 className="text-[10px] font-black text-indigo-500 mb-2 uppercase">{pt.label}</h4>
                    <p className="text-xs text-slate-600 leading-relaxed font-medium">{pt.text}</p>
+                   {pt.items && (
+                      <ul className="mt-3 space-y-1">
+                        {pt.items.map((item, i) => (
+                          <li key={i} className="text-[10px] text-slate-500 flex items-center gap-2 italic">
+                            <span className="w-1 h-1 bg-slate-300 rounded-full"></span> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                 </Card>
               ))}
             </div>
