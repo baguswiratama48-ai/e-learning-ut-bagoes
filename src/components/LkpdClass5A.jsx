@@ -142,6 +142,10 @@ export const LkpdClass5A = ({
     } catch (e) { return []; }
   }, [submissions, localNewComments]);
 
+  const finalSubmission = useMemo(() => {
+    return (submissions || []).find(s => s?.student_email === user.email && s?.section_name === "LKM");
+  }, [submissions, user.email]);
+
   const myStats = useMemo(() => {
     const posts = allForumPosts.filter(p => p?.student_email === user.email).length;
     const comms = allComments.filter(c => c?.student_email === user.email).length;
@@ -254,37 +258,54 @@ export const LkpdClass5A = ({
 
       {activeTab === 'MY_LKM' && (
         <div className="bg-white rounded-[3rem] md:rounded-[4.5rem] border border-slate-50 shadow-2xl p-6 md:p-16">
-          <div className="space-y-12 md:space-y-16">
-            {(currentMission.questions || []).map((q, idx) => {
-              const shared = allForumPosts.some(p => p?.student_email === user.email && p?.parsed?.questionIndex === idx);
-              return (
-                <div key={idx} className="group relative">
-                  <div className="flex gap-4 md:gap-8 items-start mb-6 md:mb-8">
-                    <div className="w-12 h-12 md:w-14 md:h-14 bg-slate-900 text-teal-400 rounded-2xl md:rounded-3xl flex items-center justify-center font-black text-xl md:text-2xl shadow-2xl shadow-teal-900/20 shrink-0">{idx + 1}</div>
-                    <p className="font-black text-slate-800 text-lg md:text-2xl pt-1 md:pt-2 flex-1 tracking-tight leading-tight">{q}</p>
-                  </div>
-                  <textarea
-                    value={answers[idx] || ""}
-                    onChange={(e) => setAnswers({...answers, [idx]: e.target.value})}
-                    placeholder="Tuangkan hasil kolaborasi di sini..."
-                    className="w-full min-h-[180px] md:min-h-[220px] bg-slate-50 border border-slate-100 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 text-md md:text-xl font-medium outline-none focus:bg-white focus:border-teal-500 focus:shadow-2xl focus:shadow-teal-500/10 transition-all resize-y"
-                  />
-                  <div className="mt-6 flex flex-col md:flex-row items-start md:items-center justify-between px-2 gap-4">
-                     <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-3 italic"><div className="w-2 h-2 bg-slate-100 rounded-full"></div> Materi Terenkripsi</span>
-                     <button onClick={() => handleShare(idx, q, answers[idx])} disabled={shared || !answers[idx] || answers[idx].length < 5 || loadingAction.type === 'share'} className={`w-full md:w-auto px-6 md:px-10 py-4 md:py-5 rounded-[2rem] font-black text-[11px] uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-4 ${shared ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-teal-950 text-white hover:bg-black shadow-2xl md:hover:scale-105 active:scale-95'}`}>
-                        {shared ? <><span className="material-symbols-outlined text-[18px] md:text-[20px]">check_circle</span> TERBAGIKAN</> : <><span className="material-symbols-outlined text-[18px] md:text-[20px]">share</span> SHARE KE FORUM</>}
-                     </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-16 md:mt-24 pt-12 md:pt-20 border-t border-slate-50 text-center flex flex-col items-center">
-             <button onClick={handleFinalSubmit} disabled={isSubmitting} className="w-full md:w-auto bg-black text-white px-10 md:px-20 py-5 md:py-7 rounded-[2rem] md:rounded-[3rem] font-black text-xs uppercase tracking-[0.2em] md:tracking-[0.4em] shadow-2xl md:hover:scale-105 active:scale-90 transition-all">
-                {isSubmitting ? "MENGIRIM..." : "SELESAI & KIRIM LKM"}
-             </button>
-             <p className="mt-6 md:mt-8 text-[10px] md:text-[11px] font-bold text-slate-300 uppercase tracking-[0.1em] md:tracking-widest italic">Periksa kembali jawaban Anda sebelum mengirim ya!</p>
-          </div>
+          {finalSubmission ? (
+            <div className="text-center py-20 px-4 animate-in zoom-in duration-500">
+               <div className="w-32 h-32 bg-emerald-50 text-emerald-500 w-full rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                  <span className="material-symbols-outlined text-7xl">task_alt</span>
+               </div>
+               <h2 className="text-4xl font-black text-slate-800 mb-4 tracking-tight uppercase">Misi Berhasil Diselesaikan!</h2>
+               <p className="text-slate-500 font-medium max-w-xl mx-auto text-lg leading-relaxed mb-10">
+                 Laporan kerja Anda sudah masuk ke sistem and sedang meluncur ke meja Tutor. <br className="hidden md:block" />Anda hebat! Sekarang saatnya mendulang poin ekstra dika Forum Diskusi.
+               </p>
+               <button onClick={() => setActiveTab('FORUM')} className="bg-slate-900 text-white px-10 py-5 rounded-3xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform flex items-center justify-center gap-3 mx-auto">
+                 <span className="material-symbols-outlined">forum</span> CEK FORUM SEKARANG
+               </button>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-12 md:space-y-16">
+                {(currentMission.questions || []).map((q, idx) => {
+                  const shared = allForumPosts.some(p => p?.student_email === user.email && p?.parsed?.questionIndex === idx);
+                  return (
+                    <div key={idx} className="group relative">
+                      <div className="flex gap-4 md:gap-8 items-start mb-6 md:mb-8">
+                        <div className="w-12 h-12 md:w-14 md:h-14 bg-slate-900 text-teal-400 rounded-2xl md:rounded-3xl flex items-center justify-center font-black text-xl md:text-2xl shadow-2xl shadow-teal-900/20 shrink-0">{idx + 1}</div>
+                        <p className="font-black text-slate-800 text-lg md:text-2xl pt-1 md:pt-2 flex-1 tracking-tight leading-tight">{q}</p>
+                      </div>
+                      <textarea
+                        value={answers[idx] || ""}
+                        onChange={(e) => setAnswers({...answers, [idx]: e.target.value})}
+                        placeholder="Tuangkan hasil kolaborasi di sini..."
+                        className="w-full min-h-[180px] md:min-h-[220px] bg-slate-50 border border-slate-100 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 text-md md:text-xl font-medium outline-none focus:bg-white focus:border-teal-500 focus:shadow-2xl focus:shadow-teal-500/10 transition-all resize-y"
+                      />
+                      <div className="mt-6 flex flex-col md:flex-row items-start md:items-center justify-between px-2 gap-4">
+                         <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest flex items-center gap-3 italic"><div className="w-2 h-2 bg-slate-100 rounded-full"></div> Materi Terenkripsi</span>
+                         <button onClick={() => handleShare(idx, q, answers[idx])} disabled={shared || !answers[idx] || answers[idx].length < 5 || loadingAction.type === 'share'} className={`w-full md:w-auto px-6 md:px-10 py-4 md:py-5 rounded-[2rem] font-black text-[11px] uppercase tracking-[0.1em] transition-all flex items-center justify-center gap-4 ${shared ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-teal-950 text-white hover:bg-black shadow-2xl md:hover:scale-105 active:scale-95'}`}>
+                            {shared ? <><span className="material-symbols-outlined text-[18px] md:text-[20px]">check_circle</span> TERBAGIKAN</> : <><span className="material-symbols-outlined text-[18px] md:text-[20px]">share</span> SHARE KE FORUM</>}
+                         </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-16 md:mt-24 pt-12 md:pt-20 border-t border-slate-50 text-center flex flex-col items-center">
+                 <button onClick={handleFinalSubmit} disabled={isSubmitting} className="w-full md:w-auto bg-black text-white px-10 md:px-20 py-5 md:py-7 rounded-[2rem] md:rounded-[3rem] font-black text-xs uppercase tracking-[0.2em] md:tracking-[0.4em] shadow-2xl md:hover:scale-105 active:scale-90 transition-all">
+                    {isSubmitting ? "MENGIRIM..." : "SELESAI & KIRIM LKM"}
+                 </button>
+                 <p className="mt-6 md:mt-8 text-[10px] md:text-[11px] font-bold text-slate-300 uppercase tracking-[0.1em] md:tracking-widest italic">Periksa kembali jawaban Anda sebelum mengirim ya!</p>
+              </div>
+            </>
+          )}
         </div>
       )}
 
