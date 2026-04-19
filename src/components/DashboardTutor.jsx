@@ -19,6 +19,11 @@ const LKM_FORUM_CONFIG = {
     commentSection: "LKM_6A_COMMENT",
     label:          "Laporan Keaktifan Forum Diskusi LKM — Kelas 6A ABK Sesi 2",
   },
+  "4_2": {
+    postSection:    "LKM_5A_FORUM_POST",
+    commentSection: "LKM_5A_COMMENT",
+    label:          "Laporan Keaktifan Forum Diskusi LKM — Kelas 5A Strategi Sesi 2",
+  },
 };
 
 export const DashboardTutor = ({ 
