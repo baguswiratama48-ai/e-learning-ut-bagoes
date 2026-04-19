@@ -702,7 +702,12 @@ export const DashboardTutor = ({
                  <div className="flex flex-col sm:flex-row gap-2">
                     <button onClick={handleGenerateGroups} disabled={generating} className="bg-yellow-400 text-slate-900 px-8 py-4 rounded-2xl font-black text-sm hover:bg-yellow-300 transition-all shadow-xl disabled:opacity-50">{generating ? 'ACAK...' : 'ACAK SEKARANG'}</button>
                     {(() => {
-                        const gr = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(selectedMeeting));
+                        const gr = (submissions || []).find(s => 
+                          s.student_email === "SYSTEM_GROUP" && 
+                          s.section_name === "GENERATED_GROUPS" && 
+                          String(s.class_id) === String(activeTab) &&
+                          String(s.meeting_num) === String(selectedMeeting)
+                        );
                         if (!gr) return null;
                         return <button onClick={() => setShowGroupPreview(!showGroupPreview)} className={`flex items-center gap-2 px-6 py-4 rounded-2xl font-black text-sm transition-all border-2 ${showGroupPreview ? "bg-white text-primary border-primary" : "bg-white/10 text-white border-white/10 hover:bg-white/20"}`}><span className="material-symbols-outlined">{showGroupPreview ? 'visibility_off' : 'visibility'}</span>{showGroupPreview ? 'Sembunyikan' : 'Lihat'}</button>;
                     })()}
@@ -714,7 +719,12 @@ export const DashboardTutor = ({
       )}
 
       {showGroupPreview && (() => {
-        const gr = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS" && String(s.meeting_num) === String(selectedMeeting));
+        const gr = (submissions || []).find(s => 
+          s.student_email === "SYSTEM_GROUP" && 
+          s.section_name === "GENERATED_GROUPS" && 
+          String(s.class_id) === String(activeTab) &&
+          String(s.meeting_num) === String(selectedMeeting)
+        );
         const groups = gr ? JSON.parse(gr.content) : null;
         if (!groups) return null;
         return (
