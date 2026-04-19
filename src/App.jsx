@@ -944,7 +944,7 @@ function SectionPage({ user }) {
         // Tambah section names spesifik kelas 6A ABK
         "LKM_6A_FORUM_POST",
         "LKM_6A_COMMENT",
-        ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4"] : [])
+        ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4", "LKM_5A_FORUM_POST", "LKM_5A_COMMENT"] : [])
       ];
 
       // Fetch personal answers + system-generated groups + everyone's LKPD for class 6A cross-visibility
@@ -959,7 +959,8 @@ function SectionPage({ user }) {
       const isForumSection =
         sectionName === "Ayo Diskusi (LKPD)" ||
         sectionName === "Ayo Diskusi" ||
-        sectionName === "LKPD (Lembar Kerja Peserta Didik)";
+        sectionName === "LKPD (Lembar Kerja Peserta Didik)" ||
+        sectionName === "LKM";
 
       // Kelas 6A di forum LKM → ambil semua data (tanpa filter user) agar forum post semua mahasiswa terlihat
       // Kelas lain di non-forum → filter hanya milik sendiri + SYSTEM_GROUP
