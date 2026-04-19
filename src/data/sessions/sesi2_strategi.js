@@ -1,7 +1,7 @@
 export const Sesi2_Strategi = {
   id: "5a-sesi2",
   classIds: ["4"], 
-  meetingId: 2,
+  meetingId: "2",
   title: "Strategi Pembelajaran di SD",
   sections: [
     {
@@ -168,7 +168,7 @@ export const Sesi2_Strategi = {
       content: null
     },
     {
-      name: "LKPD (Lembar Kerja Peserta Didik)",
+      name: "Ayo Diskusi (LKPD)",
       type: "Interactive",
       content: null
     },
