@@ -148,7 +148,7 @@ export const Sesi2_Strategi = {
             ]
           }
         ],
-        evaluationQuestion: "Setelah mempelajari materi perkembangan dan inteligensi di atas, bagaimana cara Anda merancang materi yang bisa mengakomodasi berbagai tipe kecerdasan siswa di kelas Anda?",
+        evaluationQuestion: "Setelah kalian mempelajari materi diatas, menurut mu mana tipe belajar dan hasil belajar yang bisa kalian terapkan di kelas?",
         minWords: 20
       }
     },
