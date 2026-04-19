@@ -90,14 +90,22 @@ export const InputArea = ({
         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
           <span className="material-symbols-outlined text-sm">info</span> Jawaban disimpan otomatis sebagai draft
         </p>
-        <button
-          onClick={() => onSave(value)}
-          disabled={loading || !isEnough}
-          className="w-full md:w-auto min-w-[250px] bg-slate-900 text-white font-black py-4 px-10 rounded-2xl hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-widest"
-        >
-          {loading ? "MENGIRIM..." : "KIRIM SEKARANG"}
-          <span className="material-symbols-outlined text-sm">send</span>
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          {minWords > 0 && !isEnough && (
+            <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest flex items-center gap-1">
+              <span className="material-symbols-outlined text-sm">warning</span>
+              Butuh {minWords - wordCount} kata lagi untuk dapat mengirim
+            </p>
+          )}
+          <button
+            onClick={() => onSave(value)}
+            disabled={loading || !isEnough}
+            className="w-full md:w-auto min-w-[250px] bg-slate-900 text-white font-black py-4 px-10 rounded-2xl hover:bg-slate-800 hover:scale-105 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-xl flex items-center justify-center gap-3 text-xs uppercase tracking-widest"
+          >
+            {loading ? "MENGIRIM..." : "KIRIM SEKARANG"}
+            <span className="material-symbols-outlined text-sm">send</span>
+          </button>
+        </div>
       </div>
     </div>
   );
