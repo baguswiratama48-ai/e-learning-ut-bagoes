@@ -287,6 +287,7 @@ export const DashboardTutor = ({
 
   const renderCorrectionHub = (student) => {
     const studentSubs = (submissions || []).filter(s => s.student_email === student.email && String(s.meeting_num) === String(selectedMeeting));
+    const sessionConfig = getSessionConfig(activeTab, selectedMeeting);
     
     return (
       <div className="bg-slate-50 border-t-2 border-slate-200 p-6 animate-in slide-in-from-top-2 duration-300">
@@ -294,7 +295,6 @@ export const DashboardTutor = ({
           <div className="w-full md:w-64 space-y-2">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-3 mb-4">Kategori Penilaian</p>
             {(() => {
-              const sessionConfig = getSessionConfig(activeTab, selectedMeeting);
               let dynamicMenus = sessionConfig ? sessionConfig.sections.map(s => s.name) : [...MENUS];
 
               const configKey = `${activeTab}_${selectedMeeting}`;
