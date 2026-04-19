@@ -678,7 +678,7 @@ function TutorDashboardPage({ user }) {
   if (!user || user.role !== "tutor") return <Navigate to="/" />;
 
   return (
-    <DashboardUI 
+    <DashboardUI
       submissions={submissions}
       setSubmissions={setSubmissions}
       moduleContent={moduleContent}
@@ -781,7 +781,7 @@ function ClassMenu({ user }) {
               if (sect?.label) label = sect.label;
               else if (menu === "Informasi Modul" && meetingId !== "1") label = "RAT/SAT";
               else if (sect?.tutorLabel && (menu === "Ayo Diskusi" || menu === "Ayo Diskusi (LKPD)" || menu === "Kuis dan Latihan")) {
-                 label = sect.tutorLabel === "Diskusi" || sect.tutorLabel === "LKM" ? "LKM (Lembar Kerja Mahasiswa)" : sect.tutorLabel;
+                label = sect.tutorLabel === "Diskusi" || sect.tutorLabel === "LKM" ? "LKM (Lembar Kerja Mahasiswa)" : sect.tutorLabel;
               }
             } else if (isSpecialSesi2) {
               if (menu === "Informasi Modul") label = "RAT/SAT";
@@ -853,7 +853,7 @@ function SectionPage({ user }) {
 
   // Integrated useDraft for auto-save functionality
   const [content, setContent] = useDraft(`draft_${user?.email}_${id}_${meetingId}_${sectionName}`, "");
-  
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
@@ -867,7 +867,7 @@ function SectionPage({ user }) {
         // groups adalah array of arrays — hitung total semua pertanyaan di semua grup
         return pemantikSection.content.groups.reduce((acc, g) => acc + g.length, 0);
       }
-    } catch(e) {}
+    } catch (e) { }
     // fallback ke logika lama
     return (id === "1" || id === "2" || id === "3" || id === "4") ? 6 : 3;
   })();
@@ -886,9 +886,9 @@ function SectionPage({ user }) {
 
   const activeSectionLower = sectionName?.toLowerCase() || "";
   const isStaticSection = [
-    "informasi modul", 
-    "materi pembelajaran", 
-    "video pembelajaran", 
+    "informasi modul",
+    "materi pembelajaran",
+    "video pembelajaran",
     "pertanyaan pemantik",
     "rat/sat",
     "pembagian kelompok",
@@ -922,13 +922,13 @@ function SectionPage({ user }) {
         .eq("class_id", id)
         .eq("meeting_num", meetingId)
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD", "LKPD_6A_DISCUSSION"]);
-        
+
       // Logika Filter: Jika seksi bukan Forum Diskusi (LKPD/LKM), maka hanya ambil data milik user sendiri
-      const isForumSection = 
-        sectionName === "Ayo Diskusi (LKPD)" || 
-        sectionName === "Ayo Diskusi" || 
+      const isForumSection =
+        sectionName === "Ayo Diskusi (LKPD)" ||
+        sectionName === "Ayo Diskusi" ||
         sectionName === "LKPD (Lembar Kerja Peserta Didik)";
-      
+
       // Kelas 6A di forum LKM → ambil semua data (tanpa filter user) agar forum post semua mahasiswa terlihat
       // Kelas lain di non-forum → filter hanya milik sendiri + SYSTEM_GROUP
       if (!isForumSection && user?.role === "student") {
@@ -1075,29 +1075,36 @@ function SectionPage({ user }) {
         </div>
       ) : id === "4" && sectionName === "Kuis dan Latihan" ? (
         <div className="space-y-6">
-          <QuizClass5A 
-            user={user} 
-            meetingId={meetingId} 
+          <QuizClass5A
+            user={user}
+            meetingId={meetingId}
             submissions={submissions}
             onComplete={(content) => handleAction(content)}
           />
         </div>
       ) : ((id === "1" || id === "2") && sectionName === "Ayo Diskusi (LKPD)") ||
-          (id === "3" && sectionName === "Ayo Diskusi (LKPD)") ||
-          (id === "4" && (sectionName === "Ayo Diskusi (LKPD)" || sectionName === "LKM")) ? (
+        (id === "3" && sectionName === "Ayo Diskusi (LKPD)") ||
+        (id === "4" && (sectionName === "Ayo Diskusi (LKPD)" || sectionName === "LKM")) ? (
         <div className="space-y-4">
           {id === "3" ? (
-             <LkpdClass6A 
-                user={user} 
-                classId={id} 
-                meetingId={meetingId} 
-                submissions={submissions} 
-                status={status}
-                loading={loading}
-                onComplete={(content) => handleAction(content)}
-             />
+            <LkpdClass6A
+              user={user}
+              classId={id}
+              meetingId={meetingId}
+              submissions={submissions}
+              status={status}
+              loading={loading}
+              onComplete={(content) => handleAction(content)}
+            />
           ) : id === "4" ? (
-             <LkpdClass5A user={user} meetingId={meetingId} submissions={submissions} onComplete={(content) => handleAction(content)} />
+            <LkpdClass5A
+              user={user}
+              meetingId={meetingId}
+              submissions={submissions}
+              onComplete={(content) => handleAction(content)}
+              missions={sessionData?.sections?.find(s => s.name === "LKM" || s.name === "Ayo Diskusi (LKPD)")?.content?.missions}
+              config={sessionData?.sections?.find(s => s.name === "LKM" || s.name === "Ayo Diskusi (LKPD)")?.content}
+            />
           ) : (
             <InteractiveLKMClass8
               user={user}
@@ -1406,15 +1413,15 @@ export default function App() {
   // Create a version of user that includes the reactive setter for components
   const userWithSetter = user
     ? {
-        ...user,
-        setProfileData: (newData) => {
-          setUser((prev) => {
-            const updated = { ...prev, profileData: newData };
-            localStorage.setItem("elearning_user", JSON.stringify(updated));
-            return updated;
-          });
-        },
-      }
+      ...user,
+      setProfileData: (newData) => {
+        setUser((prev) => {
+          const updated = { ...prev, profileData: newData };
+          localStorage.setItem("elearning_user", JSON.stringify(updated));
+          return updated;
+        });
+      },
+    }
     : null;
 
   return (

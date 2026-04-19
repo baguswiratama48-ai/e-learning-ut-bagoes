@@ -1,7 +1,7 @@
 export const Sesi2_ABK = {
   id: "ABK_S2",
   meetingId: "2",
-  classIds: ["3"],
+  classIds: ["1", "3"],
   courseCode: "SPDA4401",
   courseName: "Penanganan Anak Berkebutuhan Khusus",
   sections: [
@@ -166,7 +166,61 @@ export const Sesi2_ABK = {
       required: true,
       type: "Interactive",
       tutorLabel: "LKM",
-      content: null
+      content: {
+        type: "GROUP_DISCUSSION",
+        missions: {
+          "5": {
+            title: "Penanganan Anak dangan Autism",
+            subtitle: "Tugas Diskusi Kelompok 5",
+            icon: "psychology",
+            description: "Menganalisis hakikat gangguan spektrum autisme and strategi intervensi dika kelas.",
+            questions: [
+              "Jelaskan pengertian Autism sebagai bagian dari Pervasive Development Disorder (PDD).",
+              "Apa saja 3 kelainan fungsi utama yang menjadi ciri khas anak autism?"
+            ]
+          },
+          "4": {
+            title: "Anak Penyandang ADD/ADHD",
+            subtitle: "Tugas Diskusi Kelompok 4",
+            icon: "bolt",
+            description: "Mendalami karakteristik utama Inattention, Hiperaktif, and Impulsif pada anak.",
+            questions: [
+              "Sebutkan 3 komponen utama perilaku anak ADD/ADHD dika lingkungan sekolah.",
+              "Bagaimana cara membedakan antara gejala Inattention and Hiperaktif?"
+            ]
+          },
+          "3": {
+            title: "Anak Penyandang ODD",
+            subtitle: "Tugas Diskusi Kelompok 3",
+            icon: "error",
+            description: "Menganalisis gangguan perilaku menentang (ODD) and dampaknya terhadap otoritas guru.",
+            questions: [
+              "Apa ciri utama yang membedakan ODD dangan gangguan perilaku biasa?",
+              "Berapa lama gejala harus muncul secara konsisten untuk dapat didiagnosis sebagai ODD?"
+            ]
+          },
+          "2": {
+            title: "Gangguan Inteligensi & Down Syndrome",
+            subtitle: "Tugas Diskusi Kelompok 2",
+            icon: "neurology",
+            description: "Mengevaluasi penanganan anak dangan hambatan inteligensi dika sekolah inklusi.",
+            questions: [
+              "Jelaskan klasifikasi gangguan inteligensi (ringan, sedang, berat) dika konteks SD.",
+              "Bagaimana strategi guru dalam menangani anak penyandang Down Syndrome dika kelas?"
+            ]
+          },
+          "1": {
+            title: "Sinergi Guru & Orang Tua",
+            subtitle: "Tugas Diskusi Kelompok 1",
+            icon: "handshake",
+            description: "Membangun sistem dukungan kolaboratif antara pihak sekolah and keluarga.",
+            questions: [
+              "Mengapa kerja sama antara Neurolog, Psikolog, Guru, and Orang Tua sangan krusial dika penanganan ABK?",
+              "Sebutkan peran utama guru sebagai mediator dika manajemen perilaku anak ABK."
+            ]
+          }
+        }
+      }
     },
     {
       name: "Kuis dan Latihan",

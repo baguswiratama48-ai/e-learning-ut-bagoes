@@ -170,7 +170,67 @@ export const Sesi2_Strategi = {
     {
       name: "LKM",
       type: "Interactive",
-      content: null
+      content: {
+        type: "GROUP_DISCUSSION",
+        missions: {
+          "5": {
+            title: "Belajar Kolaboratif (Collaborative Learning)",
+            subtitle: "Tugas Diskusi Kelompok 5",
+            icon: "diversity_1",
+            description: "Menganalisis hakikat dan manfaat dari pola belajar kolaboratif dika ekosistem pembelajaran SD.",
+            questions: [
+               "Jelaskan menurut pendapat kelompok Anda, apa hakikat sebenarnya dari Belajar Kolaboratif?",
+               "Sebutkan dan jelaskan minimal 3 manfaat nyata dari Belajar Kolaboratif bagi siswa SD."
+            ]
+          },
+          "4": {
+            title: "Belajar Quantum (Quantum Learning)",
+            subtitle: "Tugas Diskusi Kelompok 4",
+            icon: "wb_sunny",
+            description: "Mendalami hakikat, prinsip, dan manfaat dari pendekatan Quantum Learning dika kelas.",
+            questions: [
+               "Bagaimana Hakikat Belajar Quantum dibedakan dangan model belajar konvensional?",
+               "Uraikan Prinsip Utama Pembelajaran Quantum yang harus dikuasai guru.",
+               "Apa saja Manfaat Belajar Quantum yang paling dirasakan oleh siswa?"
+            ]
+          },
+          "3": {
+            title: "Belajar Kooperatif (Cooperative Learning)",
+            subtitle: "Tugas Diskusi Kelompok 3",
+            icon: "groups_3",
+            description: "Menganalisis hakikat dan prinsip utama yang mendasari keberhasilan Belajar Kooperatif.",
+            questions: [
+               "Jelaskan Hakikat Belajar Kooperatif dangan kalimat kelompok Anda sendiri.",
+               "Sebutkan 5 Prinsip Utama Belajar Kooperatif yang menjamin kerjasama tim yang sehat.",
+               "Uraikan Manfaat Belajar Kooperatif dalam meningkatkan kecerdasan sosial siswa."
+            ]
+          },
+          "2": {
+            title: "Belajar Tematik & Batasan Kooperatif",
+            subtitle: "Tugas Diskusi Kelompok 2",
+            icon: "topic",
+            description: "Mengevaluasi keterbatasan model kooperatif dan mendalami esensi Pembelajaran Tematik dika kurikulum SD.",
+            questions: [
+               "Apa saja Keterbatasan Pembelajaran Kooperatif yang sering ditemui di lapangan?",
+               "Jelaskan Hakikat & Prinsip Belajar Tematik.",
+               "Mengapa Pembelajaran Tematik sangan diperlukan di SD? Berikan 3 alasan kuat.",
+               "Sebutkan Karakteristik dan Manfaat utama dari Pembelajaran Tematik."
+            ]
+          },
+          "1": {
+            title: "Rumpun Model Mengajar",
+            subtitle: "Tugas Diskusi Kelompok 1",
+            icon: "account_tree",
+            description: "Melakukan klasifikasi dan identifikasi berbagai rumpun model mengajar beserta jumlahnya.",
+            questions: [
+               "Sebutkan 6 Model yang masuk dika Rumpun Model Sosial.",
+               "Sebutkan 8 Model yang masuk dika Rumpun Model Pemrosesan Informasi.",
+               "Sebutkan 2 Model yang masuk dika Rumpun Modal Personal.",
+               "Sebutkan 3 Model yang masuk dika Dua Rumpun Model Sistem Perilaku."
+            ]
+          }
+        }
+      }
     },
     {
       name: "Kuis dan Latihan",

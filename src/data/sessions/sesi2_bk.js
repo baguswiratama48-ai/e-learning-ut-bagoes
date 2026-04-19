@@ -1,7 +1,7 @@
 export const Sesi2_BK = {
   id: "BK_S2",
   meetingId: "2",
-  classIds: ["1", "2"],
+  classIds: ["2"],
   courseCode: "SPGK4307",
   courseName: "Bimbingan Konseling di SD",
   sections: [
@@ -19,15 +19,15 @@ export const Sesi2_BK = {
           {
             title: "Hakikat Bimbingan dan Konseling",
             subs: [
-              "Konsep Dasar Bimbingan dan Konseling di Sekolah Dasar", 
+              "Konsep Dasar Bimbingan dan Konseling di Sekolah Dasar",
               "Jenis-jenis layanan Bimbingan dan Konseling"
             ]
           },
           {
             title: "Karakteristik & Tugas Perkembangan Peserta Didik di SD",
             subs: [
-              "Konsep Karakteristik dan Tugas", 
-              "Perkembangan Sekolah Dasar", 
+              "Konsep Karakteristik dan Tugas",
+              "Perkembangan Sekolah Dasar",
               "Perkembangan Fisik-Motorik dan Upaya Bimbingannya"
             ]
           }
@@ -258,7 +258,61 @@ export const Sesi2_BK = {
       required: true,
       type: "Interactive",
       tutorLabel: "LKM",
-      content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Topik", text: "Diskusikan perkembangan fisik motorik anak SD." }] }] }
+      content: {
+        type: "GROUP_DISCUSSION",
+        missions: {
+          "5": {
+            title: "Hakikat & Tujuan BK dika SD",
+            subtitle: "Tugas Diskusi Kelompok 5",
+            icon: "center_focus_strong",
+            description: "Mendalami esensi bantuan BK untuk perkembangan optimal pribadi and sosial siswa.",
+            questions: [
+              "Uraikan pengertian BK dika SD dangan kalimat kelompok Anda sendiri.",
+              "Sebutkan 4 tujuan utama layanan BK bagi perkembangan karakter siswa sejak dini."
+            ]
+          },
+          "4": {
+            title: "Komponen Program Layanan BK",
+            subtitle: "Tugas Diskusi Kelompok 4",
+            icon: "category",
+            description: "Menganalisis kerangka layanan dasar, responsif, and dukungan sistem.",
+            questions: [
+              "Jelaskan perbedaan antara Layanan Dasar and Layanan Responsif dika konteks SD.",
+              "Apa peran 'Dukungan Sistem' dalam menjamin keberlangsungan program BK?"
+            ]
+          },
+          "3": {
+            title: "Jenis-Jenis Layanan Intervensi",
+            subtitle: "Tugas Diskusi Kelompok 3",
+            icon: "hub",
+            description: "Mengevaluasi efektifitas layanan orientasi, informasi, and konsultasi.",
+            questions: [
+              "Sebutkan minimal 5 jenis layanan utama BK yang paling sering dibutuhkan siswa SD.",
+              "Kapan seorang guru harus melakukan Mediasi dibandingkan Konseling Individual?"
+            ]
+          },
+          "2": {
+            title: "Karakteristik & Tugas Perkembangan",
+            subtitle: "Tugas Diskusi Kelompok 2",
+            icon: "child_care",
+            description: "Menganalisis tugas perkembangan dasar (membaca, bergaul, disiplin) dika masa SD.",
+            questions: [
+              "Uraikan 5 tugas perkembangan utama yang harus dikuasai anak usia 6-12 tahun.",
+              "Apa dampaknya jika seorang anak gagal mencapai tugas perkembangan sosialnya?"
+            ]
+          },
+          "1": {
+            title: "Perkembangan Fisik-Motorik",
+            subtitle: "Tugas Diskusi Kelompok 1",
+            icon: "directions_run",
+            description: "Menganalisis hubungan antara kesehatan fisik dangan kesiapan mental belajar.",
+            questions: [
+              "Mengapa perkembangan fisik-motorik mempengaruhi kemampuan kognitif siswa?",
+              "Sebutkan upaya bimbingan yang bisa dilakukan guru untuk mendukung anak yang kurang aktif secara fisik."
+            ]
+          }
+        }
+      }
     },
     {
       name: "Kuis dan Latihan",
