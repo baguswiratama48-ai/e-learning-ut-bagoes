@@ -140,7 +140,7 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
 
   return (
     <div className="space-y-6 md:space-y-12 pb-20">
-      <SectionHero title="Studi Kasus" subtitle="Analisis kasus nyata untuk menguji pemahaman Anda." icon="tips_and_updates" gradient="from-slate-900 to-indigo-900" />
+      <SectionHero title={config.content.title || "Studi Kasus"} subtitle="Analisis kasus nyata untuk menguji pemahaman Anda." icon="tips_and_updates" gradient="from-slate-900 to-indigo-900" />
 
       {status ? (
         <div className="space-y-6">
@@ -229,31 +229,33 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
  */
 export const MateriTemplate = ({ config, content, setContent, handleAction, loading, status }) => {
   if (!config?.content) return null;
+  const { title, sections, htmlContent, evaluationQuestion } = config.content;
+
   return (
     <div className="space-y-10 pb-20">
-      <SectionHero title={config.content.title || "Materi"} icon="menu_book" />
+      <SectionHero title={title || "Materi"} icon="menu_book" />
       
       {/* Support for legacy "htmlContent" used in Sesi 1 */}
-      {config.content.htmlContent && !config.content.sections && (
+      {htmlContent && !sections && (
         <Card className="p-6 md:p-12">
           <div 
             className="prose prose-slate max-w-none text-slate-600 text-sm md:text-lg leading-relaxed text-justify"
-            dangerouslySetInnerHTML={{ __html: config.content.htmlContent }}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         </Card>
       )}
 
-      {config.content.sections && (
+      {sections && (
         <div className="max-w-4xl mx-auto space-y-10">
-          {config.content.sections.map((section, sidx) => (
-          <div key={sidx} className="px-4">
-            <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6">{section.title}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(section.points || []).map((pt, pidx) => (
-                <Card key={pidx} className="p-5">
-                   <h4 className="text-[10px] font-black text-indigo-500 mb-2 uppercase">{pt.label}</h4>
-                   <p className="text-xs text-slate-600 leading-relaxed font-medium">{pt.text}</p>
-                   {pt.items && (
+          {sections.map((section, sidx) => (
+            <div key={sidx} className="px-4">
+              <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6">{section.title}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {(section.points || []).map((pt, pidx) => (
+                  <Card key={pidx} className="p-5">
+                    <h4 className="text-[10px] font-black text-indigo-500 mb-2 uppercase">{pt.label}</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed font-medium">{pt.text}</p>
+                    {pt.items && (
                       <ul className="mt-3 space-y-1">
                         {pt.items.map((item, i) => (
                           <li key={i} className="text-[10px] text-slate-500 flex items-center gap-2 italic">
@@ -262,17 +264,21 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
                         ))}
                       </ul>
                     )}
-                </Card>
-              ))}
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       )}
-      <div className="max-w-xl mx-auto px-4 mt-20 bg-indigo-600 p-8 rounded-[2.5rem] text-white text-center">
-        <h3 className="text-xl font-black mb-4 italic">Refleksi Materi</h3>
-        <p className="text-xs opacity-70 mb-8 italic">"{config.content.evaluationQuestion}"</p>
-        <InputArea value={content} onChange={setContent} onSave={handleAction} loading={loading} status={status} />
-      </div>
+
+      {evaluationQuestion && (
+        <div className="max-w-xl mx-auto px-4 mt-20 bg-indigo-600 p-8 rounded-[2.5rem] text-white text-center">
+          <h3 className="text-xl font-black mb-4 italic">Refleksi Materi</h3>
+          <p className="text-xs opacity-70 mb-8 italic">"{evaluationQuestion}"</p>
+          <InputArea value={content} onChange={setContent} onSave={handleAction} loading={loading} status={status} />
+        </div>
+      )}
     </div>
   );
 };
