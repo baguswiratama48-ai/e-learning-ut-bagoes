@@ -10,21 +10,23 @@ export const Sesi2_Strategi = {
       label: "RAT/SAT",
       type: "RATSATV2",
       content: {
-        title: "Strategi Pembelajaran Kontemporer",
-        capaian: [
-          "Mahasiswa mampu merancang strategi pembelajaran inovatif yang berpusat pada siswa.",
-          "Mahasiswa mampu mengintegrasikan teknologi dalam proses pembelajaran di SD."
+        title: "Pembelajaran di Sekolah Dasar",
+        capaianUmum: "Mahasiswa dapat meningkatkan kemampuan professional sehingga mampu mengembangkan pengetahuan dan keterampilan dalam mengelola pembelajaran di SD",
+        capaianKhusus: [
+          "Mahasiswa dapat menjelaskan karakteristik pembelajaran di SD"
         ],
         pokokBahasan: [
           {
-            title: "Konsep Landasan Pembelajaran Kontemporer",
+            title: "Pembelajaran di Sekolah Dasar",
             subs: [
-              "Paradigma Pembelajaran Abad 21", 
-              "Student-Centered Learning (SCL)"
+              "Pengertian Belajar",
+              "Karakteristik, proses belajar dan tahapan perkembangan siswa Sekolah Dasar",
+              "Karakteristik pembelajaran di Sekolah dasar"
             ]
           }
         ],
-        evaluationQuestion: "Apa inovasi pembelajaran yang paling ingin Anda terapkan di kelas setelah mempelajari modul ini?"
+        evaluationQuestion: "Setelah Anda mempelajari materi mengenai karakteristik dan tahapan perkembangan siswa SD, jelaskan bagaimana pemahaman tersebut akan membantu Anda dalam merancang serta mengelola strategi pembelajaran yang efektif dan tepat sasaran di kelas masing-masing? (Berikan penjelasan minimal 20 kata)",
+        minWords: 20
       }
     },
     {

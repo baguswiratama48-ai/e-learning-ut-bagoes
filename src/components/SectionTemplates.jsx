@@ -138,6 +138,11 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
             <p className="text-slate-500 text-sm md:text-lg font-medium italic leading-relaxed px-4">
               "{evaluationQuestion}"
             </p>
+            {config.content.minWords && (
+              <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mt-4">
+                ✏️ Minimal {config.content.minWords} kata untuk dapat mengirim jawaban
+              </p>
+            )}
           </div>
           <div className="max-w-2xl mx-auto px-4">
             <InputArea 
@@ -146,6 +151,7 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
               onSave={handleAction}
               loading={loading}
               status={status}
+              minWords={config.content.minWords || 0}
               placeholder="Tuliskan pemikiran atau jawaban Anda di sini..."
             />
           </div>
