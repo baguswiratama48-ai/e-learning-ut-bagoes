@@ -60,7 +60,7 @@ export const Sesi2_Strategi = {
           {
             letter: "A",
             title: "Teori-Teori Belajar Utama",
-            description: "Memahami landasan psikologis bagaimana seorang siswa memperoleh pengetahuan.",
+            description: "Landasan psikologis dalam proses pembelajaran merupakan fondasi absolut bagi seorang pendidik. Pemahaman yang komprehensif terhadap teori-teori belajar memastikan bahwa setiap intervensi pendagogik tidak dilakukan secara sembarangan, melainkan berpijak pada prinsip ilmiah tentang bagaimana manusia mengonstruksi pengetahuannya. Dalam khazanah ilmu pendidikan, terdapat ragam perspektif teoretis yang saling melengkapi. Pertama, Teori Disiplin Mental yang memandang kelulusan kognitif individu ibarat otot yang harus terus dilatih melalui hafalan, ingatan, dan penalaran intensif. Meski terkesan klasik, teori ini berperan kuat dalam membentuk memori jangka panjang. Kedua, Teori Behaviorisme yang dipelopori oleh tokoh-tokoh besar pendidik, menekankan pada perubahan perilaku lahiriah melalui skema stimulus-respons. Menurut pandangan ini, lingkungan seperti keluarga, budaya, dan sekolah menjadi determinan utama karakter seorang anak. Siswa diibaratkan seperti kertas kosong yang siap dibentuk melalui sistem penghargaan (reward) dan penguatan (reinforcement). Ketiga, Teori Insight dan Gestalt yang melihat bahwa belajar adalah proses reorganisasi kognitif yang memicu pemahaman seketika. Manusia tidak bereaksi secara mekanis, melainkan merespons keseluruhan konteks informasi. Keempat, Konstruktivisme yang menjadi tonggak pendidikan modern, di mana belajar dianggap sebagai proses aktif pembentukan makna. Siswa bukanlah wadah pasif yang menampung ceramah guru, melainkan arsitek intelektual yang membongkar-pasang informasi baru berdasarkan pengalaman autentik mereka di dunia nyata.",
             points: [
               {
                 label: "Teori Disiplin Mental",
@@ -87,7 +87,7 @@ export const Sesi2_Strategi = {
           {
             letter: "B",
             title: "Tipe & Hasil Belajar",
-            description: "Klasifikasi ragam aktivitas belajar dan kompetensi yang dihasilkan.",
+            description: "Pembelajaran yang efektif adalah pembelajaran yang multidimensional, menyentuh berbagai aspek kapasitas humanis seorang siswa. Dalam menganalisis fenomena belajar, tokoh pendidikan merumuskan hierarki tipe belajar yang merepresentasikan evolusi kognitif manusia. Tahapan ini dimulai dari proses paling primitif seperti belajar isyarat (signal learning) yang bersifat instingtif, diikuti oleh stimulus-respons di mana anak mengaitkan suatu tindakan dengan konsekuensi tertentu. Hierarki kemudian berevolusi menuju kemampuan perangkaian motorik, asosiasi verbal yang memampukan anak berbahasa, hingga kemampuan tingkat tinggi seperti diskriminasi (membedakan konsep yang mirip), pembentukan konsep abstrak, pemahaman aturan hukum alam maupun sosial, hingga akhirnya bermuara pada kemampuan esensial yaitu pemecahan masalah (problem solving). Setiap guru dituntut mampu menyadari di anak tangga mana siswanya sedang berpijak saat mengajar di kelas. Di sisi lain, keberhasilan dari semua hierarki tersebut akan menelurkan taksonomi hasil belajar yang spesifik dan terukur secara akademis. Hasil belajar ini tidak sekadar bertumpu pada nilai raport di atas kertas, melainkan manifestasi nyata dalam bentuk Keterampilan Kognitif (berpikir logis, analitis, dan rasional), Keterampilan Psikomotor (penguasaan gerak jasmani, koordinasi fisik, dan eksekusi perseptual yang kompleks), Keterampilan Interaktif (kecerdasan bersosialisasi, kerja sama tim, komunikasi efektif, serta kepemimpinan), serta Keterampilan Reaktif (pengendalian diri, regulasi emosi, pembentukan sikap arif, kebijaksanaan, dan empati terdalam terhadap sesama manusia).",
             points: [
               {
                 label: "8 Tipe Belajar Gagne",
@@ -107,10 +107,10 @@ export const Sesi2_Strategi = {
           {
             letter: "C",
             title: "Tahapan Perkembangan Siswa SD",
-            description: "Perubahan yang dialami anak usia SD dalam berbagai aspek kehidupan.",
+            description: "Menyelami karakteristik perkembangan anak usia Sekolah Dasar (SD) berarti berusaha memahami transisi paling dramatis dalam rentang masa kanak-kanak manusia. Siswa SD bukanlah orang dewasa dalam skala mini; mereka secara mutlak merupakan individu-individu unik dengan pola pertumbuhan dan perkembangan yang memiliki ritme, imajinasi, dan tantangannya sendiri. Secara kognitif, anak usia SD pada umumnya berada dalam fase transisi krusial dari Pra-Operasional menuju Operasional Konkret. Pada masa tersebut, kemampuan daya logika analitik anak mulai bangkit secara substansial, namun mereka masih sangat terikat pada benda-benda fisik, manipulasi langsung secara spasial, dan konteks visual yang sungguh nyata. Mereka pastinya akan kesulitan memproses konsep-konsep filosofis abstrak tanpa didampingi alat peraga atau eksperimen langsung. Di luar domain kemampuan otak (kognitif), perkembangan realitas sosial dan spektrum emosional anak SD juga mengalami lonjakan hebat. Pada siswa di kelompok kelas tinggi (kelas 4 sampai 6), para siswa mulai melepaskan diri dari dinding egosentrisme absolut. Validasi dari sahabat dan teman sekelas (peer group) perlahan menjadi jauh lebih berharga dibandingkan sekadar mematuhi instruksi kaku orang tua. Kondisi emosional ini menuntut kearifan guru untuk senantiasa meramu pembelajaran berbasis kolaborasi alih-alih kompetisi tegang. Memahami fase perkembangan inilah yang menciptakan ruh pedagogik sesungguhnya.",
             points: [
               {
-                label: "Hasi Belajar Berpikir Kritis",
+                label: "Hasil Belajar Berpikir Kritis",
                 items: [
                   "Kemampuan membaca dan mengamati informasi.",
                   "Membuat pertanyaan dari apa yang dibaca.",
@@ -131,7 +131,7 @@ export const Sesi2_Strategi = {
           {
             letter: "D",
             title: "Aspek Inteligensi (Multiple Intelligences)",
-            description: "Tujuh jenis kecerdasan utama yang mungkin dimiliki oleh siswa SD.",
+            description: "Memiliki pemahaman tradisional yang terus-menerus membelenggu kreativitas dunia pendidikan adalah gagasan sempit bahwa kecerdasan hanya sahih diukur melalui kemampuan berhitung matematika dan hafalan gramatika bahasa. Namun, revolusi pemikiran di era pembelajaraan modern berhasil meledakkan paradigma lapuk tersebut dengan menegaskan konsep esensial mengenai Kecerdasan Majemuk (Multiple Intelligences). Pendekatan ini meyakinkan kita bahwasanya, sungguh tidak ada anak yang sama sekali bodoh; karena setiap individu cilik dilahirkan membawa rancangan potensi kecerdasannya masing-masing yang menunggu ruang untuk mekar. Di ekosistem ruang kelas SD, ragam kecerdasan tersebut bermanifestasi dalam bermacam dimensi fundamental. Inteligensi Akademik menaungi Linguistik (vokalisasi kata, bercerita, dan merangkai diksi persuasi) bersamaan dengan area Logis-Matematis (kepiawaian mendedah pola, bilangan, dan presisi akurasi komputasi). Menyusul kemudian Inteligensi Seni dan Ruang, mencakup Spasial-Visual (mata arsitek melihat manipulasi bentuk maupun dimensi), kepekaan Musikal (daya dengar terhadap ritme dan harmonisasi semesta), serta sentuhan ajaib Fisik-Kinestetik (keahlian olahragawan atau gerak luwes penari balet). Melengkapi itu semua, fondasi Inteligensi Personal terbagi atas determinasi Intrapersonal (kekuatan menyelami emosi pribadi, bermeditasi, dan sadar kelamahan diri) serta pesona panggung Interpersonal (karakter kepemimpinan luhur, mediasi diplomasi, empati hangat, serta negosiator ulung). Semuanya harus diharmoniskan secara menyeluruh.",
             points: [
               {
                 label: "Inteligensi Akademik",
