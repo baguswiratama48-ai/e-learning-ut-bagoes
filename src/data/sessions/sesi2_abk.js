@@ -1,7 +1,7 @@
 export const Sesi2_ABK = {
   id: "ABK_S2",
   meetingId: "2",
-  classIds: ["1", "3"],
+  classIds: ["3"],
   courseCode: "SPDA4401",
   courseName: "Penanganan Anak Berkebutuhan Khusus",
   sections: [

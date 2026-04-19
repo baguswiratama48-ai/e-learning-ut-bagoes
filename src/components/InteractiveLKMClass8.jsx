@@ -72,6 +72,8 @@ export default function InteractiveLKMClass8({
     return groupsData.find(g => g.members.some(m => m.email === user.email));
   }, [groupsData, user.email]);
 
+  const groupNumber = myGroupInfo ? myGroupInfo.group_num : 1;
+
   const [activeTab, setActiveTab] = useState("MY_LKM");
   const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
 
