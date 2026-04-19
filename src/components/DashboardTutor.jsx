@@ -304,8 +304,16 @@ export const DashboardTutor = ({
               // Define the list of menus for this specific context
               let dynamicMenus = sessionConfig ? sessionConfig.sections.map(s => s.name) : [...MENUS];
 
+              // Injeksi menu Keaktifan Forum jika config tersedia untuk kelas+sesi ini
+              const forumConfig = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
+              if (forumConfig) {
+                dynamicMenus.push("Keaktifan Forum");
+              }
+
               return dynamicMenus.map(menu => {
-                const hasSub = studentSubs.find(s => {
+                const isForumActivityTab = menu === "Keaktifan Forum";
+                
+                const hasSub = isForumActivityTab ? true : studentSubs.find(s => {
                   // Fallback for special Sesi 1 logic if needed
                   if (String(selectedMeeting) === "1") {
                     if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
@@ -501,6 +509,74 @@ export const DashboardTutor = ({
                                 </div>
                                 <div className="text-slate-700 leading-relaxed whitespace-pre-wrap font-medium font-serif border-l-4 border-emerald-100 pl-8 ml-2 text-sm md:text-base">
                                   {sub.content.replace(/\[RANGKUMAN MODUL PENGGANTI TEST\]\n/, "")}
+                                </div>
+                              </div>
+                            ) : activeCorrectionTab === "Keaktifan Forum" ? (
+                              <div className="space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  {/* Stats Card */}
+                                  <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                      <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined font-black">public</span>
+                                      </div>
+                                      <div className="text-left">
+                                        <p className="text-sm font-black text-slate-800">{(() => {
+                                          const config = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
+                                          return (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.section_name).length;
+                                        })()} Post</p>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Postingan Discussion</p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 border-l border-slate-100 pl-6">
+                                      <div className="w-12 h-12 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center">
+                                        <span className="material-symbols-outlined font-black">chat</span>
+                                      </div>
+                                      <div className="text-left">
+                                        <p className="text-sm font-black text-slate-800">{(() => {
+                                          const config = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
+                                          return (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.comment_section).length;
+                                        })()} Komen</p>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Komentar Balasan</p>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Badge Card */}
+                                  {(() => {
+                                    const config = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
+                                    const postCount = (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.section_name).length;
+                                    const commentCount = (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.comment_section).length;
+                                    
+                                    let badge, badgeColor;
+                                    if (postCount >= 2 && commentCount >= 2) {
+                                      badge = "Sangat Aktif";  badgeColor = "bg-emerald-500 text-white shadow-emerald-200";
+                                    } else if (postCount >= 1 && commentCount >= 1) {
+                                      badge = "Aktif";         badgeColor = "bg-blue-500 text-white shadow-blue-200";
+                                    } else if (postCount + commentCount >= 1) {
+                                      badge = "Cukup";         badgeColor = "bg-amber-400 text-slate-900 shadow-amber-200";
+                                    } else {
+                                      badge = "Pasif";         badgeColor = "bg-rose-100 text-rose-600";
+                                    }
+
+                                    return (
+                                      <div className={`p-8 rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center text-center ${badgeColor}`}>
+                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60 mb-1">Status Keaktifan</p>
+                                         <h4 className="text-2xl font-black uppercase tracking-tight">{badge}</h4>
+                                      </div>
+                                    );
+                                  })()}
+                                </div>
+
+                                {/* Detail List Display (Quick View) */}
+                                <div className="bg-white rounded-[2.5rem] border border-slate-100 p-8">
+                                   <div className="flex items-center gap-3 mb-6">
+                                      <span className="w-1 bg-indigo-500 h-6 rounded-full"></span>
+                                      <h5 className="font-black text-slate-800 text-sm italic">"Review Singkat Kontribusi Diskusi"</h5>
+                                   </div>
+                                   <p className="text-xs text-slate-500 leading-relaxed text-left bg-slate-50 p-6 rounded-2xl border border-dashed border-slate-200">
+                                      Mahasiswa ini telah berkontribusi dengan membagikan pemikiran mereka dan menanggapi rekan sejawat. Gunakan data di atas sebagai pertimbangan tambahan pemberian nilai pada menu LKM atau Refleksi.
+                                   </p>
                                 </div>
                               </div>
                             ) : sub.content.includes("Jawaban:") ? (
