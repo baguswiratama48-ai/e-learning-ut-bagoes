@@ -244,7 +244,7 @@ export default function InteractiveLKMClass8({
   };
 
   const handleFinalSubmit = async () => {
-    const answeredCount = answers.filter(a => a.trim().length >= 10).length;
+    const answeredCount = answers.filter(a => (a || "").trim().length >= 10).length;
     const isFormComplete = answeredCount >= Math.min(currentTask.questions.length, 6);
     if (!isFormComplete) return;
 
@@ -280,7 +280,7 @@ export default function InteractiveLKMClass8({
     );
   }
 
-  const answeredCountGlobal = answers.filter(a => a.trim().length >= 10).length;
+  const answeredCountGlobal = answers.filter(a => (a || "").trim().length >= 10).length;
   const isFormCompleteGlobal = answeredCountGlobal >= Math.min(currentTask.questions.length, 6);
   const remainingRequiredGlobal = Math.max(0, Math.min(currentTask.questions.length, 6) - answeredCountGlobal);
 
