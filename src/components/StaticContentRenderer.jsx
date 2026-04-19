@@ -69,6 +69,8 @@ export const StaticContentRenderer = ({
             handleAction={handleAction}
             loading={loading}
             getPemantikForStudent={getPemantikForStudent}
+            id={id}
+            meetingId={meetingId}
           />
         );
       }

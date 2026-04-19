@@ -230,50 +230,51 @@ export const VideoEvalTemplate = ({ config, content, setContent, handleAction, l
 /**
  * Template for Pertanyaan Pemantik (Case Studies / Random Reflection)
  */
-export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPemantikAnswers, handleAction, loading, getPemantikForStudent }) => {
+export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPemantikAnswers, handleAction, loading, getPemantikForStudent, meetingId, id }) => {
   const questions = getPemantikForStudent(user.nim || "0", config.content.groups);
-  const requiredCount = config.content.required;
-  const allAnswered = pemantikAnswers.every(a => a?.trim().length > 0);
-  const videoId = config.content.videoId;
   
+  // Slide state with persistence to avoid losing position on Back/Refresh
+  const SLIDE_KEY = `pemantik_idx_${user.email}_${id}_${meetingId}`;
+  const [activeIdx, setActiveIdx] = React.useState(() => {
+    const saved = localStorage.getItem(SLIDE_KEY);
+    return saved ? parseInt(saved) : 0;
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem(SLIDE_KEY, activeIdx.toString());
+  }, [activeIdx, SLIDE_KEY]);
+
   const onSubmit = () => {
-    const combined = questions.map((q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${pemantikAnswers[i]}`).join("\n\n");
+    const combined = questions.map((q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${pemantikAnswers[i] || "-"}`).join("\n\n");
     handleAction(combined);
+    localStorage.removeItem(SLIDE_KEY); 
   };
 
-  return (
-    <div className="space-y-8 md:space-y-12">
-      {videoId && (
-        <Card className="overflow-hidden border-none shadow-2xl animate-in zoom-in duration-500">
-          <div className="aspect-video relative">
-            <iframe
-              className="w-full h-full"
-              src={`https://www.youtube.com/embed/${videoId}`}
-              title="Pemantik Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-          <div className="p-4 bg-slate-900 text-white flex items-center gap-3">
-             <span className="material-symbols-outlined text-yellow-400 animate-pulse">movie</span>
-             <span className="text-[10px] font-black uppercase tracking-widest">Simak video singkat di atas sebelum menjawab</span>
-          </div>
-        </Card>
-      )}
+  const currentQ = questions[activeIdx];
+  const isLast = activeIdx === questions.length - 1;
 
+  return (
+    <div className="space-y-8 md:space-y-12 pb-20">
       <SectionHero 
         title="Pertanyaan Pemantik"
-        subtitle={`Jawablah ${requiredCount} pertanyaan reflektif di bawah ini untuk memantapkan pemahaman Anda.`}
+        subtitle={`Selesaikan ${questions.length} Studi Kasus Strategi Pembelajaran di bawah ini.`}
         category="Guided Reflection"
         icon="tips_and_updates"
         gradient="from-[#0f172a] via-[#1e1b4b] to-[#312e81]"
       />
 
-      <div className="bg-white/50 p-6 rounded-[2rem] border border-slate-200 mb-10">
-         <div className="flex items-center gap-3 text-slate-500">
-            <span className="material-symbols-outlined text-sm">history_edu</span>
-            <p className="text-[10px] font-black uppercase tracking-widest text-left">Setiap jawaban tersimpan otomatis di perangkat Anda (Anti-Hilang)</p>
+      <div className="bg-white/50 p-6 rounded-[2rem] border border-slate-200 mb-6">
+         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3 text-slate-500">
+               <span className="material-symbols-outlined text-sm">history_edu</span>
+               <p className="text-[10px] font-black uppercase tracking-widest text-left">Auto-Save Aktif: Jawaban Tidak Akan Hilang</p>
+            </div>
+            {/* Progress Pills */}
+            <div className="flex gap-1.5">
+               {questions.map((_, i) => (
+                 <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i === activeIdx ? "w-8 bg-indigo-600" : i < activeIdx ? "w-3 bg-emerald-400" : "w-3 bg-slate-200"}`}></div>
+               ))}
+            </div>
          </div>
       </div>
 
@@ -284,9 +285,9 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
                   <span className="material-symbols-outlined text-5xl font-bold">verified</span>
                </div>
                <div className="text-center md:text-left">
-                  <h4 className="text-xl md:text-3xl font-black uppercase tracking-tight mb-2">Refleksi Disimpan!</h4>
+                  <h4 className="text-xl md:text-3xl font-black uppercase tracking-tight mb-2">Jawaban Selesai Terkirim!</h4>
                   <p className="text-sm md:text-lg text-emerald-100 font-medium opacity-90 max-w-xl italic">
-                    Jawaban Anda telah tersimpan. Tutor akan memberikan feedback segera di Dashboard ini.
+                    Studi kasus Anda telah masuk ke Sistem Dasbor Tutor.
                   </p>
                </div>
             </div>
@@ -297,18 +298,18 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
               const myAns = myBlock.split("\nJawaban: ")[1] || "-";
 
               return (
-                <Card key={i} className="p-8 md:p-10 border-t-8 border-t-indigo-500/20 flex flex-col h-full">
+                <Card key={i} className="p-8 md:p-10 border-t-8 border-t-indigo-500/20 flex flex-col h-full opacity-60 hover:opacity-100 transition-opacity">
                   <div className="flex items-center gap-3 mb-6">
                     <span className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-lg">
                       {i + 1}
                     </span>
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Question {i+1}</span>
                   </div>
-                  <p className="text-base md:text-xl font-black text-slate-800 mb-8 leading-snug">
+                  <p className="text-base md:text-lg font-black text-slate-800 mb-8 leading-snug whitespace-pre-line text-left">
                     {q}
                   </p>
                   <div className="mt-auto bg-slate-50 p-6 md:p-8 rounded-[2rem] border-l-8 border-indigo-500">
-                    <p className="text-sm md:text-base text-slate-600 italic leading-relaxed font-serif font-medium">
+                    <p className="text-sm md:text-base text-slate-600 italic leading-relaxed text-left">
                       "{myAns}"
                     </p>
                   </div>
@@ -317,47 +318,72 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
             })}
         </div>
       ) : (
-        <div className="space-y-10">
-          <div className="grid grid-cols-1 gap-8 md:gap-16">
-            {questions.map((q, i) => (
-              <div key={i} className="group bg-white border border-slate-200 p-7 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-sm hover:shadow-xl transition-all focus-within:ring-8 focus-within:ring-indigo-500/5">
-                <div className="flex items-center gap-4 mb-6 md:mb-8">
-                  <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.5rem] bg-indigo-600 text-white flex items-center justify-center font-black text-xl md:text-3xl shadow-xl shadow-indigo-600/20 group-focus-within:scale-110 transition-transform">
-                    {i + 1}
-                  </div>
-                  <div className="h-px flex-grow bg-slate-100"></div>
-                </div>
-                
-                <h3 className="text-lg md:text-2xl font-black text-slate-900 mb-8 md:mb-12 leading-relaxed md:leading-snug tracking-tight text-left whitespace-pre-line font-headline">
-                  {q}
-                </h3>
-                
-                <textarea
-                  value={pemantikAnswers[i] || ""}
-                  onChange={(e) => {
-                    const newAns = [...pemantikAnswers];
-                    newAns[i] = e.target.value;
-                    setPemantikAnswers(newAns);
-                  }}
-                  placeholder="Ketik jawaban reflektif Anda disini..."
-                  className="w-full min-h-[140px] md:min-h-[200px] bg-slate-50 border border-slate-200 rounded-3xl md:rounded-[2rem] p-6 md:p-10 text-sm md:text-base text-slate-700 focus:bg-white focus:border-indigo-500 outline-none transition-all resize-none shadow-inner"
-                ></textarea>
+        <div className="space-y-10 animate-in fade-in zoom-in duration-500">
+          {/* THE SINGLE SLIDE AREA */}
+          <div className="group bg-white border border-slate-200 p-7 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-sm hover:shadow-xl transition-all focus-within:ring-8 focus-within:ring-indigo-500/5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
+               <span className="material-symbols-outlined text-[150px]">quiz</span>
+            </div>
+            
+            <div className="flex items-center gap-4 mb-8 md:mb-12">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.5rem] bg-indigo-600 text-white flex items-center justify-center font-black text-xl md:text-3xl shadow-xl shadow-indigo-600/20">
+                {activeIdx + 1}
               </div>
-            ))}
+              <div>
+                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Kasus {activeIdx + 1} dari {questions.length}</p>
+                <div className="h-px w-20 bg-indigo-100 mt-1"></div>
+              </div>
+            </div>
+            
+            <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-10 md:mb-16 leading-relaxed md:leading-tight tracking-tight text-left whitespace-pre-line font-headline">
+              {currentQ}
+            </h3>
+            
+            <textarea
+              value={pemantikAnswers[activeIdx] || ""}
+              onChange={(e) => {
+                const newAns = [...pemantikAnswers];
+                newAns[activeIdx] = e.target.value;
+                setPemantikAnswers(newAns);
+              }}
+              placeholder="Analisis kasus ini menurut pandangan Anda..."
+              className="w-full min-h-[160px] md:min-h-[250px] bg-slate-50 border border-slate-200 rounded-[2rem] p-7 md:p-12 text-sm md:text-lg text-slate-700 focus:bg-white focus:border-indigo-500 outline-none transition-all resize-none shadow-inner leading-relaxed text-justify"
+            ></textarea>
           </div>
 
-          <div className="flex flex-col items-center gap-6 pt-10">
-              <button
-                onClick={onSubmit}
-                disabled={loading || !allAnswered}
-                className="w-full md:w-auto min-w-[350px] bg-indigo-600 text-white font-black py-6 px-12 rounded-[2rem] hover:bg-slate-900 hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 text-xs tracking-[0.2em] uppercase disabled:opacity-20"
-              >
-                {loading ? "MENGIRIM JAWABAN..." : "KIRIM SEMUA JAWABAN"}
-                <span className="material-symbols-outlined">send</span>
-              </button>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest flex items-center gap-2">
-                <span className="material-symbols-outlined text-sm">lock</span> Jawaban disimpan otomatis dan dikirim secara bersamaan
-              </p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-6">
+              <div className="flex gap-4 w-full md:w-auto">
+                <button
+                  onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))}
+                  disabled={activeIdx === 0}
+                  className="flex-1 md:flex-none border border-slate-200 text-slate-400 font-black py-5 px-8 rounded-2xl hover:bg-slate-50 disabled:opacity-0 transition-all text-[10px] uppercase tracking-widest"
+                >
+                  Sebelumnya
+                </button>
+                { !isLast && (
+                  <button
+                    onClick={() => setActiveIdx(Math.min(questions.length - 1, activeIdx + 1))}
+                    className="flex-1 md:flex-none bg-slate-900 text-white font-black py-5 px-10 rounded-2xl hover:scale-105 active:scale-95 transition-all text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg"
+                  >
+                    Selanjutnya <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </button>
+                )}
+              </div>
+
+              {isLast ? (
+                <button
+                  onClick={onSubmit}
+                  disabled={loading}
+                  className="w-full md:w-auto min-w-[300px] bg-indigo-600 text-white font-black py-6 px-12 rounded-3xl hover:bg-emerald-500 hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 text-xs tracking-[0.2em] uppercase"
+                >
+                  {loading ? "MENGIRIM..." : "KIRIM SEMUA ANALISIS"}
+                  <span className="material-symbols-outlined">verified</span>
+                </button>
+              ) : (
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest hidden md:flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">lock</span> Klik Selanjutnya untuk soal berikutnya
+                </p>
+              )}
           </div>
         </div>
       )}
