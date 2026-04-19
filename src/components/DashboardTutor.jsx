@@ -4,6 +4,27 @@ import { STUDENTS } from "../data/students";
 import { CLASSES, MENUS, FEEDBACK_MESSAGES } from "../data/constants";
 import { getSessionConfig } from "../data/sessions";
 
+// ============================================================
+// KONFIGURASI LAPORAN FORUM DISKUSI LKM
+// Tambahkan entri baru di sini untuk menerapkan ke kelas/sesi lain.
+//
+// Format key: `${classId}_${meetingId}`
+// postSection   : section_name yang dipakai komponen LKM saat share ke forum
+// commentSection: section_name yang dipakai komponen LKM saat komentar
+// label         : Judul yang tampil di header laporan
+//
+// Contoh untuk kelas lain (uncomment dan sesuaikan):
+// "1_3": { postSection: "LKM_8B_FORUM_POST", commentSection: "LKM_8B_COMMENT", label: "LKM 8B Sesi 3" },
+// "2_3": { postSection: "LKM_8C_FORUM_POST", commentSection: "LKM_8C_COMMENT", label: "LKM 8C Sesi 3" },
+// ============================================================
+const LKM_FORUM_CONFIG = {
+  "3_2": {
+    postSection:    "LKM_6A_FORUM_POST",
+    commentSection: "LKM_6A_COMMENT",
+    label:          "Laporan Keaktifan Forum Diskusi LKM — Kelas 6A ABK Sesi 2",
+  },
+};
+
 export const DashboardTutor = ({ 
   submissions, 
   moduleContent, 
@@ -157,6 +178,75 @@ export const DashboardTutor = ({
   }, [activeTab, searchTerm]);
 
   const paginatedStudents = studentList.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // ============================================================
+  // LAPORAN AKTIVITAS FORUM DISKUSI LKM
+  // Menghitung jumlah post & komentar per mahasiswa di forum diskusi.
+  // Aktif hanya jika ada config LKM_FORUM_CONFIG untuk kelas+sesi aktif.
+  //
+  // Untuk memperluas ke kelas/sesi lain: tambahkan entri di LKM_FORUM_CONFIG (atas).
+  // ============================================================
+  const forumActivityReport = useMemo(() => {
+    const configKey = `${activeTab}_${selectedMeeting}`;
+    const forumConfig = LKM_FORUM_CONFIG[configKey];
+    if (!forumConfig) return null; // tidak ada config → tidak tampilkan laporan
+
+    const { postSection, commentSection, label } = forumConfig;
+
+    // Ambil semua submissions yang relevan
+    const allPosts    = (submissions || []).filter(s => s.section_name === postSection);
+    const allComments = (submissions || []).filter(s => s.section_name === commentSection);
+
+    // Ambil data kelompok (GENERATED_GROUPS)
+    const groupRow = (submissions || []).find(
+      s => s.student_email === "SYSTEM_GROUP" &&
+           s.section_name === "GENERATED_GROUPS" &&
+           String(s.meeting_num) === String(selectedMeeting)
+    );
+    const groupsData = groupRow ? (() => { try { return JSON.parse(groupRow.content); } catch(e) { return null; } })() : null;
+
+    const getGroupNum = (email) => {
+      if (!groupsData) return "-";
+      const g = groupsData.find(grp => grp.members.some(m => m.email === email));
+      return g ? g.group_num : "-";
+    };
+
+    // Hitung per mahasiswa
+    const classStudents = STUDENTS.filter(
+      s => s.classId === activeTab && s.email !== "demo@ecampus.ut.ac.id"
+    );
+
+    const rows = classStudents.map(student => {
+      const postCount    = allPosts.filter(p => p.student_email === student.email).length;
+      const commentCount = allComments.filter(c => c.student_email === student.email).length;
+      const totalActivity = postCount + commentCount;
+
+      // Badge keaktifan — threshold bisa disesuaikan
+      let badge, badgeColor;
+      if (postCount >= 2 && commentCount >= 2) {
+        badge = "Sangat Aktif";  badgeColor = "bg-emerald-500 text-white";
+      } else if (postCount >= 1 && commentCount >= 1) {
+        badge = "Aktif";         badgeColor = "bg-blue-500 text-white";
+      } else if (totalActivity >= 1) {
+        badge = "Cukup";         badgeColor = "bg-amber-400 text-slate-900";
+      } else {
+        badge = "Pasif";         badgeColor = "bg-rose-100 text-rose-600";
+      }
+
+      return {
+        ...student,
+        groupNum: getGroupNum(student.email),
+        postCount,
+        commentCount,
+        totalActivity,
+        badge,
+        badgeColor,
+      };
+    }).sort((a, b) => b.totalActivity - a.totalActivity);
+
+    return { rows, label, postSection, commentSection };
+  }, [submissions, activeTab, selectedMeeting]);
+
   // --- CALCULATORS ---
   const calculateProgress = (studentEmail, meetingNum) => {
     const sessionConfig = getSessionConfig(activeTab, meetingNum);
@@ -799,6 +889,144 @@ export const DashboardTutor = ({
              </div>
           </div>
         )}
+
+      {/* ============================================================
+          LAPORAN KEAKTIFAN FORUM DISKUSI LKM
+          Tampil otomatis jika ada LKM_FORUM_CONFIG untuk kelas+sesi aktif.
+          Untuk menambah kelas/sesi lain: edit konstanta LKM_FORUM_CONFIG di atas.
+          ============================================================ */}
+      {forumActivityReport && (
+        <div className="mt-10 bg-white rounded-[3.5rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">
+          {/* Header */}
+          <div className="p-8 md:p-12 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-indigo-50 to-violet-50">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
+                <span className="material-symbols-outlined">forum</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-black text-slate-800 tracking-tight">{forumActivityReport.label}</h2>
+                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">
+                  {forumActivityReport.rows.filter(r => r.totalActivity > 0).length} mahasiswa aktif dari {forumActivityReport.rows.length} total
+                </p>
+              </div>
+            </div>
+            {/* Legenda */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "Sangat Aktif", color: "bg-emerald-500 text-white",    desc: "≥2 post & ≥2 komen" },
+                { label: "Aktif",        color: "bg-blue-500 text-white",        desc: "≥1 post & ≥1 komen" },
+                { label: "Cukup",        color: "bg-amber-400 text-slate-900",   desc: "ada aktivitas" },
+                { label: "Pasif",        color: "bg-rose-100 text-rose-600",     desc: "belum posting" },
+              ].map(l => (
+                <div key={l.label} className="flex items-center gap-1.5 bg-white border border-slate-100 px-3 py-1.5 rounded-xl shadow-sm">
+                  <span className={`inline-block w-2 h-2 rounded-full ${l.color.split(' ')[0]}`}></span>
+                  <span className="text-[10px] font-black text-slate-600">{l.label}</span>
+                  <span className="text-[9px] text-slate-400">({l.desc})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Ringkasan Statistik */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-100 border-b border-slate-100">
+            {[
+              { icon: "person", label: "Total Mahasiswa",  value: forumActivityReport.rows.length, color: "text-slate-700" },
+              { icon: "public", label: "Total Post Forum", value: forumActivityReport.rows.reduce((s, r) => s + r.postCount, 0), color: "text-indigo-600" },
+              { icon: "chat",   label: "Total Komentar",  value: forumActivityReport.rows.reduce((s, r) => s + r.commentCount, 0), color: "text-violet-600" },
+              { icon: "emoji_events", label: "Mahasiswa Aktif", value: forumActivityReport.rows.filter(r => r.badge === "Aktif" || r.badge === "Sangat Aktif").length, color: "text-emerald-600" },
+            ].map(stat => (
+              <div key={stat.label} className="bg-white p-6 flex flex-col items-center text-center">
+                <span className={`material-symbols-outlined text-2xl mb-1 ${stat.color}`}>{stat.icon}</span>
+                <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Tabel Detail Per Mahasiswa */}
+          <div className="px-6 pb-10 overflow-x-auto">
+            <table className="w-full border-separate border-spacing-y-3 mt-6">
+              <thead>
+                <tr className="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em]">
+                  <th className="px-4 py-3 text-center w-8">No</th>
+                  <th className="px-4 py-3 text-left">Mahasiswa</th>
+                  <th className="px-4 py-3 text-center">Kelompok</th>
+                  <th className="px-4 py-3 text-center">Post Forum</th>
+                  <th className="px-4 py-3 text-center">Komentar</th>
+                  <th className="px-4 py-3 text-center">Grafik Aktivitas</th>
+                  <th className="px-4 py-3 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {forumActivityReport.rows.map((row, idx) => {
+                  const maxActivity = Math.max(...forumActivityReport.rows.map(r => r.totalActivity), 1);
+                  const barWidth = maxActivity > 0 ? Math.round((row.totalActivity / maxActivity) * 100) : 0;
+                  return (
+                    <tr key={row.email} className="bg-white border border-slate-100 shadow-sm rounded-3xl hover:shadow-md transition-all">
+                      <td className="px-4 py-4 text-center text-slate-400 font-black text-xs border-y border-l rounded-l-2xl bg-slate-50/50">{idx + 1}</td>
+                      <td className="px-4 py-4 border-y bg-white">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black text-sm shrink-0">
+                            {row.name.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="font-black text-slate-800 text-sm leading-none">{row.name}</p>
+                            <p className="text-[10px] text-slate-400 font-medium mt-0.5">{row.nim}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-center border-y bg-white">
+                        <span className="w-8 h-8 rounded-lg bg-slate-900 text-white text-xs font-black flex items-center justify-center mx-auto">
+                          {row.groupNum}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-center border-y bg-white">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-2xl font-black text-indigo-600">{row.postCount}</span>
+                          <span className="text-[8px] font-black text-slate-400 uppercase">post</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-center border-y bg-white">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-2xl font-black text-violet-600">{row.commentCount}</span>
+                          <span className="text-[8px] font-black text-slate-400 uppercase">komentar</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 border-y bg-white min-w-[140px]">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-indigo-500 rounded-full transition-all duration-700"
+                                style={{ width: `${row.postCount > 0 ? Math.max(10, (row.postCount / Math.max(...forumActivityReport.rows.map(r=>r.postCount), 1)) * 100) : 0}%` }}
+                              />
+                            </div>
+                            <span className="text-[9px] font-black text-slate-400 w-12">post</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-violet-500 rounded-full transition-all duration-700"
+                                style={{ width: `${row.commentCount > 0 ? Math.max(10, (row.commentCount / Math.max(...forumActivityReport.rows.map(r=>r.commentCount), 1)) * 100) : 0}%` }}
+                              />
+                            </div>
+                            <span className="text-[9px] font-black text-slate-400 w-12">komen</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-center border-y border-r rounded-r-2xl bg-white">
+                        <span className={`inline-block px-3 py-1.5 rounded-xl text-[10px] font-black ${row.badgeColor}`}>
+                          {row.badge}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
