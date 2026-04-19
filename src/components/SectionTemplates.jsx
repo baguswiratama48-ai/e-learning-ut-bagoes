@@ -455,6 +455,11 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
           <p className="text-sm md:text-lg text-white/70 font-medium mb-12 max-w-2xl mx-auto italic leading-relaxed">
             "{config.content.evaluationQuestion || "Setelah mempelajari seluruh poin di atas, apa kesimpulan atau pelajaran terpenting yang Anda dapatkan?"}"
           </p>
+          {config.content.minWords && (
+            <p className="text-[11px] font-black uppercase tracking-widest text-white/40 mb-6 -mt-8">
+              ✏️ Minimal {config.content.minWords} kata untuk dapat mengirim jawaban
+            </p>
+          )}
           <div className="max-w-2xl mx-auto">
              <InputArea 
                value={content}
