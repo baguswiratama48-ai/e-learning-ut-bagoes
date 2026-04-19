@@ -261,54 +261,75 @@ export const Sesi2_BK = {
       content: {
         type: "GROUP_DISCUSSION",
         missions: {
-          "5": {
-            title: "Hakikat & Tujuan BK dika SD",
-            subtitle: "Tugas Diskusi Kelompok 5",
-            icon: "center_focus_strong",
-            description: "Mendalami esensi bantuan BK untuk perkembangan optimal pribadi and sosial siswa.",
-            questions: [
-              "Uraikan pengertian BK dika SD dangan kalimat kelompok Anda sendiri.",
-              "Sebutkan 4 tujuan utama layanan BK bagi perkembangan karakter siswa sejak dini."
-            ]
-          },
-          "4": {
-            title: "Komponen Program Layanan BK",
-            subtitle: "Tugas Diskusi Kelompok 4",
-            icon: "category",
-            description: "Menganalisis kerangka layanan dasar, responsif, and dukungan sistem.",
-            questions: [
-              "Jelaskan perbedaan antara Layanan Dasar and Layanan Responsif dika konteks SD.",
-              "Apa peran 'Dukungan Sistem' dalam menjamin keberlangsungan program BK?"
-            ]
-          },
-          "3": {
-            title: "Jenis-Jenis Layanan Intervensi",
-            subtitle: "Tugas Diskusi Kelompok 3",
-            icon: "hub",
-            description: "Mengevaluasi efektifitas layanan orientasi, informasi, and konsultasi.",
-            questions: [
-              "Sebutkan minimal 5 jenis layanan utama BK yang paling sering dibutuhkan siswa SD.",
-              "Kapan seorang guru harus melakukan Mediasi dibandingkan Konseling Individual?"
-            ]
-          },
-          "2": {
-            title: "Karakteristik & Tugas Perkembangan",
-            subtitle: "Tugas Diskusi Kelompok 2",
-            icon: "child_care",
-            description: "Menganalisis tugas perkembangan dasar (membaca, bergaul, disiplin) dika masa SD.",
-            questions: [
-              "Uraikan 5 tugas perkembangan utama yang harus dikuasai anak usia 6-12 tahun.",
-              "Apa dampaknya jika seorang anak gagal mencapai tugas perkembangan sosialnya?"
-            ]
-          },
           "1": {
-            title: "Perkembangan Fisik-Motorik",
+            title: "Perkembangan Fisik-Motorik & Upaya Bimbingan",
             subtitle: "Tugas Diskusi Kelompok 1",
             icon: "directions_run",
             description: "Menganalisis hubungan antara kesehatan fisik dangan kesiapan mental belajar.",
             questions: [
+              "Pengertian perkembangan fisik",
+              "Empat komponen utama perkembangan fisik seseorang",
+              "Aspek-aspek perkembangan fisik individu, dan Jabarkan aspek struktur fisik",
+              "Faktor yang mendorong keterampilan motorik yang memungkinkan peran serta orang tua dan guru dalam mengarahkannya",
+              "Uraikan tabel perkembangan fisik masa kanak-kanak akhir",
               "Mengapa perkembangan fisik-motorik mempengaruhi kemampuan kognitif siswa?",
               "Sebutkan upaya bimbingan yang bisa dilakukan guru untuk mendukung anak yang kurang aktif secara fisik."
+            ]
+          },
+          "2": {
+            title: "Karakteristik & Tugas Perkembangan SD",
+            subtitle: "Tugas Diskusi Kelompok 2",
+            icon: "child_care",
+            description: "Menganalisis tugas perkembangan dasar (membaca, bergaul, disiplin) dika masa SD.",
+            questions: [
+              "Tugas Perkembangan peserta didik di SD menurut Yusuf (2016:69)",
+              "Fase peserta didik membutuhkan kemampuan intelektual dan kognitif pada usia SD (6-12 tahun)",
+              "Uraikan 5 tugas perkembangan utama yang harus dikuasai anak usia 6-12 tahun.",
+              "Apa dampaknya jika seorang anak gagal mencapai tugas perkembangan sosialnya?",
+              "Uraikan karakteristik anak SD dalam perilaku yang direalisasikan dalam bentuk tindakan",
+              "Sebutkan karakteristik perkembangan sosial pada jenjang SD kelas rendah dan kelas tinggi"
+            ]
+          },
+          "3": {
+            title: "Jenis-Jenis Layanan Bimbingan dan Konseling",
+            subtitle: "Tugas Diskusi Kelompok 3",
+            icon: "hub",
+            description: "Mengevaluasi efektifitas layanan orientasi, informasi, and konsultasi.",
+            questions: [
+              "Jenis Layanan BK: Layanan Orientasi & Layanan Informasi",
+              "Jenis Layanan BK: Layanan Pembelajaran & Layanan Penempatan/Penyaluran",
+              "Jenis Layanan BK: Layanan Penguasaan Konten & Layanan Konseling Individual",
+              "Jenis Layanan BK: Layanan Bimbingan Kelompok & Konseling Kelompok",
+              "Jenis Layanan BK: Layanan Konsultasi & Layanan Mediasi",
+              "Sebutkan minimal 5 jenis layanan utama BK yang paling sering dibutuhkan siswa SD.",
+              "Kapan seorang guru harus melakukan Mediasi dibandingkan Konseling Individual?"
+            ]
+          },
+          "4": {
+            title: "Perkembangan Sosial, Emosi, dan Moral",
+            subtitle: "Tugas Diskusi Kelompok 4",
+            icon: "psychology",
+            description: "Menganalisis kerangka layanan dasar, responsif, and dukungan sistem.",
+            questions: [
+              "Pengertian perkembangan sosial & Emosi",
+              "Uraikan perkembangan dan ciri-ciri emosi peserta didik di SD",
+              "Pengertian perkembangan moral",
+              "Jelaskan 3 tingkatan klasifikasi perkembangan moral",
+              "Jelaskan perbedaan antara Layanan Dasar and Layanan Responsif dika konteks SD.",
+              "Apa peran 'Dukungan Sistem' dalam menjamin keberlangsungan program BK?"
+            ]
+          },
+          "5": {
+            title: "Hakikat & Tujuan BK serta Perkembangan Kognitif",
+            subtitle: "Tugas Diskusi Kelompok 5",
+            icon: "school",
+            description: "Mendalami esensi bantuan BK untuk perkembangan optimal pribadi and sosial siswa.",
+            questions: [
+              "Uraikan pengertian BK dika SD dangan kalimat kelompok Anda sendiri.",
+              "Sebutkan 4 tujuan utama layanan BK bagi perkembangan karakter siswa sejak dini.",
+              "Uraikan 4 tahap utama perkembangan kognitif individu",
+              "Identifikasi 5 karakteristik utama bahasa",
+              "Uraikan tahapan perkembangan bahasa pada anak"
             ]
           }
         }
