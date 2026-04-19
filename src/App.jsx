@@ -858,7 +858,20 @@ function SectionPage({ user }) {
   const [success, setSuccess] = useState(false);
   const [status, setStatus] = useState(null);
   const [submissions, setSubmissions] = useState([]);
-  const [pemantikAnswers, setPemantikAnswers] = useState(Array((id === "1" || id === "2" || id === "3" || id === "4") ? 6 : 3).fill(""));
+  // Hitung jumlah pertanyaan pemantik dari config sesi (bukan hardcode)
+  const pemantikQuestionCount = (() => {
+    try {
+      const cfg = getSessionConfig(id, meetingId);
+      const pemantikSection = cfg?.sections?.find(s => s.type === "PemantikV2");
+      if (pemantikSection?.content?.groups) {
+        // groups adalah array of arrays — hitung total semua pertanyaan di semua grup
+        return pemantikSection.content.groups.reduce((acc, g) => acc + g.length, 0);
+      }
+    } catch(e) {}
+    // fallback ke logika lama
+    return (id === "1" || id === "2" || id === "3" || id === "4") ? 6 : 3;
+  })();
+  const [pemantikAnswers, setPemantikAnswers] = useState(Array(pemantikQuestionCount).fill(""));
   const [tutorFeedback, setTutorFeedback] = useState(null);
 
   const isInput = [
