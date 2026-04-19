@@ -611,6 +611,12 @@ export const STUDENTS = [
     email: "878212606@ecampus.ut.ac.id",
     classId: "4",
   },
+  {
+    nim: "877606024",
+    name: "ENDAH GUSTRI HAYATI",
+    email: "877606024@ecampus.ut.ac.id",
+    classId: "4",
+  },
   // === AKUN UJICOBA (DUMMY) - bisa dipakai masuk ke semua kelas ===
   {
     nim: "000000000",
