@@ -2,9 +2,6 @@ import React from 'react';
 import { Card, SectionHero, InputArea } from './base/BaseComponents';
 
 /**
- * Template for RAT/SAT (Session Info)
- */
-/**
  * Templat untuk RAT/SAT (Informasi Silabus/Modul)
  * Diperbarui untuk mendukung tampilan profesional di mobile dan teks terstruktur.
  */
@@ -22,14 +19,12 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
 
   return (
     <div className="space-y-8 md:space-y-12 pb-10 animate-in fade-in duration-700">
-      {/* Hero Utama - Judul Sesi */}
       <SectionHero 
         title={title || "Informasi Modul"}
         category="RAT / SAT"
         icon="auto_stories"
       />
 
-      {/* Kartu Informasi Mata Kuliah - Sangat penting untuk identitas modul */}
       {(courseName || courseCode || sks) && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center group hover:border-primary transition-all">
@@ -51,7 +46,6 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 md:gap-12">
-        {/* Deskripsi Singkat - Perataan rapi dan font profesional untuk mobile */}
         {description && (
           <Card className="p-8 md:p-14 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
@@ -65,7 +59,6 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
           </Card>
         )}
 
-        {/* Capaian Pembelajaran - Dipisahkan antara Umum dan Khusus */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           <Card className="p-8 md:p-12 border-l-[12px] border-l-indigo-500 hover:shadow-2xl transition-shadow">
             <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-8 flex items-center gap-3">
@@ -74,7 +67,6 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
             </h3>
             
             <div className="space-y-8">
-              {/* Capaian Umum - Jika tersedia */}
               {config.content.capaianUmum && (
                 <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100">
                   <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-3">Capaian Umum</h4>
@@ -84,7 +76,6 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
                 </div>
               )}
 
-              {/* Capaian Khusus */}
               <div className="space-y-4">
                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Capaian Khusus</h4>
                 <ul className="space-y-4 text-slate-700 text-sm md:text-base font-semibold">
@@ -101,7 +92,6 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
             </div>
           </Card>
 
-          {/* Sub Pokok Bahasan */}
           <div className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-slate-200 border-opacity-50 hover:bg-white transition-colors">
             <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
               <span className="material-symbols-outlined text-indigo-600">account_tree</span>
@@ -128,7 +118,6 @@ export const RATSATTemplate = ({ config, content, setContent, handleAction, load
         </div>
       </div>
 
-      {/* Bagian Evaluasi - Jika ada pertanyaan pemantik khusus di RAT/SAT */}
       {evaluationQuestion && (
         <div className="mt-10 pt-10 border-t border-slate-100">
           <div className="max-w-3xl mx-auto text-center mb-10">
@@ -233,7 +222,6 @@ export const VideoEvalTemplate = ({ config, content, setContent, handleAction, l
 export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPemantikAnswers, handleAction, loading, getPemantikForStudent, meetingId, id }) => {
   const questions = getPemantikForStudent(user.nim || "0", config.content.groups);
   
-  // Slide state with persistence to avoid losing position on Back/Refresh
   const SLIDE_KEY = `pemantik_idx_${user.email}_${id}_${meetingId}`;
   const [activeIdx, setActiveIdx] = React.useState(() => {
     const saved = localStorage.getItem(SLIDE_KEY);
@@ -245,35 +233,46 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
   }, [activeIdx, SLIDE_KEY]);
 
   const onSubmit = () => {
+    // Collect all answers
     const combined = questions.map((q, i) => `Pertanyaan ${i + 1}: ${q}\nJawaban: ${pemantikAnswers[i] || "-"}`).join("\n\n");
     handleAction(combined);
-    localStorage.removeItem(SLIDE_KEY); 
+    localStorage.removeItem(SLIDE_KEY);
   };
 
   const currentQ = questions[activeIdx];
-  const isLast = activeIdx === questions.length - 1;
+  const isLast = activeIdx === (questions.length - 1);
 
   return (
     <div className="space-y-8 md:space-y-12 pb-20">
       <SectionHero 
         title="Pertanyaan Pemantik"
-        subtitle={`Selesaikan ${questions.length} Studi Kasus Strategi Pembelajaran di bawah ini.`}
+        subtitle="Pelajari studi kasus di bawah ini untuk mengasah pemahaman Anda."
         category="Guided Reflection"
         icon="tips_and_updates"
         gradient="from-[#0f172a] via-[#1e1b4b] to-[#312e81]"
       />
 
-      <div className="bg-white/50 p-6 rounded-[2rem] border border-slate-200 mb-6">
-         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-slate-500">
-               <span className="material-symbols-outlined text-sm">history_edu</span>
-               <p className="text-[10px] font-black uppercase tracking-widest text-left">Auto-Save Aktif: Jawaban Tidak Akan Hilang</p>
+      <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm mb-6">
+         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+               <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                  <span className="material-symbols-outlined">explore</span>
+               </div>
+               <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Tahapan Analisis</p>
+                  <p className="text-sm font-black text-slate-800 uppercase">Kasus {activeIdx + 1} dari {questions.length}</p>
+               </div>
             </div>
-            {/* Progress Pills */}
-            <div className="flex gap-1.5">
-               {questions.map((_, i) => (
-                 <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${i === activeIdx ? "w-8 bg-indigo-600" : i < activeIdx ? "w-3 bg-emerald-400" : "w-3 bg-slate-200"}`}></div>
-               ))}
+            <div className="flex-1 max-w-xs">
+              <div className="flex justify-between mb-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Progress Pengerjaan</span>
+                <span className="text-[10px] font-black text-indigo-600 italic">{Math.round(((activeIdx + 1) / questions.length) * 100)}%</span>
+              </div>
+              <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden flex gap-1 p-0.5">
+                 {questions.map((_, i) => (
+                   <div key={i} className={`h-full rounded-full transition-all duration-700 ease-out ${i === activeIdx ? "flex-[2] bg-indigo-600" : i < activeIdx ? "flex-[1] bg-emerald-400" : "flex-[1] bg-slate-200"}`}></div>
+                 ))}
+              </div>
             </div>
          </div>
       </div>
@@ -318,27 +317,20 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
             })}
         </div>
       ) : (
-        <div className="space-y-10 animate-in fade-in zoom-in duration-500">
-          {/* THE SINGLE SLIDE AREA */}
-          <div className="group bg-white border border-slate-200 p-7 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-sm hover:shadow-xl transition-all focus-within:ring-8 focus-within:ring-indigo-500/5 relative overflow-hidden">
+        <div className="space-y-6 md:space-y-10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+          <div className="group bg-white border border-slate-200 p-7 md:p-14 rounded-[2.5rem] md:rounded-[4rem] shadow-sm hover:shadow-xl transition-all relative overflow-hidden">
             <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
-               <span className="material-symbols-outlined text-[150px]">quiz</span>
+               <span className="material-symbols-outlined text-[150px]">auto_awesome</span>
             </div>
-            
             <div className="flex items-center gap-4 mb-8 md:mb-12">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.2rem] md:rounded-[1.5rem] bg-indigo-600 text-white flex items-center justify-center font-black text-xl md:text-3xl shadow-xl shadow-indigo-600/20">
+              <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl md:text-3xl shadow-xl shadow-indigo-600/20">
                 {activeIdx + 1}
               </div>
-              <div>
-                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Kasus {activeIdx + 1} dari {questions.length}</p>
-                <div className="h-px w-20 bg-indigo-100 mt-1"></div>
-              </div>
+              <p className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Pertanyaan {activeIdx + 1}</p>
             </div>
-            
-            <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-10 md:mb-16 leading-relaxed md:leading-tight tracking-tight text-left whitespace-pre-line font-headline">
+            <h3 className="text-xl md:text-3xl font-black text-slate-900 mb-10 md:mb-16 leading-relaxed md:leading-[1.4] tracking-tight text-left whitespace-pre-line font-headline">
               {currentQ}
             </h3>
-            
             <textarea
               value={pemantikAnswers[activeIdx] || ""}
               onChange={(e) => {
@@ -346,44 +338,48 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
                 newAns[activeIdx] = e.target.value;
                 setPemantikAnswers(newAns);
               }}
-              placeholder="Analisis kasus ini menurut pandangan Anda..."
-              className="w-full min-h-[160px] md:min-h-[250px] bg-slate-50 border border-slate-200 rounded-[2rem] p-7 md:p-12 text-sm md:text-lg text-slate-700 focus:bg-white focus:border-indigo-500 outline-none transition-all resize-none shadow-inner leading-relaxed text-justify"
+              placeholder="Berikan analisis atau pandangan Anda mengenai kasus ini..."
+              className="w-full min-h-[200px] md:min-h-[300px] bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-7 md:p-12 text-sm md:text-xl text-slate-700 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all resize-none leading-relaxed text-justify"
             ></textarea>
+            <div className="mt-6 flex items-center gap-2 text-indigo-400 opacity-60">
+               <span className="material-symbols-outlined animate-bounce text-sm">keyboard_double_arrow_down</span>
+               <p className="text-[10px] font-black uppercase tracking-widest">Scroll kebawah untuk lanjut</p>
+            </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-6">
-              <div className="flex gap-4 w-full md:w-auto">
-                <button
-                  onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))}
-                  disabled={activeIdx === 0}
-                  className="flex-1 md:flex-none border border-slate-200 text-slate-400 font-black py-5 px-8 rounded-2xl hover:bg-slate-50 disabled:opacity-0 transition-all text-[10px] uppercase tracking-widest"
-                >
-                  Sebelumnya
-                </button>
-                { !isLast && (
+          <div className="flex flex-col gap-4 items-center">
+             <div className="w-full flex flex-col md:flex-row gap-4">
+                {activeIdx > 0 && (
                   <button
-                    onClick={() => setActiveIdx(Math.min(questions.length - 1, activeIdx + 1))}
-                    className="flex-1 md:flex-none bg-slate-900 text-white font-black py-5 px-10 rounded-2xl hover:scale-105 active:scale-95 transition-all text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg"
+                    onClick={() => setActiveIdx(activeIdx - 1)}
+                    className="flex-1 bg-white border-2 border-slate-100 text-slate-400 font-extrabold py-6 rounded-3xl hover:bg-slate-50 transition-all text-xs uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 order-2 md:order-1"
                   >
-                    Selanjutnya <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    <span className="material-symbols-outlined text-sm">arrow_back</span> Sebelumnya
                   </button>
                 )}
-              </div>
-
-              {isLast ? (
-                <button
-                  onClick={onSubmit}
-                  disabled={loading}
-                  className="w-full md:w-auto min-w-[300px] bg-indigo-600 text-white font-black py-6 px-12 rounded-3xl hover:bg-emerald-500 hover:scale-105 active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 text-xs tracking-[0.2em] uppercase"
-                >
-                  {loading ? "MENGIRIM..." : "KIRIM SEMUA ANALISIS"}
-                  <span className="material-symbols-outlined">verified</span>
-                </button>
-              ) : (
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest hidden md:flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm">lock</span> Klik Selanjutnya untuk soal berikutnya
-                </p>
-              )}
+                {isLast ? (
+                  <button
+                    onClick={onSubmit}
+                    disabled={loading}
+                    className="flex-[2] bg-indigo-600 text-white font-black py-7 px-10 rounded-[2.5rem] hover:bg-emerald-500 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 text-sm tracking-[0.2em] uppercase order-1 md:order-2"
+                  >
+                    {loading ? "MENGIRIM..." : "KIRIM SEKARANG KE TUTOR"}
+                    <span className="material-symbols-outlined font-bold">send</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setActiveIdx(activeIdx + 1)}
+                    className="flex-[2] bg-slate-900 text-white font-black py-7 px-10 rounded-[2.5rem] hover:bg-indigo-600 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 text-sm tracking-[0.2em] uppercase order-1 md:order-2"
+                  >
+                    SOAL BERIKUTNYA
+                    <span className="material-symbols-outlined font-bold">arrow_forward</span>
+                  </button>
+                )}
+             </div>
+             <div className="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] py-2">
+                <span className="material-symbols-outlined text-[10px] text-emerald-400">shield_check</span>
+                Auto-save aktif - aman dan rahasia
+             </div>
           </div>
         </div>
       )}
@@ -410,7 +406,6 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
       <div className="max-w-5xl mx-auto space-y-16 md:space-y-24">
         {(config.content.sections || []).map((section, sidx) => (
           <div key={sidx} className="relative group px-4">
-            {/* Section Header */}
             <div className="flex items-center gap-4 mb-8">
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-[1.5rem] bg-slate-900 shadow-xl shadow-slate-900/20 flex items-center justify-center text-white font-black text-xl md:text-2xl ring-8 ring-slate-50 group-hover:scale-110 transition-transform">
                 {section.letter || sidx + 1}
@@ -422,7 +417,6 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
               {section.title}
             </h3>
 
-            {/* Section Description */}
             {section.description && (
               <div className="bg-slate-50 p-6 md:p-10 rounded-[2rem] border-l-8 border-slate-300 mb-10 shadow-sm">
                 <p className="text-sm md:text-lg text-slate-600 font-medium leading-relaxed italic">
@@ -431,7 +425,6 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
               </div>
             )}
 
-            {/* Main Content Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {section.points && (
                 <div className="space-y-6">
@@ -459,7 +452,6 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
                 </div>
               )}
 
-              {/* Examples Column */}
               {section.examples && (
                 <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden h-full shadow-2xl min-h-[300px]">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-primary opacity-20 rounded-full -mr-32 -mt-32 blur-[100px]"></div>
@@ -484,7 +476,6 @@ export const MateriTemplate = ({ config, content, setContent, handleAction, load
         ))}
       </div>
 
-      {/* Engagement Section */}
       <div className="max-w-4xl mx-auto pt-20 border-t border-slate-100 px-4">
         <div className="bg-gradient-to-br from-primary to-[#1a2169] rounded-[3rem] p-10 md:p-16 text-white text-center shadow-2xl shadow-primary/20">
           <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur-md border border-white/20">
