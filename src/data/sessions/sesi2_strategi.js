@@ -6,7 +6,7 @@ export const Sesi2_Strategi = {
   sections: [
     {
       name: "Informasi Modul",
-      type: "RATSAT",
+      type: "RATSATV2",
       content: {
         title: "RAT / SAT - Strategi Pembelajaran",
         courseCode: "SPGK4410",
@@ -154,11 +154,11 @@ export const Sesi2_Strategi = {
     },
     {
       name: "Video Pembelajaran",
-      type: "VideoEval",
+      type: "VideoEvalV2",
       content: {
         title: "Implementasi Strategi Kontemporer",
         evaluationText: "Tuliskan ringkasan inovasi pembelajaran yang Anda temukan dalam video ini.",
-        videoId: "J8_T6lH2n7U", // Dummy video ID
+        videoId: "J8_T6lH2n7U",
         minWords: 20
       }
     },
