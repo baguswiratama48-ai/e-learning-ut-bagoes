@@ -3,17 +3,18 @@ import { supabase } from '../supabaseClient';
 import { STUDENTS } from '../data/students';
 
 /**
- * LkpdClass5A - STABLE EMERGENCY VERSION
- * Fixes: White Screen (runtime crash) by adding defensive checks.
+ * LkpdClass5A - FINAL STABLE VERSION
+ * Built with full Error Boundaries and Defensive States
  */
 export const LkpdClass5A = ({
   user,
   meetingId,
-  submissions: initialSubmissions,
+  submissions = [],
   onComplete,
   missions: propMissions,
   config: lkmConfig = {}
 }) => {
+  // 1. Critical Base State
   const [activeTab, setActiveTab] = useState("MY_LKM");
   const [answers, setAnswers] = useState({});
   const [localNewPosts, setLocalNewPosts] = useState([]);
@@ -22,326 +23,320 @@ export const LkpdClass5A = ({
   const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Safety Toggle: If data parsing fails, show friendlier error
-  const [dataError, setDataError] = useState(null);
+  const STORAGE_KEY = `lkpd_5a_v5_draft_${user?.email || 'guest'}_${meetingId}`;
 
-  const STORAGE_KEY = `lkpd_5a_v4_draft_${user?.email}_${meetingId}`;
+  // 2. Error Boundary for Component
+  const [componentError, setComponentError] = useState(null);
 
   const showSuccess = (msg) => {
     setSuccessMsg(msg);
     setTimeout(() => setSuccessMsg(null), 3000);
   };
 
-  // 1. Group Logic with Safety
-  const { activeGroupNum, groupRowFound } = useMemo(() => {
+  // 3. Resolve Group Logic Safely
+  const { activeGroupNum, hasGroupRow } = useMemo(() => {
     try {
-      const row = (initialSubmissions || []).find(
-        (s) => s.student_email === "SYSTEM_GROUP" && String(s.meeting_num) === String(meetingId) && String(s.class_id) === "4"
+      const gRow = (submissions || []).find(
+        (s) => s?.student_email === "SYSTEM_GROUP" && 
+               String(s?.meeting_num) === String(meetingId) && 
+               String(s?.class_id) === "4"
       );
-      if (!row) return { activeGroupNum: 1, groupRowFound: false };
+      
+      if (!gRow) return { activeGroupNum: 1, hasGroupRow: false };
 
-      // DEFENSIVE: JSON.parse can crash if content is bad
-      let allGroups = [];
+      let parsed = [];
       try {
-        allGroups = typeof row.content === 'string' ? JSON.parse(row.content) : (row.content || []);
-      } catch (e) {
-        console.error("LKM 5A: JSON Parse Error on Groups", e);
-        allGroups = [];
-      }
+        parsed = typeof gRow.content === 'string' ? JSON.parse(gRow.content) : (gRow.content || []);
+      } catch (e) { parsed = []; }
 
-      const myGroup = allGroups.find(g => g?.members?.some(m => m?.email === user?.email));
-      return { activeGroupNum: myGroup ? myGroup.group_num : 1, groupRowFound: true };
+      const myG = (parsed || []).find(g => g?.members?.some(m => m?.email === user?.email));
+      return { activeGroupNum: myG ? myG.group_num : 1, hasGroupRow: true };
     } catch (err) {
-      console.error("LKM 5A: Critical Failure in Group Logic", err);
-      return { activeGroupNum: 1, groupRowFound: false };
+      console.error("Group Logic Crash:", err);
+      return { activeGroupNum: 1, hasGroupRow: false };
     }
-  }, [initialSubmissions, meetingId, user?.email]);
+  }, [submissions, meetingId, user?.email]);
 
-  // 2. Mission Logic with Safety
+  // 4. Resolve Mission Content safely
   const currentMission = useMemo(() => {
     try {
-      if (propMissions && (lkmConfig?.type === "GROUP_DISCUSSION" || lkmConfig?.type === "Interactive")) {
-        const groupData = propMissions[activeGroupNum] || propMissions[String(activeGroupNum)];
-        if (groupData) return groupData;
-      }
-      return {
-        title: "Strategi Pembelajaran di SD",
-        subtitle: `Diskusi Materi Kelompok ${activeGroupNum}`,
+      const fallback = {
+        title: "Strategi Pembelajaran SD",
+        subtitle: `Tugas Diskusi Kelompok ${activeGroupNum}`,
         icon: "groups",
-        description: "Menganalisis dan mendiskusikan berbagai model strategi pembelajaran kontemporer.",
-        questions: ["Materi belum termapping sempurna dika kelas ini. Silakan refresh halaman atau hubungi Tutor Anda."]
+        description: "Menganalisis rumpun model mengajar dan strategi pembelajaran kontemporer dika dika SD.",
+        questions: ["Gagal memuat materi spesifik. Silakan hubungi Tutor atau refresh halaman."]
       };
-    } catch (err) {
-      return { title: "Error Memuat Misi", questions: ["Terjadi kesalahan teknis. Mohon maaf."] };
-    }
-  }, [propMissions, activeGroupNum, lkmConfig]);
 
-  // 3. Draft Sync
+      if (!propMissions) return fallback;
+      
+      const target = propMissions[activeGroupNum] || propMissions[String(activeGroupNum)];
+      return target || fallback;
+    } catch (e) { return { title: "Error Data", questions: ["Terjadi kesalahan parsing materi."] }; }
+  }, [propMissions, activeGroupNum]);
+
+  // 5. Lifecycle Hooks
   useEffect(() => {
     if (!user?.email) return;
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try { setAnswers(JSON.parse(saved)); } catch (e) { console.error(e); }
-    }
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) setAnswers(JSON.parse(saved));
+    } catch (e) { console.warn("Draft load failed"); }
   }, [meetingId, user?.email]);
 
   useEffect(() => {
     if (!user?.email) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
+    } catch (e) { }
   }, [answers, user?.email]);
 
-  // 4. Forum Processing with Safety
+  // 6. Forum Data Processing Safely
   const allForumPosts = useMemo(() => {
     try {
-      const fromServer = (initialSubmissions || [])
-        .filter(s => s?.section_name === "LKM_5A_FORUM_POST")
-        .map(p => { 
-          try { 
-            const parsed = typeof p.content === 'string' ? JSON.parse(p.content) : (p.content || {});
-            return { ...p, parsed }; 
-          } catch(e) { 
-            return {...p, parsed: {}};
-          } 
-        });
-      const combined = [...localNewPosts, ...fromServer];
+      const rawPosts = (submissions || []).filter(s => s?.section_name === "LKM_5A_FORUM_POST");
+      const mapped = rawPosts.map(p => {
+        try {
+          const content = typeof p.content === 'string' ? JSON.parse(p.content) : (p.content || {});
+          return { ...p, parsed: content };
+        } catch (e) { return { ...p, parsed: {} }; }
+      });
+      const combined = [...localNewPosts, ...mapped];
+      const unique = [];
       const seen = new Set();
-      return combined.filter(p => { 
-        if (!p?.id || seen.has(p.id)) return false; 
-        seen.add(p.id); 
-        return true; 
-      }).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-    } catch (e) {
-      return [];
-    }
-  }, [initialSubmissions, localNewPosts]);
+      combined.forEach(p => {
+        if (p?.id && !seen.has(p.id)) {
+          seen.add(p.id);
+          unique.push(p);
+        }
+      });
+      return unique.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+    } catch (e) { return []; }
+  }, [submissions, localNewPosts]);
 
   const allComments = useMemo(() => {
     try {
-      const fromServer = (initialSubmissions || [])
-        .filter(s => s?.section_name === "LKM_5A_COMMENT")
-        .map(c => { 
-          try { 
-            const parsed = typeof c.content === 'string' ? JSON.parse(c.content) : (c.content || {});
-            return { ...c, parsed: { targetId: parsed.targetId || null, comment: parsed.comment || "" } }; 
-          } catch(e) { 
-            return {...c, parsed: {targetId: null, comment: ""}};
-          } 
-        });
-      const combined = [...fromServer, ...localNewComments];
+      const rawComm = (submissions || []).filter(s => s?.section_name === "LKM_5A_COMMENT");
+      const mapped = rawComm.map(c => {
+        try {
+          const content = typeof c.content === 'string' ? JSON.parse(c.content) : (c.content || {});
+          return { ...c, parsed: content };
+        } catch (e) { return { ...c, parsed: { targetId: null, comment: "" } }; }
+      });
+      const combined = [...mapped, ...localNewComments];
+      const unique = [];
       const seen = new Set();
-      return combined.filter(c => { 
-        if (!c?.id || seen.has(c.id)) return false; 
-        seen.add(c.id); 
-        return true; 
-      }).sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-    } catch (e) {
-      return [];
-    }
-  }, [initialSubmissions, localNewComments]);
+      combined.forEach(c => {
+         if (c?.id && !seen.has(c.id)) { seen.add(c.id); unique.push(c); }
+      });
+      return unique.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+    } catch (e) { return []; }
+  }, [submissions, localNewComments]);
 
-  // 5. Stats Logic
-  const myStats = useMemo(() => {
-    try {
-      const pCount = allForumPosts.filter(p => p?.student_email === user?.email).length;
-      const cCount = allComments.filter(c => c?.student_email === user?.email).length;
-      return { 
-        posts: pCount, 
-        comments: cCount, 
-        total: pCount + cCount,
-        badge: pCount >= 2 && cCount >= 2 ? "Strategist Sejati" : pCount >= 1 ? "Aktif" : "Pasif"
-      };
-    } catch (e) {
-      return { posts: 0, comments: 0, total: 0, badge: "N/A" };
-    }
+  const stats = useMemo(() => {
+    const pCount = allForumPosts.filter(p => p?.student_email === user?.email).length;
+    const cCount = allComments.filter(c => c?.student_email === user?.email).length;
+    return { 
+      posts: pCount, 
+      comments: cCount, 
+      badge: pCount >= 2 && cCount >= 2 ? "Strategist Sejati" : pCount >= 1 ? "Aktif" : "Peserta"
+    };
   }, [allForumPosts, allComments, user?.email]);
 
-  const getSafeName = (email) => {
-    if (!email) return "Anonymous";
+  const getName = (email) => {
+    if (!email) return "Mahasiswa";
     const st = STUDENTS?.find(s => s?.email === email);
     return st ? st.name : email.split('@')[0];
   };
 
-  // --- ACTIONS ---
-  const handleShare = async (idx, qText, aText) => {
-    if (!aText || aText.trim().length < 5) return;
+  // 7. Actions
+  const handleShare = async (idx, q, a) => {
+    if (!a || a.trim().length < 5) return;
     setLoadingAction({ type: 'share', id: idx });
     try {
-      const parsedContent = { questionIndex: idx, questionText: qText, answerText: aText, groupNum: activeGroupNum, title: currentMission.title };
-      const payload = { student_email: user.email, class_id: "4", meeting_num: String(meetingId), section_name: "LKM_5A_FORUM_POST", content: JSON.stringify(parsedContent) };
+      const contentObj = { questionIndex: idx, questionText: q, answerText: a, groupNum: activeGroupNum, title: currentMission.title };
+      const payload = { student_email: user.email, class_id: "4", meeting_num: String(meetingId), section_name: "LKM_5A_FORUM_POST", content: JSON.stringify(contentObj) };
       const { data } = await supabase.from("submissions").insert([payload]).select();
-      
-      const newPost = data?.[0] ?? { id: `local_${Date.now()}`, student_email: user.email, created_at: new Date().toISOString() };
-      setLocalNewPosts(prev => [{ ...newPost, parsed: parsedContent }, ...prev]);
-      showSuccess('✅ Jawaban Anda kini tersedia di Forum!');
-      setActiveTab('FORUM');
+      if (data?.[0]) {
+        setLocalNewPosts(prev => [{ ...data[0], parsed: contentObj }, ...prev]);
+        showSuccess("Wuih! Strategi Kakak sudah tayang dika Forum!");
+        setActiveTab("FORUM");
+      }
     } catch (e) { console.error(e); }
     setLoadingAction({ type: null, id: null });
   };
 
-  const handleComment = async (targetId, text) => {
+  const handleComment = async (postId, text) => {
     if (!text || text.trim().length === 0) return;
-    setLoadingAction({ type: 'comment', id: targetId });
+    setLoadingAction({ type: 'comment', id: postId });
     try {
-      const parsedContent = { targetId, comment: text };
-      const payload = { student_email: user.email, class_id: "4", meeting_num: String(meetingId), section_name: "LKM_5A_COMMENT", content: JSON.stringify(parsedContent) };
+      const contentObj = { targetId: postId, comment: text };
+      const payload = { student_email: user.email, class_id: "4", meeting_num: String(meetingId), section_name: "LKM_5A_COMMENT", content: JSON.stringify(contentObj) };
       const { data } = await supabase.from("submissions").insert([payload]).select();
-      const newComment = data?.[0] ?? { id: `local_${Date.now()}`, student_email: user.email, created_at: new Date().toISOString() };
-      setLocalNewComments(prev => [...prev, { ...newComment, parsed: parsedContent }]);
-    } catch (e) { console.error(e); }
+      if (data?.[0]) setLocalNewComments(prev => [...prev, { ...data[0], parsed: contentObj }]);
+    } catch (e) { }
     setLoadingAction({ type: null, id: null });
   };
 
-  const handleFinalSubmit = async () => {
-    setIsSubmitting(true);
-    let finalDoc = `LEMBAR KERJA MAHASISWA (LKM) - STRATEGI PEMBELAJARAN\nTopik: ${currentMission.title}\n\n`;
-    (currentMission.questions || []).forEach((q, i) => {
-       finalDoc += `Q${i+1}: ${q}\nJ: ${answers[i] || "-"}\n\n`;
-    });
-    try {
-      await onComplete(finalDoc);
-      showSuccess('🏆 LKM Strategi berhasil terkirim!');
-    } catch (e) { console.error(e); }
-    setIsSubmitting(false);
-  };
+  if (componentError) return <div className="p-10 text-center text-red-500 font-bold">Terjadi kesalahan muat LKM. Silakan muat ulang halaman.</div>;
 
-  // --- RENDER FALLBACKS ---
-  if (!user) return <div className="p-10 text-center">Mohon login untuk mengakses LKM.</div>;
+  if (!user) return <div className="p-20 text-center font-bold text-slate-400">Silakan login untuk mengakses LKM.</div>;
 
-  if (!groupRowFound) {
+  if (!hasGroupRow) {
     return (
-      <div className="bg-white border-2 border-dashed border-slate-200 p-12 py-20 rounded-[3rem] text-center mt-10">
-         <span className="material-symbols-outlined text-6xl text-slate-200 mb-4 animate-pulse">group_work</span>
-         <h3 className="font-bold text-xl text-slate-800 mb-2">Menunggu Pembagian Kelompok</h3>
-         <p className="text-slate-400 text-sm max-w-sm mx-auto">Harap tunggu Tutor untuk memasukkan Anda ke dalam kelompok sebelum mengerjakan LKM ini.</p>
+      <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-[3rem] p-20 text-center mt-10">
+         <span className="material-symbols-outlined text-6xl text-slate-300 mb-4 animate-pulse">diversity_3</span>
+         <h3 className="text-xl font-black text-slate-800 mb-2 tracking-tight">Menunggu Pembagian Kelompok...</h3>
+         <p className="text-sm text-slate-400 font-medium">Sabar ya Kak, Tutor sedang mengatur kelompok strategi belajar.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20 text-left">
-      
+    <div className="space-y-10 animate-in fade-in duration-700 pb-20 text-left">
       {successMsg && (
-        <div className="fixed top-8 right-8 z-[100] bg-slate-900 text-white px-8 py-4 rounded-[2rem] shadow-2xl flex items-center gap-4 animate-in slide-in-from-right-10 border border-white/10">
-          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
-          <p className="font-black text-[10px] uppercase tracking-widest">{successMsg}</p>
+        <div className="fixed top-10 right-10 z-[100] bg-teal-950 text-white px-8 py-5 rounded-[2rem] shadow-2xl flex items-center gap-4 animate-in slide-in-from-right-10">
+          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></div>
+          <p className="font-black text-[10px] uppercase tracking-widest leading-none">{successMsg}</p>
         </div>
       )}
 
-      {/* HEADER */}
-      <div className="bg-gradient-to-br from-teal-900 to-black text-white p-8 md:p-14 rounded-[3.5rem] relative overflow-hidden shadow-2xl mt-10">
-        <div className="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
-          <span className="material-symbols-outlined text-[150px]">architecture</span>
-        </div>
+      {/* NEW PREMIUM HEADER */}
+      <div className="bg-gradient-to-br from-[#064e3b] via-[#022c22] to-black text-white p-10 md:p-14 rounded-[3.5rem] relative overflow-hidden shadow-2xl shadow-teal-900/20 mt-10">
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl"></div>
         <div className="relative z-10">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
-            <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 flex items-center gap-2">
-               <span className="material-symbols-outlined text-yellow-400 text-sm">military_tech</span>
-               <p className="text-[10px] font-black uppercase tracking-widest">TIM {activeGroupNum}</p>
-            </div>
-            <div className="flex bg-black/40 rounded-2.5xl p-1.5 border border-white/5 backdrop-blur-md">
-              <button onClick={() => setActiveTab('MY_LKM')} className={`px-5 py-2.5 rounded-2xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'MY_LKM' ? 'bg-white text-teal-950 shadow-xl' : 'text-teal-100/30'}`}>DRAFT LKM</button>
-              <button onClick={() => setActiveTab('FORUM')} className={`px-5 py-2.5 rounded-2xl text-[10px] font-black tracking-widest transition-all flex items-center gap-2 ${activeTab === 'FORUM' ? 'bg-white text-teal-950 shadow-xl' : 'text-teal-100/30'}`}>FORUM <span className="bg-emerald-500 text-white px-1.5 py-0.5 rounded-lg text-[8px]">{allForumPosts.length}</span></button>
-              <button onClick={() => setActiveTab('GRAFIK')} className={`px-5 py-2.5 rounded-2xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'GRAFIK' ? 'bg-white text-teal-950 shadow-xl' : 'text-teal-100/30'}`}>GRAFIK SAYA</button>
-            </div>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-tight mb-4">{currentMission.title}</h1>
-          <p className="text-teal-100/40 text-sm font-medium max-w-xl leading-relaxed">{currentMission.description}</p>
+           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
+              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl backdrop-blur-xl">
+                 <span className="material-symbols-outlined text-yellow-400 text-sm">stars</span>
+                 <p className="text-[10px] font-black uppercase tracking-widest">TIM STRATEGI {activeGroupNum}</p>
+              </div>
+              <div className="flex bg-black/40 p-1.5 rounded-3xl border border-white/5 backdrop-blur-2xl">
+                 <button onClick={() => setActiveTab('MY_LKM')} className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'MY_LKM' ? 'bg-white text-teal-950 shadow-xl' : 'text-teal-100/30 hover:text-white'}`}>DRAFT</button>
+                 <button onClick={() => setActiveTab('FORUM')} className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'FORUM' ? 'bg-white text-teal-950 shadow-xl' : 'text-teal-100/30 hover:text-white'}`}>FORUM <span className="bg-emerald-500 text-white px-2 py-0.5 rounded-lg text-[8px] ml-1">{allForumPosts.length}</span></button>
+                 <button onClick={() => setActiveTab('GRAFIK')} className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'GRAFIK' ? 'bg-white text-teal-950 shadow-xl' : 'text-teal-100/30 hover:text-white'}`}>PROGRES</button>
+              </div>
+           </div>
+           <h1 className="text-3xl md:text-5xl font-black tracking-tighter uppercase leading-tight mb-4">{currentMission.title}</h1>
+           <p className="text-teal-100/50 text-sm font-medium max-w-xl leading-relaxed">{currentMission.description}</p>
         </div>
       </div>
 
       {activeTab === 'MY_LKM' && (
-        <div className="bg-white rounded-[3.5rem] border border-slate-100 shadow-xl p-8 md:p-14">
-          <div className="space-y-12">
+        <div className="bg-white rounded-[4rem] border border-slate-100 shadow-xl p-8 md:p-14">
+          <div className="space-y-14">
             {(currentMission.questions || []).map((q, idx) => {
               const isShared = allForumPosts.some(p => p?.student_email === user?.email && p?.parsed?.questionIndex === idx);
               return (
-                <div key={idx} className="relative">
-                  <div className="flex gap-5 items-start mb-6">
-                    <div className="w-10 h-10 bg-slate-900 text-teal-400 rounded-xl flex items-center justify-center font-black text-sm shrink-0 shadow-lg">{idx + 1}</div>
-                    <p className="font-bold text-slate-800 text-base md:text-lg leading-relaxed pt-1 flex-1">{q}</p>
+                <div key={idx} className="relative group">
+                  <div className="flex gap-6 items-start mb-6">
+                    <div className="w-12 h-12 bg-slate-900 text-teal-400 rounded-2xl flex items-center justify-center font-black text-xl shadow-xl shadow-teal-900/10 shrink-0">{idx + 1}</div>
+                    <p className="font-bold text-slate-800 text-lg md:text-xl leading-relaxed pt-1 flex-1">{q}</p>
                   </div>
                   <textarea
                     value={answers[idx] || ""}
                     onChange={(e) => setAnswers({...answers, [idx]: e.target.value})}
-                    placeholder="Tuliskan ulasan strategi Anda di sini..."
-                    className="w-full min-h-[160px] bg-slate-50 border border-slate-100 rounded-[2rem] p-6 text-sm md:text-base font-medium outline-none focus:bg-white focus:border-teal-500 transition-all resize-y"
+                    placeholder="Tuangkan hasil pemikiran kelompok Kakak dika dika sini..."
+                    className="w-full min-h-[200px] bg-slate-50 border border-slate-100 rounded-[2.5rem] p-8 text-base md:text-lg font-medium outline-none focus:bg-white focus:border-emerald-500 focus:shadow-2xl focus:shadow-emerald-500/5 transition-all resize-y"
                   />
-                  <div className="mt-4 flex items-center justify-between">
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><div className="w-1.5 h-1.5 bg-slate-300 rounded-full"></div> Cloud Synced</p>
-                     <button
-                        onClick={() => handleShare(idx, q, answers[idx])}
+                  <div className="mt-5 flex items-center justify-between">
+                     <div className="flex items-center gap-2 text-[10px] font-black text-slate-300 uppercase tracking-widest"><div className="w-1.5 h-1.5 bg-slate-200 rounded-full"></div> Auto-Save Aktif</div>
+                     <button 
+                        onClick={() => handleShare(idx, q, answers[idx])} 
                         disabled={isShared || !answers[idx] || answers[idx].length < 5 || loadingAction.type === 'share'}
-                        className={`px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-2 ${isShared ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-teal-950 text-white hover:bg-black shadow-xl"}`}
-                      >
-                         {isShared ? <><span className="material-symbols-outlined !text-[16px]">verified</span> Shared</> : <><span className="material-symbols-outlined !text-[16px]">share</span> Share ke Forum</>}
-                      </button>
+                        className={`px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-3 ${isShared ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-teal-950 text-white hover:bg-black shadow-2xl shadow-teal-950/20"}`}
+                     >
+                        {isShared ? <><span className="material-symbols-outlined text-[16px]">check_circle</span> TERBAGIKAN</> : <><span className="material-symbols-outlined text-[16px]">bolt</span> SHARE KE FORUM</>}
+                     </button>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <div className="mt-16 pt-12 border-t border-slate-50 flex flex-col items-center">
-             <button onClick={handleFinalSubmit} disabled={isSubmitting} className="bg-slate-950 text-white px-12 py-5 rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all">
-                {isSubmitting ? "MENGIRIM..." : "KIRIM LKM FINAL"}
+          <div className="mt-20 pt-16 border-t border-slate-50 flex flex-col items-center">
+             <button onClick={handleFinalSubmit} disabled={isSubmitting} className="bg-black text-white px-16 py-6 rounded-[2.5rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-105 active:scale-95 transition-all">
+                {isSubmitting ? "SEDANG MENGIRIM..." : "KIRIM LKM FINAL"}
              </button>
+             <p className="mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest tracking-tighter">Pastikan semua pertanyaan sudah dijawab ya Kak!</p>
           </div>
         </div>
       )}
 
       {activeTab === 'FORUM' && (
-        <div className="space-y-6">
-           {allForumPosts.length === 0 ? (
-             <div className="p-20 text-center bg-white rounded-[3.5rem] border border-slate-100 text-slate-400 italic">Belum ada strategi yang dibagikan. Mari berkontribusi!</div>
-           ) : allForumPosts.map((post) => {
-             const comments = allComments.filter(c => c.parsed.targetId === post.id);
-             return (
-               <div key={post.id} className="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all">
-                  <div className="p-6 bg-slate-50 flex items-center justify-between border-b border-slate-100">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-teal-950 text-teal-400 rounded-xl flex items-center justify-center font-black text-sm">{getSafeName(post.student_email).charAt(0)}</div>
-                        <div><p className="font-black text-slate-800 text-[10px] leading-none mb-1 uppercase">{getSafeName(post.student_email)}</p><p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">TIM {post.parsed.groupNum}</p></div>
-                     </div>
-                  </div>
-                  <div className="p-8">
-                     <div className="bg-teal-50/50 p-6 rounded-2xl border border-teal-100 mb-8">
-                        <p className="text-[9px] font-black text-teal-600 uppercase mb-3 italic">Membahas: "{post.parsed.questionText}"</p>
-                        <p className="text-sm text-slate-700 font-medium leading-relaxed italic">"{post.parsed.answerText}"</p>
-                     </div>
-                     <div className="space-y-4">
-                        {comments.map((c, ci) => (
-                           <div key={ci} className="bg-slate-50 p-4 rounded-xl text-xs"><p className="font-black text-slate-800 text-[9px] mb-1">{getSafeName(c.student_email)}</p><p className="text-slate-500 font-medium">{c.parsed.comment}</p></div>
-                        ))}
-                        <div className="flex gap-3 items-center pt-2">
-                           <input id={`cf-${post.id}`} placeholder="Tulis komentar..." className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs outline-none focus:bg-white" />
-                           <button onClick={() => { const el = document.getElementById(`cf-${post.id}`); handleComment(post.id, el.value); el.value=''; }} className="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center"><span className="material-symbols-outlined text-[18px]">send</span></button>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-             );
-           })}
+        <div className="space-y-8 animate-in slide-in-from-bottom-5 duration-500">
+          <div className="bg-teal-950 text-white p-12 rounded-[3.5rem] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+             <div className="relative z-10 text-center md:text-left">
+                <h3 className="text-3xl font-black mb-2 flex items-center justify-center md:justify-start gap-4 uppercase tracking-tighter">Ruang Kolaborasi ✨</h3>
+                <p className="text-teal-100/40 text-sm font-medium">Beri masukan atau tanya jawab strategi dngan teman sekelas Anda.</p>
+             </div>
+             <div className="bg-white/10 px-6 py-4 rounded-3xl border border-white/10 backdrop-blur-xl text-center">
+                <p className="text-3xl font-black">{allForumPosts.length}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Strategi Tayang</p>
+             </div>
+          </div>
+
+          {allForumPosts.length === 0 ? (
+            <div className="p-24 text-center bg-white rounded-[4rem] border border-slate-100 text-slate-300 italic font-bold">Belum ada strategi yang dibagi. Mari jadi yang pertama, Kak!</div>
+          ) : allForumPosts.map((post) => {
+            const comms = allComments.filter(c => c.parsed.targetId === post.id);
+            return (
+              <div key={post.id} className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl transition-all group">
+                 <div className="p-8 bg-slate-50/50 border-b border-slate-50 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                       <div className="w-12 h-12 bg-teal-900 text-teal-400 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg">{getName(post.student_email).charAt(0)}</div>
+                       <div><p className="font-black text-slate-800 text-xs leading-none mb-1 uppercase">{getName(post.student_email)}</p><p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">TIM {post.parsed.groupNum}</p></div>
+                    </div>
+                    <p className="text-[9px] font-black text-teal-600 bg-teal-50 px-4 py-2 rounded-xl uppercase tracking-widest">{new Date(post.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                 </div>
+                 <div className="p-10">
+                    <div className="bg-white border-2 border-slate-50 p-8 rounded-3xl mb-10 shadow-inner relative">
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2 italic">Membahas pertanyaan: "{post.parsed.questionText}"</p>
+                       <p className="text-lg text-slate-700 font-medium leading-relaxed italic">"{post.parsed.answerText}"</p>
+                    </div>
+
+                    <div className="space-y-4 max-w-2xl ml-auto">
+                       {comms.map((c, ci) => (
+                         <div key={ci} className="bg-slate-50 p-5 rounded-2xl border border-slate-100/50 animate-in fade-in slide-in-from-right-2 duration-300">
+                            <p className="text-[9px] font-black text-slate-800 uppercase mb-1">{getName(c.student_email)}</p>
+                            <p className="text-xs text-slate-500 font-medium">{c.parsed.comment}</p>
+                         </div>
+                       ))}
+                       <div className="flex gap-4 items-center pt-4">
+                          <input id={`cfx-${post.id}`} placeholder="Tulis komentar..." className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 text-xs outline-none focus:bg-white focus:border-teal-500 transition-all font-medium" />
+                          <button onClick={() => { const el = document.getElementById(`cfx-${post.id}`); handleComment(post.id, el.value); el.value=''; }} className="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center shadow-xl hover:bg-emerald-600 transition-all"><span className="material-symbols-outlined !text-[20px]">send</span></button>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
       {activeTab === 'GRAFIK' && (
-        <div className="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 text-center animate-in zoom-in-95 duration-500">
-           <div className="flex flex-col md:flex-row gap-8 justify-around mb-12">
-              <div><p className="text-5xl font-black text-teal-700">{myStats.posts}</p><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Post Forum</p></div>
-              <div><p className="text-5xl font-black text-violet-700">{myStats.comments}</p><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Ulasan Teman</p></div>
-              <div className="bg-teal-950 text-white px-10 py-6 rounded-3xl flex flex-col items-center justify-center shadow-2xl">
-                 <p className="text-[9px] font-black uppercase tracking-widest opacity-40 mb-2">My Rank</p>
-                 <h4 className="text-xl font-black uppercase">{myStats.badge}</h4>
+        <div className="animate-in zoom-in-95 duration-500">
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-white p-12 rounded-[4rem] shadow-sm border border-slate-100 text-center"><p className="text-7xl font-black text-teal-600 mb-2">{stats.posts}</p><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Kontribusi Forum</p></div>
+              <div className="bg-white p-12 rounded-[4rem] shadow-sm border border-slate-100 text-center"><p className="text-7xl font-black text-violet-600 mb-2">{stats.comments}</p><p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Komentar Balik</p></div>
+              <div className="bg-black text-white p-12 rounded-[4rem] shadow-2xl text-center flex flex-col items-center justify-center relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 blur-3xl rounded-full"></div>
+                 <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-3">Pencapaian</p>
+                 <h4 className="text-2xl font-black uppercase tracking-tighter leading-none mb-3">{stats.badge}</h4>
+                 <div className="w-10 h-1 bg-teal-400 rounded-full"></div>
               </div>
            </div>
-           <div className="space-y-8 max-w-xl mx-auto">
-              <div className="space-y-3">
-                 <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase"><span>Post Status</span><span>{myStats.posts} / 2</span></div>
-                 <div className="h-4 bg-slate-50 rounded-full p-1"><div className="h-full bg-teal-500 rounded-full transition-all duration-1000" style={{width: `${Math.min(100, (myStats.posts/2)*100)}%`}}></div></div>
-              </div>
-              <div className="space-y-3">
-                 <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase"><span>Comment Status</span><span>{myStats.comments} / 2</span></div>
-                 <div className="h-4 bg-slate-50 rounded-full p-1"><div className="h-full bg-violet-500 rounded-full transition-all duration-1000" style={{width: `${Math.min(100, (myStats.comments/2)*100)}%`}}></div></div>
+           
+           <div className="bg-white p-12 md:p-16 rounded-[4.5rem] shadow-xl border border-slate-50">
+              <h3 className="text-3xl font-black text-slate-800 mb-14 flex items-center gap-6"><span className="w-3 h-14 bg-teal-500 rounded-full shadow-lg shadow-teal-500/20"></span> Analisis Keaktifan Strategi</h3>
+              <div className="space-y-16">
+                 <div className="space-y-6">
+                    <div className="flex justify-between items-end px-4 font-black"><p className="text-[11px] text-slate-400 uppercase tracking-widest">Posisi Berbagi (Target: 2)</p><span className="text-xl text-teal-600">{stats.posts} / 2</span></div>
+                    <div className="h-6 bg-slate-50 rounded-full p-1.5 border border-slate-100"><div className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full shadow-md transition-all duration-1000" style={{ width: `${Math.min(100, (stats.posts/2)*100)}%` }}></div></div>
+                 </div>
+                 <div className="space-y-6">
+                    <div className="flex justify-between items-end px-4 font-black"><p className="text-[11px] text-slate-400 uppercase tracking-widest">Feedback Teman (Target: 2)</p><span className="text-xl text-violet-600">{stats.comments} / 2</span></div>
+                    <div className="h-6 bg-slate-50 rounded-full p-1.5 border border-slate-100"><div className="h-full bg-gradient-to-r from-violet-500 to-indigo-600 rounded-full shadow-md transition-all duration-1000" style={{ width: `${Math.min(100, (stats.comments/2)*100)}%` }}></div></div>
+                 </div>
               </div>
            </div>
         </div>
