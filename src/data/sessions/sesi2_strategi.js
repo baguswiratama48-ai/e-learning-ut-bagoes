@@ -168,11 +168,6 @@ export const Sesi2_Strategi = {
       content: null
     },
     {
-      name: "Ayo Diskusi (LKPD)",
-      type: "Interactive",
-      content: null
-    },
-    {
       name: "Kuis dan Latihan",
       type: "Interactive",
       content: null
