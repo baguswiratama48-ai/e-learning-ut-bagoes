@@ -1,7 +1,7 @@
 export const Sesi2_BK = {
   id: "BK_S2",
   meetingId: "2",
-  classIds: ["2"],
+  classIds: ["1", "2"],
   courseCode: "SPGK4307",
   courseName: "Bimbingan Konseling di SD",
   sections: [
@@ -239,7 +239,7 @@ export const Sesi2_BK = {
       }
     },
     {
-      name: "Video Pembelajaran",
+      name: "Video Pemantik",
       type: "VideoEvalV2",
       content: {
         videoId: "lEWK8NMHtEs",

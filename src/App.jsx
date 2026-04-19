@@ -836,7 +836,7 @@ function ClassMenu({ user }) {
             } else if (menu === "Materi Pembelajaran") {
               iconName = "menu_book";
               colorClass = "bg-emerald-50 text-emerald-600";
-            } else if (menu === "Video Pembelajaran") {
+            } else if (menu === "Video Pembelajaran" || menu === "Video Pemantik") {
               iconName = "play_circle";
               colorClass = "bg-rose-50 text-rose-600";
             } else if (menu === "Ayo Diskusi (LKPD)" || menu === "Ayo Diskusi") {

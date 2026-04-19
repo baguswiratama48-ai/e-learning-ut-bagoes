@@ -86,6 +86,10 @@ export const StaticContentRenderer = ({
           />
         );
       }
+
+      if (activeSection.type === "GroupsV2") {
+          return renderGroups(activeSection);
+      }
       
       // If type exists but is not handled above
       console.warn(`Section type '${activeSection.type}' encountered but not matched in dispatcher.`);
@@ -108,9 +112,12 @@ export const StaticContentRenderer = ({
     );
   }
 
-
-  if (sectionName === "Pembagian Kelompok") {
-    const groupRow = (submissions || []).find(s => s.student_email === "SYSTEM_GROUP" && s.section_name === "GENERATED_GROUPS");
+  function renderGroups(config) {
+    const groupRow = (submissions || []).find(s => 
+      s.student_email === "SYSTEM_GROUP" && 
+      s.section_name === "GENERATED_GROUPS" &&
+      String(s.meeting_num) === String(meetingId)
+    );
     const groups = groupRow ? JSON.parse(groupRow.content) : null;
     
     if (!groups) {
