@@ -140,13 +140,24 @@ export const DashboardTutor = ({
         });
       });
 
-      await supabase.from("submissions").delete()
-        .eq("student_email", "SYSTEM_GROUP").eq("class_id", activeTab).eq("meeting_num", selectedMeeting);
+      // Conversion to integer for DB compatibility if needed
+      const dbClassId = isNaN(activeTab) ? activeTab : parseInt(activeTab);
+      const dbMeetingNum = isNaN(selectedMeeting) ? selectedMeeting : parseInt(selectedMeeting);
 
-      await supabase.from("submissions").insert([{
-        student_email: "SYSTEM_GROUP", class_id: activeTab, meeting_num: selectedMeeting,
-        section_name: "GENERATED_GROUPS", content: JSON.stringify(groups)
+      await supabase.from("submissions").delete()
+        .eq("student_email", "SYSTEM_GROUP")
+        .eq("class_id", dbClassId)
+        .eq("meeting_num", dbMeetingNum);
+
+      const { error: insError } = await supabase.from("submissions").insert([{
+        student_email: "SYSTEM_GROUP", 
+        class_id: dbClassId, 
+        meeting_num: dbMeetingNum,
+        section_name: "GENERATED_GROUPS", 
+        content: JSON.stringify(groups)
       }]);
+
+      if (insError) throw insError;
 
       alert(`Berhasil mengacak ${classStudents.length} mahasiswa ke ${groupCount} kelompok!`);
       await fetchData();
@@ -159,8 +170,15 @@ export const DashboardTutor = ({
     if (!confirm(`Reset kelompok Pertemuan ${selectedMeeting}?`)) return;
     setGenerating(true);
     try {
+      const dbClassId = isNaN(activeTab) ? activeTab : parseInt(activeTab);
+      const dbMeetingNum = isNaN(selectedMeeting) ? selectedMeeting : parseInt(selectedMeeting);
+
       await supabase.from("submissions").delete()
-        .eq("student_email", "SYSTEM_GROUP").eq("class_id", activeTab).eq("meeting_num", selectedMeeting).eq("section_name", "GENERATED_GROUPS");
+        .eq("student_email", "SYSTEM_GROUP")
+        .eq("class_id", dbClassId)
+        .eq("meeting_num", dbMeetingNum)
+        .eq("section_name", "GENERATED_GROUPS");
+      
       await fetchData();
     } finally {
       setGenerating(false);
