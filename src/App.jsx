@@ -1153,6 +1153,8 @@ function SectionPage({ user }) {
               submissions={submissions}
               status={status}
               loading={loading}
+              missions={sessionConfig?.sections?.find(s => s.name === "Ayo Diskusi (LKPD)" || s.name === "LKM")?.content?.missions}
+              config={sessionConfig?.sections?.find(s => s.name === "Ayo Diskusi (LKPD)" || s.name === "LKM")?.content}
               onComplete={async (finalContent) => {
                 setLoading(true);
                 try {
