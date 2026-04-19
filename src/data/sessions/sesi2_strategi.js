@@ -1,16 +1,20 @@
-export const Sesi2_Strategi = {
-  id: "STRAT_S2",
-  meetingId: "2",
-  classIds: ["4"],
-  courseCode: "SPGK4410",
-  courseName: "Strategi Pembelajaran Kontemporer di SD",
+import { SESSIONS } from '../index';
+
+export const sesi2_strategi = {
+  id: "5a-sesi2",
+  classId: "5a",
+  meetingId: 2,
+  title: "Strategi Pembelajaran di SD",
   sections: [
     {
       name: "Informasi Modul",
-      label: "RAT/SAT",
-      type: "RATSATV2",
+      type: "RATSAT",
       content: {
-        title: "Pembelajaran di Sekolah Dasar",
+        title: "RAT / SAT - Strategi Pembelajaran",
+        courseCode: "PDGK4105",
+        courseName: "Strategi Pembelajaran di SD",
+        sks: "4",
+        description: "Modul ini membahas tentang hakikat belajar dan karakteristik perkembangan serta pembelajaran di Sekolah Dasar.",
         capaianUmum: "Mahasiswa dapat meningkatkan kemampuan professional sehingga mampu mengembangkan pengetahuan dan keterampilan dalam mengelola pembelajaran di SD",
         capaianKhusus: [
           "Mahasiswa dapat menjelaskan karakteristik pembelajaran di SD"
@@ -35,11 +39,16 @@ export const Sesi2_Strategi = {
       type: "PemantikV2",
       content: {
         required: 3,
+        // Memecah menjadi 3 grup agar sistem mendeteksi ada 3 pertanyaan wajib pengerjaan berurutan
         groups: [
           [
-            "Seorang siswa kelas 2 SD terlihat cepat memahami pelajaran saat menggunakan gambar dan permainan, tetapi kesulitan saat hanya mendengarkan penjelasan guru.\n\n👉 Menurut Anda, bagaimana proses belajar yang sedang terjadi pada siswa tersebut?",
-            "Di kelas 5, beberapa siswa mulai aktif bertanya dan berpendapat, tetapi ada juga yang masih pasif dan bergantung pada arahan guru.\n\n👉 Bagaimana Anda menjelaskan perbedaan karakteristik dan tahap perkembangan siswa dalam kasus ini?",
-            "Seorang guru mengajar dengan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dengan karakteristik siswa?"
+            "1. Seorang siswa kelas 2 SD terlihat cepat memahami pelajaran saat menggunakan gambar dan permainan, tetapi kesulitan saat hanya mendengarkan penjelasan guru.\n\n👉 Menurut Anda, bagaimana proses belajar yang sedang terjadi pada siswa tersebut?"
+          ],
+          [
+            "2. Di kelas 5, beberapa siswa mulai aktif bertanya dan berpendapat, tetapi ada juga yang masih pasif dan bergantung pada arahan guru.\n\n👉 Bagaimana Anda menjelaskan perbedaan karakteristik dan tahap perkembangan siswa dalam kasus ini?"
+          ],
+          [
+            "3. Seorang guru mengajar dengan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dengan karakteristik siswa?"
           ]
         ]
       }
@@ -54,62 +63,21 @@ export const Sesi2_Strategi = {
           {
             letter: "A",
             title: "Hakikat Strategi Kontemporer",
-            description: "Pendekatan pembelajaran yang menyesuaikan dengan perkembangan zaman.",
+            description: "Pendekatan pembelajaran yang menyesuaikan dangan perkembangan zaman.",
             points: [
               {
                 label: "Prinsip Utama",
-                text: "Interaktivitas dan kemandirian belajar.",
-                items: [
-                  "Kolaboratif",
-                  "Berbasis Masalah",
-                  "Pemanfaatan Multimedia"
-                ]
+                text: "Berpusat pada siswa (Student Centered Learning), kolaboratif, dan memanfaatkan teknologi."
               }
+            ],
+            examples: [
+              "Penggunaan aplikasi interaktif dalam menjelaskan siklus air."
             ]
           }
-        ]
+        ],
+        evaluationQuestion: "Dari materi strategi kontemporer ini, strategi mana yang paling mungkin Anda terapkan di kelas esok hari?",
+        minWords: 10
       }
-    },
-    {
-      name: "Video Pembelajaran",
-      type: "VideoEvalV2",
-      content: {
-        videoId: "6V-1C9Cj6X0",
-        title: "Inovasi Strategi Pembelajaran di Era Digital",
-        category: "Materi Strategi",
-        evaluationText: "Tuliskan pendapat Anda mengenai salah satu strategi inovatif yang dipaparkan dalam video tersebut.",
-        minWords: 100,
-      },
-    },
-    {
-      name: "Pembagian Kelompok",
-      type: "GroupsV2"
-    },
-    {
-      name: "Ayo Diskusi (LKPD)",
-      required: true,
-      type: "Interactive",
-      tutorLabel: "LKM",
-      content: { title: "Forum Diskusi / LKM Sesi 2", sections: [{ title: "Tugas Diskusi", points: [{ label: "Target", text: "Diskusikan penerapan strategi pembelajaran kontemporer." }] }] }
-    },
-    {
-      name: "Kuis dan Latihan",
-      required: true,
-      type: "Interactive",
-      tutorLabel: "Quiz",
-      content: { videoId: "", title: "Quiz Sesi 2", evaluationText: "Berikan ulasan tugas kuis Anda." }
-    },
-    {
-      name: "Refleksi",
-      required: true,
-      type: "Interactive",
-      content: { title: "Refleksi Sesi 2", sections: [{ title: "Refleksi Diri", points: [{ label: "Ulasan", text: "Apa pelajaran paling berharga dari sesi ini?" }] }] }
-    },
-    {
-      name: "Rangkuman",
-      required: true,
-      type: "Interactive",
-      content: { title: "Rangkuman Sesi 2", sections: [{ title: "Point Utama", points: [{ label: "Kesimpulan", text: "Rangkuman materi strategi kontemporer." }] }] }
     }
-  ],
+  ]
 };
