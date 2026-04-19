@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, Fragment, useMemo, lazy, Suspense } from "react";
 import {
   Routes,
   Route,
@@ -35,6 +35,38 @@ import { DashboardTutor as DashboardUI } from "./components/DashboardTutor";
 
 // Global configurations and modular components are imported above.
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error", error, errorInfo);
+    this.setState({ errorInfo });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 40, background: '#fee', color: '#900', fontFamily: 'monospace' }}>
+          <h1>Something went wrong.</h1>
+          <details style={{ whiteSpace: 'pre-wrap' }}>
+            <summary>Click for error details</summary>
+            {this.state.error && this.state.error.toString()}
+            <br />
+            {this.state.errorInfo && this.state.errorInfo.componentStack}
+          </details>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function Home({ navigate, onLoginTutor }) {
   return (
@@ -1429,17 +1461,19 @@ export default function App() {
     : null;
 
   return (
-    <Routes>
-      <Route
-        path="*"
-        element={
-          <Layout
-            user={userWithSetter}
-            onLogin={handleLogin}
-            onLogout={handleLogout}
-          />
-        }
-      />
-    </Routes>
+    <ErrorBoundary>
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <Layout
+              user={userWithSetter}
+              onLogin={handleLogin}
+              onLogout={handleLogout}
+            />
+          }
+        />
+      </Routes>
+    </ErrorBoundary>
   );
 }
