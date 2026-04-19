@@ -136,6 +136,26 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
       .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
   }, [submissions, localNewComments]);
 
+  // Statistik Aktivitas Pribadi Mahasiswa
+  const myStats = useMemo(() => {
+    const myPosts = allForumPosts.filter(p => p.student_email === user.email).length;
+    const myComments = allComments.filter(c => c.student_email === user.email).length;
+    const total = myPosts + myComments;
+
+    let badge, badgeColor, badgeDesc;
+    if (myPosts >= 2 && myComments >= 2) {
+      badge = "Sangat Aktif";  badgeColor = "bg-emerald-500 text-white"; badgeDesc = "Luar biasa! Pertahankan kontribusimu.";
+    } else if (myPosts >= 1 && myComments >= 1) {
+      badge = "Aktif";         badgeColor = "bg-blue-500 text-white";    badgeDesc = "Bagus! Terus berinteraksi dengan kelompok lain.";
+    } else if (total >= 1) {
+      badge = "Cukup Aktif";   badgeColor = "bg-amber-400 text-slate-900";badgeDesc = "Sedikit lagi untuk menjadi mahasiwa aktif.";
+    } else {
+      badge = "Pasif";         badgeColor = "bg-rose-100 text-rose-600"; badgeDesc = "Yuk mulai bagikan jawaban atau beri komentar!";
+    }
+
+    return { myPosts, myComments, total, badge, badgeColor, badgeDesc };
+  }, [allForumPosts, allComments, user.email]);
+
   const getStudentProfile = (email) => {
     const student = STUDENTS.find(s => s.email === email);
     if (student) return { name: student.name, nim: student.nim };
@@ -298,13 +318,21 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
                >
                   FORUM DISKUSI <span className="bg-indigo-500 text-white px-1.5 py-0.5 rounded-md text-[9px] font-black">{allForumPosts.length}</span>
                </button>
+               <button
+                   onClick={() => setActiveTab("GRAFIK")}
+                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${activeTab === "GRAFIK" ? "bg-white text-slate-900 shadow-md scale-100" : "text-slate-400 hover:text-white"}`}
+                >
+                   📊 GRAFIK SAYA
+                </button>
              </div>
           </div>
           <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2 leading-tight">
             {currentTask.title}
           </h2>
           <p className="text-slate-400 text-sm font-medium">
-             {activeTab === "MY_LKM" ? "Analisis topik ABK kelompok Anda dan simpan jawaban per soal." : "Tanggapi hasil analisis dari kelompok ABK lainnya."}
+             {activeTab === "MY_LKM" ? "Analisis topik ABK kelompok Anda dan simpan jawaban per soal." : 
+              activeTab === "FORUM" ? "Tanggapi hasil analisis dari kelompok ABK lainnya." :
+              "Pantau tingkat keaktifan diskusi Anda dibandingkan standar tutor."}
           </p>
         </div>
       </div>
@@ -371,11 +399,11 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                        <div className="flex items-center gap-2 self-start md:self-center">
                            {answerMissing ? (
-                              <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-lg text-xs font-bold">Harap isi &gt; 10 karakter</span>
+                               <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-lg text-xs font-bold">Harap isi &gt; 10 karakter</span>
                            ) : (
-                              <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
-                                 <span className="material-symbols-outlined !text-[14px]">save</span>Draft Tersimpan
-                              </span>
+                               <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                                  <span className="material-symbols-outlined !text-[14px]">save</span>Draft Tersimpan
+                               </span>
                            )}
                        </div>
                        
@@ -385,11 +413,11 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
                            className={`w-full md:w-auto px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 ${isShared ? 'bg-emerald-50 text-emerald-600 border border-emerald-200 cursor-not-allowed' : 'bg-indigo-600 text-white hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-50 disabled:hover:scale-100'}`}
                        >
                            {loadingAction.type === 'share' && loadingAction.id === idx ? (
-                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                            ) : isShared ? (
-                                <><span className="material-symbols-outlined !text-[18px]">check_circle</span> Sudah di Forum</>
+                                 <><span className="material-symbols-outlined !text-[18px]">check_circle</span> Sudah di Forum</>
                            ) : (
-                                <><span className="material-symbols-outlined !text-[18px]">share</span> Bagikan Ke Forum</>
+                                 <><span className="material-symbols-outlined !text-[18px]">share</span> Bagikan Ke Forum</>
                            )}
                        </button>
                    </div>
@@ -525,6 +553,102 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
                </div>
              );
           })}
+        </div>
+      )}
+
+      {activeTab === "GRAFIK" && (
+        <div className="space-y-8 animate-in zoom-in-95 duration-500">
+           {/* Summary Cards */}
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col items-center text-center">
+                 <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+                    <span className="material-symbols-outlined text-3xl font-black">public</span>
+                 </div>
+                 <p className="text-4xl font-black text-slate-800">{myStats.myPosts}</p>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Postingan Saya</p>
+              </div>
+
+              <div className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col items-center text-center">
+                 <div className="w-14 h-14 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center mb-4">
+                    <span className="material-symbols-outlined text-3xl font-black">chat_bubble</span>
+                 </div>
+                 <p className="text-4xl font-black text-slate-800">{myStats.myComments}</p>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Komentar Saya</p>
+              </div>
+
+              <div className="bg-indigo-900 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-200 relative overflow-hidden">
+                 <div className="absolute -right-4 -bottom-4 opacity-10">
+                    <span className="material-symbols-outlined text-8xl">military_tech</span>
+                 </div>
+                 <div className="relative z-10 flex flex-col items-center text-center">
+                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-4 ${myStats.badgeColor} ${myStats.badge.includes('Pasif') ? '' : 'text-white'}`}>
+                       {myStats.badge}
+                    </div>
+                    <p className="text-xs font-bold text-indigo-200 leading-relaxed">{myStats.badgeDesc}</p>
+                    <div className="mt-4 flex gap-1">
+                       {[1,2,3,4,5].map(s => {
+                         const isActive = (myStats.total >= s);
+                         return <span key={s} className={`w-2 h-2 rounded-full ${isActive ? 'bg-yellow-400' : 'bg-white/10'}`}></span>
+                       })}
+                    </div>
+                 </div>
+              </div>
+           </div>
+
+           {/* Progress Chart Visual */}
+           <div className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
+              <h3 className="text-xl font-black text-slate-800 mb-8 flex items-center gap-3 text-left">
+                 <span className="w-2 h-8 bg-indigo-600 rounded-full"></span>
+                 Visualisasi Keaktifan Diskusi
+              </h3>
+              
+              <div className="space-y-10">
+                 {/* Posts Bar */}
+                 <div className="space-y-4">
+                    <div className="flex items-end justify-between">
+                       <div className="text-left">
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Postingan Forum (Target: ≥ 2)</p>
+                          <p className="text-lg font-black text-slate-800">{myStats.myPosts} <span className="text-slate-300 font-bold">/ 2</span></p>
+                       </div>
+                       <span className={`text-[10px] font-black px-3 py-1 rounded-lg ${myStats.myPosts >= 2 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                          {myStats.myPosts >= 2 ? 'TERPENUHI' : 'BELUM'}
+                       </span>
+                    </div>
+                    <div className="h-4 bg-slate-50 rounded-full overflow-hidden p-1 border border-slate-100">
+                       <div 
+                        className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full transition-all duration-1000"
+                        style={{ width: `${Math.min(100, (myStats.myPosts / 2) * 100)}%` }}
+                       ></div>
+                    </div>
+                 </div>
+
+                 {/* Comments Bar */}
+                 <div className="space-y-4">
+                    <div className="flex items-end justify-between">
+                       <div className="text-left">
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Komentar Diskusi (Target: ≥ 2)</p>
+                          <p className="text-lg font-black text-slate-800">{myStats.myComments} <span className="text-slate-300 font-bold">/ 2</span></p>
+                       </div>
+                       <span className={`text-[10px] font-black px-3 py-1 rounded-lg ${myStats.myComments >= 2 ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                          {myStats.myComments >= 2 ? 'TERPENUHI' : 'BELUM'}
+                       </span>
+                    </div>
+                    <div className="h-4 bg-slate-50 rounded-full overflow-hidden p-1 border border-slate-100">
+                       <div 
+                        className="h-full bg-gradient-to-r from-violet-500 to-violet-600 rounded-full transition-all duration-1000"
+                        style={{ width: `${Math.min(100, (myStats.myComments / 2) * 100)}%` }}
+                       ></div>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="mt-12 bg-slate-50 p-6 rounded-2xl border border-slate-100 flex items-start gap-4 text-left">
+                 <span className="material-symbols-outlined text-indigo-400">info</span>
+                 <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                    Statistik ini diperbarui secara otomatis ketika Anda membagikan jawaban atau memberikan tanggapan pada postingan kelompok lain. Tutor akan menilai keaktifan Anda berdasarkan data ini.
+                 </p>
+              </div>
+           </div>
         </div>
       )}
     </div>
