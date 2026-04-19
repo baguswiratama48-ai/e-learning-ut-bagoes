@@ -1,8 +1,8 @@
-import { SESSIONS } from '../index';
-
-export const sesi2_strategi = {
+export const Sesi2_Strategi = {
   id: "5a-sesi2",
   classId: "5a",
+  // classIds diperlukan agar getSessionConfig di index.js bisa menemukannya
+  classIds: ["5a"], 
   meetingId: 2,
   title: "Strategi Pembelajaran di SD",
   sections: [
