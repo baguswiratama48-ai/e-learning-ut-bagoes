@@ -54,7 +54,7 @@ export const Sesi2_ABK = {
         title: "Anak Dengan Gangguan Perilaku",
         subtitle: "Autism, ADD/ADHD, dan ODD",
         evaluationQuestion: "Apa saja jenis Anak Dengan Gangguan Perilaku yang anda ketahui dari materi tadi?",
-        minWords: 15,
+        minWords: 0,
         sections: [
           {
             letter: "A",
