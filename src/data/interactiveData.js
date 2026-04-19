@@ -233,6 +233,11 @@ export const REFLECTION_QUESTIONS_DATA = {
   3: [
     "Satu kata untuk pembelajaran hari ini!",
   ],
+  4: [
+    "Materi atau konsep apa yang paling melekat di ingatan Anda dari sesi pembelajaran hari ini?",
+    "Menurut Anda, bagian mana dari aktivitas hari ini yang paling menantang dan mengapa?",
+    "Sampaikan pesan, saran, atau kesan Anda terhadap bimbingan Pak Bagus Panca Wiratama, S.Pd., M.Pd. hari ini!"
+  ],
   default: [
     "Apa manfaat materi hari ini untuk profesi keguruan Anda?",
     "Bagaimana Anda akan menerapkan ilmu ini di sekolah nanti?",
