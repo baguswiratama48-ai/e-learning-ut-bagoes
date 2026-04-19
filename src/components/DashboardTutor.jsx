@@ -252,27 +252,33 @@ export const DashboardTutor = ({
       String(s.meeting_num) === String(meetingNum)
     );
 
-    const completedCount = requiredMenus.filter(menu => 
-      studentSubs.some(s => {
-        if (String(meetingNum) === "1") {
-          if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
-          if (activeTab === "4") {
-            if (menu === "Ayo Diskusi (LKPD)") {
-              return s.section_name.startsWith("LKPD_5A_STAGE_") || 
-                     s.section_name === "Ayo Diskusi (LKPD)" || 
-                     s.section_name === "Ayo Diskusi" || 
-                     s.section_name === "LKPD (Lembar Kerja Peserta Didik)" ||
-                     s.section_name === "LKM (Lembar Kerja Peserta Didik)";
-            }
-            if (menu === "Pertanyaan Pemantik") return s.section_name === "Pertanyaan Pemantik" || s.section_name === "Pemantik";
-            if (menu === "Kuis dan Latihan") return s.section_name === "Kuis dan Latihan" || s.section_name === "Quiz" || s.section_name === "Kuis";
-            if (menu === "Refleksi") return s.section_name === "Refleksi" || s.section_name === "Refleksi Materi";
+    const isSectionCompleted = (menuName, subs) => {
+      return subs.some(s => {
+        const sName = s.section_name || "";
+        // Special Matching for Class 5A (ID: 4) Sesi 1 (meeting: 1)
+        if (activeTab === "4" && String(meetingNum) === "1") {
+          if (menuName === "Ayo Diskusi (LKPD)") {
+            return sName.startsWith("LKPD_5A_STAGE_") || 
+                   sName === "Ayo Diskusi (LKPD)" || 
+                   sName === "LKPD (Lembar Kerja Peserta Didik)" ||
+                   sName === "LKM (Lembar Kerja Peserta Didik)";
           }
-          if ((activeTab === "1" || activeTab === "2") && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
+          if (menuName === "Pertanyaan Pemantik") return sName === "Pertanyaan Pemantik" || sName === "Pemantik";
+          if (menuName === "Kuis dan Latihan") return sName === "Kuis dan Latihan" || sName === "Quiz" || sName === "Kuis";
+          if (menuName === "Refleksi") return sName === "Refleksi" || sName === "Refleksi Materi";
         }
-        return s.section_name === menu;
-      })
-    ).length;
+        
+        // Special Matching for Class 6A (ID: 3) Sesi 1
+        if (activeTab === "3" && String(meetingNum) === "1" && menuName === "Ayo Diskusi (LKPD)") {
+           return sName === "LKPD_6A_DISCUSSION" || sName === "Ayo Diskusi (LKPD)";
+        }
+
+        // Default Match
+        return sName === menuName;
+      });
+    };
+
+    const completedCount = requiredMenus.filter(menu => isSectionCompleted(menu, studentSubs)).length;
 
     return Math.round((completedCount / requiredMenus.length) * 100);
   };
@@ -297,16 +303,31 @@ export const DashboardTutor = ({
                 dynamicMenus.push("Keaktifan Forum");
               }
 
+              const isSectionCompletedInHub = (menuName) => {
+                return studentSubs.some(s => {
+                  const sName = s.section_name || "";
+                  if (String(selectedMeeting) === "1") {
+                    if (activeTab === "3" && menuName === "Ayo Diskusi (LKPD)") return sName === "LKPD_6A_DISCUSSION";
+                    if (activeTab === "4") {
+                      if (menuName === "Ayo Diskusi (LKPD)") {
+                        return sName.startsWith("LKPD_5A_STAGE_") || 
+                               sName === "Ayo Diskusi (LKPD)" || 
+                               sName === "LKPD (Lembar Kerja Peserta Didik)" ||
+                               sName === "LKM (Lembar Kerja Peserta Didik)";
+                      }
+                      if (menuName === "Pertanyaan Pemantik") return sName === "Pertanyaan Pemantik" || sName === "Pemantik";
+                      if (menuName === "Kuis dan Latihan") return sName === "Kuis dan Latihan" || sName === "Quiz" || sName === "Kuis";
+                      if (menuName === "Refleksi") return sName === "Refleksi" || sName === "Refleksi Materi";
+                    }
+                    if ((activeTab === "1" || activeTab === "2") && menuName === "Ayo Diskusi (LKPD)") return sName === "LKPD (Lembar Kerja Peserta Didik)";
+                  }
+                  return sName === menuName;
+                });
+              };
+
               return dynamicMenus.map(menu => {
                 const isForumActivityTab = menu === "Keaktifan Forum";
-                const hasSub = isForumActivityTab ? true : studentSubs.find(s => {
-                  if (String(selectedMeeting) === "1") {
-                    if (activeTab === "3" && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
-                    if (activeTab === "4" && menu === "Ayo Diskusi (LKPD)") return s.section_name.startsWith("LKPD_5A_STAGE_");
-                    if ((activeTab === "1" || activeTab === "2") && menu === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
-                  }
-                  return s.section_name === menu;
-                });
+                const hasSub = isForumActivityTab ? true : isSectionCompletedInHub(menu);
                 
                 const hasFeedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${menu}`);
                 
@@ -350,12 +371,17 @@ export const DashboardTutor = ({
                   <h4 className="text-2xl font-black text-slate-800 flex items-center gap-3">
                     <span className="w-2 h-10 bg-primary rounded-full shadow-sm shadow-primary/40"></span>
                     {(() => {
-                        const isSpecialSesi2 = (activeTab === "1" || activeTab === "2" || activeTab === "3" || activeTab === "4") && String(selectedMeeting) === "2";
-                        if (isSpecialSesi2) {
-                          if (activeCorrectionTab === "Informasi Modul") return "RAT/SAT";
-                          if (activeCorrectionTab === "Ayo Diskusi (LKPD)") return "LKM (Lembar Kerja Mahasiswa)";
-                          if (activeCorrectionTab === "Kuis dan Latihan") return "Quiz";
+                        const sect = sessionConfig?.sections?.find(s => s.name === activeCorrectionTab);
+                        if (sect?.tutorLabel) {
+                           if (sect.tutorLabel === "LKM") return "LKM (Lembar Kerja Mahasiswa)";
+                           if (sect.tutorLabel === "Quiz") return "Quiz (Latihan)";
+                           return sect.tutorLabel;
                         }
+                        
+                        // Fallback labels for older sessions without tutorLabels
+                        if (activeCorrectionTab === "Ayo Diskusi (LKPD)") return "LKM (Lembar Kerja Mahasiswa)";
+                        if (activeCorrectionTab === "Kuis dan Latihan") return "Quiz";
+                        
                         return activeCorrectionTab;
                     })()}
                   </h4>
@@ -367,23 +393,23 @@ export const DashboardTutor = ({
 
                 {(() => {
                   const sub = studentSubs.find(s => {
+                    const sName = s.section_name || "";
                     if (String(selectedMeeting) === "1") {
-                      if (activeTab === "3" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD_6A_DISCUSSION";
+                      if (activeTab === "3" && activeCorrectionTab === "Ayo Diskusi (LKPD)") return sName === "LKPD_6A_DISCUSSION";
                       if (activeTab === "4") {
                         if (activeCorrectionTab === "Ayo Diskusi (LKPD)") {
-                          return s.section_name.startsWith("LKPD_5A_STAGE_") || 
-                                 s.section_name === "Ayo Diskusi (LKPD)" || 
-                                 s.section_name === "Ayo Diskusi" || 
-                                 s.section_name === "LKPD (Lembar Kerja Peserta Didik)" ||
-                                 s.section_name === "LKM (Lembar Kerja Peserta Didik)";
+                          return sName.startsWith("LKPD_5A_STAGE_") || 
+                                 sName === "Ayo Diskusi (LKPD)" || 
+                                 sName === "LKPD (Lembar Kerja Peserta Didik)" ||
+                                 sName === "LKM (Lembar Kerja Peserta Didik)";
                         }
-                        if (activeCorrectionTab === "Pertanyaan Pemantik") return s.section_name === "Pertanyaan Pemantik" || s.section_name === "Pemantik";
-                        if (activeCorrectionTab === "Kuis dan Latihan") return s.section_name === "Kuis dan Latihan" || s.section_name === "Quiz" || s.section_name === "Kuis";
-                        if (activeCorrectionTab === "Refleksi") return s.section_name === "Refleksi" || s.section_name === "Refleksi Materi";
+                        if (activeCorrectionTab === "Pertanyaan Pemantik") return sName === "Pertanyaan Pemantik" || sName === "Pemantik";
+                        if (activeCorrectionTab === "Kuis dan Latihan") return sName === "Kuis dan Latihan" || sName === "Quiz" || sName === "Kuis";
+                        if (activeCorrectionTab === "Refleksi") return sName === "Refleksi" || sName === "Refleksi Materi";
                       }
-                      if ((activeTab === "1" || activeTab === "2") && activeCorrectionTab === "Ayo Diskusi (LKPD)") return s.section_name === "LKPD (Lembar Kerja Peserta Didik)";
+                      if ((activeTab === "1" || activeTab === "2") && activeCorrectionTab === "Ayo Diskusi (LKPD)") return sName === "LKPD (Lembar Kerja Peserta Didik)";
                     }
-                    return s.section_name === activeCorrectionTab;
+                    return sName === activeCorrectionTab;
                   });
 
                   if (!sub && activeCorrectionTab !== "Keaktifan Forum") return (
