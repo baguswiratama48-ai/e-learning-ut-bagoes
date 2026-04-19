@@ -81,9 +81,9 @@ export default function InteractiveLKMClass8({
   // 4. Determine Active Missions
   const activeMissionsList = useMemo(() => {
     // If we have prop missions and it's a group-based discussion
-    if (propMissions && lkmConfig.type === "GROUP_DISCUSSION") {
+    if (propMissions && lkmConfig?.content?.type === "GROUP_DISCUSSION") {
       // Find the mission for THIS specific group
-      const groupMission = propMissions[groupNumber];
+      const groupMission = propMissions[String(groupNumber)];
       if (groupMission) {
         // Formulate a mission object consistent with LKM rendering
         // Use group-specific questions if available, or the mission title/questions
