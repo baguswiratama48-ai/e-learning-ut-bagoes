@@ -904,12 +904,14 @@ function SectionPage({ user }) {
     setTutorFeedback(null);
     if (!user) return;
     const fetchStatus = async () => {
-      // If we are looking for Pertanyaan Pemantik, fetch that and its tutor feedback
       const sectionNamesToFetch = [
         sectionName,
         `TUTOR_FEEDBACK_${sectionName}`,
         "LKM_COMMENT",
         "LKM_FORUM_POST",
+        // Tambah section names spesifik kelas 6A ABK
+        "LKM_6A_FORUM_POST",
+        "LKM_6A_COMMENT",
         ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4"] : [])
       ];
 
@@ -922,12 +924,17 @@ function SectionPage({ user }) {
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD", "LKPD_6A_DISCUSSION"]);
         
       // Logika Filter: Jika seksi bukan Forum Diskusi (LKPD/LKM), maka hanya ambil data milik user sendiri
-      const isForumSection = sectionName === "Ayo Diskusi (LKPD)" || sectionName === "Ayo Diskusi" || sectionName === "LKPD (Lembar Kerja Peserta Didik)";
+      const isForumSection = 
+        sectionName === "Ayo Diskusi (LKPD)" || 
+        sectionName === "Ayo Diskusi" || 
+        sectionName === "LKPD (Lembar Kerja Peserta Didik)";
       
-      // Jika seksi bukan forum DAN yg login adalah mahasiswa, filter hanya miliknya (plus data sistem)
+      // Kelas 6A di forum LKM → ambil semua data (tanpa filter user) agar forum post semua mahasiswa terlihat
+      // Kelas lain di non-forum → filter hanya milik sendiri + SYSTEM_GROUP
       if (!isForumSection && user?.role === "student") {
         query = query.or(`student_email.eq.${user.email},student_email.eq.SYSTEM_GROUP`);
       }
+      // Jika isForumSection=true (termasuk kelas 6A "Ayo Diskusi (LKPD)") → tidak difilter → semua mahasiswa terlihat
 
       const { data } = await query;
 
