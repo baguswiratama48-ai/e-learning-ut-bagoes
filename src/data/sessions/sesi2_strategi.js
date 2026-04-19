@@ -156,9 +156,9 @@ export const Sesi2_Strategi = {
       name: "Video Pembelajaran",
       type: "VideoEvalV2",
       content: {
-        title: "Implementasi Strategi Kontemporer",
-        evaluationText: "Tuliskan ringkasan inovasi pembelajaran yang Anda temukan dalam video ini.",
-        videoId: "J8_T6lH2n7U",
+        title: "Praktik Strategi Pembelajaran di SD",
+        evaluationText: "Setelah menyimak video di atas, menurut Anda bagaimana strategi guru dalam video tersebut dapat meningkatkan keterlibatan siswa di kelas? Jelaskan analisis Anda!",
+        videoId: "btcFxsfoeuU",
         minWords: 20
       }
     },
