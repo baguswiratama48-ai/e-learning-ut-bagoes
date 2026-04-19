@@ -45,7 +45,7 @@ export const Sesi2_Strategi = {
             "2. Di kelas 5, beberapa siswa mulai aktif bertanya dan berpendapat, tetapi ada juga yang masih pasif dan bergantung pada arahan guru.\n\n👉 Bagaimana Anda menjelaskan perbedaan karakteristik dan tahap perkembangan siswa dalam kasus ini?"
           ],
           [
-            "3. Seorang guru mengajar dengan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dengan karakteristik siswa?"
+            "3. Seorang guru mengajar dangan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dangan karakteristik siswa?"
           ]
         ]
       }
@@ -64,15 +64,15 @@ export const Sesi2_Strategi = {
             points: [
               {
                 label: "Teori Disiplin Mental",
-                text: "Setiap anak lahir dengan daya mengingat, memecahkan masalah, dan menghafal yang bisa dilatih serta ditransfer."
+                text: "Setiap anak lahir dangan daya-daya tertentu seperti daya mengingat, memecahkan masalah, mencurahkan pendapat, dan menghafal."
               },
               {
                 label: "Teori Behaviorisme",
-                text: "Perkembangan ditentukan lingkungan (keluarga, sekolah, masyarakat). Mencakup koneksionisme, kondisioning, dan penguatan."
+                text: "Perkembangan ditentukan lingkungan (keluarga, sekolah, masyarakat). Mencakup teori koneksionisme, kondisioning, dan penguatan."
               },
               {
                 label: "Teori Insight",
-                text: "Belajar melalui proses eksploratif, imajinatif, dan kreatif. Siswa berpartisipasi aktif dalam berpikir tingkat tinggi."
+                text: "Belajar melalui proses eksploratif, imajinatif, dan kreatif. Siswa berpartisipasi aktif dalam mempelajari kejadian alam."
               },
               {
                 label: "Teori Gestalt/Organismik",
@@ -80,13 +80,13 @@ export const Sesi2_Strategi = {
               },
               {
                 label: "Konstruktivisme",
-                text: "Pengetahuan tidak diberikan begitu saja, melainkan dibangun sendiri secara aktif oleh siswa."
+                text: "Pengetahun dibangun secara aktif oleh siswa sendiri melalui pengalaman nyata."
               }
             ]
           },
           {
             letter: "B",
-            title: "Tipe, Hasil, & Keterampilan Belajar",
+            title: "Tipe & Hasil Belajar",
             description: "Klasifikasi ragam aktivitas belajar dan kompetensi yang dihasilkan.",
             points: [
               {
@@ -98,17 +98,8 @@ export const Sesi2_Strategi = {
                 items: [
                   "Kognitif: Pemecahan masalah & berpikir logis.",
                   "Psikomotor: Tindakan fisik & kegiatan perseptual.",
-                  "Interaktif: Keterampilan sosial & kepemimpinan.",
-                  "Reaktif: Sikap, kebijaksanaan, & self-control."
-                ]
-              },
-              {
-                label: "Indikator Berpikir Kritis/Ilmiah",
-                items: [
-                  "Kemampuan membaca dan mengamati informasi.",
-                  "Kemampuan membuat pertanyaan kritis dari bacaan.",
-                  "Mampu mengkaji persamaan atau perbedaan.",
-                  "Melakukan kajian secara menyeluruh (holistik)."
+                  "Keterampilan Interaktif: Kemampuan sosial & kepemimpinan.",
+                  "Keterampilan Reaktif: Sikap, kebijaksanaan, rasa, & self-control."
                 ]
               }
             ]
@@ -119,43 +110,40 @@ export const Sesi2_Strategi = {
             description: "Perubahan yang dialami anak usia SD dalam berbagai aspek kehidupan.",
             points: [
               {
-                label: "Fisik & Ekspresif",
-                text: "Perkembangan tinggi, berat badan, motorik, serta minat bermain dan hobi berdasarkan gender."
+                label: "Hasi Belajar Berpikir Kritis",
+                items: [
+                  "Kemampuan membaca dan mengamati informasi.",
+                  "Membuat pertanyaan dari apa yang dibaca.",
+                  "Mengkaji dari sudut persamaan atau perbedaan.",
+                  "Melakukan kajian secara menyeluruh."
+                ]
               },
               {
-                label: "Sosial & Bahasa",
-                text: "Munculnya kerjasama, empati, hingga penggunaan bahasa yang lebih halus, kompleks, dan kalimat panjang."
-              },
-              {
-                label: "Kognitif (Operasional Konkrit)",
-                text: "Mampu menyelesaikan tugas menggabungkan, menghubungkan, memisahkan, menyusun, melipat, dan membagi."
-              },
-              {
-                label: "Moral & Kebutuhan",
-                text: "Kemampuan bertindak menjadi orang baik menurut pandangan orang lain serta pemenuhan aspek psiko-biologis."
+                label: "Aspek Perkembangan",
+                items: [
+                  "Fisik & Ekspresif: Berat, tinggi, motorik, & hobi seni.",
+                  "Sosial & Bahasa: Kerjasama, empati, & kalimat kompleks.",
+                  "Kognitif & Moral: Operasional konkrit & kemandirian moral."
+                ]
               }
             ]
           },
           {
             letter: "D",
             title: "Aspek Inteligensi (Multiple Intelligences)",
-            description: "Setiap siswa memiliki potensi kecerdasan yang berbeda-beda.",
+            description: "Tujuh jenis kecerdasan utama yang mungkin dimiliki oleh siswa SD.",
             points: [
               {
-                label: "Linguistik & Logis-Matematis",
-                text: "Kecerdasan menggunakan bahasa dan berpikir logis melalui pola, hubungan, serta kategori."
+                label: "Inteligensi Akademik",
+                text: "Linguistik (bahasa) dan Logis-Matematis (pola & kategori)."
               },
               {
-                label: "Spasial & Musik",
-                text: "Kemampuan mempersepsi dunia ruang visual serta mempertunjukkan atau mengubah musik."
+                label: "Inteligensi Seni & Ruang",
+                text: "Spasial (visual), Musik (irama), dan Fisik-Kinestetik (olahraga/seni)."
               },
               {
-                label: "Fisik-Kinestetik",
-                text: "Kemampuan motorik halus dan kasar dalam bidang olahraga maupun seni."
-              },
-              {
-                label: "Intrapribadi & Interpribadi",
-                text: "Memahami perasaan/gagasan diri sendiri (Intra) serta memahami motivasi/tempramen orang lain (Inter)."
+                label: "Inteligensi Personal",
+                text: "Intrapribadi (pemahaman diri) dan Interpribadi (pemahaman orang lain)."
               }
             ]
           }
@@ -163,6 +151,41 @@ export const Sesi2_Strategi = {
         evaluationQuestion: "Setelah mempelajari materi perkembangan dan inteligensi di atas, bagaimana cara Anda merancang materi yang bisa mengakomodasi berbagai tipe kecerdasan siswa di kelas Anda?",
         minWords: 20
       }
+    },
+    {
+      name: "Video Pembelajaran",
+      type: "VideoEval",
+      content: {
+        title: "Implementasi Strategi Kontemporer",
+        evaluationText: "Tuliskan ringkasan inovasi pembelajaran yang Anda temukan dalam video ini.",
+        videoId: "J8_T6lH2n7U", // Dummy video ID
+        minWords: 20
+      }
+    },
+    {
+      name: "Pembagian Kelompok",
+      type: "Interactive",
+      content: null
+    },
+    {
+      name: "LKPD (Lembar Kerja Peserta Didik)",
+      type: "Interactive",
+      content: null
+    },
+    {
+      name: "Kuis dan Latihan",
+      type: "Interactive",
+      content: null
+    },
+    {
+      name: "Refleksi",
+      type: "Interactive",
+      content: null
+    },
+    {
+      name: "Rangkuman",
+      type: "Interactive",
+      content: null
     }
   ]
 };
