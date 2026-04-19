@@ -305,7 +305,8 @@ export const DashboardTutor = ({
               let dynamicMenus = sessionConfig ? sessionConfig.sections.map(s => s.name) : [...MENUS];
 
               // Injeksi menu Keaktifan Forum jika config tersedia untuk kelas+sesi ini
-              const forumConfig = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
+              const configKey = `${activeTab}_${selectedMeeting}`;
+              const forumConfig = LKM_FORUM_CONFIG[configKey];
               if (forumConfig) {
                 dynamicMenus.push("Keaktifan Forum");
               }
@@ -396,7 +397,7 @@ export const DashboardTutor = ({
                   const feedback = studentSubs.find(s => s.section_name === `TUTOR_FEEDBACK_${activeCorrectionTab}`);
                   const curStars = feedback ? parseInt(feedback.content) : 0;
 
-                  if (!sub) return (
+                  if (!sub && activeCorrectionTab !== "Keaktifan Forum") return (
                     <div className="py-24 text-center animate-in fade-in zoom-in duration-500">
                       <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-slate-200 shadow-inner">
                         <span className="material-symbols-outlined text-slate-300 text-4xl">history_edu</span>
@@ -522,8 +523,9 @@ export const DashboardTutor = ({
                                       </div>
                                       <div className="text-left">
                                         <p className="text-sm font-black text-slate-800">{(() => {
-                                          const config = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
-                                          return (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.section_name).length;
+                                          const configKey = `${activeTab}_${selectedMeeting}`;
+                                          const config = LKM_FORUM_CONFIG[configKey];
+                                          return (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.postSection).length;
                                         })()} Post</p>
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Postingan Discussion</p>
                                       </div>
@@ -534,8 +536,9 @@ export const DashboardTutor = ({
                                       </div>
                                       <div className="text-left">
                                         <p className="text-sm font-black text-slate-800">{(() => {
-                                          const config = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
-                                          return (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.comment_section).length;
+                                          const configKey = `${activeTab}_${selectedMeeting}`;
+                                          const config = LKM_FORUM_CONFIG[configKey];
+                                          return (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.commentSection).length;
                                         })()} Komen</p>
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Komentar Balasan</p>
                                       </div>
@@ -544,9 +547,10 @@ export const DashboardTutor = ({
 
                                   {/* Badge Card */}
                                   {(() => {
-                                    const config = LKM_FORUM_CONFIG.find(c => c.class_id === selectedClass && String(c.meeting_num) === String(selectedMeeting));
-                                    const postCount = (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.section_name).length;
-                                    const commentCount = (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.comment_section).length;
+                                    const configKey = `${activeTab}_${selectedMeeting}`;
+                                    const config = LKM_FORUM_CONFIG[configKey];
+                                    const postCount = (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.postSection).length;
+                                    const commentCount = (submissions || []).filter(s => s.student_email === student.email && s.section_name === config.commentSection).length;
                                     
                                     let badge, badgeColor;
                                     if (postCount >= 2 && commentCount >= 2) {
