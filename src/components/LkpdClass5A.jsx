@@ -145,7 +145,11 @@ export const LkpdClass5A = ({
   const myStats = useMemo(() => {
     const posts = allForumPosts.filter(p => p?.student_email === user.email).length;
     const comms = allComments.filter(c => c?.student_email === user.email).length;
-    return { posts, comms, badge: posts >= 2 && comms >= 2 ? "Strategist Sejati" : posts >= 1 ? "Aktif" : "Eksplorer" };
+    return { 
+      posts, 
+      comms, 
+      badge: posts >= 1 && comms >= 5 ? "Sangat Aktif" : posts >= 1 ? "Aktif" : "Pasif" 
+    };
   }, [allForumPosts, allComments, user.email]);
 
   const getSafeName = (email) => {
