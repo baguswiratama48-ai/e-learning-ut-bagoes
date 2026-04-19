@@ -947,12 +947,16 @@ function SectionPage({ user }) {
         ...(id === "4" ? ["LKPD_5A_STAGE_1", "LKPD_5A_STAGE_2", "LKPD_5A_STAGE_3", "LKPD_5A_STAGE_4", "LKM_5A_FORUM_POST", "LKM_5A_COMMENT"] : [])
       ];
 
+      // Conversion to integer for DB compatibility
+      const dbClassId = isNaN(id) ? id : parseInt(id);
+      const dbMeetingNum = isNaN(meetingId) ? meetingId : parseInt(meetingId);
+
       // Fetch personal answers + system-generated groups + everyone's LKPD for class 6A cross-visibility
       let query = supabase
         .from("submissions")
         .select("*")
-        .eq("class_id", id)
-        .eq("meeting_num", meetingId)
+        .eq("class_id", dbClassId)
+        .eq("meeting_num", dbMeetingNum)
         .in("section_name", [...sectionNamesToFetch, "GENERATED_GROUPS", "DISCUSSION_LKPD", "LKPD_6A_DISCUSSION"]);
 
       // Logika Filter: Jika seksi bukan Forum Diskusi (LKPD/LKM), maka hanya ambil data milik user sendiri
@@ -991,10 +995,13 @@ function SectionPage({ user }) {
     if (!val || !val.trim()) return;
     setLoading(true);
     try {
+      const dbClassId = isNaN(id) ? id : parseInt(id);
+      const dbMeetingNum = isNaN(meetingId) ? meetingId : parseInt(meetingId);
+
       const payload = {
         student_email: user.email,
-        class_id: id,
-        meeting_num: meetingId,
+        class_id: dbClassId,
+        meeting_num: dbMeetingNum,
         section_name: sectionName,
         content: val,
       };
