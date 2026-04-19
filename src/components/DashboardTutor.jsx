@@ -261,6 +261,7 @@ export const DashboardTutor = ({
               return s.section_name.startsWith("LKPD_5A_STAGE_") || 
                      s.section_name === "Ayo Diskusi (LKPD)" || 
                      s.section_name === "Ayo Diskusi" || 
+                     s.section_name === "LKPD (Lembar Kerja Peserta Didik)" ||
                      s.section_name === "LKM (Lembar Kerja Peserta Didik)";
             }
             if (menu === "Pertanyaan Pemantik") return s.section_name === "Pertanyaan Pemantik" || s.section_name === "Pemantik";
@@ -373,6 +374,7 @@ export const DashboardTutor = ({
                           return s.section_name.startsWith("LKPD_5A_STAGE_") || 
                                  s.section_name === "Ayo Diskusi (LKPD)" || 
                                  s.section_name === "Ayo Diskusi" || 
+                                 s.section_name === "LKPD (Lembar Kerja Peserta Didik)" ||
                                  s.section_name === "LKM (Lembar Kerja Peserta Didik)";
                         }
                         if (activeCorrectionTab === "Pertanyaan Pemantik") return s.section_name === "Pertanyaan Pemantik" || s.section_name === "Pemantik";
