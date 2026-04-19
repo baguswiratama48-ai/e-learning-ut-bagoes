@@ -910,20 +910,24 @@ export const DashboardTutor = ({
                 </p>
               </div>
             </div>
-            {/* Legenda */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                { label: "Sangat Aktif", color: "bg-emerald-500 text-white",    desc: "≥2 post & ≥2 komen" },
-                { label: "Aktif",        color: "bg-blue-500 text-white",        desc: "≥1 post & ≥1 komen" },
-                { label: "Cukup",        color: "bg-amber-400 text-slate-900",   desc: "ada aktivitas" },
-                { label: "Pasif",        color: "bg-rose-100 text-rose-600",     desc: "belum posting" },
-              ].map(l => (
-                <div key={l.label} className="flex items-center gap-1.5 bg-white border border-slate-100 px-3 py-1.5 rounded-xl shadow-sm">
-                  <span className={`inline-block w-2 h-2 rounded-full ${l.color.split(' ')[0]}`}></span>
-                  <span className="text-[10px] font-black text-slate-600">{l.label}</span>
-                  <span className="text-[9px] text-slate-400">({l.desc})</span>
-                </div>
-              ))}
+            {/* Syarat Badge Keaktifan */}
+            <div className="bg-white/70 backdrop-blur border border-indigo-100 rounded-2xl p-4 shadow-sm">
+              <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest mb-3">📋 Syarat Status Keaktifan</p>
+              <div className="space-y-2">
+                {[
+                  { label: "Sangat Aktif", color: "bg-emerald-500", text: "white", post: "≥ 2 post", komen: "≥ 2 komentar" },
+                  { label: "Aktif",        color: "bg-blue-500",    text: "white", post: "≥ 1 post", komen: "≥ 1 komentar" },
+                  { label: "Cukup",        color: "bg-amber-400",   text: "slate-900", post: "≥ 1 post", komen: "0 komentar (atau sebaliknya)" },
+                  { label: "Pasif",        color: "bg-rose-200",    text: "rose-700", post: "0 post", komen: "0 komentar" },
+                ].map(l => (
+                  <div key={l.label} className="flex items-center gap-3">
+                    <span className={`${l.color} text-white text-[9px] font-black px-2.5 py-1 rounded-lg w-24 text-center shrink-0`}>{l.label}</span>
+                    <span className="text-indigo-600 text-[10px] font-black">📤 {l.post}</span>
+                    <span className="text-[9px] text-slate-300">+</span>
+                    <span className="text-violet-600 text-[10px] font-black">💬 {l.komen}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

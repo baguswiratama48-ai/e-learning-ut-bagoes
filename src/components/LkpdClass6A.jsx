@@ -89,6 +89,18 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
   const [commentInputs, setCommentInputs] = useState({});
   const [loadingAction, setLoadingAction] = useState({ type: null, id: null });
 
+  // State lokal untuk post & komentar baru — dikombinasikan dengan props submissions
+  // sehingga setelah submit tidak perlu reload halaman dan tetap di tab FORUM
+  const [localNewPosts, setLocalNewPosts] = useState([]);
+  const [localNewComments, setLocalNewComments] = useState([]);
+
+  // Tambah notifikasi sukses tanpa interrupt (ganti alert)
+  const [successMsg, setSuccessMsg] = useState(null);
+  const showSuccess = (msg) => {
+    setSuccessMsg(msg);
+    setTimeout(() => setSuccessMsg(null), 3000);
+  };
+
   // Save to local storage automatically
   useEffect(() => {
      localStorage.setItem(draftKey, JSON.stringify(answers));
@@ -99,24 +111,30 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
   const isFormComplete = answeredCount >= Math.min(currentTask.questions.length, 5);
   const remainingRequired = Math.max(0, Math.min(currentTask.questions.length, 5) - answeredCount);
 
-  // Data fetching from props (submissions)
+  // Gabungkan data dari props (submissions) + local new posts/comments
+  // sehingga tampilan update langsung tanpa reload halaman
   const allForumPosts = useMemo(() => {
-    return (submissions || [])
+    const fromServer = (submissions || [])
       .filter(s => s.section_name === "LKM_6A_FORUM_POST")
-      .map(p => {
-         try { return { ...p, parsed: JSON.parse(p.content) }; } catch(e) { return {...p, parsed: {}};}
-      })
+      .map(p => { try { return { ...p, parsed: JSON.parse(p.content) }; } catch(e) { return {...p, parsed: {}};} });
+    // Gabungkan dengan post baru dari local state
+    const combined = [...localNewPosts, ...fromServer];
+    // Deduplikasi berdasarkan id
+    const seen = new Set();
+    return combined.filter(p => { if (seen.has(p.id)) return false; seen.add(p.id); return true; })
       .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-  }, [submissions]);
+  }, [submissions, localNewPosts]);
 
   const allComments = useMemo(() => {
-    return (submissions || [])
+    const fromServer = (submissions || [])
       .filter(s => s.section_name === "LKM_6A_COMMENT")
-      .map(c => {
-         try { return { ...c, parsed: JSON.parse(c.content) }; } catch(e) { return {...c, parsed: {targetId: null, comment: ""}};}
-      })
+      .map(c => { try { return { ...c, parsed: JSON.parse(c.content) }; } catch(e) { return {...c, parsed: {targetId: null, comment: ""}};} });
+    // Gabungkan dengan komentar baru dari local state
+    const combined = [...fromServer, ...localNewComments];
+    const seen = new Set();
+    return combined.filter(c => { if (seen.has(c.id)) return false; seen.add(c.id); return true; })
       .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-  }, [submissions]);
+  }, [submissions, localNewComments]);
 
   const getStudentProfile = (email) => {
     const student = STUDENTS.find(s => s.email === email);
@@ -137,21 +155,32 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
      
      setLoadingAction({ type: 'share', id: idx });
      try {
+         const parsedContent = { 
+             questionIndex: idx, 
+             questionText: currentTask.questions[idx], 
+             answerText: answerText,
+             groupNum: groupNumber
+         };
          const payload = {
             student_email: user.email,
             class_id: classId,
             meeting_num: meetingId,
             section_name: "LKM_6A_FORUM_POST",
-            content: JSON.stringify({ 
-                questionIndex: idx, 
-                questionText: currentTask.questions[idx], 
-                answerText: answerText,
-                groupNum: groupNumber
-            })
+            content: JSON.stringify(parsedContent)
          };
-         await supabase.from("submissions").insert([payload]);
-         alert('Berhasil dibagikan ke forum diskusi!');
-         window.location.reload();
+         const { data } = await supabase.from("submissions").insert([payload]).select();
+
+         // Tambah ke local state agar langsung tampil tanpa reload
+         const newPost = data?.[0] ?? {
+           id: `local_${Date.now()}`,
+           student_email: user.email,
+           created_at: new Date().toISOString(),
+           section_name: "LKM_6A_FORUM_POST",
+         };
+         setLocalNewPosts(prev => [{ ...newPost, parsed: parsedContent }, ...prev]);
+
+         showSuccess('✅ Jawaban berhasil dibagikan ke forum!');
+         setActiveTab('FORUM'); // pindah ke tab forum otomatis
      } catch (err) {
          console.error(err);
          alert('Gagal membagikan.');
@@ -165,16 +194,27 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
      
      setLoadingAction({ type: 'comment', id: targetId });
      try {
+         const parsedContent = { targetId, comment: commentInput };
          const payload = {
             student_email: user.email,
             class_id: classId,
             meeting_num: meetingId,
             section_name: "LKM_6A_COMMENT",
-            content: JSON.stringify({ targetId, comment: commentInput })
+            content: JSON.stringify(parsedContent)
          };
-         await supabase.from("submissions").insert([payload]);
-         setCommentInputs({...commentInputs, [targetId]: ""});
-         window.location.reload();
+         const { data } = await supabase.from("submissions").insert([payload]).select();
+
+         // Tambah ke local state agar komentar langsung tampil tanpa reload
+         // Mahasiswa tetap di tab FORUM untuk bisa berkomentar lagi
+         const newComment = data?.[0] ?? {
+           id: `local_${Date.now()}`,
+           student_email: user.email,
+           created_at: new Date().toISOString(),
+           section_name: "LKM_6A_COMMENT",
+         };
+         setLocalNewComments(prev => [...prev, { ...newComment, parsed: parsedContent }]);
+         setCommentInputs(prev => ({...prev, [targetId]: ""}));
+         showSuccess('💬 Komentar berhasil dikirim!');
      } catch (err) {
          console.error(err);
          alert("Gagal mengirim komentar.");
@@ -222,7 +262,15 @@ export const LkpdClass6A = ({ user, classId, meetingId, submissions, onComplete,
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500 pb-20">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-500 pb-20 relative">
+
+      {/* Toast Notifikasi Sukses — muncul di pojok kanan atas, auto-hilang 3 detik */}
+      {successMsg && (
+        <div className="fixed top-6 right-6 z-50 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 animate-in slide-in-from-right-4 duration-300 border border-white/10">
+          <span className="text-lg">{successMsg.charAt(0)}</span>
+          <p className="font-bold text-sm">{successMsg.slice(2)}</p>
+        </div>
+      )}
       
       {/* HEADER TUGAS */}
       <div className="bg-gradient-to-br from-[#1e293b] to-slate-900 border border-slate-700 p-8 md:p-10 rounded-[2.5rem] relative overflow-hidden shadow-2xl text-white mt-10">
