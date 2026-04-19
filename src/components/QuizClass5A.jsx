@@ -453,6 +453,8 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
   const [gameState, setGameState] = useState("INTRO"); // INTRO, PLAYING, FINISHED
   const [showExplanation, setShowExplanation] = useState(false);
 
+  const STORAGE_KEY = `quiz_5a_draft_${user?.email}_${meetingId}`;
+
   // Cek apakah sudah pernah mengerjakan
   const statusRow = submissions?.find(
     (s) => s.student_email === user.email && s.section_name === "Kuis dan Latihan"
@@ -461,19 +463,40 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
   useEffect(() => {
     if (statusRow) {
       setGameState("FINISHED");
+    } else {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.answers && Object.keys(parsed.answers).length > 0) {
+             setAnswers(parsed.answers);
+          }
+          if (parsed.order && parsed.order.length > 0) {
+             setShuffledQuestions(parsed.order);
+          }
+        }
+      } catch(e) {}
     }
-  }, [statusRow]);
+  }, [statusRow, STORAGE_KEY]);
 
   useEffect(() => {
-    if (gameState === "INTRO") {
+    try {
+      if (gameState === "PLAYING" && shuffledQuestions.length > 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ answers, order: shuffledQuestions }));
+      }
+    } catch(e) {}
+  }, [answers, gameState, shuffledQuestions, STORAGE_KEY]);
+
+  useEffect(() => {
+    if (gameState === "INTRO" && shuffledQuestions.length === 0) {
       // Pilih soal berdasarkan Sesi
       const baseQuestions = meetingId === "2" ? QUIZ_SESI_2 : QUIZ_SESI_1;
       
-      // Acak soal setiap kali dimuat
+      // Acak soal setiap kali dimuat hanya jika belum ada draft (shuffledQuestions kosong)
       const shuffled = [...baseQuestions].sort(() => Math.random() - 0.5);
       setShuffledQuestions(shuffled);
     }
-  }, [gameState, meetingId]);
+  }, [gameState, meetingId, shuffledQuestions.length]);
 
   const handleStart = () => {
     setGameState("PLAYING");
@@ -490,6 +513,13 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
     }
   };
 
+  const prevQuestion = () => {
+    if (currentIdx > 0) {
+      setCurrentIdx(currentIdx - 1);
+      setShowExplanation(false);
+    }
+  };
+
   const calculateScore = () => {
     let score = 0;
     shuffledQuestions.forEach((q, idx) => {
@@ -501,6 +531,7 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
   const handleSubmit = () => {
     const finalScore = calculateScore();
     setGameState("FINISHED");
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
     const reportText = `[SKOR AKHIR: ${finalScore}/100]\n(Hasil Kuis Interaktif diselesaikan secara otomatis)\nTerisi: ${Object.keys(answers).length} dari 20 soal.`;
     if (onComplete) onComplete(reportText);
   };
@@ -532,7 +563,7 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
             onClick={handleStart}
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-emerald-200 active:scale-95"
           >
-            MULAI SEKARANG
+            {Object.keys(answers).length > 0 ? "LANJUTKAN KUIS (ADA DRAF)" : "MULAI SEKARANG"}
           </button>
         </div>
       </div>
@@ -644,14 +675,23 @@ export default function QuizClass5A({ user, meetingId, onComplete, submissions }
         </div>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 w-full">
+        {currentIdx > 0 && (
+          <button
+            onClick={prevQuestion}
+            className="bg-white text-slate-600 font-black px-6 py-5 rounded-2xl border-2 border-slate-100 hover:bg-slate-50 transition-all flex items-center justify-center"
+          >
+            <span className="material-symbols-outlined">arrow_back</span>
+          </button>
+        )}
+        
         {currentIdx === shuffledQuestions.length - 1 ? (
           <button
             onClick={handleSubmit}
             disabled={!answers[currentIdx]}
             className="flex-1 bg-slate-900 text-white font-black py-5 rounded-2xl hover:bg-black transition-all shadow-xl disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            SUBMIT JAWABAN <span className="material-symbols-outlined">send</span>
+            SUBMIT JAWABAN <span className="material-symbols-outlined">done_all</span>
           </button>
         ) : (
           <button
