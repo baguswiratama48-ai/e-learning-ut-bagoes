@@ -1,8 +1,7 @@
 export const Sesi2_Strategi = {
   id: "5a-sesi2",
-  classId: "5a",
-  // classIds diperlukan agar getSessionConfig di index.js bisa menemukannya
-  classIds: ["5a"], 
+  // Menggunakan "4" karena di mockData.js, ID untuk Kelas 5A adalah "4"
+  classIds: ["4"], 
   meetingId: 2,
   title: "Strategi Pembelajaran di SD",
   sections: [
@@ -11,8 +10,8 @@ export const Sesi2_Strategi = {
       type: "RATSAT",
       content: {
         title: "RAT / SAT - Strategi Pembelajaran",
-        courseCode: "PDGK4105",
-        courseName: "Strategi Pembelajaran di SD",
+        courseCode: "SPGK4410",
+        courseName: "Strategi Pembelajaran Kontemporer di SD",
         sks: "4",
         description: "Modul ini membahas tentang hakikat belajar dan karakteristik perkembangan serta pembelajaran di Sekolah Dasar.",
         capaianUmum: "Mahasiswa dapat meningkatkan kemampuan professional sehingga mampu mengembangkan pengetahuan dan keterampilan dalam mengelola pembelajaran di SD",
@@ -39,7 +38,6 @@ export const Sesi2_Strategi = {
       type: "PemantikV2",
       content: {
         required: 3,
-        // Memecah menjadi 3 grup agar sistem mendeteksi ada 3 pertanyaan wajib pengerjaan berurutan
         groups: [
           [
             "1. Seorang siswa kelas 2 SD terlihat cepat memahami pelajaran saat menggunakan gambar dan permainan, tetapi kesulitan saat hanya mendengarkan penjelasan guru.\n\n👉 Menurut Anda, bagaimana proses belajar yang sedang terjadi pada siswa tersebut?"
@@ -48,7 +46,7 @@ export const Sesi2_Strategi = {
             "2. Di kelas 5, beberapa siswa mulai aktif bertanya dan berpendapat, tetapi ada juga yang masih pasif dan bergantung pada arahan guru.\n\n👉 Bagaimana Anda menjelaskan perbedaan karakteristik dan tahap perkembangan siswa dalam kasus ini?"
           ],
           [
-            "3. Seorang guru mengajar dengan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dengan karakteristik siswa?"
+            "3. Seorang guru mengajar dangan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dangan karakteristik siswa?"
           ]
         ]
       }
