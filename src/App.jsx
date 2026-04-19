@@ -871,7 +871,7 @@ function SectionPage({ user }) {
     // fallback ke logika lama
     return (id === "1" || id === "2" || id === "3" || id === "4") ? 6 : 3;
   })();
-  const [pemantikAnswers, setPemantikAnswers] = useState(Array(pemantikQuestionCount).fill(""));
+  const [pemantikAnswers, setPemantikAnswers, clearPemantikDraft] = useDraft(`pemantik_${user?.email}_${id}_${meetingId}`, Array(pemantikQuestionCount).fill(""));
   const [tutorFeedback, setTutorFeedback] = useState(null);
 
   const isInput = [
@@ -972,6 +972,9 @@ function SectionPage({ user }) {
       if (!error && data && data.length > 0) {
         setStatus(data[0]);
         setSubmissions((prev) => [...prev, data[0]]);
+        if (sectionName === "Pertanyaan Pemantik" || sectionName === "Pemantik") {
+          clearPemantikDraft();
+        }
       }
     } catch (err) {
       console.log(err);

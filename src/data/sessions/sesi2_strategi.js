@@ -34,15 +34,12 @@ export const Sesi2_Strategi = {
       required: true,
       type: "PemantikV2",
       content: {
-        required: 6,
+        required: 3,
         groups: [
           [
-            "Mengapa kreativitas guru menjadi kunci dalam strategi pembelajaran kontemporer?",
-            "Bagaimana cara mengintegrasikan teknologi dalam pembelajaran secara efektif?",
-            "Apa tantangan terbesar dalam menerapkan model pembelajaran berpusat pada siswa?",
-            "Bagaimana strategi Anda dalam menghadapi keberagaman gaya belajar di kelas?",
-            "Apa peran umpan balik dalam meningkatkan hasil belajar siswa secara berkelanjutan?",
-            "Bagaimana Anda merancang evaluasi yang otentik dalam konteks SD?"
+            "Seorang siswa kelas 2 SD terlihat cepat memahami pelajaran saat menggunakan gambar dan permainan, tetapi kesulitan saat hanya mendengarkan penjelasan guru.\n\n👉 Menurut Anda, bagaimana proses belajar yang sedang terjadi pada siswa tersebut?",
+            "Di kelas 5, beberapa siswa mulai aktif bertanya dan berpendapat, tetapi ada juga yang masih pasif dan bergantung pada arahan guru.\n\n👉 Bagaimana Anda menjelaskan perbedaan karakteristik dan tahap perkembangan siswa dalam kasus ini?",
+            "Seorang guru mengajar dengan metode ceramah terus-menerus, sehingga siswa terlihat bosan dan kurang terlibat dalam pembelajaran.\n\n👉 Menurut Anda, bagaimana seharusnya pembelajaran di SD dirancang agar sesuai dengan karakteristik siswa?"
           ]
         ]
       }

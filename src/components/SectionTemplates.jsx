@@ -270,6 +270,13 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
         gradient="from-[#0f172a] via-[#1e1b4b] to-[#312e81]"
       />
 
+      <div className="bg-white/50 p-6 rounded-[2rem] border border-slate-200 mb-10">
+         <div className="flex items-center gap-3 text-slate-500">
+            <span className="material-symbols-outlined text-sm">history_edu</span>
+            <p className="text-[10px] font-black uppercase tracking-widest text-left">Setiap jawaban tersimpan otomatis di perangkat Anda (Anti-Hilang)</p>
+         </div>
+      </div>
+
       {status ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
             <div className="lg:col-span-2 bg-emerald-500 p-8 md:p-14 rounded-[3rem] text-white shadow-xl shadow-emerald-500/20 flex flex-col md:flex-row items-center gap-6 md:gap-10">
@@ -321,7 +328,7 @@ export const PemantikTemplate = ({ config, user, status, pemantikAnswers, setPem
                   <div className="h-px flex-grow bg-slate-100"></div>
                 </div>
                 
-                <h3 className="text-lg md:text-3xl font-black text-slate-900 mb-8 md:mb-12 leading-snug md:leading-tight tracking-tight">
+                <h3 className="text-lg md:text-2xl font-black text-slate-900 mb-8 md:mb-12 leading-relaxed md:leading-snug tracking-tight text-left whitespace-pre-line font-headline">
                   {q}
                 </h3>
                 
